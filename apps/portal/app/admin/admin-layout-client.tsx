@@ -36,6 +36,7 @@ const navigation = [
     badge: true, // Show notification badge for new leads
   },
   { name: "Customers", href: "/admin/customers", icon: Users },
+  { name: "Users", href: "/admin/users", icon: Users },
   {
     name: "Growth",
     icon: Mail,
