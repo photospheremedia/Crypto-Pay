@@ -31,17 +31,22 @@ export async function POST(request: NextRequest) {
       return createRateLimitResponse(rateLimitResult.limit, rateLimitResult.remaining, rateLimitResult.reset);
     }
 
-    // Use Supabase's built-in current password verification when provided.
-    const { error: updateError } = await supabase.auth.updateUser(
-      currentPassword
-        ? {
-            password: normalizedPassword,
-            currentPassword,
-          }
-        : {
-            password: normalizedPassword,
-          }
-    );
+    if (currentPassword) {
+      const { error: verifyError } = await supabase.auth.signInWithPassword({
+        email: user.email || "",
+        password: String(currentPassword),
+      });
+      if (verifyError) {
+        return NextResponse.json(
+          { error: "Current password is incorrect" },
+          { status: 400 }
+        );
+      }
+    }
+
+    const { error: updateError } = await supabase.auth.updateUser({
+      password: normalizedPassword,
+    });
 
     if (updateError) {
       const message = updateError.message.toLowerCase().includes("current password")
