@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getSupabaseServerClient } from "@crypto-pay/db/supabaseServer";
+import { isAdminEmail } from "@/lib/admin-email";
 
 /**
  * OAuth Callback Handler
@@ -77,7 +78,7 @@ export async function GET(request: NextRequest) {
       .in("role", ["rhs_admin", "admin", "owner", "manager", "staff"])
       .maybeSingle();
 
-    if (membership) {
+    if (membership || isAdminEmail(data.session.user.email)) {
       // Staff/Admin user → admin dashboard
       const target = next && next !== "/" ? next : "/admin/dashboard";
       return NextResponse.redirect(new URL(target, baseUrl));

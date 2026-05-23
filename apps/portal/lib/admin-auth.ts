@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { isAdminEmail } from "@/lib/admin-email";
 
 // ============================================
 // ROLE HIERARCHY (highest to lowest)
@@ -85,6 +86,18 @@ export async function checkAdminAccess() {
 
   if (!user) {
     return { user: null, role: null, isAdmin: false, isSuperAdmin: false, permissions: null };
+  }
+
+  if (isAdminEmail(user.email)) {
+    return {
+      user,
+      role: "rhs_admin" as const,
+      tenantId: null,
+      isAdmin: true,
+      isSuperAdmin: true,
+      permissions: ROLE_PERMISSIONS.rhs_admin,
+      roleLevel: ROLE_HIERARCHY.rhs_admin,
+    };
   }
 
   const { data: membership } = await supabase

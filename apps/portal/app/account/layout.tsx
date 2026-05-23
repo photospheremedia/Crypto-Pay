@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSupabaseServerClient } from "@crypto-pay/db/supabaseServer";
+import { isAdminEmail } from "@/lib/admin-email";
 import { signOut } from "@/app/(login)/actions";
 import { CartProvider } from "@/components/store/cart-context";
 import { WishlistProvider } from "@/components/store/wishlist-context";
@@ -55,7 +56,7 @@ export default async function AccountLayout({
   }
 
   // Check if user is admin - Handle potential RLS errors gracefully
-  let isAdmin = false;
+  let isAdmin = isAdminEmail(user.email);
   try {
     const { data: membership, error } = await supabase
       .from("memberships")
@@ -66,7 +67,7 @@ export default async function AccountLayout({
       .maybeSingle();
     
     // Only set isAdmin if no error occurred and membership exists
-    isAdmin = !error && !!membership;
+    isAdmin = isAdmin || (!error && !!membership);
   } catch (err) {
     // Silently handle errors - user simply won't see admin link
     console.error("Error checking admin status:", err);

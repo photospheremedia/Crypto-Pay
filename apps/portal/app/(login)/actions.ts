@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { redirect } from "next/navigation";
 import { getSupabaseServerClient } from "@crypto-pay/db/supabaseServer";
+import { isAdminEmail } from "@/lib/admin-email";
 
 export type ActionState = {
   error?: string;
@@ -64,7 +65,7 @@ export async function signIn(
       .in("role", ["rhs_admin", "admin", "owner", "manager", "staff"])
       .maybeSingle();
 
-    if (membership) {
+    if (membership || isAdminEmail(data.user.email)) {
       // Staff/Admin user → admin dashboard
       redirect("/admin/dashboard");
     }

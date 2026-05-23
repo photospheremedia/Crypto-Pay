@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
+import { isAdminEmail } from "@/lib/admin-email";
 
 // ============================================
 // ROUTE PROTECTION CONFIGURATION
@@ -69,6 +70,7 @@ export async function proxy(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  const hasAdminEmail = isAdminEmail(user?.email);
 
   // ============================================
   // ADMIN ROUTE PROTECTION
@@ -94,7 +96,7 @@ export async function proxy(request: NextRequest) {
       .in("role", ADMIN_ROLES)
       .maybeSingle();
 
-    if (!membership) {
+    if (!membership && !hasAdminEmail) {
       // User is authenticated but NOT an admin
       // Redirect to regular user account page with message
       const redirectUrl = new URL("/account", request.url);
@@ -124,7 +126,7 @@ export async function proxy(request: NextRequest) {
       .in("role", ADMIN_ROLES)
       .maybeSingle();
 
-    const destination = membership ? "/admin/dashboard" : "/account";
+    const destination = membership || hasAdminEmail ? "/admin/dashboard" : "/account";
     return NextResponse.redirect(new URL(destination, request.url));
   }
 
