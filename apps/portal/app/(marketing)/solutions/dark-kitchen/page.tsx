@@ -16,7 +16,7 @@ import {
 
 export const metadata = {
   title: "Dark Kitchen Solutions | Crypto Pay",
-  description: "Launch and scale delivery-only restaurant concepts with optimized operations, multi-brand management, and data-driven insights.",
+  description: "Launch and scale delivery-only business concepts with optimized operations, multi-brand management, and data-driven insights.",
 };
 
 const features = [
@@ -80,7 +80,7 @@ const brandExamples = [
 ];
 
 const metrics = [
-  { value: "40%", label: "Lower Overhead", description: "vs. traditional restaurants" },
+  { value: "40%", label: "Lower Overhead", description: "vs. traditional businesses" },
   { value: "5+", label: "Brands Per Kitchen", description: "Average client operates" },
   { value: "15min", label: "Avg. Prep Time", description: "Across all concepts" },
   { value: "4.6★", label: "Avg. Rating", description: "Across delivery platforms" },
@@ -126,7 +126,7 @@ export default function DarkKitchenPage() {
                 <span className="text-slate-700">one kitchen</span>
               </h1>
               <p className="mt-6 text-lg text-slate-600">
-                Launch delivery-only restaurant concepts without the overhead. Run multiple
+                Launch delivery-only business concepts without the overhead. Run multiple
                 virtual brands from a single kitchen and capture more market share.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">

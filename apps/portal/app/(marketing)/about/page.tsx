@@ -13,16 +13,16 @@ import {
 
 export const metadata: Metadata = {
   title: "About | Crypto Pay",
-  description: "Learn about Crypto Pay. A team of restaurant operators, technologists, and supply chain experts building tools to simplify restaurant operations.",
+  description: "Learn about Crypto Pay. A team of business operators, technologists, and supply chain experts building tools to simplify business operations.",
   keywords: [
-    "about restaurant hub",
+    "about business hub",
     "our story",
-    "restaurant operations company",
-    "restaurant technology team",
+    "business operations company",
+    "business technology team",
   ],
   openGraph: {
     title: "Our Story: Crypto Pay",
-    description: "Built by restaurant operators for restaurant operators. Simplifying delivery, supply, and brand management.",
+    description: "Built by business operators for business operators. Simplifying delivery, supply, and brand management.",
     url: "https://cryptopay.sale/about",
     type: "website",
   },
@@ -70,13 +70,13 @@ const milestones = [
     year: "2025",
     title: "100+ locations",
     description:
-      "Reached milestone of 100 restaurant locations actively using our platform.",
+      "Reached milestone of 100 business locations actively using our platform.",
   },
   {
     year: "2026",
     title: "Enterprise expansion",
     description:
-      "Expanding to serve larger restaurant groups with custom integrations and SLAs.",
+      "Expanding to serve larger business groups with custom integrations and SLAs.",
   },
 ];
 
@@ -90,10 +90,10 @@ export default function AboutPage() {
             About us
           </p>
           <h1 className="font-display mt-3 text-4xl font-semibold text-slate-900 md:text-5xl">
-            We help restaurants scale without vendor overload.
+            We help businesses scale without vendor overload.
           </h1>
           <p className="mt-4 text-lg text-slate-600">
-            Crypto Pay is built for restaurant groups juggling
+            Crypto Pay is built for business groups juggling
             delivery platforms, menu changes, and supply costs. We combine
             delivery platform integration, marketing upgrades, and curated
             product resale to keep everything in one operational hub.
@@ -121,14 +121,14 @@ export default function AboutPage() {
             Our mission
           </p>
           <p className="mt-4 text-lg text-slate-700">
-            Build a single control plane for restaurant ops: delivery
+            Build a single control plane for business ops: delivery
             integrations, marketing performance, and supply workflows — all in
             one place.
           </p>
           <div className="mt-6 flex items-center gap-4 rounded-2xl bg-orange-100/50 p-4">
             <Rocket className="h-8 w-8 text-orange-500" />
             <p className="text-sm font-medium text-orange-800">
-              Serving multi-location restaurant groups and fast-growing
+              Serving multi-location business groups and fast-growing
               independents.
             </p>
           </div>
@@ -213,7 +213,7 @@ export default function AboutPage() {
             Our journey
           </p>
           <h2 className="font-display mt-3 text-3xl font-semibold text-slate-900">
-            Building the future of restaurant ops.
+            Building the future of business ops.
           </h2>
         </div>
         <div className="relative mt-10">
@@ -256,7 +256,7 @@ export default function AboutPage() {
               Talk to the team about your rollout timeline.
             </h3>
             <p className="mt-2 text-orange-100">
-              Get a personalized demo and see how we can help your restaurant
+              Get a personalized demo and see how we can help your business
               group.
             </p>
           </div>

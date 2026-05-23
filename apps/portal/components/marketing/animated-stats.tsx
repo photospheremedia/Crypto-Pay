@@ -6,7 +6,7 @@ import { TrendingUp, Users, Package, Clock } from "lucide-react";
 const stats = [
   {
     value: "500+",
-    label: "Restaurant partners",
+    label: "Business partners",
     icon: Users,
     image: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1470&auto=format&fit=crop",
   },
@@ -125,7 +125,7 @@ export function AnimatedStats() {
       <div className="mb-12 text-center">
         <p className="text-xs uppercase tracking-[0.2em] text-orange-600">Trusted by hundreds</p>
         <h2 className="font-display mt-3 text-3xl font-bold text-slate-900 md:text-4xl">
-          Powering restaurant operations nationwide
+          Powering business operations nationwide
         </h2>
       </div>
 

@@ -72,7 +72,7 @@ export default function QuotePage() {
             Get a Custom Quote
           </div>
           <h1 className="font-display text-3xl font-bold text-slate-900 md:text-5xl">
-            Tell us about your restaurant
+            Tell us about your business
           </h1>
           <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">
             Fill out the form below and our team will prepare a custom quote tailored to your needs. Response within 24 hours guaranteed.
@@ -140,7 +140,7 @@ export default function QuotePage() {
               <div>
                 <label className="flex items-center gap-2 text-sm font-medium text-slate-700 mb-2">
                   <Building2 className="h-4 w-4" />
-                  Restaurant Name *
+                  Business Name *
                 </label>
                 <input
                   type="text"
@@ -158,7 +158,7 @@ export default function QuotePage() {
                   type="email"
                   required
                   className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm focus:border-orange-500 focus:ring-2 focus:ring-orange-100 outline-none transition"
-                  placeholder="john@restaurant.com"
+                  placeholder="john@business.com"
                 />
               </div>
               <div>
@@ -254,7 +254,7 @@ export default function QuotePage() {
           </div>
           <div className="flex items-center gap-2">
             <Check className="h-4 w-4 text-orange-500" />
-            <span>500+ Restaurants Served</span>
+            <span>500+ Businesss Served</span>
           </div>
         </div>
       </div>

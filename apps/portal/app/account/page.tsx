@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { getSupabaseBrowserClient } from "@crypto-pay/db/supabaseClient";
+import { WalletLinkCard } from "./wallet-link-card";
 
 type OrderStats = {
   total_orders: number;
@@ -97,6 +98,13 @@ type OnboardingLead = {
   updated_at: string;
 };
 
+type WalletProfile = {
+  wallet_network: string;
+  wallet_address: string;
+  wallet_verified: boolean;
+  updated_at: string | null;
+};
+
 export default function AccountDashboardPage() {
   const searchParams = useSearchParams();
   const errorParam = searchParams.get("error");
@@ -114,6 +122,7 @@ export default function AccountDashboardPage() {
   const [subscription, setSubscription] = useState<any>(null);
   const [lastSession, setLastSession] = useState<LastSession | null>(null);
   const [onboardingLead, setOnboardingLead] = useState<OnboardingLead | null>(null);
+  const [walletProfile, setWalletProfile] = useState<WalletProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [showAdminError, setShowAdminError] = useState(errorParam === "admin_required");
   const supabase = getSupabaseBrowserClient();
@@ -157,6 +166,13 @@ export default function AccountDashboardPage() {
           .limit(1)
           .maybeSingle();
         setOnboardingLead((leadData as OnboardingLead | null) ?? null);
+
+        const { data: walletData } = await supabase
+          .from("user_wallet_profiles")
+          .select("wallet_network, wallet_address, wallet_verified, updated_at")
+          .eq("user_id", user.id)
+          .maybeSingle();
+        setWalletProfile((walletData as WalletProfile | null) ?? null);
 
         // Log dashboard access
         try {
@@ -395,6 +411,7 @@ export default function AccountDashboardPage() {
     if (onboardingLead || onboardingSubmitted) {
       return (
         <div className="space-y-6">
+          <WalletLinkCard walletProfile={walletProfile} onSaved={setWalletProfile} />
           <div className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8 shadow-sm">
             <p className="text-xs uppercase tracking-[0.2em] text-emerald-700">Setup in progress</p>
             <h1 className="mt-3 text-2xl font-semibold text-slate-900">
@@ -436,29 +453,32 @@ export default function AccountDashboardPage() {
     }
 
     return (
-      <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-        <p className="text-xs uppercase tracking-[0.2em] text-orange-500">
-          Complete setup
-        </p>
-        <h1 className="mt-3 text-2xl font-semibold text-slate-900">
-          You&apos;re almost ready to order.
-        </h1>
-        <p className="mt-2 text-sm text-slate-600">
-          Add your organization details so we can configure integrations and quotes.
-        </p>
-        <div className="mt-4 flex flex-wrap gap-3 text-sm">
-          <Link
-            href="/account/setup"
-            className="rounded-full bg-orange-500 px-5 py-2 text-white"
-          >
-            Finish setup
-          </Link>
-          <Link
-            href="/shop"
-            className="rounded-full border border-slate-300 px-5 py-2 text-slate-700"
-          >
-            Browse shop
-          </Link>
+      <div className="space-y-6">
+        <WalletLinkCard walletProfile={walletProfile} onSaved={setWalletProfile} />
+        <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+          <p className="text-xs uppercase tracking-[0.2em] text-orange-500">
+            Complete setup
+          </p>
+          <h1 className="mt-3 text-2xl font-semibold text-slate-900">
+            You&apos;re almost ready to order.
+          </h1>
+          <p className="mt-2 text-sm text-slate-600">
+            Add your organization details so we can configure integrations and quotes.
+          </p>
+          <div className="mt-4 flex flex-wrap gap-3 text-sm">
+            <Link
+              href="/account/setup"
+              className="rounded-full bg-orange-500 px-5 py-2 text-white"
+            >
+              Finish setup
+            </Link>
+            <Link
+              href="/shop"
+              className="rounded-full border border-slate-300 px-5 py-2 text-slate-700"
+            >
+              Browse shop
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -497,6 +517,8 @@ export default function AccountDashboardPage() {
           </div>
         </div>
       )}
+
+      <WalletLinkCard walletProfile={walletProfile} onSaved={setWalletProfile} />
 
       {/* Welcome Hero Section - Modern Design */}
       <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-slate-50 via-white to-orange-50 border border-slate-200/50 p-8 shadow-sm">

@@ -53,7 +53,7 @@ export function HeroWithVideo() {
         <div className="relative h-full w-full">
           <img
             src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2070&auto=format&fit=crop"
-            alt="Fine dining restaurant interior"
+            alt="Fine dining business interior"
             className="h-full w-full object-cover opacity-[0.08]"
           />
           <div className="absolute inset-0 bg-linear-to-b from-white/90 via-white/95 to-white" />

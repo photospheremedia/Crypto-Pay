@@ -101,7 +101,7 @@ export default function AnalyticsPage() {
               
               <p className="text-xl text-purple-100/80 mb-8">
                 Stop guessing. Get real-time insights into your sales, customers, and operations 
-                with comprehensive analytics designed for restaurants.
+                with comprehensive analytics designed for businesses.
               </p>
               
               <div className="flex flex-wrap gap-4">
@@ -205,7 +205,7 @@ export default function AnalyticsPage() {
               Powerful Yet Simple
             </h2>
             <p className="text-lg text-slate-600">
-              Complex analytics made accessible for busy restaurant operators
+              Complex analytics made accessible for busy business operators
             </p>
           </div>
           
@@ -268,7 +268,7 @@ export default function AnalyticsPage() {
             Start Making Data-Driven Decisions
           </h2>
           <p className="text-xl text-purple-100 mb-8">
-            Get instant access to the insights that matter most for your restaurant.
+            Get instant access to the insights that matter most for your business.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link

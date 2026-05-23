@@ -241,7 +241,7 @@ export default function MenuManagementPage() {
             Take Control of Your Menus
           </h2>
           <p className="text-xl text-amber-100 mb-8">
-            Join restaurants saving hours every week with automated menu management.
+            Join businesses saving hours every week with automated menu management.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link

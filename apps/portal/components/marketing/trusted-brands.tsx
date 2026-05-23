@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 // Using Logo.dev API - the industry standard for company logos
 const getLogoUrl = (domain: string) => `https://img.logo.dev/${domain}?token=pk_X-1ZO13GSgeOoUrIuJ6GMQ`;
 
-// Major restaurant brands that trust our platform
+// Major business brands that trust our platform
 const trustedBrands = [
   { name: "Pizza Hut", domain: "pizzahut.com" },
   { name: "KFC", domain: "kfc.com" },
@@ -44,7 +44,7 @@ interface TrustedBrandsProps {
 }
 
 export function TrustedBrands({ 
-  title = "Trusted by leading restaurant brands",
+  title = "Trusted by leading business brands",
   subtitle = "Powered by UrbanPiper Technology",
   className = "" 
 }: TrustedBrandsProps) {
@@ -98,7 +98,7 @@ export function TrustedBrands({
         {/* Stats below logos */}
         <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           {[
-            { value: "45,000+", label: "Restaurants Worldwide" },
+            { value: "45,000+", label: "Businesss Worldwide" },
             { value: "250M+", label: "Orders Processed Annually" },
             { value: "99.99%", label: "Platform Uptime" },
             { value: "150+", label: "Integrations" },

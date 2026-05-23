@@ -16,7 +16,7 @@ import {
 
 export const metadata = {
   title: "Menu & Branding | Crypto Pay",
-  description: "Transform your restaurant's visual identity with professional menu design, brand refresh, and marketing materials.",
+  description: "Transform your business's visual identity with professional menu design, brand refresh, and marketing materials.",
 };
 
 const services = [
@@ -35,7 +35,7 @@ const services = [
   {
     icon: PenTool,
     title: "Brand Identity",
-    description: "Complete visual identity systems that set your restaurant apart from the competition.",
+    description: "Complete visual identity systems that set your business apart from the competition.",
     features: ["Logo design", "Color palette", "Typography", "Brand guidelines"],
   },
   {
@@ -93,7 +93,7 @@ const process = [
 ];
 
 const stats = [
-  { value: "200+", label: "Restaurants Branded" },
+  { value: "200+", label: "Businesss Branded" },
   { value: "15%", label: "Avg. Ticket Increase" },
   { value: "3x", label: "Social Engagement" },
   { value: "48hrs", label: "Design Turnaround" },
@@ -117,7 +117,7 @@ export default function BrandingPage() {
               </h1>
               <p className="mt-6 text-lg text-slate-600">
                 From menu design to complete brand identity, we create visual experiences
-                that tell your restaurant's story and drive customer loyalty.
+                that tell your business's story and drive customer loyalty.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link
@@ -292,7 +292,7 @@ export default function BrandingPage() {
               Ready to refresh your brand?
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-pink-100">
-              Let's create a visual identity that captures your restaurant's unique
+              Let's create a visual identity that captures your business's unique
               personality and attracts your ideal customers.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">

@@ -16,7 +16,7 @@ import {
 
 export const metadata = {
   title: "Multi-Location Management | Crypto Pay",
-  description: "Centralized management tools for restaurant groups. Control menus, pricing, and operations across all your locations.",
+  description: "Centralized management tools for business groups. Control menus, pricing, and operations across all your locations.",
 };
 
 const features = [
@@ -110,7 +110,7 @@ export default function MultiLocationPage() {
               </h1>
               <p className="mt-6 text-lg text-slate-600">
                 Manage menus, track performance, and maintain brand consistency across your
-                entire restaurant group from a single dashboard.
+                entire business group from a single dashboard.
               </p>
               <div className="mt-8 flex flex-wrap gap-4">
                 <Link
@@ -299,7 +299,7 @@ export default function MultiLocationPage() {
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-blue-100">
               See how our multi-location platform can streamline operations and improve
-              consistency across your restaurant group.
+              consistency across your business group.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <Link

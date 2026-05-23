@@ -144,7 +144,7 @@ export function ShopHero() {
             </h2>
             
             <p className="shop-hero-description mt-6 text-lg text-slate-300 leading-relaxed max-w-xl">
-              Shop packaging, cutlery, labels, smallwares, and more. Get quoted pricing, bulk discounts, and auto-restock programs tailored for your restaurant.
+              Shop packaging, cutlery, labels, smallwares, and more. Get quoted pricing, bulk discounts, and auto-restock programs tailored for your business.
             </p>
 
             {/* CTAs - Right after title and description */}
@@ -220,7 +220,7 @@ export function ShopHero() {
             <div className="mt-6 flex items-center justify-center gap-6 rounded-2xl bg-white/10 backdrop-blur px-6 py-4">
               <div className="flex items-center gap-2 text-sm text-white">
                 <CheckCircle className="h-5 w-5 text-orange-400" />
-                <span>Trusted by 500+ restaurants</span>
+                <span>Trusted by 500+ businesses</span>
               </div>
               <div className="h-4 w-px bg-white/30" />
               <div className="flex items-center gap-2 text-sm text-white">

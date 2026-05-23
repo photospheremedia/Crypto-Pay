@@ -157,7 +157,7 @@ const categoryData: Record<string, {
   },
   "furniture-fixtures": {
     name: "Furniture & Fixtures",
-    description: "Restaurant furniture including tables, chairs, bar stools, and outdoor seating.",
+    description: "Business furniture including tables, chairs, bar stools, and outdoor seating.",
     icon: Armchair,
     color: "indigo",
     gradient: "from-indigo-600 to-violet-700",

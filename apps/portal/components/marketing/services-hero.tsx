@@ -43,7 +43,7 @@ export function ServicesHero() {
             Professional Services
           </p>
           <h2 className="mt-3 text-3xl font-bold text-slate-900 sm:text-4xl lg:text-5xl">
-            Transform your restaurant&apos;s <span className="text-orange-500">digital presence</span>
+            Transform your business&apos;s <span className="text-orange-500">digital presence</span>
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
             From menu design to delivery optimization, our expert team handles everything so you can focus on cooking.

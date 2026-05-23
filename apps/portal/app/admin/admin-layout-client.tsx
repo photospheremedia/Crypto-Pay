@@ -5,30 +5,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
-  Package,
-  ShoppingCart,
+  Activity,
   Users,
   Settings,
   BarChart3,
-  Tag,
-  Percent,
   Menu,
   X,
   ChevronDown,
   LogOut,
-  Bell,
-  Search,
   Store,
-  Truck,
-  CreditCard,
-  FileText,
-  HelpCircle,
   Mail,
-  Repeat,
   MessageSquare,
-  Shield,
   Crown,
-  Activity,
 } from "lucide-react";
 import { AdminNotifications } from "@/components/admin/admin-notifications";
 import { AdminUserMenu } from "@/components/admin/admin-user-menu";
@@ -42,54 +30,14 @@ const navigation = [
     icon: LayoutDashboard,
   },
   {
-    name: "Chat Leads",
+    name: "Conversations",
     href: "/admin/leads",
     icon: MessageSquare,
     badge: true, // Show notification badge for new leads
   },
+  { name: "Customers", href: "/admin/customers", icon: Users },
   {
-    name: "Products",
-    icon: Package,
-    children: [
-      { name: "All Products", href: "/admin/products" },
-      { name: "Add Product", href: "/admin/products/new" },
-      { name: "Bulk Import", href: "/admin/products/import" },
-      { name: "Categories", href: "/admin/products/categories" },
-    ],
-  },
-  {
-    name: "Inventory",
-    href: "/admin/inventory",
-    icon: Truck,
-  },
-  {
-    name: "Orders",
-    icon: ShoppingCart,
-    children: [
-      { name: "All Orders", href: "/admin/orders" },
-      { name: "Pending", href: "/admin/orders?status=pending" },
-      { name: "Completed", href: "/admin/orders?status=completed" },
-      { name: "Refunds", href: "/admin/orders/refunds" },
-    ],
-  },
-  {
-    name: "Pricing",
-    icon: Tag,
-    children: [
-      { name: "Price Lists", href: "/admin/pricing" },
-      { name: "Customer Pricing", href: "/admin/pricing/customers" },
-      { name: "Margins", href: "/admin/pricing/margins" },
-      { name: "Discounts", href: "/admin/pricing/discounts" },
-      { name: "Bulk Update", href: "/admin/pricing/bulk" },
-    ],
-  },
-  {
-    name: "Subscriptions",
-    href: "/admin/subscriptions",
-    icon: Repeat,
-  },
-  {
-    name: "Marketing",
+    name: "Growth",
     icon: Mail,
     children: [
       { name: "Email Campaigns", href: "/admin/marketing" },
@@ -98,25 +46,11 @@ const navigation = [
       { name: "Contacts", href: "/admin/marketing/contacts" },
     ],
   },
-  {
-    name: "Customers",
-    href: "/admin/customers",
-    icon: Users,
-  },
-  {
-    name: "Analytics",
-    href: "/admin/analytics",
-    icon: BarChart3,
-  },
+  { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
   {
     name: "Settings",
+    href: "/admin/settings",
     icon: Settings,
-    children: [
-      { name: "General", href: "/admin/settings" },
-      { name: "Payments", href: "/admin/settings/payments" },
-      { name: "Shipping", href: "/admin/settings/shipping" },
-      { name: "Taxes", href: "/admin/settings/taxes" },
-    ],
   },
 ];
 
@@ -140,7 +74,7 @@ export function AdminLayoutClient({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [expandedMenus, setExpandedMenus] = useState<string[]>(["Products", "Pricing"]);
+  const [expandedMenus, setExpandedMenus] = useState<string[]>(["Growth"]);
   const [newLeadsCount, setNewLeadsCount] = useState(0);
   const [isSuperAdmin, setIsSuperAdmin] = useState<boolean | undefined>(undefined);
   const pathname = usePathname();
@@ -200,7 +134,7 @@ export function AdminLayoutClient({
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500">
               <Store className="h-5 w-5 text-white" />
             </div>
-            <span className="text-lg font-bold text-white">Admin Panel</span>
+            <span className="text-lg font-bold text-white">Crypto Pay Admin</span>
           </Link>
           <button
             type="button"
@@ -351,7 +285,7 @@ export function AdminLayoutClient({
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500 shrink-0">
                 <Store className="h-5 w-5 text-white" />
               </div>
-              <span className="text-lg font-bold text-slate-900 hidden sm:inline">Admin</span>
+              <span className="text-lg font-bold text-slate-900 hidden sm:inline">Crypto Pay</span>
             </Link>
           </div>
 

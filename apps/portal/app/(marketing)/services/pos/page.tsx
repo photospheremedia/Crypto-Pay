@@ -290,7 +290,7 @@ export default function POSIntegrationPage() {
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-purple-100">
               Tell us which POS system you use and we'll show you exactly how the
-              integration will work for your restaurant.
+              integration will work for your business.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <Link

@@ -17,17 +17,17 @@ import {
 
 export const metadata: Metadata = {
   title: "Technology | Crypto Pay",
-  description: "Our modern restaurant operations platform: delivery integration, supply marketplace, real-time analytics, and AI customer support. Built for scale.",
+  description: "Our modern business operations platform: delivery integration, supply marketplace, real-time analytics, and AI customer support. Built for scale.",
   keywords: [
-    "restaurant technology",
-    "restaurant software",
+    "business technology",
+    "business software",
     "delivery management software",
-    "restaurant analytics",
+    "business analytics",
     "kitchen management system",
-    "AI chatbot for restaurants",
+    "AI chatbot for businesses",
   ],
   openGraph: {
-    title: "Modern Technology for Restaurant Operations",
+    title: "Modern Technology for Business Operations",
     description: "Delivery consolidation, supply management, real-time analytics, and AI support. One unified platform.",
     url: "https://cryptopay.sale/technology",
     type: "website",
@@ -93,7 +93,7 @@ const stats = [
   { value: "30%", label: "Average time saved" },
   { value: "99.9%", label: "Platform uptime" },
   { value: "24/7", label: "Support available" },
-  { value: "500+", label: "Restaurants using" }
+  { value: "500+", label: "Businesss using" }
 ];
 
 export default function TechnologyPage() {
@@ -122,12 +122,12 @@ export default function TechnologyPage() {
             <h1 className="mt-8 text-4xl font-bold text-white sm:text-5xl lg:text-6xl">
               Powerful tech for{" "}
               <span className="bg-linear-to-r from-orange-400 to-teal-300 bg-clip-text text-transparent">
-                modern restaurants
+                modern businesses
               </span>
             </h1>
             
             <p className="mt-6 text-lg text-slate-300 leading-relaxed">
-              Streamline operations, boost efficiency, and grow your business with our integrated technology platform designed specifically for restaurants.
+              Streamline operations, boost efficiency, and grow your business with our integrated technology platform designed specifically for businesses.
             </p>
 
             <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
@@ -221,10 +221,10 @@ export default function TechnologyPage() {
       <section className="py-20 bg-linear-to-br from-orange-500 to-orange-600">
         <div className="mx-auto max-w-4xl px-6 text-center">
           <h2 className="text-3xl font-bold text-white sm:text-4xl">
-            Ready to modernize your restaurant?
+            Ready to modernize your business?
           </h2>
           <p className="mt-4 text-lg text-orange-100">
-            Join hundreds of restaurants already using our technology platform.
+            Join hundreds of businesses already using our technology platform.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Link

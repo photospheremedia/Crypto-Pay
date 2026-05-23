@@ -18,7 +18,7 @@ export default function PrivacyPolicyPage() {
               <p className="text-slate-700 leading-relaxed mb-4">
                 Welcome to Crypto Pay ("we," "our," or "us"). We are committed to protecting your personal 
                 information and your right to privacy. This Privacy Policy explains how we collect, use, disclose, and 
-                safeguard your information when you use our B2B platform for restaurant management and supply ordering.
+                safeguard your information when you use our B2B platform for business management and supply ordering.
               </p>
             </section>
 
@@ -28,7 +28,7 @@ export default function PrivacyPolicyPage() {
               <h3 className="text-xl font-semibold text-slate-800 mb-3">2.1 Information You Provide</h3>
               <ul className="list-disc pl-6 mb-4 text-slate-700 space-y-2">
                 <li><strong>Account Information:</strong> Name, email address, company name, phone number</li>
-                <li><strong>Business Information:</strong> Restaurant details, business type, tax ID, billing information</li>
+                <li><strong>Business Information:</strong> Business details, business type, tax ID, billing information</li>
                 <li><strong>Order Information:</strong> Purchase orders, quotes, delivery preferences</li>
                 <li><strong>Communication Data:</strong> Support tickets, messages, feedback</li>
               </ul>

@@ -26,6 +26,7 @@ export async function sendWelcomeEmail(
     template: "welcome",
     templateData: data,
     tags: ["onboarding", "welcome"],
+    workflow: { event: "user.welcome", entityId: email },
   });
 }
 
@@ -42,6 +43,7 @@ export async function sendEmailVerification(
     template: "email_verification",
     templateData: data,
     tags: ["auth", "verification"],
+    workflow: { event: "auth.email_verification", entityId: email },
   });
 }
 
@@ -62,6 +64,7 @@ export async function sendPasswordResetEmail(
       requestTime: data.requestTime || new Date().toLocaleString(),
     },
     tags: ["auth", "password-reset"],
+    workflow: { event: "auth.password_reset", entityId: email },
   });
 }
 
@@ -92,6 +95,7 @@ export async function sendOrderConfirmation(
       orderDate: data.orderDate || new Date().toLocaleDateString(),
     },
     tags: ["transactional", "order", "confirmation"],
+    workflow: { event: "order.confirmation", entityId: data.orderNumber },
   });
 }
 
@@ -112,6 +116,7 @@ export async function sendOrderShipped(
     template: "order_shipped",
     templateData: data,
     tags: ["transactional", "order", "shipping"],
+    workflow: { event: "order.shipped", entityId: data.orderNumber },
   });
 }
 

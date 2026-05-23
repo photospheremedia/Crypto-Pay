@@ -26,7 +26,7 @@ export function DashboardMock({ className }: { className?: string }) {
         <span className="h-3 w-3 rounded-full bg-red-400/90" />
         <span className="h-3 w-3 rounded-full bg-amber-400/90" />
         <span className="h-3 w-3 rounded-full bg-emerald-400/90" />
-        <span className="ml-2 text-xs text-slate-400">CryptivaPay Dashboard</span>
+        <span className="ml-2 text-xs text-slate-400">Crypto Pay Dashboard</span>
       </div>
       <div className="grid gap-4 p-4 sm:grid-cols-3 sm:p-6">
         <div className="rounded-xl bg-slate-800/80 p-4 sm:col-span-1">

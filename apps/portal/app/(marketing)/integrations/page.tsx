@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     "DoorDash integration",
     "Grubhub integration",
     "POS integration",
-    "restaurant API",
+    "business API",
     "menu sync",
     "order aggregation",
   ],
@@ -72,7 +72,7 @@ const posSystems = [
   { name: "NCR", domain: "ncr.com" },
 ];
 
-// Trusted Restaurant Brands
+// Trusted Business Brands
 const trustedBrands = [
   { name: "Pizza Hut", domain: "pizzahut.com" },
   { name: "KFC", domain: "kfc.com" },
@@ -88,7 +88,7 @@ const trustedBrands = [
 const getLogoUrl = (domain: string) => `https://img.logo.dev/${domain}?token=pk_X-1ZO13GSgeOoUrIuJ6GMQ`;
 
 const stats = [
-  { value: "45,000+", label: "Restaurants Trust Us", icon: Store },
+  { value: "45,000+", label: "Businesss Trust Us", icon: Store },
   { value: "250M+", label: "Orders Processed Annually", icon: Package },
   { value: "99.99%", label: "System Uptime", icon: Shield },
   { value: "150+", label: "Integrations", icon: Zap },
@@ -115,7 +115,7 @@ const testimonials = [
     quote: "We expanded from 3 to 15 locations without adding operations staff. The automation handles everything.",
     author: "Amanda Liu",
     role: "CEO & Founder",
-    company: "Golden Dragon Restaurants",
+    company: "Golden Dragon Businesss",
     image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&q=80",
     metric: "5x expansion"
   }
@@ -229,7 +229,7 @@ export default function IntegrationsPage() {
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-10">
             <p className="text-sm font-semibold text-slate-500 uppercase tracking-wider">
-              Trusted by Leading Restaurant Brands Worldwide
+              Trusted by Leading Business Brands Worldwide
             </p>
           </div>
           
@@ -416,7 +416,7 @@ export default function IntegrationsPage() {
               Everything you need to manage online orders
             </p>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              From order management to menu sync to analytics—we've built the tools restaurants actually need.
+              From order management to menu sync to analytics—we've built the tools businesses actually need.
             </p>
           </div>
           
@@ -446,7 +446,7 @@ export default function IntegrationsPage() {
           <div className="text-center mb-16">
             <h2 className="text-sm font-semibold text-orange-600 uppercase tracking-wide mb-3">Testimonials</h2>
             <p className="text-3xl md:text-4xl font-bold text-slate-900">
-              Trusted by restaurants like yours
+              Trusted by businesses like yours
             </p>
           </div>
           
@@ -492,7 +492,7 @@ export default function IntegrationsPage() {
             Ready to simplify your delivery operations?
           </h2>
           <p className="text-lg text-orange-100 mb-8 max-w-2xl mx-auto">
-            Join 45,000+ restaurants that trust our integration technology. Get a personalized demo and see how much time you can save.
+            Join 45,000+ businesses that trust our integration technology. Get a personalized demo and see how much time you can save.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

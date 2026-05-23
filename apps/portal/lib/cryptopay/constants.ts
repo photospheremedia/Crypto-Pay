@@ -9,18 +9,16 @@ export const SUPABASE = {
 } as const;
 
 export const BRAND = {
-  name: "CryptivaPay",
+  name: "Crypto Pay",
   tagline: "Accept Crypto Payments. Instantly. Securely. Globally.",
   email: "support@cryptopay.sale",
   siteUrl: process.env.NEXT_PUBLIC_APP_URL || "https://cryptopay.sale",
 } as const;
 
 export const NAV_LINKS = [
-  { label: "Features", href: "/features" },
   { label: "Pricing", href: "/pricing" },
   { label: "How It Works", href: "/how-it-works" },
   { label: "Developers", href: "/developers" },
-  { label: "Dashboard", href: "/dashboard-preview" },
 ] as const;
 
 export const CRYPTO_OPTIONS = [

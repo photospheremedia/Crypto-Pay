@@ -4,6 +4,7 @@ import { z } from "zod";
 import { redirect } from "next/navigation";
 import { getSupabaseServerClient } from "@crypto-pay/db/supabaseServer";
 import { isAdminEmail } from "@/lib/admin-email";
+import { sendWelcomeEmail } from "@/lib/email";
 
 export type ActionState = {
   error?: string;
@@ -78,22 +79,9 @@ export async function signIn(
 const signUpSchema = z.object({
   email: z.string().email('Invalid email address').min(3).max(255),
   password: z.string().min(8, 'Password must be at least 8 characters').max(100),
-  orgName: z.string().min(2, 'Business name is required').max(120),
-  orgType: z.string().min(2, 'Business type is required').max(80),
-  orgTypeOther: z.string().max(120).optional().default(''),
-  // Location fields - city and state required, others optional
-  addressLine1: z.string().max(160).optional().default(''),
-  addressLine2: z.string().max(160).optional(),
-  city: z.string().min(2, 'City is required').max(80),
-  state: z.string().min(2, 'State is required').max(80),
-  postalCode: z.string().max(20).optional().default(''),
-  country: z.string().max(80).optional().default('US'),
-  phone: z.string().min(6, 'Phone number is required').max(30),
-  // New fields for analytics
-  estimatedLocations: z.string().optional().default('1'),
-  howHeard: z.string().optional().default(''),
-  howHeardOther: z.string().max(120).optional().default(''),
-  newsletterConsent: z.string().optional().default('true').transform(v => v === 'true'),
+  firstName: z.string().min(2, "First name is required").max(80),
+  lastName: z.string().min(2, "Last name is required").max(80),
+  phone: z.string().max(30).optional().default(""),
 });
 
 export async function signUp(
@@ -103,21 +91,9 @@ export async function signUp(
   const payload = {
     email: String(formData.get("email") || ""),
     password: String(formData.get("password") || ""),
-    orgName: String(formData.get("org_name") || ""),
-    orgType: String(formData.get("org_type") || ""),
-    orgTypeOther: String(formData.get("org_type_other") || "") || undefined,
-    addressLine1: String(formData.get("address_line1") || "") || undefined,
-    addressLine2: String(formData.get("address_line2") || "") || undefined,
-    city: String(formData.get("city") || ""),
-    state: String(formData.get("state") || ""),
-    postalCode: String(formData.get("postal_code") || "") || undefined,
-    country: String(formData.get("country") || "US"),
+    firstName: String(formData.get("first_name") || ""),
+    lastName: String(formData.get("last_name") || ""),
     phone: String(formData.get("phone") || ""),
-    // New analytics fields
-    estimatedLocations: String(formData.get("estimated_locations") || "1"),
-    howHeard: String(formData.get("how_heard") || "") || undefined,
-    howHeardOther: String(formData.get("how_heard_other") || "") || undefined,
-    newsletterConsent: String(formData.get("newsletter_consent") || "true"),
   };
 
   const parsed = signUpSchema.safeParse(payload);
@@ -132,23 +108,13 @@ export async function signUp(
   const {
     email,
     password,
-    orgName,
-    orgType,
-    orgTypeOther,
-    addressLine1,
-    addressLine2,
-    city,
-    state,
-    postalCode,
-    country,
+    firstName,
+    lastName,
     phone,
-    estimatedLocations,
-    howHeard,
-    howHeardOther,
-    newsletterConsent,
   } = parsed.data;
   const supabase = await getSupabaseServerClient();
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3001";
+  const fullName = `${firstName.trim()} ${lastName.trim()}`.trim();
 
   let data: Awaited<ReturnType<typeof supabase.auth.signUp>>["data"] | null = null;
   let error: Awaited<ReturnType<typeof supabase.auth.signUp>>["error"] | null = null;
@@ -160,20 +126,10 @@ export async function signUp(
       options: {
         emailRedirectTo: `${appUrl}/auth/callback?next=/account/setup`,
         data: {
-          org_name: orgName,
-          org_type: orgType,
-          org_type_other: orgTypeOther || "",
-          address_line1: addressLine1 || "",
-          address_line2: addressLine2 || "",
-          city,
-          state,
-          postal_code: postalCode || "",
-          country: country || "US",
+          first_name: firstName,
+          last_name: lastName,
+          full_name: fullName,
           phone,
-          estimated_locations: estimatedLocations,
-          how_heard_about_us: howHeard || "",
-          how_heard_other: howHeardOther || "",
-          newsletter_consent: newsletterConsent,
         },
       },
     });
@@ -200,11 +156,18 @@ export async function signUp(
     return { error: userMessage, email };
   }
 
+  // Best-effort welcome email; auth flow should not fail if email sending fails.
+  try {
+    await sendWelcomeEmail(email, {
+      firstName,
+      dashboardUrl: `${appUrl}/account`,
+    });
+  } catch (welcomeError) {
+    console.error("[Auth] Welcome email failed:", welcomeError);
+  }
+
   if (!data.session) {
-    return {
-      success: "Account created! Check your email to verify your account.",
-      email,
-    };
+    redirect(`/login?created=1&verify=1&email=${encodeURIComponent(email)}`);
   }
 
   redirect("/account/setup");

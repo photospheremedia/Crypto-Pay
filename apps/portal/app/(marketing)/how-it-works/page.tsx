@@ -3,7 +3,7 @@ import { CheckCircle2, Link2, ShieldCheck, Wallet } from "lucide-react";
 import { CtaButton, Section, SectionHeading } from "@/components/cryptopay/marketing-section";
 
 export const metadata: Metadata = {
-  title: "How CryptivaPay Works",
+  title: "How Crypto Pay Works",
   description: "A simple walkthrough of setup, payment collection, and confirmation tracking.",
 };
 
@@ -11,7 +11,7 @@ const steps = [
   {
     icon: Wallet,
     title: "Connect your wallet",
-    description: "Use your existing wallet address. CryptivaPay is non-custodial, so you keep control.",
+    description: "Use your existing wallet address so settlement goes directly to your wallet.",
   },
   {
     icon: Link2,
@@ -26,7 +26,7 @@ const steps = [
   {
     icon: ShieldCheck,
     title: "Reconcile and export",
-    description: "Review transaction history and export records for accounting and restaurant operations.",
+    description: "Review transaction history and export records for accounting and business operations.",
   },
 ];
 
@@ -37,7 +37,7 @@ export default function HowItWorksPage() {
         <SectionHeading
           eyebrow="How It Works"
           title="From setup to settlement in minutes"
-          description="CryptivaPay makes crypto acceptance practical for daily restaurant operations."
+          description="Crypto Pay makes crypto acceptance practical for daily business operations."
         />
       </Section>
 
@@ -66,8 +66,8 @@ export default function HowItWorksPage() {
           </p>
           <div className="mt-7 flex flex-wrap justify-center gap-3">
             <CtaButton href="/signup">Start Accepting Crypto</CtaButton>
-            <CtaButton href="/dashboard-preview" variant="outline">
-              Preview dashboard
+            <CtaButton href="/developers" variant="outline">
+              View API docs
             </CtaButton>
           </div>
         </div>

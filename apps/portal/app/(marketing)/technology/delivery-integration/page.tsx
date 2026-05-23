@@ -221,7 +221,7 @@ export default function DeliveryIntegrationPage() {
             Ready to Simplify Your Delivery Operations?
           </h2>
           <p className="text-xl text-orange-100 mb-8">
-            Join 500+ restaurants already saving time and reducing errors with our platform.
+            Join 500+ businesses already saving time and reducing errors with our platform.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link

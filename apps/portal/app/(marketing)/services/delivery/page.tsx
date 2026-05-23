@@ -181,7 +181,7 @@ export default function DeliveryIntegrationPage() {
                 <span className="text-orange-500">impact your bottom line</span>
               </h2>
               <p className="mt-4 text-slate-600">
-                Restaurants using our delivery integration see immediate improvements in
+                Businesss using our delivery integration see immediate improvements in
                 efficiency and order accuracy.
               </p>
               <ul className="mt-8 space-y-4">
@@ -255,7 +255,7 @@ export default function DeliveryIntegrationPage() {
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-orange-100">
               Schedule a demo to see how our delivery integration can transform your
-              restaurant's efficiency and reduce errors.
+              business's efficiency and reduce errors.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <Link

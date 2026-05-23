@@ -15,12 +15,12 @@ export const metadata: Metadata = {
     template: "%s | Crypto Pay",
   },
   description:
-    "Accept crypto payments instantly, securely, and globally. Non-custodial wallet-to-wallet processing for modern merchants.",
+    "Accept crypto payments instantly, securely, and globally. Direct wallet settlement for modern merchants.",
   keywords: [
     "crypto payments",
     "bitcoin payments",
     "merchant crypto",
-    "non-custodial payments",
+    "direct wallet payments",
     "crypto checkout",
     "payment API",
     "wallet payments",
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     url: siteUrl,
     siteName: "Crypto Pay",
     title: "Crypto Pay — Accept Crypto Payments Instantly",
-    description: "Accept crypto payments instantly with non-custodial checkout, settlement tracking, and merchant-ready APIs.",
+    description: "Accept crypto payments instantly with direct wallet checkout, settlement tracking, and merchant-ready APIs.",
     images: [
       {
         url: "/og-image.png",

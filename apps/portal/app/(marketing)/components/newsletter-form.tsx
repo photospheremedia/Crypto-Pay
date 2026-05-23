@@ -101,7 +101,7 @@ export function NewsletterForm({
           </h3>
         </div>
         <p className="text-sm text-slate-600 mb-4">
-          {description || "Get weekly insights on restaurant ops, delivery trends, and supply deals."}
+          {description || "Get weekly insights on business ops, delivery trends, and supply deals."}
         </p>
         <form action={formAction} className="space-y-3">
           <input type="hidden" name="source" value={source} />
@@ -118,7 +118,7 @@ export function NewsletterForm({
             <input
               type="text"
               name="company_name"
-              placeholder="Restaurant / Company name"
+              placeholder="Business / Company name"
               className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-100"
             />
           )}
@@ -166,10 +166,10 @@ export function NewsletterForm({
           </span>
         </div>
         <h3 className="text-xl font-bold mb-2">
-          {title || "Restaurant Ops Weekly"}
+          {title || "Business Ops Weekly"}
         </h3>
         <p className="text-sm text-orange-100 mb-4">
-          {description || "Join 500+ restaurant operators getting weekly tips on delivery optimization, supply savings, and growth strategies."}
+          {description || "Join 500+ business operators getting weekly tips on delivery optimization, supply savings, and growth strategies."}
         </p>
         <form action={formAction} className="space-y-3">
           <input type="hidden" name="source" value={source} />

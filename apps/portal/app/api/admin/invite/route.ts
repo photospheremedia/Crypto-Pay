@@ -245,6 +245,7 @@ export async function POST(req: NextRequest) {
         subject: "You've been invited to Crypto Pay",
         html: emailHtml,
         tags: ['admin-invite', newRole],
+        workflow: { event: "admin.invite_sent", entityId: userId, actorId: user.id },
       });
 
       emailSent = result.success;

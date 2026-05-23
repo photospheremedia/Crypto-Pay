@@ -35,10 +35,10 @@ export function TestimonialsWithImages() {
       <div className="mb-16 text-center">
         <p className="text-xs uppercase tracking-[0.2em] text-orange-600">Client stories</p>
         <h2 className="font-display mt-3 text-3xl font-bold text-slate-900 md:text-4xl">
-          Loved by restaurant operators
+          Loved by business operators
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
-          See how we've helped restaurants streamline operations and grow their business
+          See how we've helped businesses streamline operations and grow their business
         </p>
       </div>
 

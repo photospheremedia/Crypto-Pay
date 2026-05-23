@@ -17,7 +17,7 @@ export default function TermsOfServicePage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-slate-900 mb-4">1. Acceptance of Terms</h2>
               <p className="text-slate-700 leading-relaxed mb-4">
-                Welcome to Crypto Pay. By accessing or using our B2B platform for restaurant management 
+                Welcome to Crypto Pay. By accessing or using our B2B platform for business management 
                 and supply ordering (the "Service"), you agree to be bound by these Terms of Service ("Terms"). 
                 If you do not agree to these Terms, do not use the Service.
               </p>
@@ -71,8 +71,8 @@ export default function TermsOfServicePage() {
                 You may use the Service for legitimate business purposes, including:
               </p>
               <ul className="list-disc pl-6 mb-4 text-slate-700 space-y-2">
-                <li>Browsing and ordering restaurant supplies</li>
-                <li>Managing restaurant operations</li>
+                <li>Browsing and ordering business supplies</li>
+                <li>Managing business operations</li>
                 <li>Communicating with suppliers and support</li>
                 <li>Accessing reports and analytics</li>
               </ul>

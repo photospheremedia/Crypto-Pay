@@ -71,7 +71,7 @@ export default function SuppliesPage() {
             Supplies
           </p>
           <h1 className="font-display mt-3 text-4xl font-semibold text-slate-900 md:text-5xl">
-            Curated supply bundles with restaurant-ready margins.
+            Curated supply bundles with business-ready margins.
           </h1>
           <p className="mt-4 text-lg text-slate-600">
             We build and quote bundles sourced from trusted suppliers, then
@@ -171,7 +171,7 @@ export default function SuppliesPage() {
             Categories we cover
           </p>
           <h2 className="font-display mt-3 text-2xl font-semibold text-slate-900">
-            Everything your restaurant needs.
+            Everything your business needs.
           </h2>
         </div>
         <div className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-4">

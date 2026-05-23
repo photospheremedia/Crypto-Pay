@@ -29,17 +29,40 @@ export function ResetPasswordForm() {
   const isPasswordStrong = hasMinLength && hasUppercase && hasLowercase && hasNumber;
 
   useEffect(() => {
-    const checkSession = async () => {
-      const supabase = getSupabaseBrowserClient();
-      const { data, error } = await supabase.auth.getSession();
+    const supabase = getSupabaseBrowserClient();
+    let isMounted = true;
 
-      if (!data.session || error) {
+    const checkSession = async () => {
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+
+      if (!isMounted) return;
+      if (!user || error) {
         setStatus("invalid");
       }
       setCheckingSession(false);
     };
 
     checkSession();
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (_event) => {
+      if (!isMounted) return;
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        setStatus("idle");
+      }
+      setCheckingSession(false);
+    });
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {

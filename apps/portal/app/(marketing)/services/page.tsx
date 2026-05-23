@@ -17,18 +17,18 @@ import {
 
 export const metadata: Metadata = {
   title: "Services | Crypto Pay",
-  description: "Full-stack restaurant operations services: delivery platform consolidation, supply chain management, brand refresh, menu design, and ongoing support.",
+  description: "Full-stack business operations services: delivery platform consolidation, supply chain management, brand refresh, menu design, and ongoing support.",
   keywords: [
-    "restaurant operations services",
+    "business operations services",
     "delivery consolidation",
     "supply chain management",
-    "restaurant branding",
+    "business branding",
     "menu design services",
-    "restaurant consulting",
+    "business consulting",
   ],
   openGraph: {
-    title: "End-to-End Restaurant Operations Support",
-    description: "From delivery integration to supply procurement to brand refresh. Your single partner for restaurant growth.",
+    title: "End-to-End Business Operations Support",
+    description: "From delivery integration to supply procurement to brand refresh. Your single partner for business growth.",
     url: "https://cryptopay.sale/services",
     type: "website",
     images: [
@@ -132,10 +132,10 @@ export default function ServicesPage() {
             Services
           </p>
           <h1 className="font-display mt-3 text-4xl font-semibold text-slate-900 md:text-5xl">
-            A full-stack partner for restaurant growth.
+            A full-stack partner for business growth.
           </h1>
           <p className="mt-4 text-lg text-slate-600">
-            From delivery stack integration to marketing execution, Restaurant
+            From delivery stack integration to marketing execution, Business
             Hub Solution is the single team that owns your launch plan,
             automation, and ongoing optimization.
           </p>
@@ -186,8 +186,8 @@ export default function ServicesPage() {
       <div className="mt-16 grid gap-4 md:grid-cols-3">
         {[
           { src: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop", alt: "Analytics dashboard" },
-          { src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&h=400&fit=crop", alt: "Restaurant branding" },
-          { src: "https://images.unsplash.com/photo-1604756930505-1b1a0c1ed4a3?w=600&h=400&fit=crop", alt: "Restaurant supplies" },
+          { src: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&h=400&fit=crop", alt: "Business branding" },
+          { src: "https://images.unsplash.com/photo-1604756930505-1b1a0c1ed4a3?w=600&h=400&fit=crop", alt: "Business supplies" },
         ].map((image, index) => (
           <div
             key={image.src}
@@ -210,7 +210,7 @@ export default function ServicesPage() {
             What we do
           </p>
           <h2 className="font-display mt-3 text-3xl font-semibold text-slate-900">
-            End-to-end restaurant operations support.
+            End-to-end business operations support.
           </h2>
         </div>
         <div className="mt-10 grid gap-6 md:grid-cols-2">
@@ -323,7 +323,7 @@ export default function ServicesPage() {
               Book a rollout workshop with our team.
             </h3>
             <p className="mt-2 text-orange-100">
-              Get a personalized plan for your restaurant group in 30 minutes.
+              Get a personalized plan for your business group in 30 minutes.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">

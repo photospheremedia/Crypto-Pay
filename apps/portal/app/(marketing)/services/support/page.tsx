@@ -18,7 +18,7 @@ import {
 
 export const metadata = {
   title: "24/7 Support | Crypto Pay",
-  description: "Expert support available around the clock. Get help with integrations, technical issues, and optimizing your restaurant operations.",
+  description: "Expert support available around the clock. Get help with integrations, technical issues, and optimizing your business operations.",
 };
 
 const supportChannels = [
@@ -75,12 +75,12 @@ const features = [
   {
     icon: Shield,
     title: "Expert Technical Support",
-    description: "Our team includes POS specialists, integration experts, and restaurant industry veterans who understand your challenges.",
+    description: "Our team includes POS specialists, integration experts, and business industry veterans who understand your challenges.",
   },
   {
     icon: Globe,
     title: "Multilingual Support",
-    description: "Support available in English, Spanish, Mandarin, and 10+ other languages to serve restaurants nationwide.",
+    description: "Support available in English, Spanish, Mandarin, and 10+ other languages to serve businesses nationwide.",
   },
   {
     icon: FileText,
@@ -190,7 +190,7 @@ export default function SupportPage() {
             </h2>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto">
               We&apos;re not just a help desk—we&apos;re your partner in success. Our team understands 
-              the restaurant industry inside and out.
+              the business industry inside and out.
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -268,7 +268,7 @@ export default function SupportPage() {
             Ready to Get Started?
           </h2>
           <p className="text-orange-100 text-lg mb-8">
-            Join thousands of restaurants who trust us with their operations.
+            Join thousands of businesses who trust us with their operations.
             Our team is ready to help you succeed.
           </p>
           <div className="flex flex-wrap justify-center gap-4">

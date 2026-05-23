@@ -118,6 +118,34 @@ export function OnboardingForm({ defaultEmail }: { defaultEmail: string }) {
                 className="mt-1 w-full rounded-full border border-slate-300 px-4 py-2 text-sm text-slate-900 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
               />
             </div>
+            <div>
+              <label className="text-sm font-medium text-slate-700">Business phone</label>
+              <input
+                name="phone"
+                type="tel"
+                required
+                inputMode="tel"
+                pattern="^\+?[1-9]\d{7,14}$"
+                title="Use international format, for example +14155552671"
+                placeholder="+14155552671"
+                className="mt-1 w-full rounded-full border border-slate-300 px-4 py-2 text-sm text-slate-900 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+              />
+              <p className="mt-1 text-xs text-slate-500">
+                Include country code for fastest onboarding.
+              </p>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-slate-700">Business address</label>
+              <input
+                name="business_address"
+                type="text"
+                required
+                minLength={8}
+                maxLength={180}
+                placeholder="123 Market Street, San Francisco, CA"
+                className="mt-1 w-full rounded-full border border-slate-300 px-4 py-2 text-sm text-slate-900 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200"
+              />
+            </div>
 
             {state.error ? (
               <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">

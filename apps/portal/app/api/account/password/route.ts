@@ -6,6 +6,7 @@ export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient();
     const { currentPassword, newPassword } = await request.json();
+    const normalizedPassword = String(newPassword || "");
 
     // Get current user
     const { data: { user }, error: userError } = await supabase.auth.getUser();
@@ -17,35 +18,37 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (normalizedPassword.length < 8) {
+      return NextResponse.json(
+        { error: "Password must be at least 8 characters" },
+        { status: 400 }
+      );
+    }
+
     // Rate limiting - 5 attempts per 15 minutes per user (via Edge Function)
     const rateLimitResult = await checkRateLimit('login', user.id);
     if (!rateLimitResult.success) {
       return createRateLimitResponse(rateLimitResult.limit, rateLimitResult.remaining, rateLimitResult.reset);
     }
 
-    // If user has a password, verify current password first
-    if (currentPassword) {
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email: user.email!,
-        password: currentPassword,
-      });
-
-      if (signInError) {
-        return NextResponse.json(
-          { error: "Current password is incorrect" },
-          { status: 400 }
-        );
-      }
-    }
-
-    // Update password
-    const { error: updateError } = await supabase.auth.updateUser({
-      password: newPassword,
-    });
+    // Use Supabase's built-in current password verification when provided.
+    const { error: updateError } = await supabase.auth.updateUser(
+      currentPassword
+        ? {
+            password: normalizedPassword,
+            currentPassword,
+          }
+        : {
+            password: normalizedPassword,
+          }
+    );
 
     if (updateError) {
+      const message = updateError.message.toLowerCase().includes("current password")
+        ? "Current password is incorrect"
+        : updateError.message;
       return NextResponse.json(
-        { error: updateError.message },
+        { error: message },
         { status: 400 }
       );
     }

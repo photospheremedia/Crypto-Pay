@@ -10,7 +10,7 @@ interface PasswordChangeFormProps {
 
 export default function PasswordChangeForm({ hasPassword, userEmail }: PasswordChangeFormProps) {
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -43,7 +43,7 @@ export default function PasswordChangeForm({ hasPassword, userEmail }: PasswordC
     e.preventDefault();
     setLoading(true);
     setError("");
-    setSuccess(false);
+    setSuccessMessage("");
 
     // Validation
     if (hasPassword && !currentPassword) {
@@ -80,12 +80,12 @@ export default function PasswordChangeForm({ hasPassword, userEmail }: PasswordC
         throw new Error(data.error || "Failed to update password");
       }
 
-      setSuccess(true);
+      setSuccessMessage(hasPassword ? "Password updated successfully" : "Password set successfully");
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
       
-      setTimeout(() => setSuccess(false), 5000);
+      setTimeout(() => setSuccessMessage(""), 5000);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -96,7 +96,7 @@ export default function PasswordChangeForm({ hasPassword, userEmail }: PasswordC
   const handleSendResetEmail = async () => {
     setLoading(true);
     setError("");
-    setSuccess(false);
+    setSuccessMessage("");
 
     try {
       const response = await fetch("/api/account/password-reset", {
@@ -111,7 +111,9 @@ export default function PasswordChangeForm({ hasPassword, userEmail }: PasswordC
         throw new Error(data.error || "Failed to send reset email");
       }
 
-      setSuccess(true);
+      setSuccessMessage(
+        data.message || "If an account exists for this email, a reset link has been sent."
+      );
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -122,12 +124,10 @@ export default function PasswordChangeForm({ hasPassword, userEmail }: PasswordC
   return (
     <div className="space-y-6">
       {/* Success/Error Messages */}
-      {success && (
+      {successMessage && (
         <div className="flex items-center gap-2 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-900/30 rounded-lg">
           <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400" />
-          <p className="text-sm text-green-700 dark:text-green-400">
-            {hasPassword ? "Password updated successfully" : "Password set successfully"}
-          </p>
+          <p className="text-sm text-green-700 dark:text-green-400">{successMessage}</p>
         </div>
       )}
 

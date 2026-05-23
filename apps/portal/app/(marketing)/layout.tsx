@@ -26,7 +26,10 @@ export default function MarketingLayout({
 
         <CartProvider>
           <CryptoPayHeader />
-          <main id="main-content" className="relative z-10">
+          <main
+            id="main-content"
+            className="relative z-10 [&>*:first-child]:!pt-10 sm:[&>*:first-child]:!pt-12 lg:[&>*:first-child]:!pt-14"
+          >
             {children}
           </main>
         </CartProvider>

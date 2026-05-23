@@ -6,16 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, ArrowLeft, Mail, CheckCircle2, AlertCircle } from "lucide-react";
-import { getSupabaseBrowserClient } from "@crypto-pay/db/supabaseClient";
 
 export function ForgotPasswordForm() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
-
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 
-    (typeof window !== "undefined" ? window.location.origin : "http://localhost:3001");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,14 +20,16 @@ export function ForgotPasswordForm() {
     setLoading(true);
 
     try {
-      const supabase = getSupabaseBrowserClient();
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${appUrl}/reset-password`,
+      const response = await fetch("/api/account/password-reset", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
       });
+      const payload = await response.json();
 
-      if (error) {
+      if (!response.ok) {
         setStatus("error");
-        setErrorMessage(error.message || "Failed to send reset email. Please try again.");
+        setErrorMessage(payload.error || "Failed to send reset email. Please try again.");
       } else {
         setStatus("success");
       }
@@ -56,8 +54,9 @@ export function ForgotPasswordForm() {
               Check your email
             </h2>
             <p className="text-slate-600 mb-6">
-              We sent a password reset link to{" "}
+              If an account exists for{" "}
               <span className="font-medium text-slate-900">{email}</span>
+              , you&apos;ll receive a password reset link shortly.
             </p>
             <div className="space-y-3 text-sm text-slate-500">
               <p>The link will expire in 1 hour.</p>

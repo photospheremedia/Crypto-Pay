@@ -19,6 +19,12 @@ export interface EmailOptions {
   tags?: string[];
   scheduledAt?: Date;
   from?: string;
+  idempotencyKey?: string;
+  workflow?: {
+    event: string;
+    entityId?: string;
+    actorId?: string;
+  };
 }
 
 export interface EmailResult {
@@ -29,6 +35,32 @@ export interface EmailResult {
 
 import { emailTemplates, type EmailTemplate } from './templates';
 import { getEmailFrom, getReplyTo } from './config';
+
+function sanitizeToken(value: string): string {
+  return value.replace(/[^a-zA-Z0-9._:/-]/g, "-").slice(0, 120);
+}
+
+function buildWorkflowIdempotencyKey(
+  workflow: EmailOptions["workflow"],
+  recipients: EmailRecipient[],
+): string | undefined {
+  if (!workflow?.event) return undefined;
+
+  const recipientKey = recipients
+    .map((recipient) => recipient.email.trim().toLowerCase())
+    .sort()
+    .join(",");
+
+  const parts = [
+    sanitizeToken(workflow.event),
+    workflow.entityId ? sanitizeToken(workflow.entityId) : "",
+    workflow.actorId ? sanitizeToken(workflow.actorId) : "",
+    sanitizeToken(recipientKey),
+  ].filter(Boolean);
+
+  const key = parts.join("/");
+  return key.slice(0, 256);
+}
 
 /**
  * Send email via Resend on Vercel (RESEND_API_KEY) or Supabase Edge Function fallback.
@@ -61,20 +93,29 @@ export async function sendEmail(options: EmailOptions): Promise<EmailResult> {
     const fromEmail = options.from || getEmailFrom();
     const replyTo = options.replyTo || getReplyTo();
     const htmlBody = html || options.text || "";
+    const mergedTags = [
+      ...(options.tags || []),
+      ...(options.workflow?.event ? [`workflow:${options.workflow.event}`] : []),
+    ].slice(0, 10);
+    const resolvedIdempotencyKey =
+      options.idempotencyKey || buildWorkflowIdempotencyKey(options.workflow, recipients);
 
     // Primary: direct Resend (Vercel env RESEND_API_KEY)
     if (resendKey) {
       const { Resend } = await import("resend");
       const resend = new Resend(resendKey);
-      const { data, error } = await resend.emails.send({
-        from: fromEmail,
-        to: toAddresses,
-        subject,
-        html: htmlBody,
-        text: options.text,
-        replyTo,
-        tags: options.tags?.map((name) => ({ name, value: "true" })),
-      });
+      const { data, error } = await resend.emails.send(
+        {
+          from: fromEmail,
+          to: toAddresses,
+          subject,
+          html: htmlBody,
+          text: options.text,
+          replyTo,
+          tags: mergedTags.map((name) => ({ name, value: "true" })),
+        },
+        resolvedIdempotencyKey ? { idempotencyKey: resolvedIdempotencyKey } : undefined,
+      );
 
       if (error) {
         console.error("Resend error:", error);
@@ -104,7 +145,9 @@ export async function sendEmail(options: EmailOptions): Promise<EmailResult> {
         html: htmlBody,
         text: options.text,
         replyTo,
-        tags: options.tags,
+        tags: mergedTags,
+        idempotencyKey: resolvedIdempotencyKey,
+        workflow: options.workflow,
       }),
     });
 

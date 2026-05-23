@@ -60,7 +60,7 @@ export function BenefitsSection() {
         {/* Section Header */}
         <div className="mb-16 text-center max-w-2xl mx-auto">
           <p className="text-sm uppercase tracking-widest text-orange-600 font-semibold mb-4">
-            Why restaurants switch to Crypto Pay
+            Why businesses switch to Crypto Pay
           </p>
           <h2 className="text-4xl font-bold text-slate-900 mb-6">
             The real results that matter
@@ -117,10 +117,10 @@ export function BenefitsSection() {
         {/* Bottom CTA Section */}
         <div className="bg-linear-to-r from-orange-500/10 via-transparent to-orange-500/10 rounded-2xl border border-orange-200/50 p-12 text-center">
           <h3 className="text-2xl font-bold text-slate-900 mb-4">
-            Ready to transform your restaurant?
+            Ready to transform your business?
           </h3>
           <p className="text-lg text-slate-600 mb-8 max-w-2xl mx-auto">
-            Join 1,200+ restaurants that are saving money, reducing stress, and growing faster with Crypto Pay.
+            Join 1,200+ businesses that are saving money, reducing stress, and growing faster with Crypto Pay.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

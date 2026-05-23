@@ -60,7 +60,7 @@ interface Review {
 // Generate sample reviews - in production, fetch from API
 const generateSampleReviews = (productId: string, count: number): Review[] => {
   const reviewTemplates = [
-    { name: "Sarah M.", title: "Perfect for our restaurant!", text: "These are exactly what we needed. Great quality, secure packaging, and customers love them. Will definitely reorder.", rating: 5 },
+    { name: "Sarah M.", title: "Perfect for our business!", text: "These are exactly what we needed. Great quality, secure packaging, and customers love them. Will definitely reorder.", rating: 5 },
     { name: "Michael R.", title: "Best value we've found", text: "After trying several brands, these are by far the best. The quality is outstanding and the price point is excellent for bulk ordering.", rating: 5 },
     { name: "Jennifer L.", title: "Great product, fast shipping", text: "Very happy with the quality. Shipping was faster than expected. Only minor issue is sizing ran slightly smaller than expected.", rating: 4 },
     { name: "David K.", title: "Solid choice for busy kitchens", text: "We go through hundreds of these a week. Consistent quality and our staff finds them easy to use. Highly recommend.", rating: 5 },
@@ -97,7 +97,7 @@ const productDatabase: Record<string, Product & {
     id: "takeout-containers-001",
     name: "Premium Takeout Containers with Lids (200 ct)",
     description: "Microwavable, stackable containers with secure lids. Perfect for hot and cold foods.",
-    longDescription: `Our Premium Takeout Containers are the gold standard for food service packaging. Designed with your restaurant's efficiency in mind, these containers feature:
+    longDescription: `Our Premium Takeout Containers are the gold standard for food service packaging. Designed with your business's efficiency in mind, these containers feature:
 
 • **Secure Snap-Lock Lids** - No more spills during delivery
 • **Microwave Safe** - Customers can reheat without transferring food
@@ -260,9 +260,9 @@ export default function ProductDetailPage() {
       const productSeed = productId.replace(/[^a-z0-9]/gi, '').slice(0, 10) || 'product';
       setProduct({
         id: productId,
-        name: "Premium Restaurant Supply",
-        description: "High-quality supplies for your restaurant needs.",
-        longDescription: "Our premium supplies are designed with quality and durability in mind. Perfect for busy restaurants and commercial kitchens.",
+        name: "Premium Business Supply",
+        description: "High-quality supplies for your business needs.",
+        longDescription: "Our premium supplies are designed with quality and durability in mind. Perfect for busy businesses and commercial kitchens.",
         category: "general",
         priceCents: 9900,
         image: `https://picsum.photos/seed/${productSeed}/800/600`,

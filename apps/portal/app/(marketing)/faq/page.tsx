@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   title: "FAQ | Crypto Pay",
   description: "Frequently asked questions about Crypto Pay. Learn about delivery integration, pricing, setup time, and more.",
   keywords: [
-    "restaurant hub faq",
+    "business hub faq",
     "delivery integration questions",
     "setup time",
     "pricing questions",
@@ -24,7 +24,7 @@ const faqs = [
     category: "Getting Started",
     question: "What is Crypto Pay?",
     answer:
-      "Crypto Pay is an all-in-one partner for restaurant groups. We consolidate your delivery platforms into one tablet, refresh your menu and branding, and provide curated supplies at reseller pricing — all managed through a single portal.",
+      "Crypto Pay is an all-in-one partner for business groups. We consolidate your delivery platforms into one tablet, refresh your menu and branding, and provide curated supplies at reseller pricing — all managed through a single portal.",
   },
   {
     category: "Getting Started",
@@ -60,7 +60,7 @@ const faqs = [
     category: "Multi-Location",
     question: "Do you offer enterprise pricing?",
     answer:
-      "Yes. Restaurant groups with 5+ locations qualify for volume discounts on both services and supply orders. Contact us for a custom quote.",
+      "Yes. Business groups with 5+ locations qualify for volume discounts on both services and supply orders. Contact us for a custom quote.",
   },
   {
     category: "Supplies",

@@ -5,7 +5,7 @@ import { CtaButton, Section, SectionHeading } from "@/components/cryptopay/marke
 
 export const metadata: Metadata = {
   title: "Developers",
-  description: "Build payment links, automate workflows, and monitor crypto payment events for restaurant systems.",
+  description: "Build payment links, automate workflows, and monitor crypto payment events for business systems.",
 };
 
 const blocks = [
@@ -45,7 +45,7 @@ export default function DevelopersPage() {
       <Section className="pb-8 pt-12">
         <SectionHeading
           eyebrow="Developers"
-          title="Integrate CryptivaPay into your stack"
+          title="Integrate Crypto Pay into your stack"
           description="From no-code payment links to backend-driven charge creation and webhooks for POS and ordering systems."
         />
       </Section>

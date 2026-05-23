@@ -29,8 +29,8 @@ const posSystems = [
   { name: "NCR", domain: "ncr.com" },
 ];
 
-// Restaurant brands
-const trustedRestaurants = [
+// Business brands
+const trustedBusinesss = [
   { name: "Pizza Hut", domain: "pizzahut.com" },
   { name: "KFC", domain: "kfc.com" },
   { name: "Taco Bell", domain: "tacobell.com" },
@@ -61,7 +61,7 @@ export function IntegrationsShowcase() {
             </h2>
             <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">
               Integrate all your delivery platforms and POS systems into one unified dashboard. 
-              Join 45,000+ restaurants worldwide.
+              Join 45,000+ businesses worldwide.
             </p>
           </motion.div>
         </div>
@@ -192,13 +192,13 @@ export function IntegrationsShowcase() {
               Trusted by Industry Leaders
             </p>
             <h3 className="mt-2 text-2xl md:text-3xl font-bold text-white">
-              45,000+ Restaurants Worldwide
+              45,000+ Businesss Worldwide
             </h3>
           </div>
           
-          {/* Restaurant Logo Grid - Full Color */}
+          {/* Business Logo Grid - Full Color */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 mb-8">
-            {trustedRestaurants.map((brand, index) => (
+            {trustedBusinesss.map((brand, index) => (
               <motion.div
                 key={brand.name}
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -220,7 +220,7 @@ export function IntegrationsShowcase() {
           {/* Stats Row */}
           <div className="pt-8 border-t border-slate-700 grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { value: "45,000+", label: "Restaurants" },
+              { value: "45,000+", label: "Businesss" },
               { value: "250M+", label: "Orders/Year" },
               { value: "99.99%", label: "Uptime" },
               { value: "150+", label: "Integrations" },

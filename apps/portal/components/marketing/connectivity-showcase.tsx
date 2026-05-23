@@ -70,7 +70,7 @@ export function ConnectivityShowcase() {
             One platform, infinite possibilities
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
-            Connect your entire restaurant tech stack in minutes, not weeks
+            Connect your entire business tech stack in minutes, not weeks
           </p>
         </div>
 

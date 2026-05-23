@@ -90,7 +90,7 @@ const process = [
   {
     step: "Strategy",
     title: "Custom Strategy",
-    description: "Develop a marketing plan tailored to your restaurant's goals and budget.",
+    description: "Develop a marketing plan tailored to your business's goals and budget.",
   },
   {
     step: "Execute",
@@ -286,11 +286,11 @@ export default function MarketingPage() {
           <div className="rounded-3xl bg-linear-to-br from-amber-600 to-amber-700 p-10 text-center text-white shadow-2xl shadow-amber-600/30 lg:p-16">
             <TrendingUp className="mx-auto mb-6 h-12 w-12 text-amber-200" />
             <h2 className="font-display text-3xl font-bold lg:text-4xl">
-              Ready to grow your restaurant?
+              Ready to grow your business?
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-amber-100">
               Let's build a marketing strategy that drives measurable results for your
-              restaurant.
+              business.
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-4">
               <Link

@@ -98,7 +98,7 @@ export default function CustomOrderingPage() {
               </div>
               
               <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6">
-                Your Restaurant.<br />Your Website.<br />Zero Commissions.
+                Your Business.<br />Your Website.<br />Zero Commissions.
               </h1>
               
               <p className="text-xl text-blue-100/80 mb-8">
@@ -129,7 +129,7 @@ export default function CustomOrderingPage() {
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-10 h-10 rounded-full bg-linear-to-br from-orange-400 to-red-500" />
                   <div>
-                    <div className="font-bold text-slate-900">Your Restaurant</div>
+                    <div className="font-bold text-slate-900">Your Business</div>
                     <div className="text-sm text-slate-500">Online Ordering</div>
                   </div>
                 </div>
@@ -176,7 +176,7 @@ export default function CustomOrderingPage() {
               Third-Party Apps vs Direct Ordering
             </h2>
             <p className="text-lg text-slate-600">
-              See why restaurants are switching to direct ordering
+              See why businesses are switching to direct ordering
             </p>
           </div>
           

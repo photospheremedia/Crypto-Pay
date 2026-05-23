@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
  * Improved Hero Section - ChowNow inspired
  * 
  * Key improvements:
- * 1. Problem-first headline addressing restaurant pain point
+ * 1. Problem-first headline addressing business pain point
  * 2. Specific ROI metrics ($X savings, X% increase)
  * 3. Trust badges (customer count, awards, support)
  * 4. Clear CTA buttons
@@ -29,7 +29,7 @@ export function HeroImproved() {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-100/50 border border-orange-200 mb-6">
             <Zap className="h-4 w-4 text-orange-600" />
             <span className="text-sm font-semibold text-orange-700">
-              Boost your restaurant operations
+              Boost your business operations
             </span>
           </div>
 
@@ -38,7 +38,7 @@ export function HeroImproved() {
           </h1>
 
           <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto mb-8 leading-relaxed">
-            Restaurant operators save an average of <span className="font-semibold text-slate-900">$18,000/year</span> using Crypto Pay's unified platform for delivery consolidation, supply management, and operations.
+            Business operators save an average of <span className="font-semibold text-slate-900">$18,000/year</span> using Crypto Pay's unified platform for delivery consolidation, supply management, and operations.
           </p>
 
           {/* CTA Buttons */}
@@ -62,7 +62,7 @@ export function HeroImproved() {
               <Users className="h-5 w-5 text-orange-600" />
               <div className="text-left">
                 <p className="text-2xl font-bold text-slate-900">1,200+</p>
-                <p className="text-sm text-slate-600">Active Restaurants</p>
+                <p className="text-sm text-slate-600">Active Businesss</p>
               </div>
             </div>
             <div className="flex items-center gap-2">

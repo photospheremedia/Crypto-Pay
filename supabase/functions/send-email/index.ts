@@ -32,6 +32,12 @@ interface EmailPayload {
   from?: string;
   replyTo?: string;
   tags?: string[];
+  idempotencyKey?: string;
+  workflow?: {
+    event?: string;
+    entityId?: string;
+    actorId?: string;
+  };
 }
 
 async function sendViaResend(
@@ -40,7 +46,9 @@ async function sendViaResend(
   html: string,
   from: string,
   replyTo: string,
-  tags?: string[]
+  tags?: string[],
+  text?: string,
+  idempotencyKey?: string,
 ) {
   const apiKey = Deno.env.get("RESEND_API_KEY");
   if (!apiKey) {
@@ -52,12 +60,14 @@ async function sendViaResend(
     headers: {
       "Authorization": `Bearer ${apiKey}`,
       "Content-Type": "application/json",
+      ...(idempotencyKey ? { "Idempotency-Key": idempotencyKey } : {}),
     },
     body: JSON.stringify({
       from,
       to,
       subject,
       html,
+      text,
       reply_to: replyTo,
       tags: tags?.map((tag) => ({ name: tag, value: "true" })),
     }),
@@ -66,7 +76,7 @@ async function sendViaResend(
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(`Resend API error: ${data.message}`);
+    throw new Error(`Resend API error (${response.status}): ${data?.message || "unknown"}`);
   }
 
   return data;
@@ -135,6 +145,8 @@ serve(async (req) => {
       Deno.env.get("EMAIL_REPLY_TO") ||
       "support@cryptopay.sale";
     let html = payload.html || "";
+    const workflowTag = payload.workflow?.event ? [`workflow:${payload.workflow.event}`] : [];
+    const mergedTags = [...(payload.tags || []), ...workflowTag].slice(0, 10);
 
     // If template is specified, use it (simplified - can be extended)
     if (payload.template && payload.templateData) {
@@ -145,7 +157,16 @@ serve(async (req) => {
 
     // Send email with automatic retry
     const result = await retryWithBackoff(() =>
-      sendViaResend(to, payload.subject, html, from, replyTo, payload.tags)
+      sendViaResend(
+        to,
+        payload.subject,
+        html,
+        from,
+        replyTo,
+        mergedTags,
+        payload.text,
+        payload.idempotencyKey,
+      )
     );
 
     console.log(`📧 Email sent successfully: ${result.id}`);

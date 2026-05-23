@@ -32,39 +32,27 @@ test.describe('Authentication Flow', () => {
     expect(hasSignupForm || hasEmailInput || hasPasswordInput).toBeTruthy();
   });
 
-  test('signup multi-step flow submits successfully', async ({ page }) => {
+  test('signup flow submits successfully', async ({ page }) => {
     await page.goto('/signup');
     await page.waitForLoadState('networkidle');
 
-    // Step 1: business info
-    await page.getByLabel(/company \/ project name/i).fill('Crypto Pay QA Merchant');
-    await page.getByRole('button', { name: /online merchant/i }).click();
-    await page.locator('#estimated_locations').selectOption('1');
-    await page.locator('#how_heard').selectOption('google');
-    await page.getByRole('button', { name: 'Continue', exact: true }).click();
-
-    // Step 2: location & contact
-    await page.getByLabel(/^city \*/i).fill('Miami');
-    await page.getByLabel(/^state \*/i).fill('FL');
-    await page.getByLabel(/phone number \*/i).fill('+1 305 555 0110');
-    await page.getByRole('button', { name: 'Continue', exact: true }).click();
-
-    // Step 3: account
+    // Current signup form is minimal: email + password
     const uniqueEmail = `qa-signup-${Date.now()}@outlook.com`;
-    await page.getByLabel(/email address \*/i).fill(uniqueEmail);
-    await page.getByLabel(/^password \*/i).fill('StrongPass123!');
-    await page.getByRole('button', { name: /create account/i }).click();
+    await page.getByLabel(/^email$/i).fill(uniqueEmail);
+    await page.getByLabel(/^password$/i).fill('StrongPass123!');
+    await page.getByRole('button', { name: /sign up/i }).click();
 
-    // Sign-up may redirect (when email confirm disabled) or show success message.
+    // Sign-up may redirect to setup (auto-session) or login with created flag (email verify flow).
     await expect
       .poll(
         async () => {
           const onSetupPage = /\/account\/setup/.test(page.url());
+          const onLoginCreated = /\/login\?created=1&email=/.test(page.url());
           const hasSuccessMessage =
             (await page.getByText(/account created|check your email|verify your account/i).count()) > 0;
           const hasRateLimitMessage =
             (await page.getByText(/email rate limit exceeded|temporarily rate-limited/i).count()) > 0;
-          return onSetupPage || hasSuccessMessage || hasRateLimitMessage;
+          return onSetupPage || onLoginCreated || hasSuccessMessage || hasRateLimitMessage;
         },
         { timeout: 15000 }
       )

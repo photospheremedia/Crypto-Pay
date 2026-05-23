@@ -14,6 +14,9 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect') ?? searchParams.get('redirectTo');
   const priceId = searchParams.get('priceId');
+  const accountCreated = searchParams.get('created') === '1';
+  const verificationPending = searchParams.get('verify') === '1';
+  const pendingEmail = searchParams.get('email');
   const [existingUser, setExistingUser] = useState(false);
   const [state, formAction, pending] = useActionState<ActionState, FormData>(
     mode === 'signin' ? signIn : signUp,
@@ -30,6 +33,14 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
     checkUser();
   }, []);
 
+  const buildAuthHref = (target: '/login' | '/signup') => {
+    const params = new URLSearchParams();
+    if (redirect) params.set('redirect', redirect);
+    if (priceId) params.set('priceId', priceId);
+    const query = params.toString();
+    return query ? `${target}?${query}` : target;
+  };
+
   return (
     <div className="min-h-screen bg-white flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
@@ -45,7 +56,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
               <>
                 New to Crypto Pay?{' '}
                 <Link
-                  href="/signup"
+                  href={buildAuthHref('/signup')}
                   className="font-semibold text-emerald-600 hover:text-cyan-600 transition"
                 >
                   Create an account
@@ -55,7 +66,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
               <>
                 Already have an account?{' '}
                 <Link
-                  href="/login"
+                  href={buildAuthHref('/login')}
                   className="font-semibold text-emerald-600 hover:text-cyan-600 transition"
                 >
                   Sign in
@@ -67,6 +78,51 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
 
         {/* Form Card */}
         <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 px-6 py-8 sm:px-10 sm:py-12">
+          {mode === 'signin' && accountCreated && (
+            <div className="mb-4 rounded-lg bg-emerald-50 border border-emerald-200 p-4">
+              <p className="text-sm text-emerald-800">
+                <strong>Account created.</strong>{" "}
+                {verificationPending ? (
+                  pendingEmail ? (
+                    <>We sent a confirmation link to <strong>{pendingEmail}</strong>. Please verify your email, then sign in.</>
+                  ) : (
+                    <>We sent a confirmation email. Please verify your email, then sign in.</>
+                  )
+                ) : pendingEmail ? (
+                  `Sign in with ${pendingEmail} to continue.`
+                ) : (
+                  "Sign in to continue to your dashboard."
+                )}
+              </p>
+            </div>
+          )}
+          {existingUser && mode === 'signin' && (
+            <div className="mb-4 rounded-lg bg-emerald-50 border border-emerald-200 p-4">
+              <p className="text-sm text-emerald-800">
+                <strong>You are already signed in.</strong>{' '}
+                Go to your dashboard or sign out to switch accounts.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Link
+                  href="/account"
+                  className="inline-flex items-center rounded-full bg-emerald-600 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-700"
+                >
+                  Continue to dashboard
+                </Link>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    const supabase = getSupabaseBrowserClientOptional();
+                    if (supabase) await supabase.auth.signOut();
+                    setExistingUser(false);
+                  }}
+                  className="inline-flex items-center rounded-full border border-emerald-300 px-4 py-2 text-xs font-semibold text-emerald-700 hover:bg-emerald-100"
+                >
+                  Sign out
+                </button>
+              </div>
+            </div>
+          )}
           {existingUser && mode === 'signup' && (
             <div className="mb-4 rounded-lg bg-amber-50 border border-amber-200 p-4">
               <p className="text-sm text-amber-800">
@@ -87,7 +143,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
           {mode === 'signup' && !existingUser && (
             <div className="mb-4 rounded-lg bg-cyan-50 border border-cyan-200 p-4">
               <p className="text-sm text-blue-800">
-                <strong>New here?</strong> Create your account with your business details and email below.
+                <strong>New here?</strong> Create your account with your email and password to get started.
               </p>
             </div>
           )}
@@ -96,172 +152,50 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
           <form className="space-y-6 mt-6" action={formAction}>
             <input type="hidden" name="redirect" value={redirect || ''} />
             <input type="hidden" name="priceId" value={priceId || ''} />
-            {mode === 'signup' ? (
-              <div className="space-y-4">
+            {mode === "signup" && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <Label
-                    htmlFor="org_name"
+                    htmlFor="first_name"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Organization name
+                    First name
                   </Label>
                   <div className="mt-1">
                     <Input
-                      id="org_name"
-                      name="org_name"
+                      id="first_name"
+                      name="first_name"
                       type="text"
+                      autoComplete="given-name"
                       required
-                      maxLength={120}
+                      maxLength={80}
                       className="appearance-none rounded-full relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 focus:z-10 sm:text-sm"
-                      placeholder="Your business name"
+                      placeholder="First name"
                     />
                   </div>
                 </div>
                 <div>
                   <Label
-                    htmlFor="org_type"
+                    htmlFor="last_name"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Organization type
+                    Last name
                   </Label>
                   <div className="mt-1">
-                    <select
-                      id="org_type"
-                      name="org_type"
-                      required
-                      aria-label="Organization type"
-                      className="w-full rounded-full border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
-                      defaultValue=""
-                    >
-                      <option value="" disabled>
-                        Select one
-                      </option>
-                      <option>Online merchant</option>
-                      <option>SaaS / Platform</option>
-                      <option>Crypto exchange</option>
-                      <option>Agency / Integrator</option>
-                      <option>Other</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="sm:col-span-2">
-                    <Label
-                      htmlFor="address_line1"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Address line 1
-                    </Label>
                     <Input
-                      id="address_line1"
-                      name="address_line1"
+                      id="last_name"
+                      name="last_name"
                       type="text"
-                      required
-                      maxLength={160}
-                      className="mt-1 rounded-full border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
-                      placeholder="Street address"
-                    />
-                  </div>
-                  <div className="sm:col-span-2">
-                    <Label
-                      htmlFor="address_line2"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Address line 2
-                    </Label>
-                    <Input
-                      id="address_line2"
-                      name="address_line2"
-                      type="text"
-                      maxLength={160}
-                      className="mt-1 rounded-full border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
-                      placeholder="Suite, unit, floor (optional)"
-                    />
-                  </div>
-                  <div>
-                    <Label
-                      htmlFor="city"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      City
-                    </Label>
-                    <Input
-                      id="city"
-                      name="city"
-                      type="text"
+                      autoComplete="family-name"
                       required
                       maxLength={80}
-                      className="mt-1 rounded-full border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
-                    />
-                  </div>
-                  <div>
-                    <Label
-                      htmlFor="state"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      State / Region
-                    </Label>
-                    <Input
-                      id="state"
-                      name="state"
-                      type="text"
-                      required
-                      maxLength={80}
-                      className="mt-1 rounded-full border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
-                    />
-                  </div>
-                  <div>
-                    <Label
-                      htmlFor="postal_code"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Postal code
-                    </Label>
-                    <Input
-                      id="postal_code"
-                      name="postal_code"
-                      type="text"
-                      required
-                      maxLength={20}
-                      className="mt-1 rounded-full border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
-                    />
-                  </div>
-                  <div>
-                    <Label
-                      htmlFor="country"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Country
-                    </Label>
-                    <Input
-                      id="country"
-                      name="country"
-                      type="text"
-                      required
-                      maxLength={80}
-                      className="mt-1 rounded-full border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
-                    />
-                  </div>
-                  <div className="sm:col-span-2">
-                    <Label
-                      htmlFor="phone"
-                      className="block text-sm font-medium text-gray-700"
-                    >
-                      Phone number
-                    </Label>
-                    <Input
-                      id="phone"
-                      name="phone"
-                      type="tel"
-                      required
-                      maxLength={30}
-                      className="mt-1 rounded-full border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
-                      placeholder="+1 555 123 4567"
+                      className="appearance-none rounded-full relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 focus:z-10 sm:text-sm"
+                      placeholder="Last name"
                     />
                   </div>
                 </div>
               </div>
-            ) : null}
+            )}
             <div>
               <Label
                 htmlFor="email"
@@ -283,6 +217,27 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                 />
               </div>
             </div>
+            {mode === "signup" && (
+              <div>
+                <Label
+                  htmlFor="phone"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Phone (optional)
+                </Label>
+                <div className="mt-1">
+                  <Input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    autoComplete="tel"
+                    maxLength={30}
+                    className="appearance-none rounded-full relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 focus:z-10 sm:text-sm"
+                    placeholder="+1 (555) 123-4567"
+                  />
+                </div>
+              </div>
+            )}
 
             <div>
               <Label

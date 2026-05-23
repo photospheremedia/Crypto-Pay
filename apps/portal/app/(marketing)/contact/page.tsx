@@ -16,7 +16,7 @@ import {
 const contactPoints = [
   {
     title: "Sales + onboarding",
-    copy: "New restaurant groups, demos, and pricing.",
+    copy: "New business groups, demos, and pricing.",
     detail: "hello@cryptopay.sale",
     icon: Mail,
   },
@@ -286,7 +286,7 @@ export default function ContactPage() {
             <div>
               <input
                 type="text"
-                placeholder="Restaurant group / company name *"
+                placeholder="Business group / company name *"
                 value={formData.company}
                 onChange={(e) =>
                   setFormData({ ...formData, company: e.target.value })
