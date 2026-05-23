@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { redirect } from "next/navigation";
 import { getSupabaseServerClient } from "@crypto-pay/db/supabaseServer";
-import { sendEmail } from "@/lib/email";
+import { sendEmail } from "@/lib/email/sender";
 
 const walletSchema = z.object({
   walletNetwork: z.literal("btc"),

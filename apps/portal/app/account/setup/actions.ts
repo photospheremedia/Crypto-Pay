@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { redirect } from "next/navigation";
 import { getSupabaseServerClient, getSupabaseServiceClient } from "@crypto-pay/db/supabaseServer";
-import { sendEmail } from "@/lib/email";
+import { sendEmail } from "@/lib/email/sender";
 
 const onboardingSchema = z.object({
   selectedPlan: z.enum(["starter", "pro", "business"]),
