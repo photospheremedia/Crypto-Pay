@@ -4,7 +4,7 @@ import { z } from "zod";
 import { redirect } from "next/navigation";
 import { getSupabaseServerClient } from "@crypto-pay/db/supabaseServer";
 import { isAdminEmail } from "@/lib/admin-email";
-import { sendWelcomeEmail } from "@/lib/email";
+import { sendWelcomeEmail } from "@/lib/email/triggers";
 
 export type ActionState = {
   error?: string;
