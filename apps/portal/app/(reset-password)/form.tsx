@@ -48,7 +48,7 @@ export function ResetPasswordForm() {
     checkSession();
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event) => {
+    } = supabase.auth.onAuthStateChange(async () => {
       if (!isMounted) return;
       const {
         data: { user },
