@@ -17,7 +17,7 @@ import {
 import { IntegrationsTable } from "@/components/marketing/integrations-table";
 
 export const metadata: Metadata = {
-  title: "Integrations | Restaurant Hub Solution",
+  title: "Integrations | Crypto Pay",
   description: "Connect 15+ delivery platforms: Uber Eats, DoorDash, Grubhub, Postmates, Deliveroo, and more. POS integration, real-time menu sync, inventory management.",
   keywords: [
     "delivery platform integration",
@@ -32,14 +32,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "15+ Delivery Platforms. One Dashboard.",
     description: "Consolidate Uber Eats, DoorDash, Grubhub, Postmates, Deliveroo and more. Real-time menu sync, inventory tracking, and kitchen routing.",
-    url: "https://restauranthubsolution.com/integrations",
+    url: "https://cryptopay.sale/integrations",
     type: "website",
     images: [
       {
         url: "/og-integrations.png",
         width: 1200,
         height: 630,
-        alt: "Restaurant Hub Solution Platform Integrations",
+        alt: "Crypto Pay Platform Integrations",
       },
     ],
   },

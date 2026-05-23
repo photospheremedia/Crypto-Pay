@@ -118,7 +118,7 @@ file_size_limit = "50MiB"
 [storage.s3_protocol]
 enabled = true
 # S3 Endpoint for Supabase Storage
-# Endpoint: https://xfairwgarmpvbogiuduk.storage.supabase.co/storage/v1/s3
+# Endpoint: https://hwntncyiqaltzvlidscg.storage.supabase.co/storage/v1/s3
 # Region: us-east-1
 # Use AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY from Supabase dashboard
 
@@ -231,8 +231,8 @@ host = "smtp.resend.com"
 port = 587
 user = "resend"
 pass = "env(RESEND_API_KEY)"
-admin_email = "noreply@restauranthubsolution.com"
-sender_name = "Restaurant Hub Solution"
+admin_email = "noreply@cryptopay.sale"
+sender_name = "Crypto Pay"
 
 # Custom email templates - Professional B2B branding
 # Note: Production templates are managed via Supabase Management API
@@ -240,19 +240,19 @@ sender_name = "Restaurant Hub Solution"
 # Template HTML files: supabase/templates/*.html
 
 [auth.email.template.invite]
-subject = "You've Been Invited to Restaurant Hub"
+subject = "You've Been Invited to Crypto Pay"
 
 [auth.email.template.confirmation]
-subject = "Confirm Your Restaurant Hub Account"
+subject = "Confirm Your Crypto Pay Account"
 
 [auth.email.template.recovery]
-subject = "Reset Your Password - Restaurant Hub"
+subject = "Reset Your Password - Crypto Pay"
 
 [auth.email.template.magic_link]
-subject = "Your Login Link - Restaurant Hub"
+subject = "Your Login Link - Crypto Pay"
 
 [auth.email.template.email_change]
-subject = "Confirm Your New Email - Restaurant Hub"
+subject = "Confirm Your New Email - Crypto Pay"
 
 [auth.sms]
 # Allow/disallow new user signups via SMS to your project.

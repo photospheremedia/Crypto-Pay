@@ -88,7 +88,7 @@ export function ResetPasswordForm() {
   if (checkingSession) {
     return (
       <div className="min-h-[calc(100vh-120px)] flex flex-col items-center justify-center">
-        <div className="animate-spin h-8 w-8 border-2 border-orange-500 border-t-transparent rounded-full" />
+        <div className="animate-spin h-8 w-8 border-2 border-emerald-500 border-t-transparent rounded-full" />
         <p className="mt-4 text-slate-600">Verifying reset link...</p>
       </div>
     );
@@ -112,7 +112,7 @@ export function ResetPasswordForm() {
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 href="/forgot-password"
-                className="flex-1 inline-flex justify-center items-center px-4 py-2.5 rounded-xl text-sm font-medium text-white bg-orange-500 hover:bg-orange-600 transition"
+                className="flex-1 inline-flex justify-center items-center px-4 py-2.5 rounded-xl text-sm font-medium text-white bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 transition"
               >
                 Request new link
               </Link>
@@ -135,8 +135,8 @@ export function ResetPasswordForm() {
       <div className="min-h-[calc(100vh-120px)] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 px-8 py-10 text-center">
-            <div className="mx-auto w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-6">
-              <CheckCircle2 className="h-8 w-8 text-orange-500" />
+            <div className="mx-auto w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-6">
+              <CheckCircle2 className="h-8 w-8 text-emerald-600" />
             </div>
             <h2 className="text-2xl font-bold text-slate-900 mb-2">
               Password reset successful!
@@ -158,8 +158,8 @@ export function ResetPasswordForm() {
     <div className="min-h-[calc(100vh-120px)] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="text-center mb-8">
-          <div className="mx-auto w-14 h-14 bg-orange-100 rounded-full flex items-center justify-center mb-4">
-            <KeyRound className="h-7 w-7 text-orange-500" />
+          <div className="mx-auto w-14 h-14 bg-emerald-100 rounded-full flex items-center justify-center mb-4">
+            <KeyRound className="h-7 w-7 text-emerald-600" />
           </div>
           <h2 className="text-3xl font-bold tracking-tight text-slate-900">
             Create new password
@@ -201,19 +201,19 @@ export function ResetPasswordForm() {
               <div className="p-3 rounded-xl bg-slate-50 border border-slate-100">
                 <p className="text-xs font-medium text-slate-700 mb-2">Password requirements:</p>
                 <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className={`flex items-center gap-1.5 ${hasMinLength ? 'text-orange-500' : 'text-slate-400'}`}>
+                  <div className={`flex items-center gap-1.5 ${hasMinLength ? 'text-emerald-600' : 'text-slate-400'}`}>
                     <ShieldCheck className="h-3.5 w-3.5" />
                     8+ characters
                   </div>
-                  <div className={`flex items-center gap-1.5 ${hasUppercase ? 'text-orange-500' : 'text-slate-400'}`}>
+                  <div className={`flex items-center gap-1.5 ${hasUppercase ? 'text-emerald-600' : 'text-slate-400'}`}>
                     <ShieldCheck className="h-3.5 w-3.5" />
                     Uppercase letter
                   </div>
-                  <div className={`flex items-center gap-1.5 ${hasLowercase ? 'text-orange-500' : 'text-slate-400'}`}>
+                  <div className={`flex items-center gap-1.5 ${hasLowercase ? 'text-emerald-600' : 'text-slate-400'}`}>
                     <ShieldCheck className="h-3.5 w-3.5" />
                     Lowercase letter
                   </div>
-                  <div className={`flex items-center gap-1.5 ${hasNumber ? 'text-orange-500' : 'text-slate-400'}`}>
+                  <div className={`flex items-center gap-1.5 ${hasNumber ? 'text-emerald-600' : 'text-slate-400'}`}>
                     <ShieldCheck className="h-3.5 w-3.5" />
                     Number
                   </div>
@@ -266,7 +266,7 @@ export function ResetPasswordForm() {
             <Button
               type="submit"
               disabled={loading || !isPasswordStrong || !passwordsMatch}
-              className="w-full rounded-xl bg-orange-500 hover:bg-orange-600 h-11"
+              className="w-full rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 h-11"
             >
               {loading ? (
                 <>
@@ -282,7 +282,7 @@ export function ResetPasswordForm() {
           <div className="mt-6 pt-6 border-t border-slate-100 text-center">
             <Link
               href="/login"
-              className="inline-flex items-center gap-2 text-sm font-medium text-orange-500 hover:text-orange-600"
+              className="inline-flex items-center gap-2 text-sm font-medium text-emerald-600 hover:text-cyan-600"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to sign in

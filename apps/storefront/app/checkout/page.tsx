@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Checkout",
-  description: "Complete your order with Restaurant Hub Solution.",
+  description: "Complete your order with Crypto Pay.",
 };
 
 export default function CheckoutPage() {
@@ -10,7 +10,7 @@ export default function CheckoutPage() {
     <div className="mx-auto max-w-2xl px-4 py-16">
       <h1 className="mb-4 text-4xl font-bold">Checkout</h1>
       <p className="mb-6 text-neutral-600 dark:text-neutral-300">
-        Checkout is handled through our supplier partners or your Restaurant Hub Solution
+        Checkout is handled through our supplier partners or your Crypto Pay
         subscription plan. We will connect you with the right checkout flow for
         your order.
       </p>

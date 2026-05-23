@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "Marketing Support | Restaurant Hub Solution",
+  title: "Marketing Support | Crypto Pay",
   description: "Drive more orders with strategic marketing campaigns, email automation, and data-driven promotion planning.",
 };
 

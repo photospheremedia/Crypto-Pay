@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Services | Restaurant Hub Solution",
+  title: "Services | Crypto Pay",
   description: "Full-stack restaurant operations services: delivery platform consolidation, supply chain management, brand refresh, menu design, and ongoing support.",
   keywords: [
     "restaurant operations services",
@@ -29,14 +29,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: "End-to-End Restaurant Operations Support",
     description: "From delivery integration to supply procurement to brand refresh. Your single partner for restaurant growth.",
-    url: "https://restauranthubsolution.com/services",
+    url: "https://cryptopay.sale/services",
     type: "website",
     images: [
       {
         url: "/og-services.png",
         width: 1200,
         height: 630,
-        alt: "Restaurant Hub Solution Services",
+        alt: "Crypto Pay Services",
       },
     ],
   },

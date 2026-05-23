@@ -311,7 +311,7 @@ export function SupportChatWidget() {
           )}
         </div>
         <span className="font-medium text-sm">
-          {isLoading ? "Typing..." : "Restaurant Hub AI"}
+          {isLoading ? "Typing..." : "Crypto Pay AI"}
         </span>
         {messages.length > 0 && (
           <span className="bg-white/20 text-xs px-2 py-0.5 rounded-full">

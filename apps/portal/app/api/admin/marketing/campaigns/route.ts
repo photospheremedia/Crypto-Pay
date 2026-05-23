@@ -68,7 +68,7 @@ export async function POST(request: Request) {
         subject,
         template_id: template_id || null,
         from_email,
-        from_name: from_name || 'Restaurant Hub',
+        from_name: from_name || 'Crypto Pay',
         status: scheduled_for ? 'scheduled' : 'draft',
         scheduled_for: scheduled_for || null,
         tags: tags || null,

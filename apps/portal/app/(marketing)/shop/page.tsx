@@ -140,7 +140,7 @@ const sampleProducts: Product[] = [
     reviewCount: 89,
     inStock: true,
     freeShipping: true,
-    brand: "Restaurant Hub",
+    brand: "Crypto Pay",
     sku: "TB-001"
   },
   {

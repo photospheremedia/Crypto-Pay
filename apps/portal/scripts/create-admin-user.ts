@@ -82,11 +82,11 @@ async function createAdminUser() {
   console.log('\nSending custom invitation email...');
   
   const { data: emailData, error: emailError } = await resend.emails.send({
-    from: 'Restaurant Hub <noreply@restauranthubsolution.com>',
+    from: process.env.EMAIL_FROM || "Crypto Pay <noreply@cryptopay.sale>",
     to: [`${fullName} <${email}>`],
-    subject: `🎉 Your Restaurant Hub Solution Account is Ready!`,
+    subject: `Your Crypto Pay admin account is ready`,
     html: `
-      <h1>Welcome to Restaurant Hub Solution!</h1>
+      <h1>Welcome to Crypto Pay</h1>
       <p>Hi ${fullName},</p>
       <p>Your Super Administrator account has been created.</p>
       <h2>Login Credentials:</h2>
@@ -96,7 +96,7 @@ async function createAdminUser() {
       </ul>
       <p><a href="${APP_URL}/login">Click here to sign in</a></p>
       <p>Please change your password after your first login.</p>
-      <p>Best regards,<br>The Restaurant Hub Team</p>
+      <p>Best regards,<br>The Crypto Pay Team</p>
     `,
   });
 

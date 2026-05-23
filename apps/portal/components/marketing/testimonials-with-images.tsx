@@ -4,7 +4,7 @@ import { Star, Quote } from "lucide-react";
 
 const testimonials = [
   {
-    quote: "Restaurant Hub cut our delivery tablet chaos from 5 devices to 1. Our kitchen runs smoother and we save 3 hours a day on order management.",
+    quote: "Crypto Pay cut our delivery tablet chaos from 5 devices to 1. Our kitchen runs smoother and we save 3 hours a day on order management.",
     author: "Maria Chen",
     role: "Operations Director",
     company: "Golden Dragon Group (8 locations)",

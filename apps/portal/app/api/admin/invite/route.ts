@@ -178,7 +178,7 @@ export async function POST(req: NextRequest) {
       const { data: newTenant, error: tenantError } = await supabase
         .from("tenants")
         .insert({
-          name: "Restaurant Hub Admin",
+          name: "Crypto Pay Admin",
           slug: "rhs-admin",
           status: "active"
         })
@@ -224,7 +224,7 @@ export async function POST(req: NextRequest) {
     // Send invite email using React Email
     let emailSent = false;
     if (sendInviteEmail) {
-      const loginUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://restauranthubsolution.com'}/app/admin`;
+      const loginUrl = `${process.env.NEXT_PUBLIC_APP_URL || "https://cryptopay.sale"}/app/admin`;
       
       // Render React Email template to HTML
       const emailHtml = await render(
@@ -236,13 +236,13 @@ export async function POST(req: NextRequest) {
           role: newRole as 'rhs_admin' | 'admin' | 'owner' | 'staff',
           loginUrl,
           temporaryPassword,
-          companyName: 'Restaurant Hub Solution',
+          companyName: "Crypto Pay",
         })
       );
 
       const result = await sendEmail({
         to: { email, name: recipientName },
-        subject: `🎉 You've been invited to Restaurant Hub Solution`,
+        subject: "You've been invited to Crypto Pay",
         html: emailHtml,
         tags: ['admin-invite', newRole],
       });

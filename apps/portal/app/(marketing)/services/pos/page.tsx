@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "POS Integration | Restaurant Hub Solution",
+  title: "POS Integration | Crypto Pay",
   description: "Seamlessly connect your POS system with delivery platforms for automatic order routing and real-time menu sync.",
 };
 

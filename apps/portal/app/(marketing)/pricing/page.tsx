@@ -1,232 +1,107 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Check, Zap, Building2, Rocket } from "lucide-react";
+import { Check, Percent, Store, Building2 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Pricing | Restaurant Hub Solution",
-  description: "Restaurant management software pricing. Basic ($99/mo), Pro ($199/mo), and Enterprise plans. Delivery integrations, supplies marketplace, and brand refresh services.",
-  keywords: [
-    "restaurant software pricing",
-    "delivery integration pricing",
-    "restaurant management cost",
-    "Urban Piper alternative",
-    "POS integration pricing",
-  ],
-  openGraph: {
-    title: "Transparent Pricing for Restaurant Operations",
-    description: "Basic ($99/mo), Pro ($199/mo), and Enterprise plans. Start with delivery integration, grow with supply marketplace and brand services.",
-    url: "https://restauranthubsolution.com/pricing",
-    type: "website",
-    images: [
-      {
-        url: "/og-pricing.png",
-        width: 1200,
-        height: 630,
-        alt: "Restaurant Hub Solution Pricing Plans",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Transparent Pricing for Restaurant Operations",
-    description: "Basic ($99/mo), Pro ($199/mo), and Enterprise plans with no hidden fees.",
-  },
+  title: "Pricing | CryptivaPay",
+  description:
+    "Restaurant-friendly crypto payment pricing with a 2% business trial and custom scale plans.",
 };
 
-const plans = [
+const planCards = [
   {
-    name: "Basic",
-    description: "Essential delivery integration for single-location restaurants.",
-    price: "$99",
-    period: "/mo per location",
-    setupFee: "$199 one-time setup",
-    icon: Zap,
-    highlight: false,
-    features: [
-      "Delivery Integration (powered by Urban Piper)",
-      "Connect up to 3 delivery platforms",
-      "Single unified dashboard",
-      "Basic menu sync",
-      "POS order routing",
-      "Email support (48hr response)",
-      "Supply catalog access",
-      "Monthly reports",
-    ],
-    cta: "Get Started",
-    ctaLink: "/signup",
-  },
-  {
-    name: "Pro",
-    description: "Complete solution for growing multi-location restaurant groups.",
-    price: "$199",
-    period: "/mo per location",
-    setupFee: "$299 one-time setup",
-    icon: Building2,
+    name: "Business Trial",
+    icon: Percent,
+    price: "2%",
+    subtitle: "per successful transaction",
+    note: "No free starter pack",
+    cta: "Start business trial",
+    href: "/signup",
     highlight: true,
-    badge: "Most Popular",
     features: [
-      "Everything in Basic, plus:",
-      "Connect unlimited delivery platforms",
-      "Advanced menu management",
-      "Real-time inventory sync",
-      "Kitchen display integration",
-      "Analytics & business insights",
-      "Priority support (24hr response)",
-      "Dedicated success manager",
-      "Bulk supply discounts",
-      "Weekly performance reports",
-      "Staff training included",
+      "Direct non-custodial wallet payments",
+      "Crypto checkout links and invoices",
+      "Real-time status tracking",
+      "Live crypto-to-fiat converter",
+      "Email support for onboarding",
     ],
-    cta: "Talk to Sales",
-    ctaLink: "/contact",
   },
   {
-    name: "Enterprise",
-    description: "Custom solution for large chains with advanced needs.",
+    name: "Restaurant Scale",
+    icon: Building2,
     price: "Custom",
-    period: "contact for pricing",
-    setupFee: "Custom setup & onboarding",
-    icon: Rocket,
+    subtitle: "volume-based pricing",
+    note: "For multi-location operations",
+    cta: "Talk to sales",
+    href: "/contact",
     highlight: false,
     features: [
-      "Everything in Pro, plus:",
-      "Unlimited locations & platforms",
-      "White-label delivery integration",
-      "Custom API development",
-      "Multi-tenant management",
-      "24/7 priority support",
-      "Dedicated account team",
-      "Custom SLAs & uptime guarantees",
-      "On-site training & workshops",
-      "Quarterly business reviews",
-      "Early access to new features",
+      "Everything in Business Trial",
+      "Custom settlement and reporting",
+      "Priority support and SLA options",
+      "Dedicated integration support",
+      "Enterprise security review",
     ],
-    cta: "Contact Sales",
-    ctaLink: "/contact",
   },
 ];
 
-const addOns = [
-  {
-    name: "Menu & Brand Refresh",
-    price: "$499",
-    period: "one-time per location",
-    description: "Professional menu redesign, QR assets, and digital brand refresh.",
-  },
-  {
-    name: "Website Optimization",
-    price: "$999",
-    period: "one-time",
-    description: "Ordering funnel optimization, SEO setup, and conversion tracking.",
-  },
-  {
-    name: "Packaging Design",
-    price: "$299",
-    period: "one-time",
-    description: "Custom branded packaging and label design for delivery orders.",
-  },
-];
-
-const faqs = [
-  {
-    q: "What's included in the Urban Piper integration?",
-    a: "Our delivery integration (powered by Urban Piper) connects your restaurant to 15+ delivery platforms including Uber Eats, DoorDash, Grubhub, Postmates, and more. All orders appear in one unified dashboard, with automatic menu sync and real-time inventory updates.",
-  },
-  {
-    q: "Are there any additional platform fees?",
-    a: "No hidden fees. Monthly subscription covers delivery integration, POS routing, menu management, and support. You only pay delivery platform commissions (set by each platform) when customers order through them.",
-  },
-  {
-    q: "Can I cancel anytime?",
-    a: "Yes. All plans are month-to-month with no long-term contracts. Cancel anytime with no penalties. Setup fees are non-refundable.",
-  },
-  {
-    q: "Do you integrate with my POS system?",
-    a: "Yes. We integrate with major POS systems including Toast, Square, Clover, and 20+ others. Orders route automatically from delivery platforms to your POS.",
-  },
-  {
-    q: "How long does setup take?",
-    a: "Most restaurants are live within 5-7 business days. We handle all technical setup, platform connections, menu configuration, and staff training.",
-  },
-  {
-    q: "What payment methods do you accept?",
-    a: "We accept all major credit cards and ACH transfers. Enterprise customers can be invoiced monthly or quarterly.",
-  },
+const comparison = [
+  { feature: "Direct wallet settlement", trial: true, scale: true },
+  { feature: "Checkout links and invoices", trial: true, scale: true },
+  { feature: "Dashboard + status tracking", trial: true, scale: true },
+  { feature: "Real-time converter widget", trial: true, scale: true },
+  { feature: "Priority support", trial: false, scale: true },
+  { feature: "Custom SLA / compliance support", trial: false, scale: true },
 ];
 
 export default function PricingPage() {
   return (
-    <section className="mx-auto w-full max-w-6xl px-6 pt-24 pb-16 lg:pt-28">
-      {/* Header */}
+    <section className="mx-auto w-full max-w-6xl px-6 pb-16 pt-24 lg:pt-28">
       <div className="text-center">
-        <p className="text-xs uppercase tracking-[0.2em] text-orange-600">
-          Pricing
-        </p>
-        <h1 className="font-display mt-3 text-4xl font-semibold text-slate-900">
-          Simple, transparent pricing.
+        <p className="text-xs uppercase tracking-[0.2em] text-orange-600">Pricing</p>
+        <h1 className="mt-3 text-4xl font-semibold text-slate-900 font-display">
+          Built for restaurant operators.
         </h1>
         <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
-          All-in-one delivery integration powered by <strong className="text-slate-900">Urban Piper</strong>. No commissions, no hidden fees.
+          Start with a simple <strong className="text-slate-900">2% business trial</strong>, then
+          move to custom volume pricing as your crypto payment volume grows.
         </p>
-        <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-orange-50 border border-orange-200 px-4 py-2">
-          <span className="text-sm text-orange-700">💰</span>
+        <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-orange-200 bg-orange-50 px-4 py-2">
+          <Store className="h-4 w-4 text-orange-600" />
           <p className="text-sm font-medium text-orange-700">
-            Save an average of <strong>$16,000/year</strong> compared to third-party delivery commissions
+            No free starter pack. Straightforward commercial pricing from day one.
           </p>
         </div>
       </div>
 
-      {/* Plans */}
-      <div className="mt-12 grid gap-6 md:grid-cols-3">
-        {plans.map((plan) => {
+      <div className="mt-12 grid gap-6 md:grid-cols-2">
+        {planCards.map((plan) => {
           const Icon = plan.icon;
           return (
-            <div
+            <article
               key={plan.name}
-              className={`relative rounded-3xl border p-6 ${
+              className={`rounded-3xl border p-6 ${
                 plan.highlight
-                  ? "border-orange-300 bg-orange-50/50 shadow-lg shadow-orange-100/50"
+                  ? "border-orange-300 bg-orange-50/60 shadow-lg shadow-orange-100/60"
                   : "border-slate-200 bg-white shadow-sm"
               }`}
             >
-              {plan.badge && (
-                <span className="absolute -top-3 left-6 rounded-full bg-orange-500 px-3 py-1 text-xs font-semibold text-white">
-                  {plan.badge}
-                </span>
-              )}
               <div className="flex items-center gap-3">
-                <div
-                  className={`rounded-xl p-2 ${
-                    plan.highlight ? "bg-orange-100" : "bg-slate-100"
-                  }`}
-                >
-                  <Icon
-                    className={`h-5 w-5 ${
-                      plan.highlight ? "text-orange-500" : "text-slate-600"
-                    }`}
-                  />
+                <div className="rounded-xl bg-white p-2 shadow-sm">
+                  <Icon className="h-5 w-5 text-orange-600" />
                 </div>
-                <h3 className="text-lg font-semibold text-slate-900">
-                  {plan.name}
-                </h3>
+                <h2 className="text-lg font-semibold text-slate-900">{plan.name}</h2>
               </div>
-              <p className="mt-3 text-sm text-slate-600">{plan.description}</p>
               <div className="mt-4">
-                <span className="text-3xl font-bold text-slate-900">
-                  {plan.price}
-                </span>
-                <span className="text-sm text-slate-500"> {plan.period}</span>
+                <p className="text-4xl font-bold text-slate-900">{plan.price}</p>
+                <p className="text-sm text-slate-500">{plan.subtitle}</p>
+                <p className="mt-1 text-xs uppercase tracking-wide text-slate-500">{plan.note}</p>
               </div>
-              {plan.setupFee && (
-                <p className="mt-2 text-xs text-slate-500">
-                  + {plan.setupFee}
-                </p>
-              )}
               <Link
-                href={plan.ctaLink}
+                href={plan.href}
                 className={`mt-6 block w-full rounded-full py-3 text-center text-sm font-semibold transition ${
                   plan.highlight
-                    ? "bg-orange-500 text-white shadow-lg shadow-orange-200/60 hover:bg-orange-600"
+                    ? "bg-gradient-to-r from-orange-500 to-emerald-600 text-white hover:from-orange-400 hover:to-emerald-500"
                     : "border border-slate-300 text-slate-700 hover:border-slate-400"
                 }`}
               >
@@ -234,96 +109,62 @@ export default function PricingPage() {
               </Link>
               <ul className="mt-6 space-y-3">
                 {plan.features.map((feature) => (
-                  <li
-                    key={feature}
-                    className="flex items-start gap-2 text-sm text-slate-600"
-                  >
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-orange-500" />
+                  <li key={feature} className="flex items-start gap-2 text-sm text-slate-600">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
                     {feature}
                   </li>
                 ))}
               </ul>
-            </div>
+            </article>
           );
         })}
       </div>
 
-      {/* Add-ons */}
-      <div className="mt-20">
-        <div className="text-center">
-          <p className="text-xs uppercase tracking-[0.2em] text-orange-500">
-            Add-ons
-          </p>
-          <h2 className="font-display mt-3 text-3xl font-semibold text-slate-900">
-            Boost your brand presence.
-          </h2>
-          <p className="mt-2 text-sm text-slate-600">
-            One-time services to elevate your restaurant&apos;s digital presence.
-          </p>
-        </div>
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
-          {addOns.map((addon) => (
-            <div
-              key={addon.name}
-              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
-            >
-              <h3 className="text-lg font-semibold text-slate-900">
-                {addon.name}
-              </h3>
-              <p className="mt-1 text-sm text-slate-600">{addon.description}</p>
-              <div className="mt-4">
-                <span className="text-xl font-bold text-slate-900">
-                  {addon.price}
-                </span>
-                <span className="text-sm text-slate-500"> {addon.period}</span>
-              </div>
-            </div>
-          ))}
+      <div className="mt-16 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+        <h3 className="text-2xl font-semibold text-slate-900">Plan comparison</h3>
+        <p className="mt-2 text-sm text-slate-600">
+          Simple feature coverage across trial and scale plans.
+        </p>
+        <div className="mt-6 overflow-x-auto">
+          <table className="w-full min-w-[640px] border-collapse text-left text-sm">
+            <thead>
+              <tr className="border-b border-slate-200">
+                <th className="px-3 py-3 font-semibold text-slate-900">Feature</th>
+                <th className="px-3 py-3 font-semibold text-slate-900">Business Trial (2%)</th>
+                <th className="px-3 py-3 font-semibold text-slate-900">Restaurant Scale</th>
+              </tr>
+            </thead>
+            <tbody>
+              {comparison.map((row) => (
+                <tr key={row.feature} className="border-b border-slate-100">
+                  <td className="px-3 py-3 text-slate-700">{row.feature}</td>
+                  <td className="px-3 py-3 text-slate-700">{row.trial ? "Included" : "—"}</td>
+                  <td className="px-3 py-3 text-slate-700">{row.scale ? "Included" : "—"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 
-      {/* FAQ */}
-      <div className="mt-20">
-        <div className="text-center">
-          <p className="text-xs uppercase tracking-[0.2em] text-orange-500">
-            Questions
-          </p>
-          <h2 className="font-display mt-3 text-3xl font-semibold text-slate-900">
-            Pricing FAQs
-          </h2>
-        </div>
-        <div className="mx-auto mt-8 grid max-w-3xl gap-4">
-          {faqs.map((faq) => (
-            <div
-              key={faq.q}
-              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
-            >
-              <h3 className="font-semibold text-slate-900">{faq.q}</h3>
-              <p className="mt-2 text-sm text-slate-600">{faq.a}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* CTA */}
-      <div className="mt-20 rounded-3xl bg-linear-to-r from-orange-500 to-orange-600 p-10 text-center text-white">
-        <h3 className="text-2xl font-semibold">Need a custom solution?</h3>
-        <p className="mt-2 text-orange-100">
-          Let&apos;s discuss your specific requirements and build a plan that
-          works for your operation.
+      <div className="mt-16 rounded-3xl bg-gradient-to-r from-orange-500 to-emerald-600 p-10 text-center text-white">
+        <h3 className="text-2xl font-semibold">Need a rollout plan for your locations?</h3>
+        <p className="mt-2 text-orange-50">
+          We can map wallet setup, team workflows, and settlement operations for your restaurant
+          business.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-4">
           <Link
-            href="/contact"
+            href="/signup"
             className="rounded-full bg-white px-8 py-3 font-semibold text-orange-600 transition hover:bg-orange-50"
           >
-            Talk to sales
+            Start 2% business trial
           </Link>
           <Link
-            href="/signup"
+            href="/contact"
             className="rounded-full border border-white/30 px-8 py-3 font-semibold text-white transition hover:bg-white/10"
           >
-            Book a demo
+            Talk to sales
           </Link>
         </div>
       </div>

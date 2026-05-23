@@ -16,7 +16,7 @@ import {
 import { DeliveryPartners } from "@/components/marketing/delivery-partners";
 
 export const metadata = {
-  title: "Delivery Integration | Restaurant Hub Solution",
+  title: "Delivery Integration | Crypto Pay",
   description: "Consolidate all your delivery platforms into one streamlined system. Manage DoorDash, Uber Eats, Grubhub, and more from a single tablet.",
 };
 

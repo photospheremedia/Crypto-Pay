@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "Menu & Branding | Restaurant Hub Solution",
+  title: "Menu & Branding | Crypto Pay",
   description: "Transform your restaurant's visual identity with professional menu design, brand refresh, and marketing materials.",
 };
 

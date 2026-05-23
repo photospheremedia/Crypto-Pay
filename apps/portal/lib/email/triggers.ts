@@ -1,5 +1,5 @@
 /**
- * Email Trigger Functions - Restaurant Hub Solution
+ * Email Trigger Functions - Crypto Pay
  * Convenient helper functions for sending specific email types
  * 
  * Usage:
@@ -22,7 +22,7 @@ export async function sendWelcomeEmail(
 ): Promise<EmailResult> {
   return sendEmail({
     to: { email, name: data.firstName },
-    subject: "Welcome to Restaurant Hub - Let's Get Started! 🎉",
+    subject: "Welcome to Crypto Pay - Let's Get Started! 🎉",
     template: "welcome",
     templateData: data,
     tags: ["onboarding", "welcome"],
@@ -38,7 +38,7 @@ export async function sendEmailVerification(
 ): Promise<EmailResult> {
   return sendEmail({
     to: { email, name: data.firstName },
-    subject: "Verify Your Email - Restaurant Hub",
+    subject: "Verify Your Email - Crypto Pay",
     template: "email_verification",
     templateData: data,
     tags: ["auth", "verification"],
@@ -55,7 +55,7 @@ export async function sendPasswordResetEmail(
 ): Promise<EmailResult> {
   return sendEmail({
     to: { email },
-    subject: "Reset Your Password - Restaurant Hub",
+    subject: "Reset Your Password - Crypto Pay",
     template: "password_reset",
     templateData: {
       ...data,
@@ -85,7 +85,7 @@ export async function sendOrderConfirmation(
 ): Promise<EmailResult> {
   return sendEmail({
     to: { email, name: data.customerName },
-    subject: `Order Confirmed #${data.orderNumber} - Restaurant Hub`,
+    subject: `Order Confirmed #${data.orderNumber} - Crypto Pay`,
     template: "order_confirmation",
     templateData: {
       ...data,
@@ -161,7 +161,7 @@ export async function sendInvoice(
 ): Promise<EmailResult> {
   return sendEmail({
     to: { email, name: data.customerName },
-    subject: `Invoice #${data.invoiceNumber} - Restaurant Hub`,
+    subject: `Invoice #${data.invoiceNumber} - Crypto Pay`,
     template: "invoice",
     templateData: {
       ...data,

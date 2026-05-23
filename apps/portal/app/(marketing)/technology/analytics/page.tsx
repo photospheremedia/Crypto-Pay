@@ -216,7 +216,7 @@ export default function AnalyticsPage() {
                 <div className="w-3 h-3 rounded-full bg-yellow-500" />
                 <div className="w-3 h-3 rounded-full bg-green-500" />
               </div>
-              <span className="text-sm text-slate-400 ml-4">Restaurant Hub Analytics</span>
+              <span className="text-sm text-slate-400 ml-4">Crypto Pay Analytics</span>
             </div>
             <div className="p-8">
               <div className="grid lg:grid-cols-3 gap-8">

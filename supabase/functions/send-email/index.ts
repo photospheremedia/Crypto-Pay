@@ -126,8 +126,14 @@ serve(async (req) => {
     }
 
     const to = Array.isArray(payload.to) ? payload.to : [payload.to];
-    const from = payload.from || "Restaurant Hub <orders@restaurant-hub.com>";
-    const replyTo = payload.replyTo || "support@restaurant-hub.com";
+    const from =
+      payload.from ||
+      Deno.env.get("EMAIL_FROM") ||
+      "Crypto Pay <noreply@cryptopay.sale>";
+    const replyTo =
+      payload.replyTo ||
+      Deno.env.get("EMAIL_REPLY_TO") ||
+      "support@cryptopay.sale";
     let html = payload.html || "";
 
     // If template is specified, use it (simplified - can be extended)

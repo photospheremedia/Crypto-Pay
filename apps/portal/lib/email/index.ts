@@ -1,5 +1,5 @@
 /**
- * Restaurant Hub Solution - Professional Email Service
+ * Crypto Pay — email service (Resend via Edge Function)
  * Enterprise-grade transactional and marketing email system
  * 
  * Features:

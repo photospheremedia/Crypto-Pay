@@ -33,9 +33,9 @@ import ReactMarkdown from "react-markdown";
 // Welcome message generator based on user
 function getWelcomeMessage(userName?: string): string {
   if (userName) {
-    return `Hi ${userName}! 👋 I'm your Restaurant Hub assistant. How can I help you today? I can answer questions about our delivery integrations, supply marketplace, or technology services.`;
+    return `Hi ${userName}! 👋 I'm your Crypto Pay assistant. How can I help you today? I can answer questions about our delivery integrations, supply marketplace, or technology services.`;
   }
-  return "Hi! 👋 I'm your Restaurant Hub assistant. How can I help you today? I can answer questions about our delivery integrations, supply marketplace, or technology services.";
+  return "Hi! 👋 I'm your Crypto Pay assistant. How can I help you today? I can answer questions about our delivery integrations, supply marketplace, or technology services.";
 }
 
 export function SupportChatWidget() {
@@ -227,7 +227,7 @@ export function SupportChatWidget() {
           </Avatar>
           <div>
             <h3 className="text-sm font-semibold flex items-center gap-2">
-              Restaurant Hub AI
+              Crypto Pay AI
               {isLoading && <Sparkles className="h-3 w-3 animate-pulse" />}
             </h3>
             {!isMinimized && (

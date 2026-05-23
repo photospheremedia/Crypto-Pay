@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "24/7 Support | Restaurant Hub Solution",
+  title: "24/7 Support | Crypto Pay",
   description: "Expert support available around the clock. Get help with integrations, technical issues, and optimizing your restaurant operations.",
 };
 
@@ -44,7 +44,7 @@ const supportChannels = [
     description: "Detailed assistance for complex issues",
     availability: "Response within 4 hours",
     action: "Send Email",
-    href: "mailto:support@restauranthubsolution.com",
+    href: "mailto:support@cryptopay.sale",
   },
   {
     icon: BookOpen,

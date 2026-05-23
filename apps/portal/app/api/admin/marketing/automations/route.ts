@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
         trigger_type,
         trigger_config: trigger_config || {},
         subject,
-        from_name: from_name || 'Restaurant Hub',
+        from_name: from_name || 'Crypto Pay',
         from_email,
         template_id,
         content_html,

@@ -7,8 +7,9 @@
 | **GitHub** | https://github.com/Skullcandyxxx/Crypto-Pay |
 | **Supabase project ref** | `hwntncyiqaltzvlidscg` |
 | **Supabase URL** | `https://hwntncyiqaltzvlidscg.supabase.co` |
+| **Cursor MCP connection** | `C412-6403` (see `docs/SUPABASE_CRYPTO_PAY.md`) |
 | **Vercel team** | `skullcandyxxxs-projects` |
-| **Vercel project (portal)** | `portal` — connect this project to the Crypto-Pay repo |
+| **Vercel project** | `crypto-pay-portal` — linked via `.vercel/project.json` |
 
 ## 1. Git push → auto-deploy
 
@@ -39,19 +40,30 @@ First push with migrations will run `supabase db push` against the new project.
 
 ## 3. Vercel environment variables
 
-In Vercel → **portal** project → Settings → Environment Variables, set (Production + Preview):
+Sync from local (recommended):
+
+```powershell
+.\scripts\sync-vercel-env.ps1
+```
+
+Or in Vercel → **crypto-pay-portal** → Settings → Environment Variables (Production + Preview + Development):
 
 | Variable | Notes |
 |----------|--------|
 | `NEXT_PUBLIC_SUPABASE_URL` | `https://hwntncyiqaltzvlidscg.supabase.co` |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase publishable or anon key (Dashboard → API) |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server only — never expose to client |
-| `NEXT_PUBLIC_APP_URL` | Your Vercel URL, e.g. `https://portal-skullcandyxxxs-projects.vercel.app` |
+| `NEXT_PUBLIC_APP_URL` | Production URL: `https://cryptopay.sale` |
 
-Optional (from Restaurant Hub; add when enabling features):
+Optional (add when enabling features):
 
-- `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, Turnstile secret
-- `RESEND_API_KEY`, Stripe keys, etc. — see `docs/ENVIRONMENT.md`
+- `RESEND_API_KEY` — Resend API key (**portal sends mail via Vercel**; see `docs/EMAIL_SETUP_CRYPTO_PAY.md`)
+- `EMAIL_FROM` — `Crypto Pay <noreply@cryptopay.sale>`
+- `EMAIL_REPLY_TO` — `support@cryptopay.sale`
+- `NEXT_PUBLIC_SUPABASE_FUNCTIONS_URL` — optional fallback for `send-email` edge function
+- `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, Stripe keys — see `docs/ENVIRONMENT.md`
+
+Auth emails (signup/reset) still use **Supabase Auth SMTP** with the same Resend key in the Supabase dashboard.
 
 Pull env locally:
 

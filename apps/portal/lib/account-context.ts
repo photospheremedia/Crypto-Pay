@@ -20,6 +20,7 @@ export async function getAccountContext() {
   const { data: memberships } = await supabase
     .from("memberships")
     .select("tenant_id, role, tenants ( id, name, slug )")
+    .eq("user_id", user.id)
     .eq("status", "active");
 
   const membership = memberships?.[0];

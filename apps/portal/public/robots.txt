@@ -1,4 +1,4 @@
-# Restaurant Hub Solution robots.txt
+# Crypto Pay robots.txt
 # Tell search engines which pages to crawl
 # NOTE: This does not prevent indexing - use meta robots or password protection for security
 
@@ -39,4 +39,4 @@ User-agent: MJ12bot
 Crawl-delay: 10
 
 # Point to sitemap
-Sitemap: https://restauranthubsolution.com/sitemap.xml
+Sitemap: https://cryptopay.sale/sitemap.xml

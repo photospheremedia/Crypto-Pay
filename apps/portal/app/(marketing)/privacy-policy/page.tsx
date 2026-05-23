@@ -1,8 +1,8 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | Restaurant Hub Solution',
-  description: 'Privacy Policy for Restaurant Hub Solution',
+  title: 'Privacy Policy | Crypto Pay',
+  description: 'Privacy Policy for Crypto Pay',
 }
 
 export default function PrivacyPolicyPage() {
@@ -16,7 +16,7 @@ export default function PrivacyPolicyPage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-slate-900 mb-4">1. Introduction</h2>
               <p className="text-slate-700 leading-relaxed mb-4">
-                Welcome to Restaurant Hub Solution ("we," "our," or "us"). We are committed to protecting your personal 
+                Welcome to Crypto Pay ("we," "our," or "us"). We are committed to protecting your personal 
                 information and your right to privacy. This Privacy Policy explains how we collect, use, disclose, and 
                 safeguard your information when you use our B2B platform for restaurant management and supply ordering.
               </p>
@@ -114,7 +114,7 @@ export default function PrivacyPolicyPage() {
                 <li><strong>Restrict Processing:</strong> Limit how we use your information</li>
               </ul>
               <p className="text-slate-700 leading-relaxed mb-4">
-                To exercise these rights, contact us at <a href="mailto:support@restauranthubsolution.com" className="text-orange-500 hover:text-orange-600 font-medium">support@restauranthubsolution.com</a>
+                To exercise these rights, contact us at <a href="mailto:support@cryptopay.sale" className="text-orange-500 hover:text-orange-600 font-medium">support@cryptopay.sale</a>
               </p>
             </section>
 
@@ -187,8 +187,8 @@ export default function PrivacyPolicyPage() {
                 If you have questions about this Privacy Policy or our data practices, please contact us:
               </p>
               <div className="bg-slate-50 rounded-lg p-6 border border-slate-200">
-                <p className="text-slate-700 mb-2"><strong>Restaurant Hub Solution</strong></p>
-                <p className="text-slate-700 mb-2">Email: <a href="mailto:support@restauranthubsolution.com" className="text-orange-500 hover:text-orange-600 font-medium">support@restauranthubsolution.com</a></p>
+                <p className="text-slate-700 mb-2"><strong>Crypto Pay</strong></p>
+                <p className="text-slate-700 mb-2">Email: <a href="mailto:support@cryptopay.sale" className="text-orange-500 hover:text-orange-600 font-medium">support@cryptopay.sale</a></p>
                 <p className="text-slate-700">Support: Available through your account dashboard</p>
               </div>
             </section>

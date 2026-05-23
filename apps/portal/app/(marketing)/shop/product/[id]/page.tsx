@@ -162,7 +162,7 @@ const relatedProductsData: Product[] = [
     reviewCount: 89,
     inStock: true,
     freeShipping: true,
-    brand: "Restaurant Hub",
+    brand: "Crypto Pay",
   },
   {
     id: "paper-bags-001",
@@ -274,7 +274,7 @@ export default function ProductDetailPage() {
         rating: 4.5,
         reviewCount: 100,
         inStock: true,
-        brand: "Restaurant Hub",
+        brand: "Crypto Pay",
         sku: productId.toUpperCase(),
         specifications: {
           "Material": "Premium Quality",
@@ -410,7 +410,7 @@ export default function ProductDetailPage() {
 
   const handleShare = async (platform: 'copy' | 'facebook' | 'twitter' | 'email') => {
     const url = window.location.href;
-    const text = `Check out ${product?.name} at Restaurant Hub!`;
+    const text = `Check out ${product?.name} at Crypto Pay!`;
     
     switch (platform) {
       case 'copy':

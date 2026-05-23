@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServerClient } from '@crypto-pay/db/supabaseServer';
+import { checkAdminAccess } from '@/lib/admin-auth';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,12 +10,15 @@ export const dynamic = 'force-dynamic';
  */
 export async function GET() {
   try {
-    const supabase = await getSupabaseServerClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    
+    const { user, isAdmin } = await checkAdminAccess();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Forbidden - Admin access required' }, { status: 403 });
+    }
+
+    const supabase = await getSupabaseServerClient();
 
     const { data: categories, error } = await supabase
       .from('product_categories')
@@ -62,12 +66,15 @@ export async function GET() {
  */
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await getSupabaseServerClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    
+    const { user, isAdmin } = await checkAdminAccess();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Forbidden - Admin access required' }, { status: 403 });
+    }
+
+    const supabase = await getSupabaseServerClient();
 
     const body = await request.json();
     const { name, slug, description, parent_id, display_order } = body;

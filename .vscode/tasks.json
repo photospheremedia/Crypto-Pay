@@ -105,6 +105,18 @@
         "clear": true
       },
       "group": "build"
+    },
+    {
+      "label": "🏠 Local Run: Portal (npm)",
+      "type": "shell",
+      "command": "npm run dev:portal",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "isBackground": true,
+      "group": "build"
     }
   ]
 }

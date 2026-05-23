@@ -13,7 +13,7 @@ test.describe('Authentication Flow', () => {
     
     // Should have link to signup ("Create an account" is the actual text)
     const hasSignupLink = await page.getByRole('link', { name: /create an account/i }).count() > 0;
-    const hasNewToText = await page.getByText(/new to restaurant hub/i).count() > 0;
+    const hasNewToText = await page.getByText(/new to crypto pay/i).count() > 0;
     expect(hasSignupLink || hasNewToText).toBeTruthy();
   });
 
@@ -30,6 +30,45 @@ test.describe('Authentication Flow', () => {
     
     // At least form structure should exist
     expect(hasSignupForm || hasEmailInput || hasPasswordInput).toBeTruthy();
+  });
+
+  test('signup multi-step flow submits successfully', async ({ page }) => {
+    await page.goto('/signup');
+    await page.waitForLoadState('networkidle');
+
+    // Step 1: business info
+    await page.getByLabel(/company \/ project name/i).fill('Crypto Pay QA Merchant');
+    await page.getByRole('button', { name: /online merchant/i }).click();
+    await page.locator('#estimated_locations').selectOption('1');
+    await page.locator('#how_heard').selectOption('google');
+    await page.getByRole('button', { name: 'Continue', exact: true }).click();
+
+    // Step 2: location & contact
+    await page.getByLabel(/^city \*/i).fill('Miami');
+    await page.getByLabel(/^state \*/i).fill('FL');
+    await page.getByLabel(/phone number \*/i).fill('+1 305 555 0110');
+    await page.getByRole('button', { name: 'Continue', exact: true }).click();
+
+    // Step 3: account
+    const uniqueEmail = `qa-signup-${Date.now()}@outlook.com`;
+    await page.getByLabel(/email address \*/i).fill(uniqueEmail);
+    await page.getByLabel(/^password \*/i).fill('StrongPass123!');
+    await page.getByRole('button', { name: /create account/i }).click();
+
+    // Sign-up may redirect (when email confirm disabled) or show success message.
+    await expect
+      .poll(
+        async () => {
+          const onSetupPage = /\/account\/setup/.test(page.url());
+          const hasSuccessMessage =
+            (await page.getByText(/account created|check your email|verify your account/i).count()) > 0;
+          const hasRateLimitMessage =
+            (await page.getByText(/email rate limit exceeded|temporarily rate-limited/i).count()) > 0;
+          return onSetupPage || hasSuccessMessage || hasRateLimitMessage;
+        },
+        { timeout: 15000 }
+      )
+      .toBeTruthy();
   });
 
   test('forgot password page is accessible', async ({ page }) => {

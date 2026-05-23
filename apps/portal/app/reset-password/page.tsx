@@ -2,8 +2,8 @@ import { Suspense } from "react";
 import { ResetPasswordForm } from "../(reset-password)/form";
 
 export const metadata = {
-  title: "Reset Password | Restaurant Hub Solution",
-  description: "Create a new password for your Restaurant Hub Solution account",
+  title: "Reset Password | Crypto Pay",
+  description: "Create a new password for your Crypto Pay account",
 };
 
 export default function ResetPasswordPage() {

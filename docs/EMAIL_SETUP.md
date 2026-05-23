@@ -1,5 +1,7 @@
 # Email System Setup Guide
 
+> **Crypto Pay:** use [`EMAIL_SETUP_CRYPTO_PAY.md`](./EMAIL_SETUP_CRYPTO_PAY.md) — this file documents the original Restaurant Hub setup.
+
 ## Current Status ✅
 
 ### Resend Configuration

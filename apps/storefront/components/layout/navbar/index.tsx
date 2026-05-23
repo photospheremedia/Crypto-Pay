@@ -7,7 +7,7 @@ import { Suspense } from "react";
 import MobileMenu from "./mobile-menu";
 import Search, { SearchSkeleton } from "./search";
 
-const siteName = process.env.SITE_NAME || "Restaurant Hub Solution";
+const siteName = process.env.SITE_NAME || "Crypto Pay";
 
 export async function Navbar() {
   const menu = await getMenu("next-js-frontend-header-menu");

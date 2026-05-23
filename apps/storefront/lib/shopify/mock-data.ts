@@ -454,13 +454,13 @@ const mockMenus: Record<string, Menu[]> = {
 const mockPages: Page[] = [
   {
     id: "page_about",
-    title: "About Restaurant Hub Solution",
+    title: "About Crypto Pay",
     handle: "about",
     body:
-      "<p>Restaurant Hub Solution helps restaurants source POS systems and operational supplies in one place.</p><p>We combine curated products with optional subscriptions for ongoing support.</p>",
-    bodySummary: "About Restaurant Hub Solution and our mission.",
+      "<p>Crypto Pay helps restaurants source POS systems and operational supplies in one place.</p><p>We combine curated products with optional subscriptions for ongoing support.</p>",
+    bodySummary: "About Crypto Pay and our mission.",
     seo: {
-      title: "About Restaurant Hub Solution",
+      title: "About Crypto Pay",
       description: "Restaurant POS systems and supply marketplace.",
     },
     createdAt: now,
@@ -475,7 +475,7 @@ const mockPages: Page[] = [
     bodySummary: "Affiliate disclosure.",
     seo: {
       title: "Affiliate Information",
-      description: "Disclosure about affiliate links used on Restaurant Hub Solution.",
+      description: "Disclosure about affiliate links used on Crypto Pay.",
     },
     createdAt: now,
     updatedAt: now,
@@ -485,11 +485,11 @@ const mockPages: Page[] = [
     title: "Support",
     handle: "support",
     body:
-      "<p>Need help selecting POS hardware or supplies?</p><p>Email <a href=\"mailto:support@restauranthubsolution.com\">support@restauranthubsolution.com</a> and our team will assist.</p>",
+      "<p>Need help selecting POS hardware or supplies?</p><p>Email <a href=\"mailto:support@cryptopay.sale\">support@cryptopay.sale</a> and our team will assist.</p>",
     bodySummary: "Support and contact details.",
     seo: {
       title: "Support",
-      description: "Contact Restaurant Hub Solution support for help and onboarding.",
+      description: "Contact Crypto Pay support for help and onboarding.",
     },
     createdAt: now,
     updatedAt: now,
@@ -499,7 +499,7 @@ const mockPages: Page[] = [
     title: "Subscriptions",
     handle: "subscriptions",
     body:
-      `<p>Subscriptions unlock POS software updates, analytics, and priority support.</p><p>Manage subscriptions in the Restaurant Hub Solution Portal: <a href=\"${portalUrl}\" target=\"_blank\" rel=\"noopener noreferrer\">${portalUrl}</a>.</p>`,
+      `<p>Subscriptions unlock POS software updates, analytics, and priority support.</p><p>Manage subscriptions in the Crypto Pay Portal: <a href=\"${portalUrl}\" target=\"_blank\" rel=\"noopener noreferrer\">${portalUrl}</a>.</p>`,
     bodySummary: "Subscription plans and portal access.",
     seo: {
       title: "Subscriptions",

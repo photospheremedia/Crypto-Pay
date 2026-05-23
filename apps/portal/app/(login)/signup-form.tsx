@@ -8,7 +8,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader2, ArrowRight, ArrowLeft, Check, Building2, MapPin, Mail } from 'lucide-react';
 import { getSupabaseBrowserClient } from '@crypto-pay/db/supabaseClient';
-import { signIn, signUp, signInWithOAuth, type ActionState } from './actions';
+import { Logo } from '@/components/logo';
+import { signUp, type ActionState } from './actions';
 
 const STEPS = [
   { id: 1, title: 'Business Info', icon: Building2 },
@@ -17,20 +18,20 @@ const STEPS = [
 ];
 
 const ORG_TYPES = [
-  { value: 'restaurant_group', label: 'Restaurant group', description: '2+ locations' },
-  { value: 'single_location', label: 'Single location restaurant', description: '1 location' },
-  { value: 'ghost_kitchen', label: 'Ghost / Dark kitchen', description: 'Delivery only' },
-  { value: 'cafe_bakery', label: 'Cafe or bakery', description: 'Quick service' },
-  { value: 'food_truck', label: 'Food truck / Pop-up', description: 'Mobile' },
+  { value: 'exchange', label: 'Crypto exchange', description: 'Custodial platform' },
+  { value: 'merchant', label: 'Online merchant', description: 'Accepts payments' },
+  { value: 'saas', label: 'SaaS / Platform', description: 'Subscription billing' },
+  { value: 'fintech', label: 'Fintech / Wallet app', description: 'Consumer payments' },
+  { value: 'agency', label: 'Agency / Integrator', description: 'Client implementations' },
   { value: 'other', label: 'Other', description: 'Tell us more' },
 ];
 
 const LOCATION_COUNTS = [
-  { value: '1', label: '1 location' },
-  { value: '2-5', label: '2-5 locations' },
-  { value: '6-10', label: '6-10 locations' },
-  { value: '11-25', label: '11-25 locations' },
-  { value: '25+', label: '25+ locations' },
+  { value: '1', label: '1 project' },
+  { value: '2-5', label: '2-5 projects' },
+  { value: '6-10', label: '6-10 projects' },
+  { value: '11-25', label: '11-25 projects' },
+  { value: '25+', label: '25+ projects' },
 ];
 
 const HOW_HEARD_OPTIONS = [
@@ -48,8 +49,6 @@ export function SignupForm() {
   const priceId = searchParams.get('priceId');
 
   const [step, setStep] = useState(1);
-  const [oauthError, setOauthError] = useState<string | null>(null);
-  const [oauthLoading, setOauthLoading] = useState<string | null>(null);
   const [existingUser, setExistingUser] = useState(false);
 
   // Form data
@@ -77,11 +76,6 @@ export function SignupForm() {
     { error: '' }
   );
 
-  const appUrl =
-    typeof window !== 'undefined'
-      ? window.location.origin
-      : process.env.NEXT_PUBLIC_APP_URL || '';
-
   useEffect(() => {
     const checkUser = async () => {
       const supabase = getSupabaseBrowserClient();
@@ -90,39 +84,6 @@ export function SignupForm() {
     };
     checkUser();
   }, []);
-
-  const handleOAuth = async (provider: 'google') => {
-    setOauthError(null);
-    setOauthLoading(provider);
-    try {
-      // Call server action to initiate OAuth with proper PKCE handling
-      const result = await signInWithOAuth(
-        provider,
-        'signup',
-        redirect || undefined,
-        priceId || undefined,
-      );
-
-      if (result?.error) {
-        setOauthError(result.error);
-        setOauthLoading(null);
-        return;
-      }
-
-      // Redirect to OAuth provider URL on client side
-      // This ensures cookies set by @supabase/ssr are properly sent before redirect
-      if (result?.url) {
-        window.location.href = result.url;
-        return;
-      }
-
-      setOauthError('OAuth initialization failed');
-    } catch {
-      setOauthError('Authentication failed. Please try again.');
-    } finally {
-      setOauthLoading(null);
-    }
-  };
 
   const updateField = (field: string, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -147,20 +108,16 @@ export function SignupForm() {
   };
 
   return (
-    <div className="min-h-[calc(100vh-120px)] bg-linear-to-br from-slate-50 via-white to-orange-50 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-[calc(100vh-120px)] bg-linear-to-br from-slate-50 via-white to-cyan-50/40 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-lg">
         {/* Logo and Branding */}
         <div className="mb-6 flex flex-col items-center">
           <div className="mb-3 flex items-center justify-center">
-            <img
-              src="/logo-full.svg"
-              alt="Restaurant Hub Solution"
-              className="h-11 w-auto drop-shadow-lg"
-            />
+            <Logo size="md" showText={true} />
           </div>
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-slate-900">Restaurant Hub</h1>
-            <p className="mt-1 text-xs tracking-wide text-slate-500 uppercase font-semibold">Operations Suite</p>
+            <h1 className="text-2xl font-bold text-slate-900">Crypto Pay</h1>
+            <p className="mt-1 text-xs tracking-wide text-slate-500 uppercase font-semibold">Merchant Onboarding</p>
           </div>
         </div>
 
@@ -170,7 +127,7 @@ export function SignupForm() {
         </h2>
         <p className="mt-3 text-center text-sm text-slate-600">
           Already have an account?{' '}
-          <Link href="/login" className="font-semibold text-orange-500 hover:text-orange-600">
+          <Link href="/login" className="font-semibold text-emerald-600 hover:text-cyan-600">
             Sign in
           </Link>
         </p>
@@ -184,9 +141,9 @@ export function SignupForm() {
                 onClick={() => s.id < step && setStep(s.id)}
                 disabled={s.id > step}
                 className={`flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium transition ${s.id === step
-                    ? 'bg-orange-500 text-white'
+                    ? 'bg-gradient-to-r from-emerald-500 to-cyan-600 text-white'
                     : s.id < step
-                      ? 'bg-orange-100 text-orange-600 hover:bg-orange-200'
+                      ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
                       : 'bg-slate-100 text-slate-400'
                   }`}
               >
@@ -199,7 +156,7 @@ export function SignupForm() {
                 <span className="sm:hidden">{s.id}</span>
               </button>
               {idx < STEPS.length - 1 && (
-                <div className={`mx-2 h-px w-6 ${s.id < step ? 'bg-orange-300' : 'bg-slate-200'}`} />
+                <div className={`mx-2 h-px w-6 ${s.id < step ? 'bg-emerald-300' : 'bg-slate-200'}`} />
               )}
             </div>
           ))}
@@ -226,42 +183,6 @@ export function SignupForm() {
             </div>
           )}
 
-          {/* Google Sign Up - Always visible */}
-          <div className="mb-6">
-            <Button
-              type="button"
-              onClick={() => handleOAuth('google')}
-              disabled={oauthLoading !== null}
-              className="w-full rounded-xl border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 shadow-sm hover:shadow-md transition disabled:opacity-70 py-2.5 font-medium"
-            >
-              {oauthLoading === 'google' ? (
-                <>
-                  <Loader2 className="animate-spin mr-2 h-4 w-4" />
-                  Connecting...
-                </>
-              ) : (
-                <>
-                  <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-                  </svg>
-                  Sign up with Google
-                </>
-              )}
-            </Button>
-            {oauthError && (
-              <p className="mt-2 text-sm text-red-600">{oauthError}</p>
-            )}
-          </div>
-
-          <div className="flex items-center gap-3 mb-6">
-            <div className="flex-1 border-t border-slate-200" />
-            <span className="text-xs font-medium text-slate-500 uppercase">or with email</span>
-            <div className="flex-1 border-t border-slate-200" />
-          </div>
-
           <form onSubmit={handleSubmit}>
             <input type="hidden" name="redirect" value={redirect || ''} />
             <input type="hidden" name="priceId" value={priceId || ''} />
@@ -271,13 +192,13 @@ export function SignupForm() {
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="org_name" className="text-sm font-medium text-slate-700">
-                    Restaurant / Business name *
+                    Company / project name *
                   </Label>
                   <Input
                     id="org_name"
                     value={formData.org_name}
                     onChange={(e) => updateField('org_name', e.target.value)}
-                    placeholder="e.g., Tony's Pizza, Fresh Eats Group"
+                    placeholder="e.g., BlockPay Labs, Atlas Exchange"
                     className="mt-1 rounded-xl"
                     required
                   />
@@ -294,7 +215,7 @@ export function SignupForm() {
                         type="button"
                         onClick={() => updateField('org_type', type.value)}
                         className={`p-3 rounded-xl border text-left transition ${formData.org_type === type.value
-                            ? 'border-orange-500 bg-orange-50 ring-2 ring-orange-200'
+                            ? 'border-emerald-500 bg-emerald-50 ring-2 ring-emerald-200'
                             : 'border-slate-200 hover:border-slate-300'
                           }`}
                       >
@@ -319,14 +240,14 @@ export function SignupForm() {
 
                 <div>
                   <Label htmlFor="estimated_locations" className="text-sm font-medium text-slate-700">
-                    How many locations?
+                    How many products or merchant deployments?
                   </Label>
                   <select
                     id="estimated_locations"
                     aria-label="Number of locations"
                     value={formData.estimated_locations}
                     onChange={(e) => updateField('estimated_locations', e.target.value)}
-                    className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-100"
+                    className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-100"
                   >
                     {LOCATION_COUNTS.map((opt) => (
                       <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -336,14 +257,14 @@ export function SignupForm() {
 
                 <div>
                   <Label htmlFor="how_heard" className="text-sm font-medium text-slate-700">
-                    How did you hear about us?
+                    How did you discover Crypto Pay?
                   </Label>
                   <select
                     id="how_heard"
-                    aria-label="How did you hear about us"
+                    aria-label="How did you discover Crypto Pay"
                     value={formData.how_heard}
                     onChange={(e) => updateField('how_heard', e.target.value)}
-                    className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-100"
+                    className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-100"
                   >
                     <option value="">Select one (optional)</option>
                     {HOW_HEARD_OPTIONS.map((opt) => (
@@ -367,7 +288,7 @@ export function SignupForm() {
                   type="button"
                   onClick={() => setStep(2)}
                   disabled={!canProceedStep1}
-                  className="w-full rounded-xl bg-orange-500 hover:bg-orange-600 mt-4"
+                  className="w-full rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 mt-4"
                 >
                   Continue
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -477,7 +398,7 @@ export function SignupForm() {
                     type="button"
                     onClick={() => setStep(3)}
                     disabled={!canProceedStep2}
-                    className="flex-1 rounded-xl bg-orange-500 hover:bg-orange-600"
+                    className="flex-1 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700"
                   >
                     Continue
                     <ArrowRight className="ml-2 h-4 w-4" />
@@ -499,7 +420,7 @@ export function SignupForm() {
                     type="email"
                     value={formData.email}
                     onChange={(e) => updateField('email', e.target.value)}
-                    placeholder="you@restaurant.com"
+                    placeholder="you@company.com"
                     className="mt-1 rounded-xl"
                     required
                   />
@@ -529,7 +450,7 @@ export function SignupForm() {
                     name="newsletter_consent"
                     checked={formData.newsletter_consent}
                     onChange={(e) => updateField('newsletter_consent', e.target.checked)}
-                    className="mt-0.5 h-4 w-4 rounded border-slate-300 text-orange-500 focus:ring-orange-500"
+                    className="mt-0.5 h-4 w-4 rounded border-slate-300 text-emerald-500 focus:ring-emerald-500"
                   />
                   <label htmlFor="newsletter_consent" className="text-sm text-slate-600">
                     <span className="font-medium text-slate-700">Send me the weekly ops brief</span>
@@ -564,7 +485,7 @@ export function SignupForm() {
                   <Button
                     type="submit"
                     disabled={pending || !canSubmit}
-                    className="flex-1 rounded-xl bg-orange-500 hover:bg-orange-600"
+                    className="flex-1 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700"
                   >
                     {pending ? (
                       <>
@@ -582,9 +503,9 @@ export function SignupForm() {
 
           <p className="mt-6 text-center text-xs text-slate-500">
             By signing up, you agree to our{' '}
-            <Link href="/terms-of-service" className="text-orange-500 hover:underline">Terms</Link>
+            <Link href="/terms-of-service" className="text-emerald-600 hover:text-cyan-600">Terms</Link>
             {' '}and{' '}
-            <Link href="/privacy-policy" className="text-orange-500 hover:underline">Privacy Policy</Link>
+            <Link href="/privacy-policy" className="text-emerald-600 hover:text-cyan-600">Privacy Policy</Link>
           </p>
         </div>
       </div>

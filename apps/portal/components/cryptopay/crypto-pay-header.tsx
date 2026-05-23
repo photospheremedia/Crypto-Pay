@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
+import type { AuthChangeEvent, Session, User } from "@supabase/supabase-js";
 import { getSupabaseBrowserClientOptional } from "@crypto-pay/db/supabaseClient";
 import { Button } from "@/components/ui/button";
 import { CryptoPayLogo } from "./crypto-pay-logo";
@@ -19,10 +20,14 @@ export function CryptoPayHeader() {
     const supabase = getSupabaseBrowserClientOptional();
     if (!supabase) return;
 
-    supabase.auth.getUser().then(({ data }) => setIsAuthed(!!data.user));
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
-      setIsAuthed(!!session?.user);
+    void supabase.auth.getUser().then(({ data }: { data: { user: User | null } }) => {
+      setIsAuthed(!!data.user);
     });
+    const { data: sub } = supabase.auth.onAuthStateChange(
+      (_event: AuthChangeEvent, session: Session | null) => {
+        setIsAuthed(!!session?.user);
+      }
+    );
     return () => sub.subscription.unsubscribe();
   }, []);
 
@@ -63,7 +68,7 @@ export function CryptoPayHeader() {
               <Button
                 asChild
                 size="sm"
-                className="rounded-full bg-gradient-to-r from-emerald-600 to-cyan-600 text-white hover:from-emerald-500 hover:to-cyan-500"
+                className="rounded-full bg-gradient-to-r from-orange-500 to-emerald-600 text-white hover:from-orange-400 hover:to-emerald-500"
               >
                 <Link href="/signup">Start Accepting Crypto</Link>
               </Button>

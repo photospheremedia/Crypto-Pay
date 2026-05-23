@@ -5,7 +5,7 @@ test.describe('Marketing Pages', () => {
     await page.goto('/');
     
     // Check page title
-    await expect(page).toHaveTitle(/Restaurant Hub Solution/);
+    await expect(page).toHaveTitle(/Crypto Pay/);
     
     // Main navigation should be visible
     await expect(page.locator('nav')).toBeVisible();

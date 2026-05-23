@@ -1,8 +1,18 @@
+/** Crypto Pay Supabase — must match Cursor MCP (connection C412-6403) */
+export const SUPABASE = {
+  projectRef: "hwntncyiqaltzvlidscg",
+  url: "https://hwntncyiqaltzvlidscg.supabase.co",
+  functionsUrl: "https://hwntncyiqaltzvlidscg.supabase.co/functions/v1",
+  dashboardUrl:
+    "https://supabase.com/dashboard/project/hwntncyiqaltzvlidscg",
+  mcpConnectionId: "C412-6403",
+} as const;
+
 export const BRAND = {
-  name: "Crypto Pay",
+  name: "CryptivaPay",
   tagline: "Accept Crypto Payments. Instantly. Securely. Globally.",
-  email: "support@cryptopay.com",
-  siteUrl: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3001",
+  email: "support@cryptopay.sale",
+  siteUrl: process.env.NEXT_PUBLIC_APP_URL || "https://cryptopay.sale",
 } as const;
 
 export const NAV_LINKS = [

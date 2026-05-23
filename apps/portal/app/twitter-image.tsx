@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Restaurant Hub Solution - Streamline Your Restaurant Operations";
+export const alt = "Crypto Pay - Streamline Your Restaurant Operations";
 export const size = {
   width: 1200,
   height: 630,
@@ -86,7 +86,7 @@ export default async function Image() {
             letterSpacing: "-0.02em",
           }}
         >
-          Restaurant Hub Solution
+          Crypto Pay
         </div>
 
         {/* Tagline */}
@@ -142,7 +142,7 @@ export default async function Image() {
             letterSpacing: "0.05em",
           }}
         >
-          restauranthubsolution.com
+          cryptopay.sale
         </div>
       </div>
     ),

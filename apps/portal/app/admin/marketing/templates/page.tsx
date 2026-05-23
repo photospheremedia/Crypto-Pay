@@ -79,7 +79,7 @@ export default function TemplatesPage() {
         {
           id: "tmpl-001",
           name: "Welcome Email",
-          subject: "Welcome to Restaurant Hub! 🎉",
+          subject: "Welcome to Crypto Pay! 🎉",
           category: "Welcome",
           last_modified: "2024-03-10",
           times_used: 450,

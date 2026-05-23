@@ -22,7 +22,8 @@
     "vercel:deploy": "vercel --prod",
     "vercel:preview": "vercel",
     "vercel:env": "vercel env pull",
-    "vercel:link": "vercel link",
+    "vercel:link": "vercel link --project crypto-pay-portal",
+    "vercel:env:push": "powershell -ExecutionPolicy Bypass -File scripts/sync-vercel-env.ps1",
     "vercel:logs": "vercel logs",
     "vercel:inspect": "vercel inspect",
     "check:env": "./scripts/check-env.sh"

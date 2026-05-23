@@ -149,29 +149,41 @@ export async function signUp(
   const supabase = await getSupabaseServerClient();
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3001";
 
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      emailRedirectTo: `${appUrl}/auth/callback?next=/account/setup`,
-      data: {
-        org_name: orgName,
-        org_type: orgType,
-        org_type_other: orgTypeOther || "",
-        address_line1: addressLine1 || "",
-        address_line2: addressLine2 || "",
-        city,
-        state,
-        postal_code: postalCode || "",
-        country: country || "US",
-        phone,
-        estimated_locations: estimatedLocations,
-        how_heard_about_us: howHeard || "",
-        how_heard_other: howHeardOther || "",
-        newsletter_consent: newsletterConsent,
+  let data: Awaited<ReturnType<typeof supabase.auth.signUp>>["data"] | null = null;
+  let error: Awaited<ReturnType<typeof supabase.auth.signUp>>["error"] | null = null;
+
+  try {
+    const result = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${appUrl}/auth/callback?next=/account/setup`,
+        data: {
+          org_name: orgName,
+          org_type: orgType,
+          org_type_other: orgTypeOther || "",
+          address_line1: addressLine1 || "",
+          address_line2: addressLine2 || "",
+          city,
+          state,
+          postal_code: postalCode || "",
+          country: country || "US",
+          phone,
+          estimated_locations: estimatedLocations,
+          how_heard_about_us: howHeard || "",
+          how_heard_other: howHeardOther || "",
+          newsletter_consent: newsletterConsent,
+        },
       },
-    },
-  });
+    });
+    data = result.data;
+    error = result.error;
+  } catch (err) {
+    return {
+      error: "Could not create your account right now. Please try again in a moment.",
+      email,
+    };
+  }
 
   if (error) {
     // Provide user-friendly error messages
@@ -180,6 +192,9 @@ export async function signUp(
       userMessage = 'This email is already registered. Please sign in instead.';
     } else if (error.message.includes('User already exists')) {
       userMessage = 'This email is already registered. Please sign in instead.';
+    } else if (error.message.includes('email rate limit exceeded')) {
+      userMessage =
+        'Signup emails are temporarily rate-limited. Please wait a bit and try again, or configure custom SMTP/rate limits in Supabase Auth settings.';
     }
     return { error: userMessage, email };
   }
@@ -198,49 +213,4 @@ export async function signOut() {
   const supabase = await getSupabaseServerClient();
   await supabase.auth.signOut();
   redirect("/");
-}
-
-export async function signInWithOAuth(
-  provider: 'google',
-  mode: 'signin' | 'signup' = 'signin',
-  redirectPath?: string,
-  priceId?: string,
-): Promise<{ error?: string; url?: string }> {
-  const supabase = await getSupabaseServerClient();
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001';
-
-  // Build callback URL with mode and other parameters
-  const callbackUrl = new URL('/auth/callback', baseUrl);
-  callbackUrl.searchParams.set('mode', mode);
-  if (redirectPath) {
-    callbackUrl.searchParams.set('next', redirectPath);
-  }
-  if (priceId) {
-    callbackUrl.searchParams.set('priceId', priceId);
-  }
-
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider,
-    options: {
-      redirectTo: callbackUrl.toString(),
-      queryParams: {
-        access_type: 'offline',
-        prompt: mode === 'signup' ? 'consent' : 'select_account',
-      },
-    },
-  });
-
-  if (error) {
-    return {
-      error: `Failed to ${mode === 'signup' ? 'sign up' : 'sign in'} with ${provider}. ${error.message}`,
-    };
-  }
-
-  // Return the OAuth URL for the client to handle the redirect
-  // This ensures cookies are properly set before the redirect happens
-  if (data?.url) {
-    return { url: data.url };
-  }
-
-  return { error: 'OAuth initialization failed' };
 }

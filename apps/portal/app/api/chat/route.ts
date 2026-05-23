@@ -33,7 +33,7 @@ interface OrderRecord {
  * Context helps personalize responses but is gracefully optional
  */
 function buildSystemPrompt(context?: ChatContext): string {
-  let prompt = `You are a friendly and knowledgeable AI assistant for Restaurant Hub Solution, a B2B SaaS platform that helps restaurant operators manage their business more efficiently.
+  let prompt = `You are a friendly and knowledgeable AI assistant for Crypto Pay, a B2B SaaS platform that helps restaurant operators manage their business more efficiently.
 
 CORE SERVICES:
 1. **Delivery Integration (via Urban Piper)**: Consolidate 15+ delivery platforms (Uber Eats, DoorDash, Grubhub, etc.) into one dashboard

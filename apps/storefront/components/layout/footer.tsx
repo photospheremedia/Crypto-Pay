@@ -5,7 +5,7 @@ import LogoSquare from "components/logo-square";
 import { getMenu } from "lib/shopify";
 import { Suspense } from "react";
 
-const siteName = process.env.SITE_NAME || "Restaurant Hub Solution";
+const siteName = process.env.SITE_NAME || "Crypto Pay";
 const companyName = process.env.COMPANY_NAME || siteName;
 
 export default async function Footer() {

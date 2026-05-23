@@ -384,7 +384,7 @@ export default function EmailMarketingPage() {
         </h2>
         <div className="grid gap-4 sm:grid-cols-5">
           {[
-            { day: "Day 0", subject: "Welcome to Restaurant Hub! 🎉", desc: "Account setup guide" },
+            { day: "Day 0", subject: "Welcome to Crypto Pay! 🎉", desc: "Account setup guide" },
             { day: "Day 1", subject: "Complete your store profile", desc: "Profile optimization tips" },
             { day: "Day 3", subject: "Your first order guide", desc: "How to place orders" },
             { day: "Day 5", subject: "Unlock exclusive discounts", desc: "Subscription benefits" },

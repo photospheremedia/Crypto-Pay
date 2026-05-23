@@ -1,13 +1,6 @@
 /**
- * Base Email Template - Restaurant Hub Solution
- * Professional B2B email design system matching market standards
- * 
- * Design principles:
- * - Mobile-first responsive (600px max width)
- * - Brand consistent (orange primary)
- * - High deliverability (inline styles, clean HTML)
- * - Accessibility compliant
- * - Dark mode support via prefers-color-scheme
+ * Base Email Template - Crypto Pay
+ * Mobile-first HTML emails (emerald brand)
  */
 
 export interface BaseTemplateOptions {
@@ -18,22 +11,9 @@ export interface BaseTemplateOptions {
   backgroundColor?: string;
 }
 
-// Brand colors - RHS Orange Theme
-export const brandColors = {
-  primary: '#f0531c',       // RHS Orange
-  primaryDark: '#c24215',   // RHS Orange Dark
-  primaryLight: '#ff6b35',  // RHS Orange Light
-  secondary: '#111827',     // Gray 900
-  background: '#f9fafb',    // Gray 50
-  surface: '#ffffff',
-  text: '#374151',          // Gray 700
-  textLight: '#6b7280',     // Gray 500
-  textMuted: '#9ca3af',     // Gray 400
-  border: '#e5e7eb',        // Gray 200
-  success: '#10b981',       // Emerald for success states
-  warning: '#f59e0b',
-  error: '#ef4444',
-};
+import { emailBrandColors, EMAIL } from "./config";
+
+export const brandColors = emailBrandColors;
 
 export const baseStyles = `
   /* Reset */
@@ -99,7 +79,7 @@ export function generateBaseTemplate(
   <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
   <meta name="color-scheme" content="light dark">
   <meta name="supported-color-schemes" content="light dark">
-  <title>Restaurant Hub Solution</title>
+  <title>${EMAIL.brandName}</title>
   <!--[if mso]>
   <noscript>
     <xml>
@@ -157,10 +137,10 @@ function generateHeader(): string {
       <table role="presentation" cellspacing="0" cellpadding="0" border="0">
         <tr>
           <td style="vertical-align: middle; padding-right: 12px;">
-            <img src="https://restauranthubsolution.com/logo-500.png" alt="Restaurant Hub Solution" width="40" height="40" style="display: block; border-radius: 8px;" />
+            <span style="display:inline-block;width:40px;height:40px;line-height:40px;text-align:center;background:${brandColors.primary};color:white;border-radius:8px;font-size:20px;font-weight:700;">&#8383;</span>
           </td>
           <td style="vertical-align: middle;">
-            <span style="font-size: 20px; font-weight: 700; color: ${brandColors.secondary};">Restaurant Hub Solution</span>
+            <span style="font-size: 20px; font-weight: 700; color: ${brandColors.secondary};">${EMAIL.brandName}</span>
           </td>
         </tr>
       </table>
@@ -171,53 +151,46 @@ function generateHeader(): string {
 
 function generateFooter(showSocial: boolean): string {
   const currentYear = new Date().getFullYear();
+  const socialLinks = [
+    { url: EMAIL.social.x, icon: "twitter", alt: "X" },
+    { url: EMAIL.social.linkedin, icon: "linkedin", alt: "LinkedIn" },
+    { url: EMAIL.social.facebook, icon: "facebook", alt: "Facebook" },
+  ].filter((item): item is { url: string; icon: string; alt: string } => Boolean(item.url));
   
   return `
   <!-- Footer -->
   <tr>
     <td style="padding: 32px 24px; text-align: center;">
-      ${showSocial ? `
+      ${showSocial && socialLinks.length > 0 ? `
       <!-- Social links -->
       <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto 16px;">
         <tr>
+          ${socialLinks.map((item) => `
           <td style="padding: 0 8px;">
-            <a href="https://twitter.com/restauranthub" style="display: inline-block; width: 32px; height: 32px; background: ${brandColors.border}; border-radius: 50%; text-decoration: none;">
-              <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/twitter.svg" alt="Twitter" width="16" height="16" style="margin: 8px; opacity: 0.6;">
+            <a href="${item.url}" style="display: inline-block; width: 32px; height: 32px; background: ${brandColors.border}; border-radius: 50%; text-decoration: none;">
+              <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/${item.icon}.svg" alt="${item.alt}" width="16" height="16" style="margin: 8px; opacity: 0.6;">
             </a>
-          </td>
-          <td style="padding: 0 8px;">
-            <a href="https://linkedin.com/company/restauranthub" style="display: inline-block; width: 32px; height: 32px; background: ${brandColors.border}; border-radius: 50%; text-decoration: none;">
-              <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/linkedin.svg" alt="LinkedIn" width="16" height="16" style="margin: 8px; opacity: 0.6;">
-            </a>
-          </td>
-          <td style="padding: 0 8px;">
-            <a href="https://facebook.com/restauranthub" style="display: inline-block; width: 32px; height: 32px; background: ${brandColors.border}; border-radius: 50%; text-decoration: none;">
-              <img src="https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/facebook.svg" alt="Facebook" width="16" height="16" style="margin: 8px; opacity: 0.6;">
-            </a>
-          </td>
+          </td>`).join("")}
         </tr>
       </table>
       ` : ''}
       
       <!-- Company info -->
       <p style="margin: 0 0 8px; font-size: 13px; color: ${brandColors.textMuted};">
-        Restaurant Hub Solution • B2B Restaurant Supply Platform
-      </p>
-      <p style="margin: 0 0 16px; font-size: 12px; color: ${brandColors.textMuted};">
-        123 Business Ave, Suite 400 • New York, NY 10001
+        ${EMAIL.brandName} • ${EMAIL.siteUrl.replace(/^https?:\/\//, "")}
       </p>
       
       <!-- Legal links -->
       <p style="margin: 0; font-size: 12px; color: ${brandColors.textMuted};">
         <a href="%unsubscribe_url%" style="color: ${brandColors.textMuted}; text-decoration: underline;">Unsubscribe</a>
         &nbsp;•&nbsp;
-        <a href="https://restauranthubsolution.com/privacy-policy" style="color: ${brandColors.textMuted}; text-decoration: underline;">Privacy Policy</a>
+        <a href="${EMAIL.siteUrl}/privacy-policy" style="color: ${brandColors.textMuted}; text-decoration: underline;">Privacy Policy</a>
         &nbsp;•&nbsp;
-        <a href="https://restauranthubsolution.com/terms-of-service" style="color: ${brandColors.textMuted}; text-decoration: underline;">Terms of Service</a>
+        <a href="${EMAIL.siteUrl}/terms-of-service" style="color: ${brandColors.textMuted}; text-decoration: underline;">Terms of Service</a>
       </p>
       
       <p style="margin: 16px 0 0; font-size: 11px; color: ${brandColors.textMuted};">
-        © ${currentYear} Restaurant Hub Solution. All rights reserved.
+        © ${currentYear} ${EMAIL.brandName}. All rights reserved.
       </p>
     </td>
   </tr>

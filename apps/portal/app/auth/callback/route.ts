@@ -6,10 +6,10 @@ import { getSupabaseServerClient } from "@crypto-pay/db/supabaseServer";
  * OAuth Callback Handler
  * 
  * Exchanges authorization code from OAuth provider for user session.
- * Called by Supabase after user grants permission on OAuth provider (Google).
+ * Called by Supabase after user grants permission on an OAuth provider.
  * 
  * PKCE Flow (Supabase Best Practice):
- * 1. User clicks "Sign in with Google" → server action calls signInWithOAuth
+ * 1. User starts OAuth login/signup → server action initializes OAuth flow
  * 2. @supabase/ssr automatically stores PKCE code_verifier in cookies (server-side)
  * 3. OAuth provider redirects to this route with ?code=XXX&mode=signin|signup
  * 4. exchangeCodeForSession reads code_verifier from cookies automatically

@@ -79,7 +79,7 @@ export async function buildChatContext(
  * Build system prompt for the AI model
  */
 function buildSystemPrompt(relevantContext: string): string {
-  const basePrompt = `You are a helpful restaurant operations assistant for Restaurant Hub. 
+  const basePrompt = `You are a helpful restaurant operations assistant for Crypto Pay. 
 You help restaurant owners and staff with:
 - Menu management and product ordering
 - Delivery platform integration (Uber Eats, DoorDash, Grubhub, etc.)

@@ -151,7 +151,7 @@ export function HeroWithVideo() {
                     <div className="h-3 w-3 rounded-full bg-green-400" />
                   </div>
                   <div className="ml-4 flex-1 rounded-lg bg-white px-4 py-1.5 text-xs text-slate-400">
-                    app.restauranthubsolution.com/dashboard
+                    app.cryptopay.com/dashboard
                   </div>
                 </div>
                 

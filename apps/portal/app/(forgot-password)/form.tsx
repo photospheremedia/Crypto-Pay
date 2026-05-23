@@ -49,8 +49,8 @@ export function ForgotPasswordForm() {
       <div className="min-h-[calc(100vh-120px)] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 px-8 py-10 text-center">
-            <div className="mx-auto w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-6">
-              <CheckCircle2 className="h-8 w-8 text-orange-500" />
+            <div className="mx-auto w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-6">
+              <CheckCircle2 className="h-8 w-8 text-emerald-600" />
             </div>
             <h2 className="text-2xl font-bold text-slate-900 mb-2">
               Check your email
@@ -68,7 +68,7 @@ export function ForgotPasswordForm() {
                     setStatus("idle");
                     setEmail("");
                   }}
-                  className="text-orange-500 hover:text-orange-600 font-medium"
+                  className="text-emerald-600 hover:text-cyan-600 font-medium"
                 >
                   Try again
                 </button>
@@ -93,8 +93,8 @@ export function ForgotPasswordForm() {
     <div className="min-h-[calc(100vh-120px)] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="text-center mb-8">
-          <div className="mx-auto w-14 h-14 bg-orange-100 rounded-full flex items-center justify-center mb-4">
-            <Mail className="h-7 w-7 text-orange-500" />
+          <div className="mx-auto w-14 h-14 bg-emerald-100 rounded-full flex items-center justify-center mb-4">
+            <Mail className="h-7 w-7 text-emerald-600" />
           </div>
           <h2 className="text-3xl font-bold tracking-tight text-slate-900">
             Forgot your password?
@@ -118,7 +118,7 @@ export function ForgotPasswordForm() {
                 required
                 autoComplete="email"
                 autoFocus
-                placeholder="you@restaurant.com"
+                placeholder="you@company.com"
                 className="mt-1.5 rounded-xl"
               />
             </div>
@@ -136,7 +136,7 @@ export function ForgotPasswordForm() {
             <Button
               type="submit"
               disabled={loading || !email}
-              className="w-full rounded-xl bg-orange-500 hover:bg-orange-600 h-11"
+              className="w-full rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 h-11"
             >
               {loading ? (
                 <>
@@ -152,7 +152,7 @@ export function ForgotPasswordForm() {
           <div className="mt-6 pt-6 border-t border-slate-100 text-center">
             <Link
               href="/login"
-              className="inline-flex items-center gap-2 text-sm font-medium text-orange-500 hover:text-orange-600"
+              className="inline-flex items-center gap-2 text-sm font-medium text-emerald-600 hover:text-cyan-600"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to sign in
@@ -162,7 +162,7 @@ export function ForgotPasswordForm() {
 
         <p className="mt-6 text-center text-xs text-slate-500">
           Remember your password?{" "}
-          <Link href="/login" className="text-orange-500 hover:underline">
+          <Link href="/login" className="text-emerald-600 hover:text-cyan-600">
             Sign in
           </Link>
         </p>

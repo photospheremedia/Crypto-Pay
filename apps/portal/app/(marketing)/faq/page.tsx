@@ -3,8 +3,8 @@ import { JsonLd } from "@/components/json-ld";
 import { getFAQJsonLd } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
-  title: "FAQ | Restaurant Hub Solution",
-  description: "Frequently asked questions about Restaurant Hub Solution. Learn about delivery integration, pricing, setup time, and more.",
+  title: "FAQ | Crypto Pay",
+  description: "Frequently asked questions about Crypto Pay. Learn about delivery integration, pricing, setup time, and more.",
   keywords: [
     "restaurant hub faq",
     "delivery integration questions",
@@ -12,9 +12,9 @@ export const metadata: Metadata = {
     "pricing questions",
   ],
   openGraph: {
-    title: "Restaurant Hub Solution - Frequently Asked Questions",
+    title: "Crypto Pay - Frequently Asked Questions",
     description: "Answers to common questions about our delivery integration, supply marketplace, and brand refresh services.",
-    url: "https://restauranthubsolution.com/faq",
+    url: "https://cryptopay.sale/faq",
     type: "website",
   },
 };
@@ -22,9 +22,9 @@ export const metadata: Metadata = {
 const faqs = [
   {
     category: "Getting Started",
-    question: "What is Restaurant Hub Solution?",
+    question: "What is Crypto Pay?",
     answer:
-      "Restaurant Hub Solution is an all-in-one partner for restaurant groups. We consolidate your delivery platforms into one tablet, refresh your menu and branding, and provide curated supplies at reseller pricing — all managed through a single portal.",
+      "Crypto Pay is an all-in-one partner for restaurant groups. We consolidate your delivery platforms into one tablet, refresh your menu and branding, and provide curated supplies at reseller pricing — all managed through a single portal.",
   },
   {
     category: "Getting Started",

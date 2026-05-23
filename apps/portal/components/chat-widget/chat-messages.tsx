@@ -60,7 +60,7 @@ export function ChatMessages({
           </Avatar>
           <div className="bg-white dark:bg-slate-800 px-4 py-3 rounded-2xl rounded-tl-md shadow-sm border border-slate-100 dark:border-slate-700 max-w-[85%]">
             <p className="text-sm text-slate-700 dark:text-slate-300">
-              Hi {userName || "there"}! 👋 I'm your Restaurant Hub AI assistant. How can I help you today?
+              Hi {userName || "there"}! 👋 I'm your Crypto Pay AI assistant. How can I help you today?
             </p>
           </div>
         </div>

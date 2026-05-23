@@ -2,8 +2,8 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Terms of Service | Restaurant Hub Solution',
-  description: 'Terms of Service for Restaurant Hub Solution',
+  title: 'Terms of Service | Crypto Pay',
+  description: 'Terms of Service for Crypto Pay',
 }
 
 export default function TermsOfServicePage() {
@@ -17,13 +17,13 @@ export default function TermsOfServicePage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-slate-900 mb-4">1. Acceptance of Terms</h2>
               <p className="text-slate-700 leading-relaxed mb-4">
-                Welcome to Restaurant Hub Solution. By accessing or using our B2B platform for restaurant management 
+                Welcome to Crypto Pay. By accessing or using our B2B platform for restaurant management 
                 and supply ordering (the "Service"), you agree to be bound by these Terms of Service ("Terms"). 
                 If you do not agree to these Terms, do not use the Service.
               </p>
               <p className="text-slate-700 leading-relaxed mb-4">
                 These Terms constitute a legally binding agreement between you (the "Customer" or "you") and 
-                Restaurant Hub Solution ("we," "us," or "our").
+                Crypto Pay ("we," "us," or "our").
               </p>
             </section>
 
@@ -126,7 +126,7 @@ export default function TermsOfServicePage() {
               
               <h3 className="text-xl font-semibold text-slate-800 mb-3">6.1 Our Rights</h3>
               <p className="text-slate-700 leading-relaxed mb-4">
-                The Service, including all content, features, and functionality, is owned by Restaurant Hub Solution 
+                The Service, including all content, features, and functionality, is owned by Crypto Pay 
                 and protected by copyright, trademark, and other intellectual property laws.
               </p>
 
@@ -208,7 +208,7 @@ export default function TermsOfServicePage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-slate-900 mb-4">11. Indemnification</h2>
               <p className="text-slate-700 leading-relaxed mb-4">
-                You agree to indemnify, defend, and hold harmless Restaurant Hub Solution from any claims, losses, 
+                You agree to indemnify, defend, and hold harmless Crypto Pay from any claims, losses, 
                 damages, liabilities, and expenses arising from:
               </p>
               <ul className="list-disc pl-6 mb-4 text-slate-700 space-y-2">
@@ -269,7 +269,7 @@ export default function TermsOfServicePage() {
               
               <h3 className="text-xl font-semibold text-slate-800 mb-3">14.1 Informal Resolution</h3>
               <p className="text-slate-700 leading-relaxed mb-4">
-                Before filing a claim, contact us at <a href="mailto:support@restauranthubsolution.com" className="text-orange-500 hover:text-orange-600 font-medium">support@restauranthubsolution.com</a> to 
+                Before filing a claim, contact us at <a href="mailto:support@cryptopay.sale" className="text-orange-500 hover:text-orange-600 font-medium">support@cryptopay.sale</a> to 
                 resolve the dispute informally.
               </p>
 
@@ -328,15 +328,15 @@ export default function TermsOfServicePage() {
                 For questions about these Terms, please contact us:
               </p>
               <div className="bg-slate-50 rounded-lg p-6 border border-slate-200">
-                <p className="text-slate-700 mb-2"><strong>Restaurant Hub Solution</strong></p>
-                <p className="text-slate-700 mb-2">Email: <a href="mailto:support@restauranthubsolution.com" className="text-orange-500 hover:text-orange-600 font-medium">support@restauranthubsolution.com</a></p>
+                <p className="text-slate-700 mb-2"><strong>Crypto Pay</strong></p>
+                <p className="text-slate-700 mb-2">Email: <a href="mailto:support@cryptopay.sale" className="text-orange-500 hover:text-orange-600 font-medium">support@cryptopay.sale</a></p>
                 <p className="text-slate-700">Support: Available through your account dashboard</p>
               </div>
             </section>
 
             <div className="mt-12 pt-8 border-t border-slate-200">
               <p className="text-sm text-slate-600 text-center">
-                By using Restaurant Hub Solution, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.
+                By using Crypto Pay, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.
               </p>
               <p className="text-sm text-slate-600 text-center mt-2">
                 Effective Date: January 27, 2026

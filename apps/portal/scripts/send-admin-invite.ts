@@ -25,7 +25,7 @@ const cleanEnvValue = (value: string | undefined): string | undefined => {
 const RESEND_API_KEY = cleanEnvValue(process.env.RESEND_API_KEY);
 const SUPABASE_URL = cleanEnvValue(process.env.NEXT_PUBLIC_SUPABASE_URL);
 const SUPABASE_SERVICE_ROLE_KEY = cleanEnvValue(process.env.SUPABASE_SERVICE_ROLE_KEY);
-const APP_URL = 'https://restauranthubsolution.com';
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001';
 
 interface InviteParams {
   email: string;
@@ -67,7 +67,7 @@ async function sendAdminInvite(params: InviteParams) {
     staff: 'Staff Member',
   }[role];
 
-  const roleBadgeColor = role === 'rhs_admin' ? '#7c3aed' : '#f0531c';
+  const roleBadgeColor = role === 'rhs_admin' ? '#7c3aed' : '#10b981';
   const loginUrl = `${APP_URL}/login`;
 
   // Generate temporary password if not provided
@@ -140,9 +140,9 @@ async function sendAdminInvite(params: InviteParams) {
   console.log(`   Temporary Password: ${password}`);
 
   const { data, error } = await resend.emails.send({
-    from: 'Restaurant Hub <noreply@restauranthubsolution.com>',
+    from: process.env.EMAIL_FROM || "Crypto Pay <noreply@cryptopay.sale>",
     to: [`${fullName} <${email}>`],
-    subject: `🎉 You've been invited to Restaurant Hub Solution`,
+    subject: `🎉 You've been invited to Crypto Pay`,
     html,
     tags: [
       { name: 'type', value: 'admin-invite' },
@@ -205,7 +205,7 @@ function generateAdminInviteEmail(data: {
     roleBadgeColor,
     loginUrl,
     temporaryPassword,
-    companyName = 'Restaurant Hub Solution',
+    companyName = 'Crypto Pay',
   } = data;
 
   const roleDisplayName = {
@@ -235,7 +235,7 @@ function generateAdminInviteEmail(data: {
   credentialRows += `
     <tr>
       <td style="padding: 8px 0; color: #64748b; font-size: 14px;">Login URL:</td>
-      <td style="padding: 8px 0;"><a href="${loginUrl}" style="color: #f0531c; font-size: 14px; font-weight: 600; text-decoration: none;">${loginUrl}</a></td>
+      <td style="padding: 8px 0;"><a href="${loginUrl}" style="color: #10b981; font-size: 14px; font-weight: 600; text-decoration: none;">${loginUrl}</a></td>
     </tr>`;
 
   const passwordSection = temporaryPassword ? `
@@ -278,12 +278,12 @@ function generateAdminInviteEmail(data: {
           
           <!-- Header -->
           <tr>
-            <td style="background: linear-gradient(135deg, #f0531c 0%, #d94a18 50%, #c24215 100%); padding: 40px 40px 50px; text-align: center;">
+            <td style="background: linear-gradient(135deg, #10b981 0%, #059669 50%, #059669 100%); padding: 40px 40px 50px; text-align: center;">
               <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto;">
                 <tr>
                   <td style="background-color: rgba(255,255,255,0.95); border-radius: 16px; padding: 16px 20px;">
                     <svg viewBox="137 137 116 64" width="48" height="48" xmlns="http://www.w3.org/2000/svg">
-                      <path fill="#f0531c" d="M 169.429688 137.277344 C 178.28125 137.277344 186.292969 140.894531 192.0625 146.726562 L 175.238281 163.550781 C 169.332031 159.5625 159.777344 160.882812 154.3125 175.253906 C 154.019531 176.027344 153.726562 176.804688 153.433594 177.578125 C 152.160156 180.917969 152.839844 184.355469 155.242188 186.757812 C 157.644531 189.160156 161.082031 189.839844 164.421875 188.570312 L 166.746094 187.6875 C 181.121094 182.226562 182.4375 172.667969 178.449219 166.765625 L 195.027344 150.1875 C 200.683594 144.527344 204.332031 140.753906 212.246094 138.496094 C 215.023438 137.703125 217.960938 137.277344 220.996094 137.277344 C 238.578125 137.277344 252.832031 151.53125 252.832031 169.117188 C 252.832031 186.699219 238.578125 200.953125 220.996094 200.953125 C 212.265625 200.953125 204.363281 197.441406 198.609375 191.753906 L 214.21875 176.144531 C 215.546875 176.925781 217.054688 177.261719 218.691406 177.140625 C 221.039062 176.960938 222.984375 175.882812 224.382812 173.988281 L 238.15625 155.273438 L 237.40625 154.519531 L 223.230469 168.695312 C 222.996094 168.929688 222.605469 168.929688 222.367188 168.695312 C 222.132812 168.457031 222.132812 168.066406 222.367188 167.832031 L 236.542969 153.65625 L 235.449219 152.566406 L 221.277344 166.738281 C 221.039062 166.976562 220.652344 166.976562 220.414062 166.738281 C 220.175781 166.503906 220.175781 166.113281 220.414062 165.875 L 234.585938 151.703125 L 233.496094 150.609375 L 219.320312 164.785156 C 219.085938 165.019531 218.695312 165.019531 218.457031 164.785156 C 218.222656 164.546875 218.222656 164.160156 218.457031 163.921875 L 232.632812 149.75 L 231.921875 149.039062 C 231.648438 149.191406 231.382812 149.363281 231.121094 149.554688 L 213.164062 162.773438 C 211.269531 164.167969 210.191406 166.117188 210.011719 168.460938 C 209.890625 170.097656 210.226562 171.605469 211.007812 172.933594 L 195.613281 188.332031 C 190.6875 192.882812 187.113281 196.425781 180.878906 198.832031 C 177.324219 200.203125 173.464844 200.953125 169.429688 200.953125 C 151.847656 200.953125 137.589844 186.699219 137.589844 169.117188 C 137.589844 151.53125 151.847656 137.277344 169.429688 137.277344 Z"/>
+                      <path fill="#10b981" d="M 169.429688 137.277344 C 178.28125 137.277344 186.292969 140.894531 192.0625 146.726562 L 175.238281 163.550781 C 169.332031 159.5625 159.777344 160.882812 154.3125 175.253906 C 154.019531 176.027344 153.726562 176.804688 153.433594 177.578125 C 152.160156 180.917969 152.839844 184.355469 155.242188 186.757812 C 157.644531 189.160156 161.082031 189.839844 164.421875 188.570312 L 166.746094 187.6875 C 181.121094 182.226562 182.4375 172.667969 178.449219 166.765625 L 195.027344 150.1875 C 200.683594 144.527344 204.332031 140.753906 212.246094 138.496094 C 215.023438 137.703125 217.960938 137.277344 220.996094 137.277344 C 238.578125 137.277344 252.832031 151.53125 252.832031 169.117188 C 252.832031 186.699219 238.578125 200.953125 220.996094 200.953125 C 212.265625 200.953125 204.363281 197.441406 198.609375 191.753906 L 214.21875 176.144531 C 215.546875 176.925781 217.054688 177.261719 218.691406 177.140625 C 221.039062 176.960938 222.984375 175.882812 224.382812 173.988281 L 238.15625 155.273438 L 237.40625 154.519531 L 223.230469 168.695312 C 222.996094 168.929688 222.605469 168.929688 222.367188 168.695312 C 222.132812 168.457031 222.132812 168.066406 222.367188 167.832031 L 236.542969 153.65625 L 235.449219 152.566406 L 221.277344 166.738281 C 221.039062 166.976562 220.652344 166.976562 220.414062 166.738281 C 220.175781 166.503906 220.175781 166.113281 220.414062 165.875 L 234.585938 151.703125 L 233.496094 150.609375 L 219.320312 164.785156 C 219.085938 165.019531 218.695312 165.019531 218.457031 164.785156 C 218.222656 164.546875 218.222656 164.160156 218.457031 163.921875 L 232.632812 149.75 L 231.921875 149.039062 C 231.648438 149.191406 231.382812 149.363281 231.121094 149.554688 L 213.164062 162.773438 C 211.269531 164.167969 210.191406 166.117188 210.011719 168.460938 C 209.890625 170.097656 210.226562 171.605469 211.007812 172.933594 L 195.613281 188.332031 C 190.6875 192.882812 187.113281 196.425781 180.878906 198.832031 C 177.324219 200.203125 173.464844 200.953125 169.429688 200.953125 C 151.847656 200.953125 137.589844 186.699219 137.589844 169.117188 C 137.589844 151.53125 151.847656 137.277344 169.429688 137.277344 Z"/>
                     </svg>
                   </td>
                 </tr>
@@ -292,7 +292,7 @@ function generateAdminInviteEmail(data: {
                 ${companyName}
               </h1>
               <p style="color: rgba(255,255,255,0.9); font-size: 16px; margin: 0;">
-                Powering restaurant success
+                Accept crypto payments globally
               </p>
             </td>
           </tr>
@@ -355,7 +355,7 @@ function generateAdminInviteEmail(data: {
                   <td align="center">
                     <table role="presentation" cellspacing="0" cellpadding="0" border="0">
                       <tr>
-                        <td style="border-radius: 12px; background: linear-gradient(135deg, #f0531c 0%, #c24215 100%); box-shadow: 0 4px 14px rgba(240, 83, 28, 0.4);">
+                        <td style="border-radius: 12px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);">
                           <a href="${loginUrl}" 
                              target="_blank"
                              style="display: inline-block; padding: 18px 48px; font-size: 16px; font-weight: 600; color: #ffffff; text-decoration: none; border-radius: 12px;">
@@ -370,7 +370,7 @@ function generateAdminInviteEmail(data: {
 
               <!-- Clickable Link Backup -->
               <p style="text-align: center; color: #9ca3af; font-size: 13px; margin: 16px 0 0;">
-                Or copy and paste this link: <a href="${loginUrl}" style="color: #f0531c;">${loginUrl}</a>
+                Or copy and paste this link: <a href="${loginUrl}" style="color: #10b981;">${loginUrl}</a>
               </p>
 
               <!-- What You Can Do -->
@@ -381,10 +381,10 @@ function generateAdminInviteEmail(data: {
                       What you can do as ${roleDisplayName}:
                     </h3>
                     <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                      <tr><td style="padding: 8px 0; color: #4b5563; font-size: 14px;"><span style="color: #f0531c; margin-right: 8px;">✓</span> Full system administration</td></tr>
-                      <tr><td style="padding: 8px 0; color: #4b5563; font-size: 14px;"><span style="color: #f0531c; margin-right: 8px;">✓</span> Manage all tenants and users</td></tr>
-                      <tr><td style="padding: 8px 0; color: #4b5563; font-size: 14px;"><span style="color: #f0531c; margin-right: 8px;">✓</span> Access audit logs and analytics</td></tr>
-                      <tr><td style="padding: 8px 0; color: #4b5563; font-size: 14px;"><span style="color: #f0531c; margin-right: 8px;">✓</span> Configure system settings</td></tr>
+                      <tr><td style="padding: 8px 0; color: #4b5563; font-size: 14px;"><span style="color: #10b981; margin-right: 8px;">✓</span> Full system administration</td></tr>
+                      <tr><td style="padding: 8px 0; color: #4b5563; font-size: 14px;"><span style="color: #10b981; margin-right: 8px;">✓</span> Manage all tenants and users</td></tr>
+                      <tr><td style="padding: 8px 0; color: #4b5563; font-size: 14px;"><span style="color: #10b981; margin-right: 8px;">✓</span> Access audit logs and analytics</td></tr>
+                      <tr><td style="padding: 8px 0; color: #4b5563; font-size: 14px;"><span style="color: #10b981; margin-right: 8px;">✓</span> Configure system settings</td></tr>
                     </table>
                   </td>
                 </tr>
@@ -400,7 +400,7 @@ function generateAdminInviteEmail(data: {
                 Questions? Just reply to this email or contact us.
               </p>
               <p style="color: #9ca3af; font-size: 12px; margin: 0;">
-                ${companyName} • Powering restaurant success<br>
+                ${companyName} • Accept crypto payments globally<br>
                 This invitation was sent to ${recipientEmail}
               </p>
             </td>

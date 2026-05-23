@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "Multi-Location Management | Restaurant Hub Solution",
+  title: "Multi-Location Management | Crypto Pay",
   description: "Centralized management tools for restaurant groups. Control menus, pricing, and operations across all your locations.",
 };
 

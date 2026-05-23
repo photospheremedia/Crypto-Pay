@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Restaurant Hub Solution",
+    name: "Crypto Pay",
     short_name: "RHS",
     description: "All-in-one platform for restaurant delivery management, supplies, and technology solutions",
     start_url: "/",
@@ -36,7 +36,7 @@ export default function manifest(): MetadataRoute.Manifest {
         sizes: "1280x720",
         type: "image/png",
         form_factor: "wide",
-        label: "Restaurant Hub Dashboard",
+        label: "Crypto Pay Dashboard",
       },
     ],
     shortcuts: [

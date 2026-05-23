@@ -10,7 +10,7 @@ export type Props = {
 export default async function OpengraphImage(
   props?: Props,
 ): Promise<ImageResponse> {
-  const siteName = process.env.SITE_NAME || "Restaurant Hub Solution";
+  const siteName = process.env.SITE_NAME || "Crypto Pay";
   const { title } = {
     ...{
       title: siteName,

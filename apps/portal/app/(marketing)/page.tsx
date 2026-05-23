@@ -37,8 +37,8 @@ const benefits = [
   },
   {
     icon: Zap,
-    title: "Low fees",
-    copy: "Transparent pricing with a simple trial rate—no hidden platform cuts.",
+    title: "2% business trial",
+    copy: "Start with a clear 2% trial fee while your restaurant team validates fit.",
   },
   {
     icon: Globe,
@@ -68,7 +68,7 @@ const steps = [
 const trust = [
   "Non-custodial by design",
   "On-chain confirmation tracking",
-  "Built for global merchants",
+  "Built for restaurant operators",
   "Developer-friendly API",
 ];
 
@@ -83,14 +83,14 @@ export default function MarketingHome() {
             </p>
             <h1 className="mt-4 font-[family-name:var(--font-display)] text-4xl font-bold leading-[1.1] tracking-tight text-slate-900 sm:text-5xl lg:text-6xl dark:text-white">
               Accept crypto payments.{" "}
-              <span className="bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-orange-500 to-emerald-600 bg-clip-text text-transparent">
                 Instantly.
               </span>
             </h1>
             <p className="mt-6 text-lg text-slate-600 dark:text-slate-400">{BRAND.tagline}</p>
             <p className="mt-4 max-w-xl text-slate-600 dark:text-slate-400">
-              Crypto Pay helps businesses accept Bitcoin and other cryptocurrencies with direct,
-              non-custodial wallet payments—no intermediaries, no complicated onboarding.
+              CryptivaPay helps restaurants accept Bitcoin and other cryptocurrencies with direct,
+              non-custodial wallet payments for dine-in, pickup, and online checkout.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <CtaButton />
@@ -118,9 +118,9 @@ export default function MarketingHome() {
 
       <Section className="bg-white/60 dark:bg-slate-900/40">
         <SectionHeading
-          eyebrow="Why Crypto Pay"
+          eyebrow="Why CryptivaPay"
           title="Built for speed, simplicity, and trust"
-          description="Everything you need to accept crypto—without giving up control of your funds."
+          description="Everything your restaurant needs to accept crypto without giving up control of funds."
         />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {benefits.map((b) => (
@@ -172,7 +172,7 @@ export default function MarketingHome() {
             <ul className="space-y-3 text-slate-300">
               <li>• Live transaction list with confirmation status</li>
               <li>• Wallet balance overview across assets</li>
-              <li>• Built-in crypto-to-fiat converter</li>
+              <li>• Built-in crypto-to-fiat converter for menu pricing</li>
             </ul>
             <div className="mt-8">
               <CtaButton href="/dashboard-preview" variant="outline">
@@ -201,7 +201,7 @@ export default function MarketingHome() {
         </div>
         <blockquote className="mx-auto mt-12 max-w-2xl rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <p className="text-lg text-slate-700 dark:text-slate-300">
-            “We switched to direct wallet payments and cut settlement confusion. Crypto Pay made
+            “We switched to direct wallet payments and cut settlement confusion. CryptivaPay made
             the dashboard dead simple for our team.”
           </p>
           <footer className="mt-4 text-sm text-slate-500">— E-commerce operator, EU</footer>
@@ -212,8 +212,8 @@ export default function MarketingHome() {
         <div className="rounded-3xl bg-gradient-to-r from-emerald-600 to-cyan-600 px-8 py-14 text-center text-white sm:px-16">
           <h2 className="text-3xl font-bold sm:text-4xl">Ready to accept crypto?</h2>
           <p className="mx-auto mt-4 max-w-xl text-emerald-50">
-            Start your business trial today. No free tier—just straightforward pricing when you
-            are ready to scale.
+            Start your business trial today at 2% per transaction. No free starter pack, no hidden
+            platform costs.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <CtaButton href="/signup">Start Accepting Crypto</CtaButton>

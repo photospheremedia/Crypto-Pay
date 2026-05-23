@@ -124,7 +124,7 @@ export async function getCachedTenantSettings(
 export async function getCachedRoleDefinitions(): Promise<Record<string, any>> {
   const ROLE_DEFINITIONS = {
     rhs_admin: {
-      name: "Restaurant Hub Admin",
+      name: "Crypto Pay Admin",
       permissions: ["manage_all_tenants", "view_analytics", "issue_refunds"],
       canImpersonate: true,
     },

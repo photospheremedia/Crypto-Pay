@@ -38,7 +38,7 @@ export function MFASetupDialog({ open, onOpenChange, onSuccess }: MFASetupDialog
   const handleEnroll = async () => {
     setLoading(true);
     try {
-      const result = await enrollTOTP('Restaurant Hub Authenticator');
+      const result = await enrollTOTP('Crypto Pay Authenticator');
 
       if (result.success && result.qrCode && result.secret && result.factorId) {
         setFactorId(result.factorId);

@@ -1,5 +1,5 @@
 /**
- * Professional Email Templates - Restaurant Hub Solution
+ * Professional Email Templates - Crypto Pay
  * B2B-focused templates matching industry standards
  */
 
@@ -37,7 +37,7 @@ export const emailTemplates: Record<EmailTemplate, TemplateConfig> = {
   // ============================================
   
   welcome: {
-    subject: "Welcome to Restaurant Hub - Let's Get Started! 🎉",
+    subject: "Welcome to Crypto Pay - Let's Get Started! 🎉",
     generateHtml: (data) => generateBaseTemplate(`
       <!-- Hero section -->
       <tr>
@@ -45,9 +45,9 @@ export const emailTemplates: Record<EmailTemplate, TemplateConfig> = {
           <div style="width: 80px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
             <span style="font-size: 40px;">👋</span>
           </div>
-          <h1 style="margin: 0 0 12px; font-size: 28px; font-weight: 700; color: white;">Welcome to Restaurant Hub Solution!</h1>
+          <h1 style="margin: 0 0 12px; font-size: 28px; font-weight: 700; color: white;">Welcome to Crypto Pay Solution!</h1>
           <p style="margin: 0; font-size: 16px; color: rgba(255,255,255,0.9);">
-            Your B2B restaurant supply platform is ready
+            Your B2B crypto payment platform is ready
           </p>
         </td>
       </tr>
@@ -56,7 +56,7 @@ export const emailTemplates: Record<EmailTemplate, TemplateConfig> = {
       <tr>
         <td style="padding: 40px 32px;" class="email-content">
           ${components.paragraph(`Hi ${data.firstName || 'there'},`)}
-          ${components.paragraph(`Welcome aboard! We're excited to have <strong>${data.businessName || 'your business'}</strong> join the Restaurant Hub family. You now have access to over 10,000 restaurant supplies at wholesale prices.`)}
+          ${components.paragraph(`Welcome aboard! We're excited to have <strong>${data.businessName || 'your business'}</strong> join the Crypto Pay family. You now have access to over 10,000 crypto checkout tools at wholesale prices.`)}
           
           ${components.card(`
             <p style="margin: 0 0 12px; font-size: 14px; font-weight: 600; color: ${brandColors.secondary};">🚀 Quick Start Checklist</p>
@@ -88,7 +88,7 @@ export const emailTemplates: Record<EmailTemplate, TemplateConfig> = {
             </table>
           `, { highlight: true })}
           
-          ${components.button('Complete Your Profile →', data.dashboardUrl as string || 'https://restauranthubsolution.com/account')}
+          ${components.button('Complete Your Profile →', data.dashboardUrl as string || "https://cryptopay.sale/account")}
           
           ${components.divider()}
           
@@ -115,14 +115,14 @@ export const emailTemplates: Record<EmailTemplate, TemplateConfig> = {
           ${components.divider()}
           
           ${components.paragraph('Need help getting started? Our B2B support team is here for you.', { muted: true })}
-          ${components.paragraph(`<strong>Email:</strong> support@restauranthubsolution.com<br><strong>Phone:</strong> 1-800-REST-HUB (Mon-Fri 8am-6pm EST)`, { small: true, muted: true })}
+          ${components.paragraph(`<strong>Email:</strong> support@cryptopay.sale<br><strong>Phone:</strong> 1-800-REST-HUB (Mon-Fri 8am-6pm EST)`, { small: true, muted: true })}
         </td>
       </tr>
-    `, { preheader: `Welcome ${data.firstName}! Your Restaurant Hub account is ready.` }),
+    `, { preheader: `Welcome ${data.firstName}! Your Crypto Pay account is ready.` }),
   },
 
   email_verification: {
-    subject: "Verify Your Email - Restaurant Hub",
+    subject: "Verify Your Email - Crypto Pay",
     generateHtml: (data) => generateBaseTemplate(`
       <tr>
         <td style="padding: 48px 32px; text-align: center;" class="email-content">
@@ -149,7 +149,7 @@ export const emailTemplates: Record<EmailTemplate, TemplateConfig> = {
   },
 
   password_reset: {
-    subject: "Reset Your Password - Restaurant Hub",
+    subject: "Reset Your Password - Crypto Pay",
     generateHtml: (data) => generateBaseTemplate(`
       <tr>
         <td style="padding: 48px 32px; text-align: center;" class="email-content">
@@ -158,7 +158,7 @@ export const emailTemplates: Record<EmailTemplate, TemplateConfig> = {
           </div>
           
           ${components.heading('Reset Your Password')}
-          ${components.paragraph('We received a request to reset the password for your Restaurant Hub account.')}
+          ${components.paragraph('We received a request to reset the password for your Crypto Pay account.')}
           
           ${components.button('Reset Password', data.resetUrl as string || '#')}
           
@@ -174,7 +174,7 @@ export const emailTemplates: Record<EmailTemplate, TemplateConfig> = {
           ${components.paragraph(`<strong>Request Details:</strong><br>Time: ${data.requestTime || new Date().toLocaleString()}<br>IP: ${data.ipAddress || 'Unknown'}`, { small: true, muted: true })}
         </td>
       </tr>
-    `, { preheader: 'Reset your Restaurant Hub password.' }),
+    `, { preheader: 'Reset your Crypto Pay password.' }),
   },
 
   // ============================================
@@ -182,7 +182,7 @@ export const emailTemplates: Record<EmailTemplate, TemplateConfig> = {
   // ============================================
 
   order_confirmation: {
-    subject: "Order Confirmed #{{orderNumber}} - Restaurant Hub",
+    subject: "Order Confirmed #{{orderNumber}} - Crypto Pay",
     generateHtml: (data) => {
       const items = (data.items as Array<{ name: string; quantity: number; price: number; image?: string }>) || [];
       const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -344,7 +344,7 @@ export const emailTemplates: Record<EmailTemplate, TemplateConfig> = {
   // ============================================
 
   invoice: {
-    subject: "Invoice #{{invoiceNumber}} - Restaurant Hub",
+    subject: "Invoice #{{invoiceNumber}} - Crypto Pay",
     generateHtml: (data) => {
       const items = (data.items as Array<{ name: string; quantity: number; price: number }>) || [];
       const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -425,7 +425,7 @@ export const emailTemplates: Record<EmailTemplate, TemplateConfig> = {
             ${components.card(`
               <p style="margin: 0 0 8px; font-size: 13px; font-weight: 600; color: ${brandColors.secondary};">Payment Terms</p>
               <p style="margin: 0; font-size: 13px; color: ${brandColors.textLight};">
-                ${data.paymentTerms || 'Net 30'} • Make checks payable to Restaurant Hub Solution<br>
+                ${data.paymentTerms || 'Net 30'} • Make checks payable to Crypto Pay Solution<br>
                 Bank: First National • Account: XXXX-XXXX-1234
               </p>
             `)}
@@ -507,7 +507,7 @@ export const emailTemplates: Record<EmailTemplate, TemplateConfig> = {
           
           ${components.button('Update Payment Method', data.updatePaymentUrl as string || '#')}
           
-          ${components.paragraph('If you need assistance, please contact our billing team at billing@restauranthubsolution.com', { muted: true, small: true })}
+          ${components.paragraph("If you need assistance, please contact our billing team at billing@cryptopay.sale", { muted: true, small: true })}
         </td>
       </tr>
     `, { preheader: `Action required: Payment of $${data.amount} failed for invoice #${data.invoiceNumber}` }),
@@ -738,7 +738,7 @@ export const emailTemplates: Record<EmailTemplate, TemplateConfig> = {
     generateHtml: (data) => generateBaseTemplate(`
       <tr>
         <td style="padding: 32px;" class="email-content">
-          ${components.heading(data.headline as string || 'Restaurant Hub Newsletter')}
+          ${components.heading(data.headline as string || 'Crypto Pay Newsletter')}
           
           <div style="font-size: 15px; color: ${brandColors.text}; line-height: 1.6;">
             ${data.content}

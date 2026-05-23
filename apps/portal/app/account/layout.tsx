@@ -62,7 +62,7 @@ export default async function AccountLayout({
       .select("role")
       .eq("user_id", user.id)
       .eq("status", "active")
-      .in("role", ["staff", "admin", "owner", "rhs_admin"])
+      .in("role", ["staff", "manager", "admin", "owner", "rhs_admin"])
       .maybeSingle();
     
     // Only set isAdmin if no error occurred and membership exists

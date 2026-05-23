@@ -116,7 +116,16 @@ export async function proxy(request: NextRequest) {
 
   // Redirect authenticated users away from auth pages
   if (isAuthRoute && user && pathname !== "/app") {
-    return NextResponse.redirect(new URL("/app", request.url));
+    const { data: membership } = await supabase
+      .from("memberships")
+      .select("role")
+      .eq("user_id", user.id)
+      .eq("status", "active")
+      .in("role", ADMIN_ROLES)
+      .maybeSingle();
+
+    const destination = membership ? "/admin/dashboard" : "/account";
+    return NextResponse.redirect(new URL(destination, request.url));
   }
 
   // ============================================

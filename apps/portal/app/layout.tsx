@@ -6,38 +6,28 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { CookieConsent } from "@/components/cookie-consent";
 import { ToastProvider } from "@/hooks/use-toast";
 
-const siteUrl = "https://restauranthubsolution.com";
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://cryptopay.sale";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Restaurant Hub Solution - Streamline Restaurant Operations",
-    template: "%s | Restaurant Hub Solution",
+    default: "Crypto Pay — Accept Crypto Payments Instantly",
+    template: "%s | Crypto Pay",
   },
-  description: "All-in-one restaurant management platform. Consolidate delivery channels, manage supplies, and refresh your brand. Trusted by 150+ locations.",
+  description:
+    "Accept crypto payments instantly, securely, and globally. Non-custodial wallet-to-wallet processing for modern merchants.",
   keywords: [
-    "restaurant management",
-    "delivery integration",
-    "restaurant supplies",
-    "POS integration",
-    "ghost kitchen",
-    "dark kitchen",
-    "franchise management",
-    "restaurant operations",
-    "menu management",
-    "DoorDash integration",
-    "UberEats integration",
-    "Grubhub integration",
-    "restaurant software",
-    "order management system",
-    "restaurant technology",
-    "kitchen management",
-    "delivery consolidation",
-    "multi-location restaurant",
+    "crypto payments",
+    "bitcoin payments",
+    "merchant crypto",
+    "non-custodial payments",
+    "crypto checkout",
+    "payment API",
+    "wallet payments",
   ],
-  authors: [{ name: "Restaurant Hub Solution", url: siteUrl }],
-  creator: "Restaurant Hub Solution",
-  publisher: "Restaurant Hub Solution",
+  authors: [{ name: "Crypto Pay", url: siteUrl }],
+  creator: "Crypto Pay",
+  publisher: "Crypto Pay",
   formatDetection: {
     email: false,
     address: false,
@@ -56,23 +46,23 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: siteUrl,
-    siteName: "Restaurant Hub Solution",
-    title: "Restaurant Hub Solution - Streamline Your Restaurant Operations",
-    description: "Delivery consolidation, supply marketplace, and brand services. Manage 15+ delivery platforms from one tablet. Trusted by 150+ restaurant locations.",
+    siteName: "Crypto Pay",
+    title: "Crypto Pay — Accept Crypto Payments Instantly",
+    description: "Accept crypto payments instantly with non-custodial checkout, settlement tracking, and merchant-ready APIs.",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Restaurant Hub Solution - Operations Made Simple",
+        alt: "Crypto Pay — Accept Crypto Payments Instantly",
         type: "image/png",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Restaurant Hub Solution - Streamline Your Restaurant Operations",
-    description: "All-in-one platform for delivery consolidation, supply management, and brand refresh. Trusted by 150+ restaurants.",
+    title: "Crypto Pay — Accept Crypto Payments Instantly",
+    description: "Merchant crypto checkout for fast, secure wallet-to-wallet payments.",
     images: ["/og-image.png"],
     creator: "@resthubsolution",
   },

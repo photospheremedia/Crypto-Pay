@@ -2,8 +2,8 @@ import { Suspense } from "react";
 import { ForgotPasswordForm } from "../(forgot-password)/form";
 
 export const metadata = {
-  title: "Forgot Password | Restaurant Hub Solution",
-  description: "Reset your Restaurant Hub Solution account password",
+  title: "Forgot Password | Crypto Pay",
+  description: "Reset your Crypto Pay account password",
 };
 
 export default function ForgotPasswordPage() {

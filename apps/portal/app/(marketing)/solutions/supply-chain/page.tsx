@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "Supply Chain Solutions | Restaurant Hub Solution",
+  title: "Supply Chain Solutions | Crypto Pay",
   description: "Optimize your procurement with group purchasing, vendor management, and inventory systems that reduce costs and improve efficiency.",
 };
 

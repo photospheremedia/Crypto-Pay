@@ -35,7 +35,7 @@ export interface AdminInviteEmailProps {
   inviteFromLocation?: string;
 }
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://restauranthubsolution.com';
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://cryptopay.sale";
 
 // Role display names and colors
 const roleConfig = {
@@ -91,9 +91,9 @@ export const AdminInviteEmail = ({
   inviterName = 'Admin',
   inviterEmail,
   role = 'admin',
-  loginUrl = 'https://restauranthubsolution.com/login',
+  loginUrl = "https://cryptopay.sale/login",
   temporaryPassword,
-  companyName = 'Restaurant Hub Solution',
+  companyName = 'Crypto Pay',
   inviteFromIp,
   inviteFromLocation,
 }: AdminInviteEmailProps) => {
@@ -292,13 +292,13 @@ export const AdminInviteEmail = ({
 // Preview props for development/testing
 AdminInviteEmail.PreviewProps = {
   recipientName: 'Wael Ghiloufi',
-  recipientEmail: 'wael@restauranthubsolution.com',
+  recipientEmail: "wael@cryptopay.sale",
   inviterName: 'Anass Hassouni',
-  inviterEmail: 'anass@restauranthubsolution.com',
+  inviterEmail: "anass@cryptopay.sale",
   role: 'admin',
-  loginUrl: 'https://restauranthubsolution.com/login',
+  loginUrl: "https://cryptopay.sale/login",
   temporaryPassword: 'Welcome2RHS!24',
-  companyName: 'Restaurant Hub Solution',
+  companyName: 'Crypto Pay',
   inviteFromIp: '192.168.1.1',
   inviteFromLocation: 'Montreal, Canada',
 } satisfies AdminInviteEmailProps;

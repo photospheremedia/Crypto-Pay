@@ -38,7 +38,7 @@ const categoryFallbacks: Record<string, string> = {
 
 const allProducts = [
   { id: "takeout-containers-001", name: "Premium Takeout Containers with Lids (200 ct)", category: "packaging-takeout", subcategory: "Takeout Containers", brand: "EcoPack", sku: "TC-001", priceCents: 11800, image: "https://images.unsplash.com/photo-1604756930505-1b1a0c1ed4a3?w=200&h=200&fit=crop&q=80", popularity: 95 },
-  { id: "thermal-bags-001", name: "Insulated Thermal Delivery Bags (Set of 10)", category: "packaging-takeout", subcategory: "Delivery Bags", brand: "Restaurant Hub", sku: "TB-001", priceCents: 12900, image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=200&fit=crop&q=80", popularity: 88 },
+  { id: "thermal-bags-001", name: "Insulated Thermal Delivery Bags (Set of 10)", category: "packaging-takeout", subcategory: "Delivery Bags", brand: "Crypto Pay", sku: "TB-001", priceCents: 12900, image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=200&fit=crop&q=80", popularity: 88 },
   { id: "paper-bags-001", name: "Handled Paper Bags (250 ct)", category: "packaging-takeout", subcategory: "Paper Bags", brand: "GreenChoice", sku: "PB-001", priceCents: 10200, image: "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=200&h=200&fit=crop&q=80", popularity: 82 },
   { id: "compostable-cutlery-001", name: "Compostable Cutlery Kits (500 ct)", category: "cutlery-utensils", subcategory: "Compostable", brand: "GreenChoice", sku: "CC-001", priceCents: 5400, image: "https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=200&h=200&fit=crop&q=80", popularity: 91 },
   { id: "hot-cups-001", name: "Double-Wall Hot Cups (500 ct)", category: "beverages-cups", subcategory: "Hot Cups", brand: "CupCo", sku: "HC-001", priceCents: 8900, image: "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=200&h=200&fit=crop&q=80", popularity: 86 },
@@ -63,7 +63,7 @@ const categories = [
 ];
 
 // Brands for suggestions
-const brands = ["EcoPack", "GreenChoice", "Restaurant Hub", "CupCo", "SafeHands", "LabelPro", "CleanPro"];
+const brands = ["EcoPack", "GreenChoice", "Crypto Pay", "CupCo", "SafeHands", "LabelPro", "CleanPro"];
 
 // Autocomplete suggestions based on common searches
 const autocompleteSuggestions = [

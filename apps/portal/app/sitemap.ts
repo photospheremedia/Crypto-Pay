@@ -1,6 +1,6 @@
 import { MetadataRoute } from "next";
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://restauranthubsolution.com";
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || "https://cryptopay.sale";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static pages

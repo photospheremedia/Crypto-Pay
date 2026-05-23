@@ -41,8 +41,8 @@ export function AdminHelpMenu() {
     {
       icon: Mail,
       title: "Email Us",
-      description: "support@restauranthubsolution.com",
-      href: "mailto:support@restauranthubsolution.com",
+      description: "support@cryptopay.sale",
+      href: "mailto:support@cryptopay.sale",
       external: true,
     },
   ];

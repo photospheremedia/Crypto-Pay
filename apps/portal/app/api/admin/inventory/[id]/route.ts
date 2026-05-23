@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServerClient } from '@crypto-pay/db/supabaseServer';
+import { checkAdminAccess } from '@/lib/admin-auth';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,13 +13,16 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
-    const supabase = await getSupabaseServerClient();
-
-    const { data: { user } } = await supabase.auth.getUser();
+    const { user, isAdmin } = await checkAdminAccess();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Forbidden - Admin access required' }, { status: 403 });
+    }
+
+    const { id } = await params;
+    const supabase = await getSupabaseServerClient();
 
     // Fetch inventory item
     const { data: item, error: itemError } = await supabase
@@ -76,13 +80,16 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
-    const supabase = await getSupabaseServerClient();
-
-    const { data: { user } } = await supabase.auth.getUser();
+    const { user, isAdmin } = await checkAdminAccess();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Forbidden - Admin access required' }, { status: 403 });
+    }
+
+    const { id } = await params;
+    const supabase = await getSupabaseServerClient();
 
     const body = await request.json();
     const {
@@ -168,13 +175,16 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
-    const supabase = await getSupabaseServerClient();
-
-    const { data: { user } } = await supabase.auth.getUser();
+    const { user, isAdmin } = await checkAdminAccess();
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Forbidden - Admin access required' }, { status: 403 });
+    }
+
+    const { id } = await params;
+    const supabase = await getSupabaseServerClient();
 
     // Delete stock movements first (foreign key constraint)
     await supabase

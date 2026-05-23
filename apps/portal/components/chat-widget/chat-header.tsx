@@ -81,7 +81,7 @@ export function ChatHeader({
         </Avatar>
         <div className="min-w-0">
           <h3 className="text-sm font-semibold flex items-center gap-2 truncate">
-            Restaurant Hub AI
+            Crypto Pay AI
             {isLoading && <Sparkles className="h-3 w-3 animate-pulse flex-shrink-0" />}
           </h3>
           {!isMinimized && (

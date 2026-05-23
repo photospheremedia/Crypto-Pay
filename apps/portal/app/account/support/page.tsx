@@ -28,7 +28,7 @@ export default async function SupportPage() {
             Concierge support for active locations and rollouts.
           </p>
           <div className="mt-4 space-y-2 text-sm text-slate-600">
-            <p>support@restauranthubsolution.com</p>
+            <p>support@cryptopay.sale</p>
             <p>+1 (555) 013-2222</p>
           </div>
           <Link

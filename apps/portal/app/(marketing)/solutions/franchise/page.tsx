@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "Franchise Support | Restaurant Hub Solution",
+  title: "Franchise Support | Crypto Pay",
   description: "Scalable systems and support for franchise operations. Standardized processes, training, and technology across all locations.",
 };
 

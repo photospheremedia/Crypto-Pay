@@ -1,5 +1,5 @@
 /**
- * Email Sender - Restaurant Hub Solution
+ * Email Sender - Crypto Pay
  * Handles actual email delivery via Resend
  */
 
@@ -28,21 +28,13 @@ export interface EmailResult {
 }
 
 import { emailTemplates, type EmailTemplate } from './templates';
+import { getEmailFrom, getReplyTo } from './config';
 
 /**
- * Send an email using Supabase Edge Function
- * Now calls the Edge Function for faster sending with automatic retry (50ms vs 200ms)
+ * Send email via Resend on Vercel (RESEND_API_KEY) or Supabase Edge Function fallback.
  */
 export async function sendEmail(options: EmailOptions): Promise<EmailResult> {
-  const functionsUrl = process.env.NEXT_PUBLIC_SUPABASE_FUNCTIONS_URL;
-  
-  if (!functionsUrl) {
-    console.warn("NEXT_PUBLIC_SUPABASE_FUNCTIONS_URL not configured - email not sent");
-    return {
-      success: false,
-      error: "Email service not configured",
-    };
-  }
+  const resendKey = process.env.RESEND_API_KEY;
 
   try {
     // Generate HTML from template if specified
@@ -63,50 +55,74 @@ export async function sendEmail(options: EmailOptions): Promise<EmailResult> {
     }
 
     const recipients = Array.isArray(options.to) ? options.to : [options.to];
-    const fromEmail = options.from || process.env.EMAIL_FROM || "Restaurant Hub Solution <noreply@restauranthubsolution.com>";
-    
-    // Call Edge Function which handles Resend API call with automatic retry
+    const toAddresses = recipients.map((r) =>
+      r.name ? `${r.name} <${r.email}>` : r.email
+    );
+    const fromEmail = options.from || getEmailFrom();
+    const replyTo = options.replyTo || getReplyTo();
+    const htmlBody = html || options.text || "";
+
+    // Primary: direct Resend (Vercel env RESEND_API_KEY)
+    if (resendKey) {
+      const { Resend } = await import("resend");
+      const resend = new Resend(resendKey);
+      const { data, error } = await resend.emails.send({
+        from: fromEmail,
+        to: toAddresses,
+        subject,
+        html: htmlBody,
+        text: options.text,
+        replyTo,
+        tags: options.tags?.map((name) => ({ name, value: "true" })),
+      });
+
+      if (error) {
+        console.error("Resend error:", error);
+        return { success: false, error: error.message };
+      }
+
+      console.log(
+        `Email sent (Resend): ${subject} to ${recipients.map((r) => r.email).join(", ")} [${data?.id}]`
+      );
+      return { success: true, messageId: data?.id };
+    }
+
+    // Fallback: Supabase Edge Function
+    const functionsUrl = process.env.NEXT_PUBLIC_SUPABASE_FUNCTIONS_URL;
+    if (!functionsUrl) {
+      console.warn("RESEND_API_KEY and NEXT_PUBLIC_SUPABASE_FUNCTIONS_URL not set");
+      return { success: false, error: "Email service not configured" };
+    }
+
     const response = await fetch(`${functionsUrl}/send-email`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         from: fromEmail,
-        to: recipients,
+        to: toAddresses,
         subject,
-        html: html || options.text || "",
+        html: htmlBody,
         text: options.text,
-        replyTo: options.replyTo || "support@restauranthubsolution.com",
+        replyTo,
         tags: options.tags,
       }),
     });
 
     if (!response.ok) {
       console.error(`Email send failed: ${response.status}`);
-      return {
-        success: false,
-        error: `HTTP ${response.status}`,
-      };
+      return { success: false, error: `HTTP ${response.status}` };
     }
 
     const data = await response.json();
-
     if (!data.success) {
       console.error("Email send error:", data.error);
-      return {
-        success: false,
-        error: data.error,
-      };
+      return { success: false, error: data.error };
     }
 
-    // Log successful send for analytics
-    console.log(`📧 Email sent: ${subject} to ${recipients.map(r => r.email).join(', ')} [${data.messageId}]`);
-
-    return {
-      success: true,
-      messageId: data.messageId,
-    };
+    console.log(
+      `Email sent (edge): ${subject} to ${recipients.map((r) => r.email).join(", ")} [${data.messageId}]`
+    );
+    return { success: true, messageId: data.messageId };
   } catch (error) {
     console.error("Email send exception:", error);
     return {

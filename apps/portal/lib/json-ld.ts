@@ -101,18 +101,20 @@ export interface ServiceJsonLd {
 
 // Helper function to generate Organization JSON-LD
 export function getOrganizationJsonLd(): OrganizationJsonLd {
+  const sameAs = [
+    process.env.NEXT_PUBLIC_SOCIAL_X_URL,
+    process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN_URL,
+    process.env.NEXT_PUBLIC_SOCIAL_FACEBOOK_URL,
+  ].filter((url): url is string => Boolean(url));
+
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "Restaurant Hub Solution",
-    url: process.env.NEXT_PUBLIC_APP_URL || "https://restauranthubsolution.com",
-    logo: `${process.env.NEXT_PUBLIC_APP_URL || "https://restauranthubsolution.com"}/logo.png`,
+    name: "Crypto Pay",
+    url: process.env.NEXT_PUBLIC_APP_URL || "https://cryptopay.sale",
+    logo: `${process.env.NEXT_PUBLIC_APP_URL || "https://cryptopay.sale"}/logo.png`,
     description: "All-in-one platform for restaurant delivery management, supplies, and technology solutions",
-    sameAs: [
-      "https://twitter.com/restauranthub",
-      "https://linkedin.com/company/restauranthub",
-      "https://facebook.com/restauranthub",
-    ],
+    sameAs: sameAs.length > 0 ? sameAs : undefined,
     contactPoint: {
       "@type": "ContactPoint",
       telephone: "+1-800-RESTAURANT",
@@ -135,7 +137,7 @@ export function getProductJsonLd(product: {
   rating?: number;
   reviewCount?: number;
 }): ProductJsonLd {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://restauranthubsolution.com";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://cryptopay.sale";
   
   return {
     "@context": "https://schema.org",
@@ -182,7 +184,7 @@ export function getServiceJsonLd(service: {
     description: service.description,
     provider: {
       "@type": "Organization",
-      name: "Restaurant Hub Solution",
+      name: "Crypto Pay",
     },
     serviceType: service.serviceType,
     areaServed: "Worldwide",

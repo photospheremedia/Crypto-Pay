@@ -90,9 +90,17 @@ type LastSession = {
   expires_at: string;
 };
 
+type OnboardingLead = {
+  email: string;
+  notes: string | null;
+  status: string | null;
+  updated_at: string;
+};
+
 export default function AccountDashboardPage() {
   const searchParams = useSearchParams();
   const errorParam = searchParams.get("error");
+  const onboardingSubmitted = searchParams.get("onboarding") === "submitted";
   
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
@@ -105,6 +113,7 @@ export default function AccountDashboardPage() {
   const [recentlyViewed, setRecentlyViewed] = useState<RecentlyViewedItem[]>([]);
   const [subscription, setSubscription] = useState<any>(null);
   const [lastSession, setLastSession] = useState<LastSession | null>(null);
+  const [onboardingLead, setOnboardingLead] = useState<OnboardingLead | null>(null);
   const [loading, setLoading] = useState(true);
   const [showAdminError, setShowAdminError] = useState(errorParam === "admin_required");
   const supabase = getSupabaseBrowserClient();
@@ -129,6 +138,7 @@ export default function AccountDashboardPage() {
         const { data: memberships } = await supabase
           .from("memberships")
           .select("tenant_id, role, tenants ( id, name, slug )")
+          .eq("user_id", user.id)
           .eq("status", "active");
 
         const membershipData = memberships?.[0];
@@ -136,6 +146,17 @@ export default function AccountDashboardPage() {
         const tenantData = membershipData?.tenants as { id: string; name: string; slug: string } | { id: string; name: string; slug: string }[] | null;
         const resolvedTenant = Array.isArray(tenantData) ? tenantData[0] : tenantData;
         setTenant(resolvedTenant);
+
+        // Load onboarding lead status for first-time user flow
+        const { data: leadData } = await supabase
+          .from("leads")
+          .select("email, notes, status, updated_at")
+          .eq("user_id", user.id)
+          .eq("source", "onboarding_flow")
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        setOnboardingLead((leadData as OnboardingLead | null) ?? null);
 
         // Log dashboard access
         try {
@@ -360,8 +381,60 @@ export default function AccountDashboardPage() {
     );
   }
 
-  // If no tenant, show setup prompt
+  // If no tenant, show onboarding setup state
   if (!tenant) {
+    let onboardingDetails: { selected_plan?: string; website_url?: string; submitted_at?: string } = {};
+    if (onboardingLead?.notes) {
+      try {
+        onboardingDetails = JSON.parse(onboardingLead.notes);
+      } catch {
+        onboardingDetails = {};
+      }
+    }
+
+    if (onboardingLead || onboardingSubmitted) {
+      return (
+        <div className="space-y-6">
+          <div className="rounded-3xl border border-emerald-200 bg-emerald-50 p-8 shadow-sm">
+            <p className="text-xs uppercase tracking-[0.2em] text-emerald-700">Setup in progress</p>
+            <h1 className="mt-3 text-2xl font-semibold text-slate-900">
+              Thank you! Our team will contact you shortly to complete your setup.
+            </h1>
+            <p className="mt-2 text-sm text-slate-700">
+              Your onboarding request is in queue and an agent will reach out soon.
+            </p>
+            {onboardingDetails.selected_plan || onboardingDetails.website_url ? (
+              <div className="mt-4 rounded-2xl border border-emerald-200 bg-white px-4 py-3 text-sm text-slate-700">
+                {onboardingDetails.selected_plan ? (
+                  <p>
+                    <strong>Plan:</strong> {onboardingDetails.selected_plan}
+                  </p>
+                ) : null}
+                {onboardingDetails.website_url ? (
+                  <p>
+                    <strong>Website:</strong> {onboardingDetails.website_url}
+                  </p>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            {[
+              { title: "Transactions", description: "Transaction feed will appear here once setup is complete." },
+              { title: "Payments", description: "Payment statuses and settlement updates will appear here." },
+              { title: "Settings", description: "Business and wallet settings will be available after activation." },
+            ].map((card) => (
+              <div key={card.title} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+                <h2 className="text-base font-semibold text-slate-900">{card.title}</h2>
+                <p className="mt-2 text-sm text-slate-600">{card.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
         <p className="text-xs uppercase tracking-[0.2em] text-orange-500">

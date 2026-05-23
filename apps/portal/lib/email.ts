@@ -1,5 +1,6 @@
 /**
- * Email Service for Restaurant Hub Solution
+ * @deprecated Prefer `@/lib/email/sender` and `@/lib/email/triggers` for Crypto Pay.
+ * Email Service (legacy inline Resend)
  * Supports Resend as the primary provider (can be extended for SendGrid, etc.)
  * 
  * To use:
@@ -40,10 +41,10 @@ export interface EmailResult {
   error?: string;
 }
 
-// Email templates for Restaurant Hub Solution
+// Email templates for Crypto Pay
 const emailTemplates: Record<EmailTemplate, { subject: string; generateHtml: (data: Record<string, unknown>) => string }> = {
   welcome: {
-    subject: "Welcome to Restaurant Hub Solution! 🎉",
+    subject: "Welcome to Crypto Pay! 🎉",
     generateHtml: (data) => `
       <!DOCTYPE html>
       <html>
@@ -54,14 +55,14 @@ const emailTemplates: Record<EmailTemplate, { subject: string; generateHtml: (da
         <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; padding: 20px;">
           <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden;">
             <div style="background: linear-gradient(135deg, #f0531c 0%, #c24215 100%); padding: 40px 20px; text-align: center;">
-              <h1 style="color: white; margin: 0; font-size: 28px;">Welcome to Restaurant Hub Solution!</h1>
+              <h1 style="color: white; margin: 0; font-size: 28px;">Welcome to Crypto Pay!</h1>
             </div>
             <div style="padding: 30px;">
               <p style="font-size: 16px; color: #374151; line-height: 1.6;">
                 Hi ${data.firstName || "there"},
               </p>
               <p style="font-size: 16px; color: #374151; line-height: 1.6;">
-                Thank you for joining Restaurant Hub Solution! We're excited to help you streamline your restaurant supply chain.
+                Thank you for joining Crypto Pay! We're excited to help you streamline your restaurant supply chain.
               </p>
               <div style="background: #fff7ed; border-radius: 8px; padding: 20px; margin: 20px 0;">
                 <h3 style="color: #c24215; margin-top: 0;">Here's what you can do next:</h3>
@@ -72,17 +73,17 @@ const emailTemplates: Record<EmailTemplate, { subject: string; generateHtml: (da
                   <li>Explore exclusive discounts for new members</li>
                 </ul>
               </div>
-              <a href="${data.dashboardUrl || 'https://restauranthubsolution.com/account'}" 
+              <a href="${data.dashboardUrl || "https://cryptopay.sale/account"}" 
                  style="display: inline-block; background: #f0531c; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; margin-top: 10px;">
                 Get Started →
               </a>
               <p style="font-size: 14px; color: #6b7280; margin-top: 30px;">
-                Need help? Reply to this email or visit our <a href="https://restauranthubsolution.com/faq" style="color: #f0531c;">Help Center</a>.
+                Need help? Reply to this email or visit our <a href="https://cryptopay.sale/faq" style="color: #f0531c;">Help Center</a>.
               </p>
             </div>
             <div style="background: #f9fafb; padding: 20px; text-align: center; border-top: 1px solid #e5e7eb;">
               <p style="color: #6b7280; font-size: 12px; margin: 0;">
-                Restaurant Hub Solution • Powering restaurant success<br>
+                Crypto Pay • Powering restaurant success<br>
                 <a href="%unsubscribe_url%" style="color: #6b7280;">Unsubscribe</a>
               </p>
             </div>
@@ -262,7 +263,7 @@ const emailTemplates: Record<EmailTemplate, { subject: string; generateHtml: (da
             </div>
             <div style="background: #f9fafb; padding: 20px; text-align: center; border-top: 1px solid #e5e7eb;">
               <p style="color: #6b7280; font-size: 12px; margin: 0;">
-                Restaurant Hub Solution<br>
+                Crypto Pay<br>
                 <a href="%unsubscribe_url%" style="color: #6b7280;">Unsubscribe</a>
               </p>
             </div>
@@ -313,7 +314,7 @@ export async function sendEmail(options: EmailOptions): Promise<EmailResult> {
     const recipients = Array.isArray(options.to) ? options.to : [options.to];
     
     const { data, error } = await resend.emails.send({
-      from: process.env.EMAIL_FROM || "Restaurant Hub Solution <noreply@restauranthubsolution.com>",
+      from: process.env.EMAIL_FROM || "Crypto Pay <noreply@cryptopay.sale>",
       to: recipients.map((r) => (r.name ? `${r.name} <${r.email}>` : r.email)),
       subject,
       html: html || options.text || "",
@@ -353,7 +354,7 @@ export async function sendWelcomeEmail(
 ): Promise<EmailResult> {
   return sendEmail({
     to: { email, name: firstName },
-    subject: "Welcome to Restaurant Hub Solution! 🎉",
+    subject: "Welcome to Crypto Pay! 🎉",
     template: "welcome",
     templateData: {
       firstName,

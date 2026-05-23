@@ -17,19 +17,19 @@ const contactPoints = [
   {
     title: "Sales + onboarding",
     copy: "New restaurant groups, demos, and pricing.",
-    detail: "hello@restauranthubsolution.com",
+    detail: "hello@cryptopay.sale",
     icon: Mail,
   },
   {
     title: "Supply quotes",
     copy: "Packaging, utensils, labels, and bundles.",
-    detail: "supplies@restauranthubsolution.com",
+    detail: "supplies@cryptopay.sale",
     icon: MessageSquare,
   },
   {
     title: "Support",
     copy: "Live locations and operational assistance.",
-    detail: "support@restauranthubsolution.com",
+    detail: "support@cryptopay.sale",
     icon: Phone,
   },
 ];
@@ -94,7 +94,7 @@ export default function ContactPage() {
     const body = encodeURIComponent(
       `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone || "Not provided"}\nCompany: ${formData.company}\nLocations: ${formData.locations || "Not specified"}\nInterested in: ${formData.interest.join(", ") || "Not specified"}\n\nMessage:\n${formData.message}`
     );
-    window.location.href = `mailto:hello@restauranthubsolution.com?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:hello@cryptopay.sale?subject=${subject}&body=${body}`;
 
     setIsSubmitting(false);
     setIsSubmitted(true);
@@ -121,10 +121,10 @@ export default function ContactPage() {
             Your email client should have opened with your message. If not, you
             can email us directly at{" "}
             <a
-              href="mailto:hello@restauranthubsolution.com"
+              href="mailto:hello@cryptopay.sale"
               className="text-orange-500 underline"
             >
-              hello@restauranthubsolution.com
+              hello@cryptopay.sale
             </a>
           </p>
           <p className="mt-2 text-sm text-slate-500">
@@ -422,7 +422,7 @@ export default function ContactPage() {
           </h3>
         </div>
         <Link
-          href="mailto:hello@restauranthubsolution.com?subject=Demo%20Request"
+          href="mailto:hello@cryptopay.sale?subject=Demo%20Request"
           className="rounded-full bg-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-200/60 hover:bg-orange-600"
         >
           Book a demo

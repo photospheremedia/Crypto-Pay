@@ -1,7 +1,7 @@
 import clsx from "clsx";
 
 export default function LogoIcon(props: React.ComponentProps<"svg">) {
-  const siteName = process.env.SITE_NAME || "Restaurant Hub Solution";
+  const siteName = process.env.SITE_NAME || "Crypto Pay";
 
   return (
     <svg

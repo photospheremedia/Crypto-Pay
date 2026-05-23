@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "Dark Kitchen Solutions | Restaurant Hub Solution",
+  title: "Dark Kitchen Solutions | Crypto Pay",
   description: "Launch and scale delivery-only restaurant concepts with optimized operations, multi-brand management, and data-driven insights.",
 };
 

@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
 /**
- * Playwright configuration for Restaurant Hub Portal
+ * Playwright configuration for Crypto Pay Portal
  * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({

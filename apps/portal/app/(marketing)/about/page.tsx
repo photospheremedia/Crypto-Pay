@@ -12,8 +12,8 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About | Restaurant Hub Solution",
-  description: "Learn about Restaurant Hub Solution. A team of restaurant operators, technologists, and supply chain experts building tools to simplify restaurant operations.",
+  title: "About | Crypto Pay",
+  description: "Learn about Crypto Pay. A team of restaurant operators, technologists, and supply chain experts building tools to simplify restaurant operations.",
   keywords: [
     "about restaurant hub",
     "our story",
@@ -21,9 +21,9 @@ export const metadata: Metadata = {
     "restaurant technology team",
   ],
   openGraph: {
-    title: "Our Story: Restaurant Hub Solution",
+    title: "Our Story: Crypto Pay",
     description: "Built by restaurant operators for restaurant operators. Simplifying delivery, supply, and brand management.",
-    url: "https://restauranthubsolution.com/about",
+    url: "https://cryptopay.sale/about",
     type: "website",
   },
 };
@@ -93,7 +93,7 @@ export default function AboutPage() {
             We help restaurants scale without vendor overload.
           </h1>
           <p className="mt-4 text-lg text-slate-600">
-            Restaurant Hub Solution is built for restaurant groups juggling
+            Crypto Pay is built for restaurant groups juggling
             delivery platforms, menu changes, and supply costs. We combine
             delivery platform integration, marketing upgrades, and curated
             product resale to keep everything in one operational hub.

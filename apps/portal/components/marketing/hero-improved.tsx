@@ -38,7 +38,7 @@ export function HeroImproved() {
           </h1>
 
           <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto mb-8 leading-relaxed">
-            Restaurant operators save an average of <span className="font-semibold text-slate-900">$18,000/year</span> using Restaurant Hub's unified platform for delivery consolidation, supply management, and operations.
+            Restaurant operators save an average of <span className="font-semibold text-slate-900">$18,000/year</span> using Crypto Pay's unified platform for delivery consolidation, supply management, and operations.
           </p>
 
           {/* CTA Buttons */}
