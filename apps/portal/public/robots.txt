@@ -1,0 +1,42 @@
+# Restaurant Hub Solution robots.txt
+# Tell search engines which pages to crawl
+# NOTE: This does not prevent indexing - use meta robots or password protection for security
+
+User-agent: *
+Allow: /
+Allow: /pricing
+Allow: /services
+Allow: /integrations
+Allow: /about
+Allow: /technology
+Allow: /contact
+Allow: /faq
+Allow: /privacy-policy
+Allow: /terms-of-service
+
+# Disallow crawling of private sections
+Disallow: /admin/
+Disallow: /account/
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /private/
+Disallow: /.next/
+Disallow: /node_modules/
+
+# Disallow crawling of specific file types
+Disallow: /*.json$
+Disallow: /*.xml$
+Disallow: /*?utm_
+
+# Slow down aggressive crawlers to reduce server load
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Crawl-delay: 10
+
+# Point to sitemap
+Sitemap: https://restauranthubsolution.com/sitemap.xml

@@ -1,0 +1,91 @@
+<svg width="900" height="600" viewBox="0 0 900 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="900" height="600" rx="40" fill="#FAFAF9"/>
+  
+  <!-- Header -->
+  <text x="60" y="55" fill="#7C3AED" font-family="system-ui" font-size="11" font-weight="600" letter-spacing="0.1em">SUPPLY CATALOG</text>
+  <text x="60" y="85" fill="#1E1B4B" font-family="system-ui" font-size="24" font-weight="700">Restaurant Essentials</text>
+  
+  <!-- Product Grid -->
+  <!-- Row 1 -->
+  <rect x="40" y="110" width="200" height="220" rx="20" fill="white" stroke="#E5E7EB"/>
+  <rect x="55" y="125" width="170" height="120" rx="12" fill="#F3F4F6"/>
+  <rect x="90" y="155" width="100" height="60" rx="8" fill="#7C3AED" opacity="0.2"/>
+  <rect x="110" y="170" width="60" height="30" rx="4" fill="#7C3AED"/>
+  <text x="55" y="265" fill="#1F2937" font-family="system-ui" font-size="13" font-weight="600">Thermal Delivery Bags</text>
+  <text x="55" y="285" fill="#6B7280" font-family="system-ui" font-size="10">Set of 10 insulated carriers</text>
+  <text x="55" y="315" fill="#7C3AED" font-family="system-ui" font-size="14" font-weight="700">$129.00</text>
+  <rect x="150" y="300" width="75" height="26" rx="13" fill="#7C3AED"/>
+  <text x="167" y="318" fill="white" font-family="system-ui" font-size="10" font-weight="500">Add to Cart</text>
+  
+  <rect x="255" y="110" width="200" height="220" rx="20" fill="white" stroke="#E5E7EB"/>
+  <rect x="270" y="125" width="170" height="120" rx="12" fill="#FEF3C7"/>
+  <circle cx="355" cy="185" r="35" fill="#F59E0B" opacity="0.3"/>
+  <rect x="330" y="165" width="50" height="40" rx="6" fill="#F59E0B"/>
+  <text x="270" y="265" fill="#1F2937" font-family="system-ui" font-size="13" font-weight="600">Day-Dot Label Rolls</text>
+  <text x="270" y="285" fill="#6B7280" font-family="system-ui" font-size="10">Kitchen prep compliance labels</text>
+  <text x="270" y="315" fill="#7C3AED" font-family="system-ui" font-size="14" font-weight="700">$42.00</text>
+  <rect x="365" y="300" width="75" height="26" rx="13" fill="#7C3AED"/>
+  <text x="382" y="318" fill="white" font-family="system-ui" font-size="10" font-weight="500">Add to Cart</text>
+  
+  <rect x="470" y="110" width="200" height="220" rx="20" fill="white" stroke="#E5E7EB"/>
+  <rect x="485" y="125" width="170" height="120" rx="12" fill="#ECFDF5"/>
+  <rect x="530" y="155" width="80" height="60" rx="8" fill="#10B981" opacity="0.3"/>
+  <rect x="550" y="170" width="40" height="30" rx="4" fill="#10B981"/>
+  <text x="485" y="265" fill="#1F2937" font-family="system-ui" font-size="13" font-weight="600">Vinyl Gloves (1000ct)</text>
+  <text x="485" y="285" fill="#6B7280" font-family="system-ui" font-size="10">Food-safe prep gloves</text>
+  <text x="485" y="315" fill="#7C3AED" font-family="system-ui" font-size="14" font-weight="700">$89.00</text>
+  <rect x="580" y="300" width="75" height="26" rx="13" fill="#7C3AED"/>
+  <text x="597" y="318" fill="white" font-family="system-ui" font-size="10" font-weight="500">Add to Cart</text>
+  
+  <rect x="685" y="110" width="200" height="220" rx="20" fill="white" stroke="#E5E7EB"/>
+  <rect x="700" y="125" width="170" height="120" rx="12" fill="#EDE9FE"/>
+  <rect x="750" y="160" width="70" height="50" rx="6" fill="#7C3AED" opacity="0.4"/>
+  <rect x="765" y="175" width="40" height="20" rx="3" fill="#7C3AED"/>
+  <text x="700" y="265" fill="#1F2937" font-family="system-ui" font-size="13" font-weight="600">Paper Bags (250ct)</text>
+  <text x="700" y="285" fill="#6B7280" font-family="system-ui" font-size="10">Handled carry bags</text>
+  <text x="700" y="315" fill="#7C3AED" font-family="system-ui" font-size="14" font-weight="700">$102.00</text>
+  <rect x="795" y="300" width="75" height="26" rx="13" fill="#7C3AED"/>
+  <text x="812" y="318" fill="white" font-family="system-ui" font-size="10" font-weight="500">Add to Cart</text>
+  
+  <!-- Row 2 -->
+  <rect x="40" y="345" width="200" height="220" rx="20" fill="white" stroke="#E5E7EB"/>
+  <rect x="55" y="360" width="170" height="120" rx="12" fill="#FEF2F2"/>
+  <rect x="100" y="395" width="80" height="50" rx="6" fill="#EF4444" opacity="0.3"/>
+  <circle cx="140" cy="420" r="15" fill="#EF4444"/>
+  <text x="55" y="500" fill="#1F2937" font-family="system-ui" font-size="13" font-weight="600">Receipt Rolls (Case)</text>
+  <text x="55" y="520" fill="#6B7280" font-family="system-ui" font-size="10">POS thermal printer rolls</text>
+  <text x="55" y="550" fill="#7C3AED" font-family="system-ui" font-size="14" font-weight="700">$76.00</text>
+  <rect x="150" y="535" width="75" height="26" rx="13" fill="#7C3AED"/>
+  <text x="167" y="553" fill="white" font-family="system-ui" font-size="10" font-weight="500">Add to Cart</text>
+  
+  <rect x="255" y="345" width="200" height="220" rx="20" fill="white" stroke="#E5E7EB"/>
+  <rect x="270" y="360" width="170" height="120" rx="12" fill="#F0FDF4"/>
+  <rect x="315" y="390" width="80" height="60" rx="8" fill="#22C55E" opacity="0.3"/>
+  <path d="M340 420 L360 420 L360 430 L340 430 Z" fill="#22C55E"/>
+  <path d="M345 410 L355 410 L355 420 L345 420 Z" fill="#22C55E"/>
+  <text x="270" y="500" fill="#1F2937" font-family="system-ui" font-size="13" font-weight="600">Compostable Utensil Kits</text>
+  <text x="270" y="520" fill="#6B7280" font-family="system-ui" font-size="10">Fork, knife, napkin bundles</text>
+  <text x="270" y="550" fill="#7C3AED" font-family="system-ui" font-size="14" font-weight="700">$54.00</text>
+  <rect x="320" y="490" width="40" height="18" rx="9" fill="#22C55E"/>
+  <text x="328" y="503" fill="white" font-family="system-ui" font-size="8" font-weight="600">ECO</text>
+  <rect x="365" y="535" width="75" height="26" rx="13" fill="#7C3AED"/>
+  <text x="382" y="553" fill="white" font-family="system-ui" font-size="10" font-weight="500">Add to Cart</text>
+  
+  <!-- Bundle Card -->
+  <rect x="470" y="345" width="415" height="220" rx="20" fill="linear-gradient(135deg, #7C3AED 0%, #4C1D95 100%)"/>
+  <rect x="470" y="345" width="415" height="220" rx="20" fill="#7C3AED"/>
+  <text x="495" y="385" fill="white" font-family="system-ui" font-size="11" font-weight="600" letter-spacing="0.1em">BUNDLE DEAL</text>
+  <text x="495" y="420" fill="white" font-family="system-ui" font-size="20" font-weight="700">Delivery Essentials Kit</text>
+  <text x="495" y="450" fill="#DDD6FE" font-family="system-ui" font-size="12">Everything you need for daily takeout operations</text>
+  
+  <rect x="495" y="470" width="160" height="30" rx="6" fill="rgba(255,255,255,0.15)"/>
+  <text x="510" y="490" fill="white" font-family="system-ui" font-size="10">Thermal bags, utensils, labels</text>
+  
+  <rect x="665" y="470" width="120" height="30" rx="6" fill="rgba(255,255,255,0.15)"/>
+  <text x="680" y="490" fill="white" font-family="system-ui" font-size="10">Seals and napkins</text>
+  
+  <text x="495" y="540" fill="white" font-family="system-ui" font-size="22" font-weight="700">$220/mo</text>
+  <rect x="750" y="520" width="110" height="36" rx="18" fill="white"/>
+  <text x="772" y="543" fill="#7C3AED" font-family="system-ui" font-size="12" font-weight="600">Get Quote</text>
+</svg>

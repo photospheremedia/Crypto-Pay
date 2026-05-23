@@ -1,17 +1,20 @@
-# Dependencies
-node_modules/
-
-# Build / env
-dist/
-build/
+node_modules
+.tools/
+.next
+.turbo
 .env
 .env.*
-
-# OS / editor
+!.env.example
 .DS_Store
-Thumbs.db
+dist
+coverage
 *.log
+supabase/.temp
+.vercel
+.env*.local
 
-# IDE
-.vscode/
-!.vscode/extensions.json
+# Legacy Restaurant Hub docs / captures (may contain OAuth tokens)
+GOOGLE_*.md
+OAUTH_FIX_GUIDE.md
+network tests/
+*.har

@@ -1,0 +1,47 @@
+{
+  // ============ GitHub Copilot Customization ============
+  // Enable custom instructions file for all code generation
+  "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+  
+  // Copilot completions: enable for all languages except markdown
+  "github.copilot.enable": {
+    "*": true,
+    "markdown": false
+  },
+  
+  // Chat settings for better experience
+  "github.copilot.chat.followUps": true,
+  "github.copilot.chat.scopeSelection": true,
+  
+  // Agent mode: enables multi-step task automation
+  "chat.agent.enabled": true,
+  "chat.agent.maxRequests": 15,
+  
+  // Auto-fix issues in generated code
+  "github.copilot.chat.agent.autoFix": true,
+  
+  // Run workspace tasks when using agent mode
+  "github.copilot.chat.agent.runTasks": true,
+
+  // ============ Tailwind CSS Configuration ============
+  "tailwindCSS.lint.cssConflict": "ignore",
+  "tailwindCSS.lint.invalidApply": "ignore",
+  "tailwindCSS.lint.invalidConfigPath": "ignore",
+  "tailwindCSS.lint.invalidScreen": "ignore",
+  "tailwindCSS.lint.invalidTailwindDirective": "ignore",
+  "tailwindCSS.lint.invalidVariant": "ignore",
+  "tailwindCSS.lint.recommendedVariantOrder": "warning",
+  "css.lint.unknownProperties": "ignore",
+
+  // ============ MCP Server Configuration ============
+  "chat.mcp.serverSampling": {
+    "crypto-pay/.vscode/mcp.json: com.supabase/mcp": {
+      "allowedModels": [
+        "copilot/auto",
+        "copilot/claude-sonnet-4.5",
+        "copilot/gpt-5.1-codex"
+      ]
+    }
+  }
+}
+

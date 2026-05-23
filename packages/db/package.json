@@ -1,0 +1,17 @@
+{
+  "name": "@crypto-pay/db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./supabaseClient": "./src/supabaseClient.ts",
+    "./supabaseServer": "./src/supabaseServer.ts"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.93.2",
+    "next": "16.1.6"
+  }
+}
