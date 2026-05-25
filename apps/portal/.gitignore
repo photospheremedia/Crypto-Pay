@@ -20,6 +20,7 @@ test-results/
 
 # misc
 .DS_Store
+.email-previews/
 *.pem
 
 # debug

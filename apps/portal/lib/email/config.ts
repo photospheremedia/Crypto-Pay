@@ -8,9 +8,12 @@ export const DEFAULT_FROM = "Crypto Pay <noreply@cryptopay.sale>";
 
 export const EMAIL = {
   brandName: BRAND.name,
+  tagline: BRAND.tagline,
   replyTo: process.env.EMAIL_REPLY_TO || "support@cryptopay.sale",
   support: BRAND.email,
   siteUrl: BRAND.siteUrl,
+  /** Shown in footer — helps inbox “profile” recognition with consistent From name */
+  fromDisplay: "Crypto Pay",
   social: {
     x: process.env.NEXT_PUBLIC_SOCIAL_X_URL || undefined,
     linkedin: process.env.NEXT_PUBLIC_SOCIAL_LINKEDIN_URL || undefined,
@@ -18,6 +21,11 @@ export const EMAIL = {
   },
   /** Verified production domain (configure in Resend → Domains) */
   productionDomain: "cryptopay.sale",
+  legal: {
+    privacy: "/privacy-policy",
+    terms: "/terms-of-service",
+    contact: "/contact",
+  },
 } as const;
 
 export function getEmailFrom(): string {

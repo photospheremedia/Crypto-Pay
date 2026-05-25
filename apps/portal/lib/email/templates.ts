@@ -37,144 +37,65 @@ export const emailTemplates: Record<EmailTemplate, TemplateConfig> = {
   // ============================================
   
   welcome: {
-    subject: "Welcome to Crypto Pay - Let's Get Started! 🎉",
-    generateHtml: (data) => generateBaseTemplate(`
-      <!-- Hero section -->
-      <tr>
-        <td style="background: linear-gradient(135deg, ${brandColors.primary} 0%, ${brandColors.primaryDark} 100%); padding: 48px 32px; text-align: center;">
-          <div style="width: 80px; height: 80px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
-            <span style="font-size: 40px;">👋</span>
-          </div>
-          <h1 style="margin: 0 0 12px; font-size: 28px; font-weight: 700; color: white;">Welcome to Crypto Pay Solution!</h1>
-          <p style="margin: 0; font-size: 16px; color: rgba(255,255,255,0.9);">
-            Your B2B crypto payment platform is ready
-          </p>
-        </td>
-      </tr>
-      
-      <!-- Content -->
-      <tr>
-        <td style="padding: 40px 32px;" class="email-content">
-          ${components.paragraph(`Hi ${data.firstName || 'there'},`)}
-          ${components.paragraph(`Welcome aboard! We're excited to have <strong>${data.businessName || 'your business'}</strong> join the Crypto Pay family. You now have access to over 10,000 crypto checkout tools at wholesale prices.`)}
-          
-          ${components.card(`
-            <p style="margin: 0 0 12px; font-size: 14px; font-weight: 600; color: ${brandColors.secondary};">🚀 Quick Start Checklist</p>
+    subject: "Welcome to Crypto Pay — your account is ready",
+    generateHtml: (data) =>
+      generateBaseTemplate(
+        `
+      ${components.iconHero("👋", `Welcome, ${data.firstName || "there"}!`, "Your merchant account is ready — accept crypto and settle to your wallet.")}
+      ${components.contentOpen()}
+          ${components.paragraph(`Thanks for joining <strong>Crypto Pay</strong>${data.businessName ? ` for <strong>${data.businessName}</strong>` : ""}.`)}
+          ${components.card(
+            `
+            <p style="margin: 0 0 12px; font-size: 14px; font-weight: 600; color: ${brandColors.secondary};">Quick start</p>
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-              <tr>
-                <td style="padding: 8px 0;">
-                  <span style="color: ${brandColors.primary};">✓</span>
-                  <span style="margin-left: 8px; color: ${brandColors.text};">Account created</span>
-                </td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 0;">
-                  <span style="color: ${brandColors.textMuted};">○</span>
-                  <span style="margin-left: 8px; color: ${brandColors.text};">Complete your business profile</span>
-                </td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 0;">
-                  <span style="color: ${brandColors.textMuted};">○</span>
-                  <span style="margin-left: 8px; color: ${brandColors.text};">Set up payment method</span>
-                </td>
-              </tr>
-              <tr>
-                <td style="padding: 8px 0;">
-                  <span style="color: ${brandColors.textMuted};">○</span>
-                  <span style="margin-left: 8px; color: ${brandColors.text};">Place your first order</span>
-                </td>
-              </tr>
+              <tr><td style="padding: 6px 0;"><span style="color: ${brandColors.primary};">✓</span> <span style="margin-left: 8px;">Account created</span></td></tr>
+              <tr><td style="padding: 6px 0;"><span style="color: ${brandColors.textMuted};">○</span> <span style="margin-left: 8px;">Connect your payout wallet</span></td></tr>
+              <tr><td style="padding: 6px 0;"><span style="color: ${brandColors.textMuted};">○</span> <span style="margin-left: 8px;">Create your first payment link</span></td></tr>
             </table>
-          `, { highlight: true })}
-          
-          ${components.button('Complete Your Profile →', data.dashboardUrl as string || "https://cryptopay.sale/account")}
-          
-          ${components.divider()}
-          
-          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-            <tr>
-              <td width="33%" style="padding: 16px; text-align: center; vertical-align: top;">
-                <div style="font-size: 28px; margin-bottom: 8px;">📦</div>
-                <p style="margin: 0 0 4px; font-size: 14px; font-weight: 600; color: ${brandColors.secondary};">10,000+</p>
-                <p style="margin: 0; font-size: 12px; color: ${brandColors.textLight};">Products</p>
-              </td>
-              <td width="33%" style="padding: 16px; text-align: center; vertical-align: top; border-left: 1px solid ${brandColors.border}; border-right: 1px solid ${brandColors.border};">
-                <div style="font-size: 28px; margin-bottom: 8px;">🚚</div>
-                <p style="margin: 0 0 4px; font-size: 14px; font-weight: 600; color: ${brandColors.secondary};">Free Shipping</p>
-                <p style="margin: 0; font-size: 12px; color: ${brandColors.textLight};">Orders $500+</p>
-              </td>
-              <td width="33%" style="padding: 16px; text-align: center; vertical-align: top;">
-                <div style="font-size: 28px; margin-bottom: 8px;">💳</div>
-                <p style="margin: 0 0 4px; font-size: 14px; font-weight: 600; color: ${brandColors.secondary};">Net 30</p>
-                <p style="margin: 0; font-size: 12px; color: ${brandColors.textLight};">Payment Terms</p>
-              </td>
-            </tr>
-          </table>
-          
-          ${components.divider()}
-          
-          ${components.paragraph('Need help getting started? Our B2B support team is here for you.', { muted: true })}
-          ${components.paragraph(`<strong>Email:</strong> support@cryptopay.sale<br><strong>Phone:</strong> 1-800-REST-HUB (Mon-Fri 8am-6pm EST)`, { small: true, muted: true })}
-        </td>
-      </tr>
-    `, { preheader: `Welcome ${data.firstName}! Your Crypto Pay account is ready.` }),
+          `,
+            { highlight: true },
+          )}
+          ${components.button("Open dashboard", (data.dashboardUrl as string) || "https://cryptopay.sale/account")}
+          ${components.paragraph(`Questions? Email <a href="mailto:support@cryptopay.sale" style="color: ${brandColors.primary};">support@cryptopay.sale</a>`, { muted: true, center: true })}
+      ${components.contentClose()}
+    `,
+        { preheader: `Welcome ${data.firstName || ""} — get started with Crypto Pay.` },
+      ),
   },
 
   email_verification: {
-    subject: "Verify Your Email - Crypto Pay",
-    generateHtml: (data) => generateBaseTemplate(`
-      <tr>
-        <td style="padding: 48px 32px; text-align: center;" class="email-content">
-          <div style="width: 64px; height: 64px; background: #f0fdf4; border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center;">
-            <span style="font-size: 32px;">✉️</span>
-          </div>
-          
-          ${components.heading('Verify Your Email Address')}
-          ${components.paragraph(`Hi ${data.firstName || 'there'}, please confirm your email address to complete your registration.`)}
-          
-          ${components.button('Verify Email Address', data.verificationUrl as string || '#')}
-          
-          ${components.card(`
-            <p style="margin: 0; font-size: 13px; color: ${brandColors.textLight};">
-              Or copy and paste this link into your browser:<br>
-              <span style="color: ${brandColors.primary}; word-break: break-all;">${data.verificationUrl}</span>
-            </p>
-          `)}
-          
-          ${components.paragraph('This link expires in 24 hours. If you didn\'t create an account, you can safely ignore this email.', { small: true, muted: true })}
-        </td>
-      </tr>
-    `, { preheader: 'Please verify your email to activate your account.' }),
+    subject: "Verify your email — Crypto Pay",
+    generateHtml: (data) =>
+      generateBaseTemplate(
+        `
+      ${components.iconHero("✉️", "Verify your email", `Hi ${data.firstName || "there"}, confirm your address to activate your account.`)}
+      ${components.contentOpen()}
+          ${components.button("Verify email", (data.verificationUrl as string) || "#")}
+          ${components.card(`<p style="margin: 0; font-size: 13px; color: ${brandColors.textLight};">Or paste this link:<br><span style="color: ${brandColors.primary}; word-break: break-all;">${data.verificationUrl}</span></p>`)}
+          ${components.paragraph("Link expires in 24 hours. Ignore this email if you did not sign up.", { small: true, muted: true, center: true })}
+      ${components.contentClose()}
+    `,
+        { preheader: "Confirm your email to activate Crypto Pay." },
+      ),
   },
 
   password_reset: {
-    subject: "Reset Your Password - Crypto Pay",
-    generateHtml: (data) => generateBaseTemplate(`
-      <tr>
-        <td style="padding: 48px 32px; text-align: center;" class="email-content">
-          <div style="width: 64px; height: 64px; background: #fef3c7; border-radius: 50%; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center;">
-            <span style="font-size: 32px;">🔐</span>
-          </div>
-          
-          ${components.heading('Reset Your Password')}
-          ${components.paragraph('We received a request to reset the password for your Crypto Pay account.')}
-          
-          ${components.button('Reset Password', data.resetUrl as string || '#')}
-          
-          ${components.divider()}
-          
+    subject: "Reset your password — Crypto Pay",
+    generateHtml: (data) =>
+      generateBaseTemplate(
+        `
+      ${components.iconHero("🔐", "Reset your password", "We received a request to reset your Crypto Pay password.")}
+      ${components.contentOpen()}
+          ${components.button("Reset password", (data.resetUrl as string) || "#")}
           ${components.card(`
-            <p style="margin: 0 0 8px; font-size: 13px; color: ${brandColors.warning}; font-weight: 600;">⚠️ Security Notice</p>
-            <p style="margin: 0; font-size: 13px; color: ${brandColors.textLight};">
-              This link expires in 1 hour. If you didn't request a password reset, please ignore this email or contact support if you have concerns.
-            </p>
+            <p style="margin: 0 0 8px; font-size: 13px; color: ${brandColors.warning}; font-weight: 600;">Security notice</p>
+            <p style="margin: 0; font-size: 13px; color: ${brandColors.textLight};">Expires in 1 hour. If you did not request this, ignore the email or contact support.</p>
           `)}
-          
-          ${components.paragraph(`<strong>Request Details:</strong><br>Time: ${data.requestTime || new Date().toLocaleString()}<br>IP: ${data.ipAddress || 'Unknown'}`, { small: true, muted: true })}
-        </td>
-      </tr>
-    `, { preheader: 'Reset your Crypto Pay password.' }),
+          ${components.paragraph(`Requested: ${data.requestTime || new Date().toLocaleString()}`, { small: true, muted: true, center: true })}
+      ${components.contentClose()}
+    `,
+        { preheader: "Reset your Crypto Pay password." },
+      ),
   },
 
   // ============================================
