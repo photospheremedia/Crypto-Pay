@@ -7,7 +7,7 @@ description: 'AI coding agent instructions for Crypto Pay — crypto payment acc
 
 Accept crypto payments instantly, securely, and globally. Non-custodial wallet-to-wallet processing with a modern merchant dashboard.
 
-- **GitHub:** https://github.com/Skullcandyxxx/Crypto-Pay
+- **GitHub:** https://github.com/photospheremedia/Crypto-Pay
 - **App:** Next.js 16 portal at `apps/portal` (port 3001)
 - **Stack:** pnpm monorepo · Next.js 16 · Tailwind CSS v4 · Supabase (auth + DB) · TypeScript strict
 

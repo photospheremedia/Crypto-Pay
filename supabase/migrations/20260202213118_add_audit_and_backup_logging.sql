@@ -1,66 +1,71 @@
 -- Enable pg_cron extension for automated backups (requires pg_cron installed)
 create extension if not exists pg_cron;
 
--- Create audit log table for tracking application events
-create table if not exists public.audit_logs (
-  id uuid primary key default gen_random_uuid(),
-  created_at timestamp with time zone default now(),
-  updated_at timestamp with time zone default now(),
-  
-  -- Core audit fields
-  event_type text not null, -- 'order_created', 'payment_processed', 'user_registered', etc.
-  severity text not null default 'info', -- 'debug', 'info', 'warning', 'error'
-  actor_id uuid references auth.users(id) on delete set null,
-  actor_email text,
-  
-  -- Resource information
-  resource_type text, -- 'order', 'user', 'product', 'subscription'
-  resource_id uuid,
-  
-  -- Event details
-  description text,
-  metadata jsonb default '{}'::jsonb,
-  
-  -- API/Request info
-  request_path text,
-  request_method text,
-  ip_address inet,
-  user_agent text,
-  
-  -- Status tracking
-  status text default 'success', -- 'success', 'failed', 'pending'
-  error_message text
-);
+-- audit_logs may already exist from super_admin_system (action/user_id schema).
+-- Only create the newer event_type schema on greenfield databases.
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.tables
+    WHERE table_schema = 'public' AND table_name = 'audit_logs'
+  ) THEN
+    CREATE TABLE public.audit_logs (
+      id uuid primary key default gen_random_uuid(),
+      created_at timestamp with time zone default now(),
+      updated_at timestamp with time zone default now(),
+      event_type text not null,
+      severity text not null default 'info',
+      actor_id uuid references auth.users(id) on delete set null,
+      actor_email text,
+      resource_type text,
+      resource_id uuid,
+      description text,
+      metadata jsonb default '{}'::jsonb,
+      request_path text,
+      request_method text,
+      ip_address inet,
+      user_agent text,
+      status text default 'success',
+      error_message text
+    );
+  END IF;
+END $$;
 
--- Create indexes for efficient querying
-create index idx_audit_logs_created_at on public.audit_logs(created_at desc);
-create index idx_audit_logs_event_type on public.audit_logs(event_type);
-create index idx_audit_logs_actor_id on public.audit_logs(actor_id);
-create index idx_audit_logs_resource on public.audit_logs(resource_type, resource_id);
-create index idx_audit_logs_severity on public.audit_logs(severity);
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_schema = 'public' AND table_name = 'audit_logs' AND column_name = 'event_type'
+  ) THEN
+    CREATE INDEX IF NOT EXISTS idx_audit_logs_created_at ON public.audit_logs(created_at DESC);
+    CREATE INDEX IF NOT EXISTS idx_audit_logs_event_type ON public.audit_logs(event_type);
+    CREATE INDEX IF NOT EXISTS idx_audit_logs_actor_id ON public.audit_logs(actor_id);
+    CREATE INDEX IF NOT EXISTS idx_audit_logs_resource ON public.audit_logs(resource_type, resource_id);
+    CREATE INDEX IF NOT EXISTS idx_audit_logs_severity ON public.audit_logs(severity);
 
--- Enable RLS for audit logs
-alter table public.audit_logs enable row level security;
+    ALTER TABLE public.audit_logs ENABLE ROW LEVEL SECURITY;
 
--- Only authenticated users can view their own audit logs (or admins can view all)
-create policy "Users can view their own audit logs"
-  on public.audit_logs
-  for select
-  to authenticated
-  using (
-    actor_id = auth.uid()
-    or exists (
-      select 1 from public.user_profiles
-      where id = auth.uid() and role = 'rhs_admin'
-    )
-  );
+    DROP POLICY IF EXISTS "Users can view their own audit logs" ON public.audit_logs;
+    CREATE POLICY "Users can view their own audit logs"
+      ON public.audit_logs
+      FOR SELECT
+      TO authenticated
+      USING (
+        actor_id = auth.uid()
+        OR EXISTS (
+          SELECT 1 FROM public.user_profiles
+          WHERE id = auth.uid() AND role = 'rhs_admin'
+        )
+      );
 
--- Only system/service can insert audit logs
-create policy "Only service role can insert audit logs"
-  on public.audit_logs
-  for insert
-  to service_role
-  with check (true);
+    DROP POLICY IF EXISTS "Only service role can insert audit logs" ON public.audit_logs;
+    CREATE POLICY "Only service role can insert audit logs"
+      ON public.audit_logs
+      FOR INSERT
+      TO service_role
+      WITH CHECK (true);
+  END IF;
+END $$;
 
 -- Create backup metadata table
 create table if not exists public.backup_logs (
@@ -88,8 +93,8 @@ create table if not exists public.backup_logs (
 );
 
 -- Create index for recent backups
-create index idx_backup_logs_created_at on public.backup_logs(created_at desc);
-create index idx_backup_logs_status on public.backup_logs(status);
+create index if not exists idx_backup_logs_created_at on public.backup_logs(created_at desc);
+create index if not exists idx_backup_logs_status on public.backup_logs(status);
 
 -- Scheduled job to clean up old audit logs (keep last 90 days)
 select cron.schedule('cleanup-audit-logs', '0 2 * * *', $$

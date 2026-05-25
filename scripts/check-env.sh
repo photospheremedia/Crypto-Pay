@@ -9,7 +9,7 @@
 set -e
 
 ENV_FILE="apps/portal/.env.local"
-SUPABASE_REF="xfairwgarmpvbogiuduk"
+SUPABASE_REF="${SUPABASE_PROJECT_REF:-}"
 
 echo "🔍 Checking environment configuration..."
 echo ""
@@ -33,6 +33,12 @@ MISSING=0
 for VAR in "${REQUIRED_VARS[@]}"; do
     if ! grep -q "^${VAR}=" "$ENV_FILE" 2>/dev/null; then
         echo "❌ Missing: $VAR"
+        MISSING=1
+        continue
+    fi
+    VAL=$(grep "^${VAR}=" "$ENV_FILE" | cut -d'=' -f2- | tr -d '"' | tr -d "'")
+    if [ -z "$VAL" ]; then
+        echo "❌ Empty: $VAR (set in Supabase Dashboard → API, then vercel env add or .env.local)"
         MISSING=1
     fi
 done

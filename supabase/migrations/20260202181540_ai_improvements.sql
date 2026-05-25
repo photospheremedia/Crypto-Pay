@@ -92,6 +92,10 @@ alter table "public"."user_security_events" drop constraint "user_security_event
 
 alter table "public"."user_sessions" drop constraint "user_sessions_user_id_fkey";
 
+drop trigger if exists cleanup_old_avatars_trigger on storage.objects;
+drop trigger if exists clear_profile_avatar_url_trigger on storage.objects;
+drop trigger if exists sync_profile_avatar_url_trigger on storage.objects;
+
 drop function if exists "public"."check_rate_limit"(p_key text, p_max_hits integer, p_window_duration interval);
 
 drop function if exists "public"."cleanup_old_avatars"();

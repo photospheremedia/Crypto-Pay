@@ -1,11 +1,22 @@
-/** Crypto Pay Supabase — must match Cursor MCP (connection C412-6403) */
+function supabaseProjectRef(): string | undefined {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  if (!url) return undefined;
+  const match = url.match(/^https:\/\/([a-z0-9]+)\.supabase\.co\/?$/i);
+  return match?.[1];
+}
+
+const projectRef = supabaseProjectRef();
+
+/** Crypto Pay Supabase — set via apps/portal/.env.local (see .env.example) */
 export const SUPABASE = {
-  projectRef: "hwntncyiqaltzvlidscg",
-  url: "https://hwntncyiqaltzvlidscg.supabase.co",
-  functionsUrl: "https://hwntncyiqaltzvlidscg.supabase.co/functions/v1",
-  dashboardUrl:
-    "https://supabase.com/dashboard/project/hwntncyiqaltzvlidscg",
-  mcpConnectionId: "C412-6403",
+  projectRef: projectRef ?? "",
+  url: process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() ?? "",
+  functionsUrl:
+    process.env.NEXT_PUBLIC_SUPABASE_FUNCTIONS_URL?.trim() ??
+    (projectRef ? `https://${projectRef}.supabase.co/functions/v1` : ""),
+  dashboardUrl: projectRef
+    ? `https://supabase.com/dashboard/project/${projectRef}`
+    : "https://supabase.com/dashboard/projects",
 } as const;
 
 /** Logo brand — emerald + cyan gradient */

@@ -10,7 +10,32 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.1"
+    PostgrestVersion: "14.5"
+  }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
   }
   public: {
     Tables: {
@@ -145,6 +170,54 @@ export type Database = {
           user_email?: string | null
           user_id?: string | null
           user_role?: string | null
+        }
+        Relationships: []
+      }
+      backup_logs: {
+        Row: {
+          backup_type: string
+          completed_at: string | null
+          created_at: string | null
+          duration_seconds: number | null
+          error_message: string | null
+          id: string
+          metadata: Json | null
+          row_count: number | null
+          started_at: string | null
+          status: string
+          storage_path: string | null
+          storage_size_bytes: number | null
+          table_count: number | null
+        }
+        Insert: {
+          backup_type: string
+          completed_at?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          row_count?: number | null
+          started_at?: string | null
+          status?: string
+          storage_path?: string | null
+          storage_size_bytes?: number | null
+          table_count?: number | null
+        }
+        Update: {
+          backup_type?: string
+          completed_at?: string | null
+          created_at?: string | null
+          duration_seconds?: number | null
+          error_message?: string | null
+          id?: string
+          metadata?: Json | null
+          row_count?: number | null
+          started_at?: string | null
+          status?: string
+          storage_path?: string | null
+          storage_size_bytes?: number | null
+          table_count?: number | null
         }
         Relationships: []
       }
@@ -1529,30 +1602,6 @@ export type Database = {
           },
         ]
       }
-      messages: {
-        Row: {
-          content: string
-          created_at: string
-          id: string
-          room_id: string
-          user_id: string
-        }
-        Insert: {
-          content: string
-          created_at?: string
-          id?: string
-          room_id: string
-          user_id: string
-        }
-        Update: {
-          content?: string
-          created_at?: string
-          id?: string
-          room_id?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       newsletter_subscribers: {
         Row: {
           company_name: string | null
@@ -2562,30 +2611,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      room_members: {
-        Row: {
-          created_at: string | null
-          id: string
-          role: string | null
-          room_id: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          role?: string | null
-          room_id: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          role?: string | null
-          room_id?: string
-          user_id?: string
-        }
-        Relationships: []
       }
       shop_customers: {
         Row: {
@@ -3653,6 +3678,36 @@ export type Database = {
           },
         ]
       }
+      user_wallet_profiles: {
+        Row: {
+          created_at: string
+          id: string
+          updated_at: string
+          user_id: string
+          wallet_address: string
+          wallet_network: string
+          wallet_verified: boolean
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+          wallet_address: string
+          wallet_network: string
+          wallet_verified?: boolean
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+          wallet_address?: string
+          wallet_network?: string
+          wallet_verified?: boolean
+        }
+        Relationships: []
+      }
       volume_pricing: {
         Row: {
           created_at: string | null
@@ -3897,6 +3952,7 @@ export type Database = {
         Args: { p_roles: string[]; p_tenant_id: string }
         Returns: boolean
       }
+      is_cp_admin: { Args: never; Returns: boolean }
       is_hanouta_admin: { Args: never; Returns: boolean }
       is_member_of_tenant: {
         Args: { check_tenant_id: string }
@@ -4067,6 +4123,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {},
   },

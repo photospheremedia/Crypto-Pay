@@ -5,7 +5,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const PROJECT_REF = 'hwntncyiqaltzvlidscg';
+const PROJECT_REF = process.env.SUPABASE_PROJECT_REF ?? '';
 const BATCH_DIR = path.resolve('.migration-batch');
 const APPLIED_FILE = path.join(BATCH_DIR, 'applied.json');
 const TOKEN = process.env.SUPABASE_ACCESS_TOKEN || '';
