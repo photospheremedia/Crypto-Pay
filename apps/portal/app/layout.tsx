@@ -5,17 +5,23 @@ import { getLocale } from "next-intl/server";
 import { CookieConsent } from "@/components/cookie-consent";
 import { ToastProvider } from "@/hooks/use-toast";
 import { isRtlLocale } from "@/i18n/routing";
-
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://cryptopay.sale";
+import { BRAND } from "@/lib/cryptopay/constants";
+import {
+  SITE_METADATA,
+  SITE_URL,
+  buildLanguageAlternates,
+  buildOpenGraphLocale,
+  sharedOpenGraph,
+} from "@/lib/site-metadata";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
+  applicationName: SITE_METADATA.applicationName,
   title: {
-    default: "Crypto Pay — Accept Crypto Payments Instantly",
-    template: "%s | Crypto Pay",
+    default: SITE_METADATA.title,
+    template: `%s | ${BRAND.name}`,
   },
-  description:
-    "Accept crypto payments instantly, securely, and globally. Direct wallet settlement for modern merchants.",
+  description: SITE_METADATA.description,
   keywords: [
     "crypto payments",
     "bitcoin payments",
@@ -25,29 +31,39 @@ export const metadata: Metadata = {
     "payment API",
     "wallet payments",
   ],
-  authors: [{ name: "Crypto Pay", url: siteUrl }],
-  creator: "Crypto Pay",
-  publisher: "Crypto Pay",
+  authors: [{ name: BRAND.name, url: SITE_URL }],
+  creator: BRAND.name,
+  publisher: BRAND.name,
+  icons: {
+    icon: [
+      { url: "/icon", type: "image/png", sizes: "32x32" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: [{ url: "/apple-icon", sizes: "180x180", type: "image/png" }],
+  },
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
+  appleWebApp: {
+    capable: true,
+    title: BRAND.name,
+    statusBarStyle: "default",
+  },
   openGraph: {
+    ...sharedOpenGraph,
     type: "website",
-    locale: "en_US",
-    url: siteUrl,
-    siteName: "Crypto Pay",
-    title: "Crypto Pay — Accept Crypto Payments Instantly",
-    description:
-      "Accept crypto payments instantly with direct wallet checkout, settlement tracking, and merchant-ready APIs.",
+    url: SITE_URL,
+    title: SITE_METADATA.title,
+    description: SITE_METADATA.ogDescription,
+    ...buildOpenGraphLocale("en"),
   },
   twitter: {
     card: "summary_large_image",
-    title: "Crypto Pay — Accept Crypto Payments Instantly",
-    description:
-      "Merchant crypto checkout for fast, secure wallet-to-wallet payments.",
-    creator: "@resthubsolution",
+    title: SITE_METADATA.title,
+    description: SITE_METADATA.twitterDescription,
+    creator: SITE_METADATA.twitterCreator,
   },
   robots: {
     index: true,
@@ -61,13 +77,21 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: siteUrl,
+    canonical: SITE_URL,
+    languages: buildLanguageAlternates("/"),
   },
   category: "technology",
   referrer: "strict-origin-when-cross-origin",
 };
 
 export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: SITE_METADATA.themeColor },
+    { media: "(prefers-color-scheme: dark)", color: "#059669" },
+  ],
+  colorScheme: "light dark",
+  width: "device-width",
+  initialScale: 1,
   maximumScale: 1,
 };
 
