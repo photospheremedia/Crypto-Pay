@@ -10,20 +10,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { createPageMetadata } from "@/lib/site-metadata";
 import { getFAQJsonLd } from "@/lib/json-ld";
 import { CRYPTO_FAQS, FAQ_CATEGORIES } from "@/lib/cryptopay/faqs";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: "FAQ | Crypto Pay",
   description:
     "Frequently asked questions about Crypto Pay — wallet settlement, supported assets, pricing, and API integration.",
-  openGraph: {
-    title: "Crypto Pay — Frequently Asked Questions",
-    description: "Answers to common questions about accepting crypto payments with Crypto Pay.",
-    url: "https://cryptopay.sale/faq",
-    type: "website",
-  },
-};
+  path: "/faq",
+  openGraphTitle: "Crypto Pay — Frequently Asked Questions",
+  openGraphDescription:
+    "Answers to common questions about accepting crypto payments with Crypto Pay.",
+});
 
 export default function FaqPage() {
   const faqJsonLd = getFAQJsonLd(

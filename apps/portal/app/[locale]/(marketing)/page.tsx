@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { createLocalizedMetadata } from "@/lib/site-metadata";
 import { Code2, Layers, Shield, Wallet } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
@@ -26,10 +27,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "HomePage" });
 
-  return {
+  return createLocalizedMetadata({
+    locale,
     title: t("metaTitle"),
     description: t("metaDescription"),
-  };
+    path: "/",
+  });
 }
 
 export default async function MarketingHome({ params }: Props) {

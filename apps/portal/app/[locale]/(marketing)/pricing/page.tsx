@@ -13,11 +13,16 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { PRICING } from "@/lib/cryptopay/constants";
+import { createPageMetadata } from "@/lib/site-metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: "Pricing | Crypto Pay",
   description: "Straightforward pricing for businesses accepting crypto payments.",
-};
+  path: "/pricing",
+  openGraphTitle: "Simple, Transparent Pricing",
+  openGraphDescription:
+    "Straightforward pricing for businesses accepting crypto payments. Direct wallet settlement included.",
+});
 
 const planCards = [
   {

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { MarketingPageShell } from "@/components/cryptopay/marketing-section";
+import { createPageMetadata } from "@/lib/site-metadata";
 import {
   Users,
   Target,
@@ -12,22 +13,15 @@ import {
   Award,
 } from "lucide-react";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: "About | Crypto Pay",
-  description: "Learn about Crypto Pay. A team of business operators, technologists, and supply chain experts building tools to simplify business operations.",
-  keywords: [
-    "about business hub",
-    "our story",
-    "business operations company",
-    "business technology team",
-  ],
-  openGraph: {
-    title: "Our Story: Crypto Pay",
-    description: "Built by business operators for business operators. Simplifying delivery, supply, and brand management.",
-    url: "https://cryptopay.sale/about",
-    type: "website",
-  },
-};
+  description:
+    "Learn about Crypto Pay. A team of business operators, technologists, and supply chain experts building tools to simplify business operations.",
+  path: "/about",
+  openGraphTitle: "Our Story: Crypto Pay",
+  openGraphDescription:
+    "Built by business operators for business operators. Simplifying delivery, supply, and brand management.",
+});
 
 const values = [
   {
