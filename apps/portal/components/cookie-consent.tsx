@@ -2,11 +2,19 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { 
-  Cookie, X, Settings2, Shield, BarChart3, ChevronDown, ChevronUp, 
-  Megaphone, Cog, ExternalLink, Check, Info
+import {
+  Settings2, Shield, BarChart3, ChevronDown,
+  Megaphone, Cog, Check,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES & CONSTANTS
@@ -52,7 +60,7 @@ const cookieCategories = [
   {
     id: 'essential',
     name: 'Strictly Necessary',
-    description: 'Essential for the website to function properly. These cookies are required for basic functionality like secure login, shopping cart, and checkout.',
+    description: 'Essential for the website to function properly. These cookies are required for basic functionality like secure login and authentication.',
     examples: ['Session cookies', 'Authentication tokens', 'CSRF protection', 'Load balancing'],
     locked: true,
     icon: Shield,
@@ -79,7 +87,7 @@ const cookieCategories = [
   {
     id: 'advertising',
     name: 'Advertising & Marketing',
-    description: 'Used to deliver relevant advertisements and track campaign performance. These cookies may be set by our advertising partners.',
+    description: 'Used to deliver relevant content and track campaign performance. These cookies may be set by our marketing partners.',
     examples: ['Google Ads', 'Facebook Pixel', 'Retargeting', 'Cross-site tracking', 'LinkedIn Insight'],
     locked: false,
     icon: Megaphone,
@@ -308,12 +316,8 @@ export function CookieConsent() {
     const isExpired = isConsentExpired();
     
     if (!hasConsent || isExpired) {
-      // Show banner after a short delay for better UX
-      const timer = setTimeout(() => {
-        setIsVisible(true);
-        setIsAnimating(true);
-      }, 1500);
-      return () => clearTimeout(timer);
+      setIsVisible(true);
+      setIsAnimating(true);
     } else {
       // Load saved preferences and initialize tracking
       const savedPrefs = localStorage.getItem(COOKIE_PREFERENCES_KEY);
@@ -353,6 +357,7 @@ export function CookieConsent() {
   }, []);
 
   const handleAcceptAll = () => {
+    setShowSettings(false);
     saveConsent({
       essential: true,
       functional: true,
@@ -362,11 +367,13 @@ export function CookieConsent() {
   };
 
   const handleRejectNonEssential = () => {
+    setShowSettings(false);
     saveConsent(defaultPreferences);
   };
 
   const handleSavePreferences = () => {
     saveConsent(preferences);
+    setShowSettings(false);
   };
 
   const togglePreference = (key: keyof CookiePreferences) => {
@@ -377,283 +384,232 @@ export function CookieConsent() {
     }));
   };
 
-  // Disable page scroll when banner is visible (professional pattern)
-  useEffect(() => {
-    if (isVisible) {
-      document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
-    };
-  }, [isVisible]);
-
   if (!isVisible) return null;
 
   return (
     <>
-      {/* Dark Overlay - blocks page interaction until consent is given */}
-      <div 
-        className={`fixed inset-0 z-99 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
-          isAnimating ? 'opacity-100' : 'opacity-0'
-        }`}
-        aria-hidden="true"
-      />
-      
-      {/* Cookie Consent Modal */}
+      {/* Non-blocking bottom banner — page stays usable */}
       <div
-        role="dialog"
-        aria-modal="true"
+        role="region"
         aria-labelledby="cookie-consent-title"
-        className={`fixed inset-0 z-100 flex items-end sm:items-center justify-center p-0 sm:p-4 transition-all duration-300 ${
-          isAnimating ? 'opacity-100' : 'opacity-0'
+        className={`pointer-events-auto fixed inset-x-0 bottom-0 z-50 border-t border-slate-200 bg-white/95 shadow-lg backdrop-blur-sm transition-all duration-300 ${
+          isAnimating ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
         }`}
       >
-        {/* Modal Container - Full height on mobile, centered card on desktop */}
-        <div 
-          className={`w-full sm:max-w-2xl lg:max-w-3xl bg-white sm:rounded-2xl shadow-2xl overflow-hidden transition-transform duration-300 ${
-            isAnimating ? 'translate-y-0' : 'translate-y-full sm:translate-y-8'
-          } max-h-dvh sm:max-h-[90vh] flex flex-col`}
-        >
-          {/* Main Banner */}
-          <div className="p-5 sm:p-6 shrink-0">
-            <div className="flex items-start gap-4">
-              <div className="hidden sm:flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-orange-500 to-teal-600 shadow-lg">
-                <Cookie className="h-7 w-7 text-white" />
-              </div>
-              
-              <div className="flex-1 min-w-0">
-                {/* Mobile Header with Icon */}
-                <div className="flex items-center gap-3 sm:hidden mb-3">
-                  <div className="h-10 w-10 shrink-0 flex items-center justify-center rounded-xl bg-linear-to-br from-orange-500 to-teal-600 shadow">
-                    <Cookie className="h-5 w-5 text-white" />
+        <div className="mx-auto flex max-w-6xl flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:py-4">
+          <div className="min-w-0 flex-1">
+            <h3 id="cookie-consent-title" className="text-sm font-semibold text-slate-900">
+              Cookie preferences
+            </h3>
+            <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
+              We use cookies for essential features and optional analytics.{' '}
+              <Link
+                href="/privacy-policy#cookies"
+                className="text-emerald-600 hover:underline"
+              >
+                Cookie Policy
+              </Link>
+            </p>
+          </div>
+          <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center">
+            <Button size="sm" onClick={handleAcceptAll}>
+              Accept all
+            </Button>
+            <Button size="sm" variant="outline" onClick={handleRejectNonEssential}>
+              Essential only
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setShowSettings(true)}
+              className="gap-1.5"
+            >
+              <Settings2 className="size-4" />
+              Customize
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <CookiePreferencesDialog
+        open={showSettings}
+        onOpenChange={setShowSettings}
+        preferences={preferences}
+        expandedCategory={expandedCategory}
+        onExpandedCategoryChange={setExpandedCategory}
+        onTogglePreference={togglePreference}
+        onSelectAll={() =>
+          setPreferences({
+            essential: true,
+            functional: true,
+            analytics: true,
+            advertising: true,
+          })
+        }
+        onDeselectAll={() => setPreferences(defaultPreferences)}
+        onSave={handleSavePreferences}
+      />
+    </>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// COOKIE PREFERENCES DIALOG (shadcn — only when user opts in)
+// ═══════════════════════════════════════════════════════════════════════════════
+
+function CookieCategoryList({
+  preferences,
+  expandedCategory,
+  onExpandedCategoryChange,
+  onTogglePreference,
+}: {
+  preferences: CookiePreferences;
+  expandedCategory: string | null;
+  onExpandedCategoryChange: (id: string | null) => void;
+  onTogglePreference: (key: keyof CookiePreferences) => void;
+}) {
+  return (
+    <div className="flex flex-col gap-3">
+      {cookieCategories.map((category) => {
+        const Icon = category.icon;
+        const isEnabled = preferences[category.id as keyof CookiePreferences];
+        const isExpanded = expandedCategory === category.id;
+
+        return (
+          <div
+            key={category.id}
+            className={`rounded-xl border transition-all ${
+              isEnabled ? 'border-emerald-200 bg-emerald-50/30' : 'border-slate-200 bg-white'
+            }`}
+          >
+            <div className="p-4">
+              <div className="flex items-start gap-3">
+                <div
+                  className={`shrink-0 rounded-lg p-2 ${
+                    isEnabled ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-400'
+                  }`}
+                >
+                  <Icon className="h-5 w-5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                      <h5 className="text-sm font-semibold text-slate-900">{category.name}</h5>
+                      {category.locked && (
+                        <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold uppercase text-emerald-600">
+                          Required
+                        </span>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      role="switch"
+                      aria-checked={isEnabled}
+                      aria-label={`${isEnabled ? 'Disable' : 'Enable'} ${category.name} cookies`}
+                      disabled={category.locked}
+                      onClick={() => onTogglePreference(category.id as keyof CookiePreferences)}
+                      className={`relative inline-flex h-6 w-11 shrink-0 rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 ${
+                        isEnabled ? 'bg-emerald-500' : 'bg-slate-300'
+                      } ${category.locked ? 'cursor-not-allowed opacity-70' : 'cursor-pointer'}`}
+                    >
+                      <span
+                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow transition ${
+                          isEnabled ? 'translate-x-5' : 'translate-x-0'
+                        }`}
+                      />
+                    </button>
                   </div>
-                  <h3 id="cookie-consent-title" className="text-lg font-bold text-slate-900">
-                    Your Privacy Choices
-                  </h3>
-                </div>
-                
-                {/* Desktop Header */}
-                <h3 id="cookie-consent-title" className="hidden sm:block text-xl font-bold text-slate-900">
-                  Your Privacy Choices
-                </h3>
-                
-                <p className="mt-2 text-sm text-slate-600 leading-relaxed">
-                  We use cookies to enhance your experience, analyze site traffic, and serve personalized content and advertising. 
-                  You can accept all cookies, reject non-essential ones, or customize your preferences.
-                </p>
-
-                {/* Quick Stats - Hidden on very small screens */}
-                <div className="mt-3 hidden xs:flex flex-wrap items-center gap-3 sm:gap-4 text-xs text-slate-500">
-                  <span className="flex items-center gap-1">
-                    <Shield className="h-3.5 w-3.5 text-orange-500" />
-                    <strong className="text-slate-700">4</strong> categories
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Info className="h-3.5 w-3.5 text-blue-500" />
-                    GDPR & CCPA compliant
-                  </span>
-                  <Link 
-                    href="/privacy-policy#cookies" 
-                    className="flex items-center gap-1 text-orange-500 hover:text-orange-600 hover:underline"
-                  >
-                    Cookie Policy
-                    <ExternalLink className="h-3 w-3" />
-                  </Link>
-                </div>
-
-                {/* Action Buttons - Stack on mobile, inline on larger screens */}
-                <div className="mt-5 flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center gap-3">
-                  {/* Primary: Accept All - Full width on mobile */}
-                  <Button
-                    onClick={handleAcceptAll}
-                    className="w-full sm:w-auto rounded-xl bg-orange-500 hover:bg-orange-600 text-base sm:text-sm px-8 py-4 sm:py-3 h-auto font-bold shadow-md hover:shadow-lg transition-all order-1"
-                  >
-                    ✓ Accept All Cookies
-                  </Button>
-                  
-                  {/* Secondary: Reject - Equal prominence on mobile */}
-                  <Button
-                    onClick={handleRejectNonEssential}
-                    variant="outline"
-                    className="w-full sm:w-auto rounded-xl text-base sm:text-sm px-6 py-4 sm:py-3 h-auto font-semibold border-2 border-slate-400 bg-white text-slate-700 hover:bg-slate-100 hover:border-slate-500 transition-all order-2"
-                  >
-                    ✗ Reject All
-                  </Button>
-                  
-                  {/* Tertiary: Customize - Text link style on mobile */}
+                  <p className="mt-1 text-xs leading-relaxed text-slate-500">{category.description}</p>
                   <button
-                    onClick={() => setShowSettings(!showSettings)}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-base sm:text-sm font-semibold text-slate-600 hover:text-orange-500 transition px-4 py-3 rounded-xl hover:bg-slate-100 order-3"
+                    type="button"
+                    onClick={() => onExpandedCategoryChange(isExpanded ? null : category.id)}
+                    className="mt-2 flex items-center gap-1 text-xs font-medium text-slate-500 hover:text-emerald-600"
                   >
-                    <Settings2 className="h-4 w-4" />
-                    Customize Settings
-                    {showSettings ? (
-                      <ChevronUp className="h-4 w-4" />
-                    ) : (
-                      <ChevronDown className="h-4 w-4" />
-                    )}
+                    {isExpanded ? 'Hide details' : 'View details'}
+                    <ChevronDown className={`h-3 w-3 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                   </button>
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Cookie Settings Panel - Scrollable on mobile */}
-          {showSettings && (
-            <div className="border-t border-slate-200 bg-slate-50 flex-1 overflow-y-auto">
-              <div className="p-4 sm:p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
-                    Cookie Preferences
-                  </h4>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => setPreferences({
-                        essential: true,
-                        functional: true,
-                        analytics: true,
-                        advertising: true,
-                      })}
-                      className="text-xs font-medium text-orange-500 hover:text-orange-600 hover:underline"
-                    >
-                      Select All
-                    </button>
-                    <span className="text-slate-300">|</span>
-                    <button
-                      onClick={() => setPreferences(defaultPreferences)}
-                      className="text-xs font-medium text-slate-500 hover:text-slate-700 hover:underline"
-                    >
-                      Deselect All
-                    </button>
+            {isExpanded && (
+              <div className="px-4 pb-4">
+                <div className="ml-11 border-l-2 border-slate-200 pl-3">
+                  <div className="flex flex-wrap gap-1.5">
+                    {category.examples.map((example, i) => (
+                      <span key={i} className="rounded-md bg-slate-100 px-2 py-1 text-[11px] text-slate-600">
+                        {example}
+                      </span>
+                    ))}
                   </div>
                 </div>
-                
-                <div className="space-y-3">
-                  {cookieCategories.map((category) => {
-                    const Icon = category.icon;
-                    const isEnabled = preferences[category.id as keyof CookiePreferences];
-                    const isExpanded = expandedCategory === category.id;
-                    
-                    return (
-                      <div
-                        key={category.id}
-                        className={`rounded-xl border transition-all ${
-                          isEnabled 
-                            ? 'bg-white border-orange-200 shadow-sm' 
-                            : 'bg-white border-slate-200'
-                        }`}
-                      >
-                        {/* Category Header */}
-                        <div className="p-4">
-                          <div className="flex items-start gap-3">
-                            <div className={`shrink-0 p-2 rounded-lg ${
-                              isEnabled 
-                                ? `bg-${category.color}-100 text-${category.color}-600`
-                                : 'bg-slate-100 text-slate-400'
-                            }`}>
-                              <Icon className="h-5 w-5" />
-                            </div>
-                            
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center justify-between gap-3">
-                                <div className="flex items-center gap-2">
-                                  <h5 className="text-sm font-semibold text-slate-900">
-                                    {category.name}
-                                  </h5>
-                                  {category.locked && (
-                                    <span className="px-2 py-0.5 bg-orange-100 text-orange-600 text-[10px] font-bold uppercase rounded-full">
-                                      Always Active
-                                    </span>
-                                  )}
-                                </div>
-                                
-                                {/* Toggle */}
-                                <button
-                                  type="button"
-                                  role="switch"
-                                  aria-checked="true"
-                                  aria-label={`${isEnabled ? 'Disable' : 'Enable'} ${category.name} cookies`}
-                                  disabled={category.locked}
-                                  onClick={() => togglePreference(category.id as keyof CookiePreferences)}
-                                  className={`relative inline-flex h-6 w-11 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 ${
-                                    isEnabled ? 'bg-orange-500' : 'bg-slate-300'
-                                  } ${category.locked ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}`}
-                                >
-                                  <span
-                                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                                      isEnabled ? 'translate-x-5' : 'translate-x-0'
-                                    }`}
-                                  />
-                                </button>
-                              </div>
-                              
-                              <p className="mt-1 text-xs text-slate-500 leading-relaxed">
-                                {category.description}
-                              </p>
-                              
-                              {/* Expand/Collapse */}
-                              <button
-                                onClick={() => setExpandedCategory(isExpanded ? null : category.id)}
-                                className="mt-2 text-xs font-medium text-slate-500 hover:text-orange-500 flex items-center gap-1"
-                              >
-                                {isExpanded ? 'Hide details' : 'View details'}
-                                <ChevronDown className={`h-3 w-3 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        {/* Expanded Details */}
-                        {isExpanded && (
-                          <div className="px-4 pb-4 pt-0">
-                            <div className="ml-11 pl-3 border-l-2 border-slate-200">
-                              <p className="text-xs font-medium text-slate-600 mb-2">Examples of cookies in this category:</p>
-                              <div className="flex flex-wrap gap-1.5">
-                                {category.examples.map((example, i) => (
-                                  <span key={i} className="px-2 py-1 bg-slate-100 text-slate-600 text-[11px] rounded-md">
-                                    {example}
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
               </div>
-              
-              {/* Footer - Sticky on mobile */}
-              <div className="px-4 sm:px-6 py-4 bg-slate-100 border-t border-slate-200 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-                <p className="text-xs text-slate-500 text-center sm:text-left">
-                  By clicking "Save Preferences", you agree to our{' '}
-                  <Link href="/privacy-policy" className="text-orange-500 hover:underline">
-                    Privacy Policy
-                  </Link>
-                  {' '}and{' '}
-                  <Link href="/terms-of-service" className="text-orange-500 hover:underline">
-                    Terms of Service
-                  </Link>
-                </p>
-                <Button
-                  onClick={handleSavePreferences}
-                  className="w-full sm:w-auto rounded-xl bg-orange-500 hover:bg-orange-600 text-base sm:text-sm px-6 py-3 sm:py-2.5 h-auto font-semibold flex items-center justify-center gap-2"
-                >
-                  <Check className="h-4 w-4" />
-                  Save Preferences
-                </Button>
-              </div>
-            </div>
-          )}
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function CookiePreferencesDialog({
+  open,
+  onOpenChange,
+  preferences,
+  expandedCategory,
+  onExpandedCategoryChange,
+  onTogglePreference,
+  onSelectAll,
+  onDeselectAll,
+  onSave,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  preferences: CookiePreferences;
+  expandedCategory: string | null;
+  onExpandedCategoryChange: (id: string | null) => void;
+  onTogglePreference: (key: keyof CookiePreferences) => void;
+  onSelectAll: () => void;
+  onDeselectAll: () => void;
+  onSave: () => void;
+}) {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto sm:max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>Cookie preferences</DialogTitle>
+          <DialogDescription>
+            Choose which optional cookies we may use. Essential cookies are always on.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="flex items-center justify-end gap-2 text-xs">
+          <button type="button" onClick={onSelectAll} className="font-medium text-emerald-600 hover:underline">
+            Select all
+          </button>
+          <span className="text-slate-300">|</span>
+          <button type="button" onClick={onDeselectAll} className="font-medium text-slate-500 hover:underline">
+            Essential only
+          </button>
         </div>
-      </div>
-    </>
+        <CookieCategoryList
+          preferences={preferences}
+          expandedCategory={expandedCategory}
+          onExpandedCategoryChange={onExpandedCategoryChange}
+          onTogglePreference={onTogglePreference}
+        />
+        <DialogFooter className="flex-col gap-2 sm:flex-row sm:justify-between">
+          <Link
+            href="/privacy-policy#cookies"
+            className="text-xs text-emerald-600 hover:underline sm:mr-auto"
+          >
+            Cookie Policy
+          </Link>
+          <Button onClick={onSave} className="gap-2">
+            <Check className="size-4" />
+            Save preferences
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -668,7 +624,7 @@ export function CookieSettingsButton({ className }: { className?: string }) {
     <>
       <button
         onClick={() => setShowModal(true)}
-        className={className || "text-sm text-slate-500 hover:text-orange-500 transition"}
+        className={className || "text-sm text-slate-500 hover:text-emerald-500 transition"}
       >
         Cookie Settings
       </button>
@@ -687,14 +643,14 @@ export function CookieSettingsButton({ className }: { className?: string }) {
 function CookieSettingsModal({ onClose }: { onClose: () => void }) {
   const [preferences, setPreferences] = useState<CookiePreferences>(defaultPreferences);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
-  
+
   useEffect(() => {
     const savedPrefs = localStorage.getItem(COOKIE_PREFERENCES_KEY);
     if (savedPrefs) {
       setPreferences(JSON.parse(savedPrefs));
     }
   }, []);
-  
+
   const handleSave = () => {
     const consentRecord: ConsentRecord = {
       preferences,
@@ -702,16 +658,16 @@ function CookieSettingsModal({ onClose }: { onClose: () => void }) {
       version: CONSENT_VERSION,
       userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
     };
-    
+
     localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(consentRecord));
     localStorage.setItem(COOKIE_PREFERENCES_KEY, JSON.stringify(preferences));
-    
+
     window.dispatchEvent(new CustomEvent('cookieConsentChanged', { detail: preferences }));
     initializeTracking(preferences);
-    
+
     onClose();
   };
-  
+
   const togglePreference = (key: keyof CookiePreferences) => {
     if (key === 'essential') return;
     setPreferences((prev) => ({
@@ -719,159 +675,28 @@ function CookieSettingsModal({ onClose }: { onClose: () => void }) {
       [key]: !prev[key],
     }));
   };
-  
-  // Block page scroll when modal is open
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
-    };
-  }, []);
-  
+
   return (
-    <div className="fixed inset-0 z-200 flex items-end sm:items-center justify-center p-0 sm:p-4">
-      {/* Overlay */}
-      <div 
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-        onClick={onClose}
-        aria-hidden="true"
-      />
-      
-      {/* Modal */}
-      <div 
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="cookie-settings-title"
-        className="relative bg-white sm:rounded-2xl shadow-2xl w-full sm:max-w-2xl max-h-dvh sm:max-h-[90vh] overflow-hidden flex flex-col"
-      >
-        {/* Header */}
-        <div className="p-4 sm:p-6 border-b border-slate-200 shrink-0">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-linear-to-br from-orange-500 to-teal-600 flex items-center justify-center">
-                <Cookie className="h-5 w-5 text-white" />
-              </div>
-              <div>
-                <h3 id="cookie-settings-title" className="text-lg font-bold text-slate-900">Cookie Preferences</h3>
-                <p className="text-xs text-slate-500">Manage your privacy settings</p>
-              </div>
-            </div>
-            <button
-              onClick={onClose}
-              className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition"
-              aria-label="Close cookie settings"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          </div>
-        </div>
-        
-        {/* Content */}
-        <div className="p-4 sm:p-6 overflow-y-auto flex-1">
-          <div className="space-y-3">
-            {cookieCategories.map((category) => {
-              const Icon = category.icon;
-              const isEnabled = preferences[category.id as keyof CookiePreferences];
-              const isExpanded = expandedCategory === category.id;
-              
-              return (
-                <div
-                  key={category.id}
-                  className={`rounded-xl border transition-all ${
-                    isEnabled 
-                      ? 'bg-orange-50/50 border-orange-200' 
-                      : 'bg-white border-slate-200'
-                  }`}
-                >
-                  <div className="p-4">
-                    <div className="flex items-start gap-3">
-                      <div className={`shrink-0 p-2 rounded-lg ${
-                        isEnabled ? 'bg-orange-100 text-orange-500' : 'bg-slate-100 text-slate-400'
-                      }`}>
-                        <Icon className="h-5 w-5" />
-                      </div>
-                      
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between gap-3">
-                          <div className="flex items-center gap-2">
-                            <h5 className="text-sm font-semibold text-slate-900">{category.name}</h5>
-                            {category.locked && (
-                              <span className="px-2 py-0.5 bg-orange-100 text-orange-600 text-[10px] font-bold uppercase rounded-full">
-                                Required
-                              </span>
-                            )}
-                          </div>
-                          
-                          <button
-                            type="button"
-                            role="switch"
-                            aria-checked="true"
-                            aria-label={`${isEnabled ? 'Disable' : 'Enable'} ${category.name} cookies`}
-                            disabled={category.locked}
-                            onClick={() => togglePreference(category.id as keyof CookiePreferences)}
-                            className={`relative inline-flex h-6 w-11 shrink-0 rounded-full border-2 border-transparent transition-colors ${
-                              isEnabled ? 'bg-orange-500' : 'bg-slate-300'
-                            } ${category.locked ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'}`}
-                          >
-                            <span
-                              className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow transition ${
-                                isEnabled ? 'translate-x-5' : 'translate-x-0'
-                              }`}
-                            />
-                          </button>
-                        </div>
-                        
-                        <p className="mt-1 text-xs text-slate-500">{category.description}</p>
-                        
-                        <button
-                          onClick={() => setExpandedCategory(isExpanded ? null : category.id)}
-                          className="mt-2 text-xs font-medium text-slate-500 hover:text-orange-500 flex items-center gap-1"
-                        >
-                          {isExpanded ? 'Hide details' : 'View cookies'}
-                          <ChevronDown className={`h-3 w-3 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {isExpanded && (
-                    <div className="px-4 pb-4">
-                      <div className="ml-11 pl-3 border-l-2 border-slate-200">
-                        <div className="flex flex-wrap gap-1.5">
-                          {category.examples.map((example, i) => (
-                            <span key={i} className="px-2 py-1 bg-slate-100 text-slate-600 text-[11px] rounded-md">
-                              {example}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-        
-        {/* Footer */}
-        <div className="p-4 sm:p-6 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 shrink-0">
-          <Link href="/privacy-policy#cookies" className="text-xs text-orange-500 hover:underline flex items-center justify-center sm:justify-start gap-1">
-            View Cookie Policy
-            <ExternalLink className="h-3 w-3" />
-          </Link>
-          <div className="flex flex-col-reverse sm:flex-row gap-3">
-            <Button variant="outline" onClick={onClose} className="rounded-xl h-12 sm:h-auto">
-              Cancel
-            </Button>
-            <Button onClick={handleSave} className="rounded-xl bg-orange-500 hover:bg-orange-600 h-12 sm:h-auto">
-              Save Changes
-            </Button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <CookiePreferencesDialog
+      open
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
+      preferences={preferences}
+      expandedCategory={expandedCategory}
+      onExpandedCategoryChange={setExpandedCategory}
+      onTogglePreference={togglePreference}
+      onSelectAll={() =>
+        setPreferences({
+          essential: true,
+          functional: true,
+          analytics: true,
+          advertising: true,
+        })
+      }
+      onDeselectAll={() => setPreferences(defaultPreferences)}
+      onSave={handleSave}
+    />
   );
 }
 
