@@ -9,7 +9,10 @@ export const size = {
 export const contentType = "image/png";
 
 export default function Icon() {
-  return new ImageResponse(<BrandMark size={32} iconSize={18} borderRadius={8} />, {
-    ...size,
-  });
+  return new ImageResponse(
+    <BrandMark size={32} iconSize={32} borderRadius={8} showShadow={false} strokeWidth={2.4} />,
+    {
+      ...size,
+    },
+  );
 }

@@ -9,7 +9,10 @@ export const size = {
 export const contentType = "image/png";
 
 export default function AppleIcon() {
-  return new ImageResponse(<BrandMark size={180} iconSize={96} borderRadius={36} />, {
-    ...size,
-  });
+  return new ImageResponse(
+    <BrandMark size={180} iconSize={180} borderRadius={40} strokeWidth={2.2} />,
+    {
+      ...size,
+    },
+  );
 }
