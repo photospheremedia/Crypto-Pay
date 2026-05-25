@@ -60,7 +60,7 @@ export function HeroWithVideo() {
         </div>
       </div>
 
-      <div className="mx-auto w-full max-w-7xl px-6 pt-20 pb-4 lg:pt-24 lg:pb-6">
+      <div className="mx-auto w-full max-w-7xl px-6 pb-4 lg:pb-6">
         <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           {/* Left Content */}
           <div className="text-center lg:text-left">

@@ -202,10 +202,11 @@ Project MCP config: `.cursor/mcp.json`. Agent skills: `.agents/skills/`.
 | Priority | MCP server | Skill | Use for |
 |----------|------------|-------|---------|
 | 1 | `plugin-supabase-supabase` | `supabase`, `supabase-postgres-best-practices` | DB, migrations, RLS, Postgres |
-| 2 | `plugin-resend-resend` | — | Email send, templates, domains |
-| 3 | `context7` | `context7-mcp` | Library/framework docs (resolve-library-id → query-docs) |
-| 4 | `shadcn` (cwd: `apps/portal`) | `shadcn` | shadcn/ui components, registries, presets |
-| 5 | CLI fallback | — | `supabase`, `vercel`, `pnpm exec shadcn` when MCP lacks a tool |
+| 2 | `netlify` (`.cursor/mcp.json` → `scripts/mcp-netlify.sh`) | — | Sites, deploys, env, duplicates — **use MCP first** (see `.cursor/rules/netlify-mcp.mdc`) |
+| 3 | `plugin-resend-resend` | — | Email send, templates, domains |
+| 4 | `context7` | `context7-mcp` | Library/framework docs (resolve-library-id → query-docs) |
+| 5 | `shadcn` (cwd: `apps/portal`) | `shadcn` | shadcn/ui components, registries, presets |
+| 6 | CLI fallback | — | `supabase`, `netlify`, `vercel`, `pnpm exec shadcn` when MCP lacks a tool |
 
 ### Context7
 

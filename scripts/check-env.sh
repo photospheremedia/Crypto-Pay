@@ -9,7 +9,7 @@
 set -e
 
 ENV_FILE="apps/portal/.env.local"
-SUPABASE_REF="${SUPABASE_PROJECT_REF:-}"
+SUPABASE_REF="${SUPABASE_PROJECT_REF:-usbxwewohpsbjwiuazpf}"
 
 echo "🔍 Checking environment configuration..."
 echo ""

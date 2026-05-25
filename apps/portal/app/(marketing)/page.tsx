@@ -56,7 +56,7 @@ const steps = [
 export default function MarketingHome() {
   return (
     <>
-      <Section className="pb-8 pt-12 sm:pt-16">
+      <Section className="pb-8 pt-0">
         <HomeHero />
       </Section>
 

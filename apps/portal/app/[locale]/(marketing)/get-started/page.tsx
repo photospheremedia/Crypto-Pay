@@ -19,7 +19,7 @@ const checklist = [
 export default function GetStartedPage() {
   return (
     <>
-      <Section className="pb-8 pt-12">
+      <Section className="pb-8 pt-0">
         <SectionHeading
           eyebrow="Get Started"
           title="Launch your crypto checkout in one short sprint"

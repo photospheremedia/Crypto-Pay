@@ -46,7 +46,7 @@ const example = `POST /api/charges
 export default function DevelopersPage() {
   return (
     <>
-      <Section className="pb-8 pt-12">
+      <Section className="pb-8 pt-0">
         <SectionHeading
           eyebrow="Developers"
           title="One-stop unified API for BTC, ETH, USDT & more"

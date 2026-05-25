@@ -2,7 +2,7 @@
 # Requires: supabase CLI logged in, or SUPABASE_ACCESS_TOKEN in environment
 
 $ErrorActionPreference = "Stop"
-$ProjectRef = ""
+$ProjectRef = "usbxwewohpsbjwiuazpf"
 $EnvFile = Join-Path $PSScriptRoot "..\apps\portal\.env.local"
 
 if (-not (Test-Path $EnvFile)) {

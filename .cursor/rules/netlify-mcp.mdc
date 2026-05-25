@@ -1,0 +1,40 @@
+---
+description: Use Netlify MCP for deploys, site audits, and duplicate cleanup (not CLI-first)
+globs: netlify.toml,scripts/**/netlify*,scripts/**/mcp-netlify*,.github/workflows/netlify.yml
+alwaysApply: false
+---
+
+# Netlify — use MCP
+
+When the **netlify** MCP server is enabled in Cursor, use it first for Netlify work. Do not rely on `netlify` CLI or raw curl unless MCP is unavailable or the user asks for CLI.
+
+## Setup (required for MCP)
+
+1. `cp .env.netlify.example .env.netlify` and add a [personal access token](https://app.netlify.com/user/applications#personal-access-tokens).
+2. `pnpm netlify:connect` (links canonical site).
+3. Restart Cursor or reload MCP so `netlify` appears in available servers.
+
+Config: `.cursor/mcp.json` → `scripts/mcp-netlify.sh` (loads `.env.netlify`).
+
+## Canonical site (only one)
+
+- **Keep:** `crypto-pay-portal` (matches `NETLIFY_SITE_NAME` in `scripts/lib/netlify-site.sh`).
+- **Delete extras:** e.g. a second site from Git import named `Crypto-Pay`.
+- Production domain: `cryptopay.sale` → must match `NETLIFY_SITE_HOSTNAME` in `.env.porkbun`.
+
+## MCP workflow for audits / duplicates
+
+1. `list-sites` (or resource `netlify://sites`) — list all sites.
+2. `get-site-info` / site overview — confirm custom domain, repo `photospheremedia/Crypto-Pay`, deploy settings.
+3. Recommend **KEEP** the highest-match site; **delete** others via `delete-site` only after user confirms.
+4. Do not create a new site if `crypto-pay-portal` already exists.
+
+## Deploys
+
+- Prefer MCP deploy/build tools when available.
+- GitHub Actions: `.github/workflows/netlify.yml` (single workflow).
+- Avoid triple deploy: disable Netlify UI “build on push” if using Actions.
+
+## Fallback
+
+If MCP server is missing: `pnpm netlify:audit` (API script) or `pnpm exec netlify sites:list` after `pnpm netlify:connect`.

@@ -1,0 +1,181 @@
+# Single Netlify deploy workflow (do not add netlify-deploy.yml or similar).
+# If the site is linked in Netlify UI with "Build on push", disable that to avoid
+# double deploys alongside this workflow — or skip GitHub Actions and use Netlify Git only.
+name: Netlify CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'apps/portal/**'
+      - 'packages/**'
+      - 'netlify.toml'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+  pull_request:
+    branches:
+      - main
+      - master
+    paths:
+      - 'apps/portal/**'
+      - 'packages/**'
+      - 'netlify.toml'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+  workflow_dispatch:
+
+concurrency:
+  group: netlify-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: corepack enable && pnpm install --frozen-lockfile
+
+      - name: Typecheck portal
+        run: pnpm --filter @crypto-pay/portal typecheck
+
+  preview:
+    if: github.event_name == 'pull_request'
+    needs: validate
+    runs-on: ubuntu-latest
+    env:
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: corepack enable && pnpm install --frozen-lockfile
+
+      - name: Validate Netlify CI secrets
+        id: validate_secrets
+        run: |
+          can_deploy=true
+
+          if [ -z "${NETLIFY_AUTH_TOKEN}" ]; then
+            echo "Missing NETLIFY_AUTH_TOKEN secret."
+            can_deploy=false
+          fi
+
+          if [ -z "${NETLIFY_SITE_ID}" ]; then
+            echo "Missing NETLIFY_SITE_ID secret."
+            can_deploy=false
+          fi
+
+          echo "can_deploy=${can_deploy}" >> "$GITHUB_OUTPUT"
+
+          if [ "${can_deploy}" != "true" ]; then
+            {
+              echo "### Netlify preview deploy skipped"
+              echo ""
+              echo "- CI did not deploy a Netlify preview because required secrets are missing."
+              echo "- Run \`pnpm netlify:secrets\` (repo admin) after \`netlify link\`."
+              echo "- Set \`NETLIFY_AUTH_TOKEN\` (personal access token) and \`NETLIFY_SITE_ID\` (Site API ID)."
+              echo "- Keep build env vars in the Netlify UI (or \`pnpm netlify:env-sync\`)."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Deploy preview to Netlify
+        if: steps.validate_secrets.outputs.can_deploy == 'true'
+        uses: netlify/actions/cli@master
+        with:
+          args: deploy --build --message "PR #${{ github.event.pull_request.number }} ${{ github.sha }}"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+  deploy:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    env:
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: corepack enable && pnpm install --frozen-lockfile
+
+      - name: Validate Netlify CI secrets
+        id: validate_secrets
+        run: |
+          can_deploy=true
+
+          if [ -z "${NETLIFY_AUTH_TOKEN}" ]; then
+            echo "Missing NETLIFY_AUTH_TOKEN secret."
+            can_deploy=false
+          fi
+
+          if [ -z "${NETLIFY_SITE_ID}" ]; then
+            echo "Missing NETLIFY_SITE_ID secret."
+            can_deploy=false
+          fi
+
+          echo "can_deploy=${can_deploy}" >> "$GITHUB_OUTPUT"
+
+          if [ "${can_deploy}" != "true" ]; then
+            {
+              echo "### Netlify deploy skipped"
+              echo ""
+              echo "- CI did not deploy to Netlify because required secrets are missing."
+              echo "- Run \`pnpm netlify:secrets\` (repo admin) after \`netlify link\`."
+              echo "- Set \`NETLIFY_AUTH_TOKEN\` (personal access token) and \`NETLIFY_SITE_ID\` (Site API ID)."
+              echo "- Keep build env vars in the Netlify UI (or \`pnpm netlify:env-sync\`)."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Deploy production to Netlify
+        if: steps.validate_secrets.outputs.can_deploy == 'true'
+        uses: netlify/actions/cli@master
+        with:
+          args: deploy --build --prod --message "Production ${{ github.sha }}"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+      - name: Deployment summary
+        if: steps.validate_secrets.outputs.can_deploy == 'true'
+        run: |
+          {
+            echo "### Netlify production deploy"
+            echo ""
+            echo "- Branch: \`${{ github.ref_name }}\`"
+            echo "- Commit: \`${{ github.sha }}\`"
+            echo "- Build settings: \`netlify.toml\`"
+          } >> "$GITHUB_STEP_SUMMARY"

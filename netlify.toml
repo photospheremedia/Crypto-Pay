@@ -1,0 +1,34 @@
+# Crypto Pay portal — single Netlify site: crypto-pay-portal (PhotoSphere Media)
+# Do not create a second site from Git import; run: pnpm netlify:audit
+# Dashboard: https://app.netlify.com/sites/crypto-pay-portal
+
+[build]
+  command = "corepack enable && pnpm install && pnpm --filter @crypto-pay/portal build"
+  publish = "apps/portal/.next"
+
+[build.environment]
+  NODE_VERSION = "24"
+  # Root package.json has packageManager = pnpm — Netlify uses corepack
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Marketing redirects (from vercel.json)
+[[redirects]]
+  from = "/home"
+  to = "/"
+  status = 301
+  force = true
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"

@@ -1,4 +1,5 @@
 import { createBrowserClient } from "@supabase/ssr";
+import { getSupabaseAnonKey, getSupabaseUrl } from "./supabaseEnv";
 
 /**
  * Singleton instance to preserve PKCE code_verifier across re-renders.
@@ -15,10 +16,7 @@ import { createBrowserClient } from "@supabase/ssr";
 let supabaseInstance: ReturnType<typeof createBrowserClient> | null = null;
 
 export function isSupabaseConfigured(): boolean {
-  return !!(
-    process.env.NEXT_PUBLIC_SUPABASE_URL &&
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  );
+  return !!(getSupabaseUrl() && getSupabaseAnonKey());
 }
 
 /** Returns null when Supabase env vars are missing (e.g. local marketing-only dev). */
@@ -30,11 +28,13 @@ export function getSupabaseBrowserClientOptional() {
 }
 
 export function getSupabaseBrowserClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const url = getSupabaseUrl();
+  const anonKey = getSupabaseAnonKey();
 
   if (!url || !anonKey) {
-    throw new Error("Supabase public environment variables are not set");
+    throw new Error(
+      "Supabase public environment variables are not set. Set NEXT_PUBLIC_SUPABASE_ANON_KEY in apps/portal/.env.local (Supabase Dashboard → API keys).",
+    );
   }
 
   // Return singleton to preserve PKCE code_verifier across re-renders

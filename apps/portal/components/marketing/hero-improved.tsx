@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
  */
 export function HeroImproved() {
   return (
-    <section className="relative overflow-hidden bg-linear-to-b from-slate-50 via-white to-white pt-20 pb-16 sm:pt-32 sm:pb-24">
+    <section className="relative overflow-hidden bg-linear-to-b from-slate-50 via-white to-white pb-16 sm:pb-24">
       {/* Decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-100/30 rounded-full blur-3xl" />

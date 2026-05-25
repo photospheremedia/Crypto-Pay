@@ -22,6 +22,7 @@ import { AdminNotifications } from "@/components/admin/admin-notifications";
 import { AdminUserMenu } from "@/components/admin/admin-user-menu";
 import { AdminHelpMenu } from "@/components/admin/admin-help-menu";
 import { AdminSearch } from "@/components/admin/admin-search";
+import { mainBelowHeaderClass } from "@/lib/layout-spacing";
 
 const navigation = [
   {
@@ -304,7 +305,11 @@ export function AdminLayoutClient({
         </header>
 
         {/* Page content */}
-        <main className="px-4 pt-4 pb-6 sm:px-5 sm:pt-4 sm:pb-6 lg:px-6 lg:pt-4 lg:pb-6">{children}</main>
+        <main
+          className={`px-4 pb-6 sm:px-5 sm:pb-6 lg:px-6 lg:pb-6 ${mainBelowHeaderClass}`}
+        >
+          {children}
+        </main>
       </div>
     </div>
   );

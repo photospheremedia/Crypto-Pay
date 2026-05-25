@@ -5,7 +5,7 @@ import requests
 import json
 import os
 
-PROJECT_REF = os.environ.get("SUPABASE_PROJECT_REF", "")
+PROJECT_REF = os.environ.get("SUPABASE_PROJECT_REF", "usbxwewohpsbjwiuazpf")
 API_KEY = os.environ.get("SUPABASE_ACCESS_TOKEN", "")
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 

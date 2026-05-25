@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Bootstrap Crypto Pay on a fresh Supabase account (e.g. photospheremedia).
-# Run after: supabase logout && supabase login (as the new account).
+# Run after: pnpm supabase:login (see .env.supabase.example).
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"

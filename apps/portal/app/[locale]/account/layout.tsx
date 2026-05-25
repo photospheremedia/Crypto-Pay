@@ -5,6 +5,7 @@ import { getSupabaseServerClient } from "@crypto-pay/db/supabaseServer";
 import { isAdminEmail } from "@/lib/admin-email";
 import { signOut } from "@/app/[locale]/(login)/actions";
 import { CryptoPayHeader } from "@/components/cryptopay/crypto-pay-header";
+import { mainBelowHeaderClass, stickyBelowHeaderClass } from "@/lib/layout-spacing";
 import {
   LayoutDashboard,
   Wallet,
@@ -55,8 +56,10 @@ export default async function AccountLayout({
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-50">
       <CryptoPayHeader />
-      <div className="mx-auto grid w-full max-w-7xl gap-8 px-4 sm:px-6 lg:px-8 pb-16 pt-24 lg:pt-28 lg:grid-cols-[260px_1fr]">
-        <aside className="lg:sticky lg:top-24 lg:self-start lg:h-fit">
+      <div
+        className={`mx-auto grid w-full max-w-7xl gap-8 px-4 sm:px-6 lg:px-8 pb-16 lg:grid-cols-[260px_1fr] ${mainBelowHeaderClass}`}
+      >
+        <aside className={`lg:sticky lg:self-start lg:h-fit ${stickyBelowHeaderClass}`}>
           <div className="space-y-3">
             <div className="rounded-2xl border border-slate-200/60 bg-white/80 backdrop-blur-sm p-5 shadow-lg shadow-slate-200/50 mb-4">
               <div className="flex items-center gap-4">

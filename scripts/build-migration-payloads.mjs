@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 const batchDir = path.resolve('.migration-batch');
-const projectId = process.env.SUPABASE_PROJECT_REF ?? '';
+const projectId = process.env.SUPABASE_PROJECT_REF ?? 'usbxwewohpsbjwiuazpf';
 const names = fs
   .readdirSync(batchDir)
   .filter((f) => f.endsWith('.sqlonly'))

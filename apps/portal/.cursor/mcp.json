@@ -1,11 +1,16 @@
 {
   "mcpServers": {
+    "netlify": {
+      "command": "bash",
+      "args": ["../../scripts/mcp-netlify.sh"]
+    },
+    "supabase": {
+      "command": "bash",
+      "args": ["../../scripts/mcp-supabase.sh"]
+    },
     "shadcn": {
       "command": "npx",
-      "args": [
-        "shadcn@latest",
-        "mcp"
-      ]
+      "args": ["shadcn@latest", "mcp"]
     }
   }
 }

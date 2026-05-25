@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
+import {
+  getSupabaseServerApiKey,
+  getSupabaseUrl,
+} from "@crypto-pay/db/supabaseEnv";
 import createIntlMiddleware from "next-intl/middleware";
 import { routing } from "@/i18n/routing";
 import { isAdminEmail } from "@/lib/admin-email";
@@ -47,14 +51,14 @@ export async function proxy(request: NextRequest) {
 
   let response = intlResponse;
 
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const url = getSupabaseUrl();
+  const apiKey = getSupabaseServerApiKey();
 
-  if (!url || !anonKey) {
+  if (!url || !apiKey) {
     return response;
   }
 
-  const supabase = createServerClient(url, anonKey, {
+  const supabase = createServerClient(url, apiKey, {
     cookies: {
       getAll() {
         return request.cookies.getAll();

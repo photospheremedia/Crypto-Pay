@@ -42,7 +42,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center px-4 sm:px-6 lg:px-8">
+    <div className="flex min-h-[calc(100dvh-5.5rem)] items-center justify-center bg-white px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         {/* Main Heading */}
         <div className="text-center">

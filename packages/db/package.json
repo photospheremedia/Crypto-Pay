@@ -7,7 +7,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./supabaseClient": "./src/supabaseClient.ts",
-    "./supabaseServer": "./src/supabaseServer.ts"
+    "./supabaseServer": "./src/supabaseServer.ts",
+    "./supabaseEnv": "./src/supabaseEnv.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.8.0",

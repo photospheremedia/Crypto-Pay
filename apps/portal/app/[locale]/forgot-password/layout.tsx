@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Logo } from "@/components/logo";
+import { mainBelowHeaderClass } from "@/lib/layout-spacing";
 
 export default function ForgotPasswordLayout({
   children,
@@ -34,7 +35,7 @@ export default function ForgotPasswordLayout({
           </Link>
         </div>
       </header>
-      <main className="pt-8">{children}</main>
+      <main className={mainBelowHeaderClass}>{children}</main>
     </div>
   );
 }

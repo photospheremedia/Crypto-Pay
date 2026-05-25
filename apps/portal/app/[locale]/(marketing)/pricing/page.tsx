@@ -59,7 +59,7 @@ const planCards = [
 export default function PricingPage() {
   return (
     <>
-      <Section className="pb-8 pt-12 sm:pt-16">
+      <Section className="pb-8 pt-0">
         <SectionHeading
           eyebrow="Pricing"
           title="Simple pricing for serious teams"

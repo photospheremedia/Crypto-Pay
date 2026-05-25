@@ -1,7 +1,12 @@
 {
   "mcpServers": {
+    "netlify": {
+      "command": "bash",
+      "args": ["scripts/mcp-netlify.sh"]
+    },
     "supabase": {
-      "url": "https://mcp.supabase.com/mcp?project_ref="
+      "command": "bash",
+      "args": ["scripts/mcp-supabase.sh"]
     },
     "shadcn": {
       "command": "npx",

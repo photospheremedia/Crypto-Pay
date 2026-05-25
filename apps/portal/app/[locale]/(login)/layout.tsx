@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
+import { mainBelowHeaderClass } from "@/lib/layout-spacing";
 
 export default function LoginLayout({
   children,
@@ -19,7 +20,7 @@ export default function LoginLayout({
           </Link>
         </div>
       </header>
-      <main>{children}</main>
+      <main className={mainBelowHeaderClass}>{children}</main>
     </div>
   );
 }

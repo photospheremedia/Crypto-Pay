@@ -9,7 +9,7 @@ const sharedDir = join(functionsDir, "_shared");
 const outDir = join(root, ".mcp-deploy");
 mkdirSync(outDir, { recursive: true });
 
-const PROJECT_ID = process.env.SUPABASE_PROJECT_REF ?? "";
+const PROJECT_ID = process.env.SUPABASE_PROJECT_REF ?? "usbxwewohpsbjwiuazpf";
 
 const functions = [
   { name: "verify-turnstile", verify_jwt: false },

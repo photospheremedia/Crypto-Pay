@@ -10,8 +10,15 @@ dist
 coverage
 *.log
 supabase/.temp
+backups/
+.supabase-migration-new-ref
 .vercel
+.netlify
+.netlify-env-import.tmp
 .env*.local
+.env.porkbun
+.env.netlify
+.env.netlify
 
 # Legacy Restaurant Hub docs / captures (may contain OAuth tokens)
 GOOGLE_*.md
