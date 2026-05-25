@@ -11,20 +11,38 @@ import {
   CheckCircle2,
   AlertTriangle,
 } from "lucide-react";
+import type { User } from "@supabase/supabase-js";
 import { getSupabaseBrowserClient } from "@crypto-pay/db/supabaseClient";
 import { WalletLinkCard } from "./wallet-link-card";
 
+type WalletProfile = {
+  wallet_network: string;
+  wallet_address: string;
+  wallet_verified: boolean;
+  updated_at: string | null;
+};
+
 export default function AccountPage() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [walletProfile, setWalletProfile] = useState<WalletProfile | null>(null);
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const supabase = getSupabaseBrowserClient();
-    supabase.auth.getUser().then(({ data }) => {
+    void (async () => {
+      const { data } = await supabase.auth.getUser();
       setUser(data.user);
+      if (data.user) {
+        const { data: profile } = await supabase
+          .from("user_wallet_profiles")
+          .select("wallet_network, wallet_address, wallet_verified, updated_at")
+          .eq("user_id", data.user.id)
+          .maybeSingle();
+        setWalletProfile(profile);
+      }
       setLoading(false);
-    });
+    })();
   }, []);
 
   function copyEmail() {
@@ -103,7 +121,7 @@ export default function AccountPage() {
       </div>
 
       {/* Wallet status */}
-      <WalletLinkCard />
+      <WalletLinkCard walletProfile={walletProfile} onSaved={setWalletProfile} />
 
       {/* Notice */}
       <div className="flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-800">
