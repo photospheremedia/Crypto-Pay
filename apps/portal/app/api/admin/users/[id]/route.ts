@@ -30,7 +30,6 @@ export async function GET(_req: NextRequest, { params }: Params) {
       profileRes,
       membershipsRes,
       walletRes,
-      ordersCountRes,
       leadsRes,
       authUserRes,
     ] = await Promise.all([
@@ -50,10 +49,6 @@ export async function GET(_req: NextRequest, { params }: Params) {
         .eq("user_id", id)
         .maybeSingle(),
       supabase
-        .from("orders")
-        .select("id", { count: "exact", head: true })
-        .eq("user_id", id),
-      supabase
         .from("chat_conversations")
         .select("id, lead_status, started_at, guest_email")
         .eq("user_id", id)
@@ -70,9 +65,6 @@ export async function GET(_req: NextRequest, { params }: Params) {
     }
     if (walletRes.error) {
       console.error("[Admin User Detail] wallet error:", walletRes.error);
-    }
-    if (ordersCountRes.error) {
-      console.error("[Admin User Detail] orders count error:", ordersCountRes.error);
     }
     if (leadsRes.error) {
       console.error("[Admin User Detail] leads error:", leadsRes.error);
@@ -112,7 +104,8 @@ export async function GET(_req: NextRequest, { params }: Params) {
         memberships: membershipsRes.data ?? [],
         wallet: walletRes.data ?? null,
         stats: {
-          orders_count: ordersCountRes.count ?? 0,
+          wallet_linked: Boolean(walletRes.data?.wallet_address),
+          wallet_verified: walletRes.data?.wallet_verified ?? false,
           leads_count: leadsRes.data?.length ?? 0,
         },
         recent_leads: leadsRes.data ?? [],

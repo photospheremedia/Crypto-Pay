@@ -1,0 +1,110 @@
+{
+  "Common": {
+    "brandName": "Crypto Pay",
+    "tagline": "Enlaces de pago y cargos por API. Los fondos se liquidan en tu billetera.",
+    "createAccount": "Crear cuenta",
+    "logIn": "Iniciar sesión",
+    "dashboard": "Panel",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
+    "supportedAssets": "Activos admitidos",
+    "viewPricing": "Ver precios",
+    "getStarted": "Comenzar",
+    "allRightsReserved": "Todos los derechos reservados.",
+    "getStartedFree": "Get started for free",
+    "talkToSales": "Talk to sales"
+  },
+  "Navigation": {
+    "pricing": "Precios",
+    "howItWorks": "Cómo funciona",
+    "developers": "Desarrolladores"
+  },
+  "Footer": {
+    "product": "Producto",
+    "company": "Empresa",
+    "legal": "Legal",
+    "contact": "Contacto",
+    "faq": "Preguntas frecuentes",
+    "privacyPolicy": "Política de privacidad",
+    "termsOfService": "Términos de servicio"
+  },
+  "LocaleSwitcher": {
+    "label": "Idioma",
+    "en": "English",
+    "ar": "العربية",
+    "es": "Español",
+    "fr": "Français",
+    "de": "Deutsch"
+  },
+  "HomePage": {
+    "metaTitle": "Acepta pagos en cripto al instante",
+    "heroTitle": "Acepta pagos en cripto en tu billetera",
+    "heroSubtitle": "Crea enlaces de pago o cargos por API. Los clientes pagan en cripto. Los fondos van a tu billetera, no a una cuenta agrupada.",
+    "howItWorksCta": "Cómo funciona",
+    "howItWorksEyebrow": "Cómo funciona",
+    "howItWorksTitle": "Tres pasos",
+    "fullWalkthrough": "Guía completa →",
+    "whatYouGetEyebrow": "Lo que obtienes",
+    "whatYouGetTitle": "Funciones principales",
+    "whatYouGetDescription": "Herramientas sencillas para aceptar cripto, sin capas extra de plataforma.",
+    "getStartedTitle": "Comenzar",
+    "getStartedDescription": "Crea una cuenta, conecta una billetera y crea tu primer enlace de pago.",
+    "steps": {
+      "1": {
+        "title": "Conecta tu billetera",
+        "description": "Añade la dirección de billetera donde quieres recibir pagos."
+      },
+      "2": {
+        "title": "Crea una solicitud de pago",
+        "description": "Define el monto, el activo y una referencia opcional para tus registros."
+      },
+      "3": {
+        "title": "El cliente paga on-chain",
+        "description": "Emparejamos la transacción entrante y actualizamos el estado del pago."
+      }
+    },
+    "benefits": {
+      "directSettlement": {
+        "title": "Liquidación directa",
+        "description": "Los pagos van a la dirección de tu billetera. No retenemos fondos de comerciantes."
+      },
+      "noChargebacks": {
+        "title": "Olvídate de los contracargos",
+        "description": "Las transacciones con criptomonedas son irreversibles."
+      },
+      "limitedKyc": {
+        "title": "Limited KYC",
+        "description": "We do not process or store payments. Requirements depend on risk assessment, not custody."
+      },
+      "unifiedApi": {
+        "title": "Unified API",
+        "description": "One integration for payment links, charges, status, and webhook callbacks."
+      }
+    },
+    "metaDescription": "Non-custodial crypto payments directly to your wallet. Privacy friendly checkout. Set up in minutes.",
+    "heroBody": "Receive crypto payments from your store or app directly to your wallet. We do not custody your funds — you keep full control.",
+    "highlightsEyebrow": "Why Crypto Pay",
+    "highlightsTitle": "Built like the gateways merchants already trust",
+    "highlights": {
+      "nonCustodial": {
+        "title": "Non custodial",
+        "description": "Payments go directly to your wallet."
+      },
+      "privacyFriendly": {
+        "title": "Privacy friendly",
+        "description": "Checkout stays on your site. We track status — we do not hold balances."
+      },
+      "quickSetup": {
+        "title": "Quick setup",
+        "description": "Connect a wallet and create your first payment link in minutes."
+      }
+    },
+    "integrationsEyebrow": "Integrations",
+    "integrationsTitle": "Payment links, buttons, and API",
+    "integrationsDescription": "Use payment links for quick invoices, embed checkout on your site, or integrate with our developer API and webhooks.",
+    "apiEyebrow": "Developers",
+    "apiTitle": "One-stop API for BTC, ETH, USDT & more",
+    "apiDescription": "Full control with the Crypto Pay API. Clear documentation, webhooks, and support for custom checkout flows.",
+    "apiCta": "Go to API docs"
+  }
+}

@@ -44,7 +44,7 @@ export function PreChatForm({ onSubmit, onSkip }: PreChatFormProps) {
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-6 bg-linear-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800">
       {/* Welcome Icon */}
-      <div className="w-16 h-16 rounded-full bg-linear-to-br from-orange-500 to-orange-500 flex items-center justify-center mb-4 shadow-lg">
+      <div className="w-16 h-16 rounded-full bg-linear-to-br from-emerald-500 to-cyan-600 flex items-center justify-center mb-4 shadow-lg">
         <MessageCircle className="w-8 h-8 text-white" />
       </div>
 
@@ -100,7 +100,7 @@ export function PreChatForm({ onSubmit, onSkip }: PreChatFormProps) {
 
         <Button
           type="submit"
-          className="w-full bg-linear-to-r from-orange-500 to-orange-500 hover:from-orange-600 hover:to-orange-500 text-white font-medium"
+          className="w-full bg-linear-to-r from-emerald-500 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 text-white font-medium"
         >
           <Sparkles className="w-4 h-4 mr-2" />
           Start Chat

@@ -281,7 +281,7 @@ export function SupportChatWidget() {
             <Button
               onClick={() => setIsOpen(true)}
               size="lg"
-              className="fixed bottom-6 right-6 z-50 h-14 rounded-full shadow-2xl hover:shadow-orange-500/50 transition-all hover:scale-105 bg-linear-to-r from-orange-500 to-orange-500 hover:from-orange-600 hover:to-orange-500"
+              className="fixed bottom-6 right-6 z-50 h-14 rounded-full shadow-2xl hover:shadow-emerald-500/50 transition-all hover:scale-105 bg-linear-to-r from-emerald-500 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500"
             >
               <MessageCircle className="h-5 w-5 mr-2" />
               <span className="font-medium">Chat</span>
@@ -302,12 +302,12 @@ export function SupportChatWidget() {
     return (
       <button
         onClick={() => setIsMinimized(false)}
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 bg-linear-to-r from-orange-500 to-orange-500 text-white rounded-full shadow-2xl hover:shadow-orange-500/50 transition-all hover:scale-105 cursor-pointer border-2 border-orange-400/30"
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 bg-linear-to-r from-emerald-500 to-cyan-600 text-white rounded-full shadow-2xl hover:shadow-emerald-500/50 transition-all hover:scale-105 cursor-pointer border-2 border-emerald-400/30"
       >
         <div className="relative">
           <Bot className="h-5 w-5" />
           {isLoading && (
-            <span className="absolute -top-1 -right-1 w-2 h-2 bg-orange-200 rounded-full animate-pulse" />
+            <span className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-200 rounded-full animate-pulse" />
           )}
         </div>
         <span className="font-medium text-sm">

@@ -26,7 +26,7 @@ export function HeroWithVideo() {
   // Simulated live order notifications
   const notifications = [
     { platform: "DoorDash", platformColor: "bg-red-500", order: "2x Signature Burger", amount: "$24.50" },
-    { platform: "Uber Eats", platformColor: "bg-orange-500", order: "1x Family Pizza Deal", amount: "$42.00" },
+    { platform: "Uber Eats", platformColor: "bg-emerald-500", order: "1x Family Pizza Deal", amount: "$42.00" },
     { platform: "Deliveroo", platformColor: "bg-teal-500", order: "3x Taco Combo", amount: "$18.75" },
   ];
 
@@ -65,7 +65,7 @@ export function HeroWithVideo() {
           {/* Left Content */}
           <div className="text-center lg:text-left">
             <h1 className="font-display text-4xl font-bold leading-tight text-slate-900 sm:text-5xl lg:text-6xl">
-              Manage all your <span className="text-orange-600">delivery channels</span> on one dashboard
+              Manage all your <span className="text-emerald-600">delivery channels</span> on one dashboard
             </h1>
             
             <p className="mt-6 text-lg text-slate-600">
@@ -75,7 +75,7 @@ export function HeroWithVideo() {
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4 lg:justify-start">
               <Link
                 href="/contact?demo=delivery"
-                className="group flex items-center gap-2 rounded-full bg-orange-600 px-8 py-4 text-base font-semibold text-white shadow-2xl shadow-orange-200/60 transition hover:bg-orange-700 hover:shadow-orange-300/70"
+                className="group flex items-center gap-2 rounded-full bg-emerald-600 px-8 py-4 text-base font-semibold text-white shadow-2xl shadow-emerald-200/60 transition hover:bg-emerald-700 hover:shadow-emerald-300/70"
               >
                 Get a Free Demo
                 <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -83,7 +83,7 @@ export function HeroWithVideo() {
               
               <Link
                 href="/integrations"
-                className="group flex items-center gap-2 rounded-full border-2 border-slate-200 bg-white px-8 py-4 text-base font-semibold text-slate-700 shadow-sm transition hover:border-orange-300 hover:bg-orange-50"
+                className="group flex items-center gap-2 rounded-full border-2 border-slate-200 bg-white px-8 py-4 text-base font-semibold text-slate-700 shadow-sm transition hover:border-emerald-300 hover:bg-emerald-50"
               >
                 See Integrations
                 <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -92,13 +92,13 @@ export function HeroWithVideo() {
 
             <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-slate-600 lg:justify-start">
               <div className="flex items-center gap-2">
-                <svg className="h-5 w-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="h-5 w-5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 <span>Setup in <strong className="text-slate-900">7 days</strong></span>
               </div>
               <div className="flex items-center gap-2">
-                <svg className="h-5 w-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="h-5 w-5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
                 <span>Uptime: <strong className="text-slate-900">99.99%</strong></span>
@@ -116,7 +116,7 @@ export function HeroWithVideo() {
                   alt={foodImages[0].alt}
                   className="h-24 w-24 rounded-2xl object-cover shadow-2xl ring-4 ring-white"
                 />
-                <div className="absolute -bottom-2 -right-2 rounded-full bg-orange-500 p-1.5 shadow-lg">
+                <div className="absolute -bottom-2 -right-2 rounded-full bg-emerald-500 p-1.5 shadow-lg">
                   <svg className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
@@ -162,17 +162,17 @@ export function HeroWithVideo() {
                     <div className="rounded-xl bg-white p-3 shadow-sm">
                       <p className="text-[10px] text-slate-500">Today's Orders</p>
                       <p className="text-xl font-bold text-slate-900">247</p>
-                      <p className="text-[10px] text-orange-600">↑ 12%</p>
+                      <p className="text-[10px] text-emerald-600">↑ 12%</p>
                     </div>
                     <div className="rounded-xl bg-white p-3 shadow-sm">
                       <p className="text-[10px] text-slate-500">Revenue</p>
                       <p className="text-xl font-bold text-slate-900">$8.4k</p>
-                      <p className="text-[10px] text-orange-600">↑ 8%</p>
+                      <p className="text-[10px] text-emerald-600">↑ 8%</p>
                     </div>
                     <div className="rounded-xl bg-white p-3 shadow-sm">
                       <p className="text-[10px] text-slate-500">Avg Prep</p>
                       <p className="text-xl font-bold text-slate-900">14m</p>
-                      <p className="text-[10px] text-orange-600">↓ 2m</p>
+                      <p className="text-[10px] text-emerald-600">↓ 2m</p>
                     </div>
                   </div>
                   
@@ -180,12 +180,12 @@ export function HeroWithVideo() {
                   <div className="rounded-xl bg-white p-3 shadow-sm">
                     <div className="mb-2 flex items-center justify-between">
                       <p className="text-xs font-semibold text-slate-700">Live Orders</p>
-                      <span className="rounded-full bg-orange-100 px-2 py-0.5 text-[10px] font-medium text-orange-700">12 active</span>
+                      <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-medium text-emerald-700">12 active</span>
                     </div>
                     <div className="space-y-2">
                       {[
                         { platform: "Uber Eats", name: "John D.", items: "2x Burger, 1x Fries", status: "Preparing", color: "bg-yellow-100 text-yellow-700" },
-                        { platform: "DoorDash", name: "Sarah M.", items: "1x Pizza, 2x Wings", status: "Ready", color: "bg-orange-100 text-orange-700" },
+                        { platform: "DoorDash", name: "Sarah M.", items: "1x Pizza, 2x Wings", status: "Ready", color: "bg-emerald-100 text-emerald-700" },
                         { platform: "Deliveroo", name: "Mike R.", items: "3x Tacos, 1x Drink", status: "New", color: "bg-blue-100 text-blue-700" },
                       ].map((order, i) => (
                         <div key={i} className="flex items-center gap-2 rounded-lg bg-slate-50 p-2">
@@ -234,10 +234,10 @@ export function HeroWithVideo() {
                     </span>
                     <span className="ml-auto flex items-center gap-1">
                       <span className="relative flex h-2 w-2">
-                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-400 opacity-75" />
-                        <span className="relative inline-flex h-2 w-2 rounded-full bg-orange-500" />
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                        <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
                       </span>
-                      <span className="text-[9px] text-orange-500 font-medium">Live</span>
+                      <span className="text-[9px] text-emerald-500 font-medium">Live</span>
                     </span>
                   </div>
                   {/* Toast Body */}
@@ -245,7 +245,7 @@ export function HeroWithVideo() {
                     <p className="text-[11px] font-medium text-slate-900">New order received</p>
                     <p className="mt-0.5 text-[10px] text-slate-500">{notifications[activeNotification].order}</p>
                     <div className="mt-2 flex items-center justify-between">
-                      <span className="text-xs font-bold text-orange-500">{notifications[activeNotification].amount}</span>
+                      <span className="text-xs font-bold text-emerald-500">{notifications[activeNotification].amount}</span>
                       <span className="text-[9px] text-slate-400">Just now</span>
                     </div>
                   </div>

@@ -1,0 +1,110 @@
+{
+  "Common": {
+    "brandName": "Crypto Pay",
+    "tagline": "روابط دفع ورسوم API. تُسوّى الأموال إلى محفظتك.",
+    "createAccount": "إنشاء حساب",
+    "logIn": "تسجيل الدخول",
+    "dashboard": "لوحة التحكم",
+    "openMenu": "فتح القائمة",
+    "closeMenu": "إغلاق القائمة",
+    "supportedAssets": "الأصول المدعومة",
+    "viewPricing": "عرض الأسعار",
+    "getStarted": "ابدأ الآن",
+    "allRightsReserved": "جميع الحقوق محفوظة.",
+    "getStartedFree": "Get started for free",
+    "talkToSales": "Talk to sales"
+  },
+  "Navigation": {
+    "pricing": "الأسعار",
+    "howItWorks": "كيف يعمل",
+    "developers": "المطورون"
+  },
+  "Footer": {
+    "product": "المنتج",
+    "company": "الشركة",
+    "legal": "قانوني",
+    "contact": "اتصل بنا",
+    "faq": "الأسئلة الشائعة",
+    "privacyPolicy": "سياسة الخصوصية",
+    "termsOfService": "شروط الخدمة"
+  },
+  "LocaleSwitcher": {
+    "label": "اللغة",
+    "en": "English",
+    "ar": "العربية",
+    "es": "Español",
+    "fr": "Français",
+    "de": "Deutsch"
+  },
+  "HomePage": {
+    "metaTitle": "اقبل مدفوعات العملات المشفرة فوراً",
+    "heroTitle": "اقبل مدفوعات العملات المشفرة في محفظتك",
+    "heroSubtitle": "أنشئ روابط دفع أو رسوم API. يدفع العملاء بالعملات المشفرة. تذهب الأموال إلى محفظتك — وليس إلى حساب مجمّع.",
+    "howItWorksCta": "كيف يعمل",
+    "howItWorksEyebrow": "كيف يعمل",
+    "howItWorksTitle": "ثلاث خطوات",
+    "fullWalkthrough": "الدليل الكامل ←",
+    "whatYouGetEyebrow": "ما الذي تحصل عليه",
+    "whatYouGetTitle": "الميزات الأساسية",
+    "whatYouGetDescription": "أدوات مباشرة لقبول العملات المشفرة — دون طبقات منصة إضافية.",
+    "getStartedTitle": "ابدأ الآن",
+    "getStartedDescription": "أنشئ حساباً، واربط محفظة، وأنشئ أول رابط دفع.",
+    "steps": {
+      "1": {
+        "title": "اربط محفظتك",
+        "description": "أضف عنوان المحفظة التي تريد استلام المدفوعات عليها."
+      },
+      "2": {
+        "title": "أنشئ طلب دفع",
+        "description": "حدد المبلغ والأصل ومرجعاً اختيارياً لسجلاتك."
+      },
+      "3": {
+        "title": "يدفع العميل على السلسلة",
+        "description": "نطابق المعاملة الواردة ونحدّث حالة الدفع."
+      }
+    },
+    "benefits": {
+      "directSettlement": {
+        "title": "تسوية مباشرة",
+        "description": "تذهب المدفوعات إلى عنوان محفظتك. لا نحتفظ بأموال التجار."
+      },
+      "noChargebacks": {
+        "title": "انسَ مشكلة الاسترجاع",
+        "description": "معاملات العملات المشفرة لا رجعة فيها."
+      },
+      "limitedKyc": {
+        "title": "Limited KYC",
+        "description": "We do not process or store payments. Requirements depend on risk assessment, not custody."
+      },
+      "unifiedApi": {
+        "title": "Unified API",
+        "description": "One integration for payment links, charges, status, and webhook callbacks."
+      }
+    },
+    "metaDescription": "Non-custodial crypto payments directly to your wallet. Privacy friendly checkout. Set up in minutes.",
+    "heroBody": "Receive crypto payments from your store or app directly to your wallet. We do not custody your funds — you keep full control.",
+    "highlightsEyebrow": "Why Crypto Pay",
+    "highlightsTitle": "Built like the gateways merchants already trust",
+    "highlights": {
+      "nonCustodial": {
+        "title": "Non custodial",
+        "description": "Payments go directly to your wallet."
+      },
+      "privacyFriendly": {
+        "title": "Privacy friendly",
+        "description": "Checkout stays on your site. We track status — we do not hold balances."
+      },
+      "quickSetup": {
+        "title": "Quick setup",
+        "description": "Connect a wallet and create your first payment link in minutes."
+      }
+    },
+    "integrationsEyebrow": "Integrations",
+    "integrationsTitle": "Payment links, buttons, and API",
+    "integrationsDescription": "Use payment links for quick invoices, embed checkout on your site, or integrate with our developer API and webhooks.",
+    "apiEyebrow": "Developers",
+    "apiTitle": "One-stop API for BTC, ETH, USDT & more",
+    "apiDescription": "Full control with the Crypto Pay API. Clear documentation, webhooks, and support for custom checkout flows.",
+    "apiCta": "Go to API docs"
+  }
+}

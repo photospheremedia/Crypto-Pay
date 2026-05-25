@@ -96,7 +96,7 @@ interface StatCardProps {
 const colorClasses = {
   slate: "bg-slate-50 text-slate-600",
   blue: "bg-blue-50 text-blue-600",
-  orange: "bg-orange-50 text-orange-500",
+  orange: "bg-emerald-50 text-emerald-500",
   purple: "bg-purple-50 text-purple-600",
   amber: "bg-amber-50 text-amber-600",
   green: "bg-green-50 text-green-600",
@@ -116,8 +116,8 @@ export function StatCard({
     <div
       className={cn(
         "bg-white rounded-xl border border-slate-200 p-4 transition-all",
-        href && "hover:border-orange-300 hover:shadow-sm cursor-pointer",
-        highlight && "ring-2 ring-orange-500 ring-offset-2"
+        href && "hover:border-emerald-300 hover:shadow-sm cursor-pointer",
+        highlight && "ring-2 ring-emerald-500 ring-offset-2"
       )}
     >
       <div className="flex items-center justify-between">
@@ -131,8 +131,8 @@ export function StatCard({
         </div>
         {highlight && (
           <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500" />
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
           </span>
         )}
       </div>
@@ -143,7 +143,7 @@ export function StatCard({
           <span
             className={cn(
               "text-xs font-medium",
-              trend.positive ? "text-orange-500" : "text-red-600"
+              trend.positive ? "text-emerald-500" : "text-red-600"
             )}
           >
             {trend.positive ? "+" : ""}
@@ -204,7 +204,7 @@ export function EmptyState({
 export function LoadingSpinner({ className }: { className?: string }) {
   return (
     <div className={cn("flex items-center justify-center py-12", className)}>
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500" />
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500" />
     </div>
   );
 }

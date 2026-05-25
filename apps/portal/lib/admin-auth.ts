@@ -1,42 +1,48 @@
 import { createClient } from "@/lib/supabase/server";
 import { isAdminEmail } from "@/lib/admin-email";
 
-// ============================================
-// ROLE HIERARCHY (highest to lowest)
-// ============================================
-// rhs_admin (Super Admin) - Full control, can see everything
-// admin     - Tenant admin, full control within tenant
-// owner     - Business owner, can manage their business
-// staff     - Limited access, can handle leads/orders
+/** Crypto Pay platform super-admin (legacy DB value: rhs_admin) */
+export const SUPER_ADMIN_ROLES = ["cp_admin", "rhs_admin"] as const;
 
 export const ROLE_HIERARCHY = {
-  rhs_admin: 5,  // Highest - Super admin
+  cp_admin: 5,
+  rhs_admin: 5,
   admin: 4,
   owner: 3,
   manager: 2,
   staff: 1,
 } as const;
 
-export const ADMIN_ROLES = ["rhs_admin", "admin", "owner", "manager", "staff"] as const;
+export const ADMIN_ROLES = [
+  "cp_admin",
+  "rhs_admin",
+  "admin",
+  "owner",
+  "manager",
+  "staff",
+] as const;
+
 export type AdminRole = (typeof ADMIN_ROLES)[number];
 
-// Permissions by role
+const superAdminPermissions = {
+  canManageAllTenants: true,
+  canManageStaff: true,
+  canViewAllLeads: true,
+  canViewMerchants: true,
+  canViewAnalytics: true,
+  canViewAuditLogs: true,
+  canManageSettings: true,
+  canImpersonate: true,
+} as const;
+
 export const ROLE_PERMISSIONS = {
-  rhs_admin: {
-    canManageAllTenants: true,
-    canManageStaff: true,
-    canViewAllLeads: true,
-    canViewAllOrders: true,
-    canViewAnalytics: true,
-    canViewAuditLogs: true,
-    canManageSettings: true,
-    canImpersonate: true,
-  },
+  cp_admin: superAdminPermissions,
+  rhs_admin: superAdminPermissions,
   admin: {
     canManageAllTenants: false,
     canManageStaff: true,
     canViewAllLeads: true,
-    canViewAllOrders: true,
+    canViewMerchants: true,
     canViewAnalytics: true,
     canViewAuditLogs: true,
     canManageSettings: true,
@@ -46,7 +52,7 @@ export const ROLE_PERMISSIONS = {
     canManageAllTenants: false,
     canManageStaff: true,
     canViewAllLeads: true,
-    canViewAllOrders: true,
+    canViewMerchants: true,
     canViewAnalytics: true,
     canViewAuditLogs: false,
     canManageSettings: true,
@@ -56,7 +62,7 @@ export const ROLE_PERMISSIONS = {
     canManageAllTenants: false,
     canManageStaff: false,
     canViewAllLeads: true,
-    canViewAllOrders: true,
+    canViewMerchants: true,
     canViewAnalytics: true,
     canViewAuditLogs: false,
     canManageSettings: false,
@@ -66,7 +72,7 @@ export const ROLE_PERMISSIONS = {
     canManageAllTenants: false,
     canManageStaff: false,
     canViewAllLeads: true,
-    canViewAllOrders: true,
+    canViewMerchants: false,
     canViewAnalytics: false,
     canViewAuditLogs: false,
     canManageSettings: false,
@@ -74,9 +80,12 @@ export const ROLE_PERMISSIONS = {
   },
 } as const;
 
-export type Permission = keyof typeof ROLE_PERMISSIONS.rhs_admin;
+export type Permission = keyof typeof superAdminPermissions;
 
-// Check if user has admin access
+export function isSuperAdminRole(role: string | null | undefined): boolean {
+  return role === "cp_admin" || role === "rhs_admin";
+}
+
 export async function checkAdminAccess() {
   const supabase = await createClient();
 
@@ -91,12 +100,12 @@ export async function checkAdminAccess() {
   if (isAdminEmail(user.email)) {
     return {
       user,
-      role: "rhs_admin" as const,
+      role: "cp_admin" as const,
       tenantId: null,
       isAdmin: true,
       isSuperAdmin: true,
-      permissions: ROLE_PERMISSIONS.rhs_admin,
-      roleLevel: ROLE_HIERARCHY.rhs_admin,
+      permissions: ROLE_PERMISSIONS.cp_admin,
+      roleLevel: ROLE_HIERARCHY.cp_admin,
     };
   }
 
@@ -105,7 +114,7 @@ export async function checkAdminAccess() {
     .select("role, tenant_id")
     .eq("user_id", user.id)
     .eq("status", "active")
-    .in("role", ADMIN_ROLES)
+    .in("role", [...ADMIN_ROLES])
     .maybeSingle();
 
   if (!membership) {
@@ -113,41 +122,38 @@ export async function checkAdminAccess() {
   }
 
   const role = membership.role as AdminRole;
-  const isSuperAdmin = role === "rhs_admin";
+  const permissions = ROLE_PERMISSIONS[role] ?? ROLE_PERMISSIONS.staff;
 
   return {
     user,
     role,
     tenantId: membership.tenant_id,
     isAdmin: true,
-    isSuperAdmin,
-    permissions: ROLE_PERMISSIONS[role],
-    roleLevel: ROLE_HIERARCHY[role],
+    isSuperAdmin: isSuperAdminRole(role),
+    permissions,
+    roleLevel: ROLE_HIERARCHY[role] ?? 0,
   };
 }
 
-// Check if user has specific permission
 export async function hasPermission(permission: Permission): Promise<boolean> {
   const { permissions } = await checkAdminAccess();
   return permissions?.[permission] ?? false;
 }
 
-// Check if user can manage another user's role
 export function canManageRole(managerRole: AdminRole, targetRole: AdminRole): boolean {
   return ROLE_HIERARCHY[managerRole] > ROLE_HIERARCHY[targetRole];
 }
 
-// Higher-order function for admin API routes
 export function withAdminAuth(
   handler: (
     req: Request,
-    context: { 
-      user: NonNullable<Awaited<ReturnType<typeof checkAdminAccess>>["user"]>; 
+    context: {
+      user: NonNullable<Awaited<ReturnType<typeof checkAdminAccess>>["user"]>;
       role: AdminRole;
       isSuperAdmin: boolean;
       permissions: (typeof ROLE_PERMISSIONS)[AdminRole];
-    }
-  ) => Response | Promise<Response>
+    },
+  ) => Response | Promise<Response>,
 ) {
   return async (req: Request): Promise<Response> => {
     const { user, role, isAdmin, isSuperAdmin, permissions } = await checkAdminAccess();
@@ -164,14 +170,13 @@ export function withAdminAuth(
   };
 }
 
-// Super admin only wrapper
 export function withSuperAdminAuth(
   handler: (
     req: Request,
-    context: { 
-      user: NonNullable<Awaited<ReturnType<typeof checkAdminAccess>>["user"]>; 
-    }
-  ) => Response | Promise<Response>
+    context: {
+      user: NonNullable<Awaited<ReturnType<typeof checkAdminAccess>>["user"]>;
+    },
+  ) => Response | Promise<Response>,
 ) {
   return async (req: Request): Promise<Response> => {
     const { user, isSuperAdmin } = await checkAdminAccess();

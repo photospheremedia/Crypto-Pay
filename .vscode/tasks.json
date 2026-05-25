@@ -17,17 +17,6 @@
       }
     },
     {
-      "label": "🚀 Dev: Storefront",
-      "type": "shell",
-      "command": "lsof -ti:3000 | xargs kill -9 2>/dev/null || true && pnpm dev:storefront",
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "clear": true
-      },
-      "isBackground": true
-    },
-    {
       "label": "🏗️ Build: Portal",
       "type": "shell",
       "command": "pnpm build:portal",
@@ -86,7 +75,7 @@
     {
       "label": "🌐 Type Check: Portal",
       "type": "shell",
-      "command": "pnpm tsc -p apps/portal/tsconfig.json --noEmit",
+      "command": "pnpm --filter @crypto-pay/portal exec tsc --noEmit",
       "presentation": {
         "reveal": "always",
         "panel": "dedicated",
@@ -109,7 +98,7 @@
     {
       "label": "🏠 Local Run: Portal (npm)",
       "type": "shell",
-      "command": "npm run dev:portal",
+      "command": "lsof -ti:3001 | xargs kill -9 2>/dev/null || true && npm run dev:portal",
       "presentation": {
         "reveal": "always",
         "panel": "dedicated",

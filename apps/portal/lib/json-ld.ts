@@ -159,7 +159,7 @@ export function getProductJsonLd(product: {
       availability: product.inStock !== false
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock",
-      url: `${baseUrl}/shop/product/${product.id}`,
+      url: `${baseUrl}/product/${product.id}`,
     },
     aggregateRating: product.rating
       ? {

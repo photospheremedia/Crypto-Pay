@@ -33,7 +33,7 @@ export function TestimonialsWithImages() {
   return (
     <section className="mx-auto w-full max-w-6xl px-6 py-20">
       <div className="mb-16 text-center">
-        <p className="text-xs uppercase tracking-[0.2em] text-orange-600">Client stories</p>
+        <p className="text-xs uppercase tracking-[0.2em] text-emerald-600">Client stories</p>
         <h2 className="font-display mt-3 text-3xl font-bold text-slate-900 md:text-4xl">
           Loved by business operators
         </h2>
@@ -53,7 +53,7 @@ export function TestimonialsWithImages() {
           >
             {/* Decorative Quote Icon */}
             <div className="absolute -right-4 -top-4 opacity-5">
-              <Quote className="h-32 w-32 text-orange-500" />
+              <Quote className="h-32 w-32 text-emerald-500" />
             </div>
 
             {/* Rating Stars */}
@@ -73,7 +73,7 @@ export function TestimonialsWithImages() {
 
             {/* Author Info */}
             <div className="relative flex items-center gap-4">
-              <div className="h-14 w-14 overflow-hidden rounded-full border-2 border-orange-100">
+              <div className="h-14 w-14 overflow-hidden rounded-full border-2 border-emerald-100">
                 <img
                   src={testimonial.image}
                   alt={testimonial.author}
@@ -91,7 +91,7 @@ export function TestimonialsWithImages() {
       </div>
 
       {/* Trust Badge */}
-      <div className="mt-16 rounded-3xl border border-orange-100 bg-linear-to-br from-orange-50 to-amber-50 p-8 text-center">
+      <div className="mt-16 rounded-3xl border border-emerald-100 bg-linear-to-br from-emerald-50 to-amber-50 p-8 text-center">
         <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-8">
           <div className="text-center">
             <div className="font-display text-3xl font-bold text-slate-900">4.9/5</div>

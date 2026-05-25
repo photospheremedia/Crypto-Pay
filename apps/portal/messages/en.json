@@ -1,0 +1,110 @@
+{
+  "Common": {
+    "brandName": "Crypto Pay",
+    "tagline": "Track and accept crypto payments. Privacy oriented. Wallet to wallet.",
+    "createAccount": "Get started",
+    "logIn": "Log in",
+    "dashboard": "Dashboard",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "supportedAssets": "Supported coins",
+    "viewPricing": "View pricing",
+    "getStarted": "Get started",
+    "getStartedFree": "Get started for free",
+    "talkToSales": "Talk to sales",
+    "allRightsReserved": "All rights reserved."
+  },
+  "Navigation": {
+    "pricing": "Pricing",
+    "howItWorks": "How It Works",
+    "developers": "Developers"
+  },
+  "Footer": {
+    "product": "Product",
+    "company": "Company",
+    "legal": "Legal",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service"
+  },
+  "LocaleSwitcher": {
+    "label": "Language",
+    "en": "English",
+    "ar": "العربية",
+    "es": "Español",
+    "fr": "Français",
+    "de": "Deutsch"
+  },
+  "HomePage": {
+    "metaTitle": "Accept Bitcoin & Crypto Payments Online",
+    "metaDescription": "Non-custodial crypto payments directly to your wallet. Privacy friendly checkout. Set up in minutes.",
+    "heroTitle": "Accept Bitcoin, USDT & crypto anywhere",
+    "heroSubtitle": "Privacy oriented. Wallet to wallet. Set up in minutes.",
+    "heroBody": "Receive crypto payments from your store or app directly to your wallet. We do not custody your funds — you keep full control.",
+    "howItWorksCta": "See how it works",
+    "highlightsEyebrow": "Why Crypto Pay",
+    "highlightsTitle": "Built like the gateways merchants already trust",
+    "highlights": {
+      "nonCustodial": {
+        "title": "Non custodial",
+        "description": "Payments go directly to your wallet."
+      },
+      "privacyFriendly": {
+        "title": "Privacy friendly",
+        "description": "Checkout stays on your site. We track status — we do not hold balances."
+      },
+      "quickSetup": {
+        "title": "Quick setup",
+        "description": "Connect a wallet and create your first payment link in minutes."
+      }
+    },
+    "howItWorksEyebrow": "How it works",
+    "howItWorksTitle": "From checkout to confirmed payment",
+    "fullWalkthrough": "Full walkthrough →",
+    "whatYouGetEyebrow": "What you get",
+    "whatYouGetTitle": "Everything to accept crypto online",
+    "whatYouGetDescription": "Payment links, invoices, and a unified API — fast, reliable, and under your control.",
+    "integrationsEyebrow": "Integrations",
+    "integrationsTitle": "Payment links, buttons, and API",
+    "integrationsDescription": "Use payment links for quick invoices, embed checkout on your site, or integrate with our developer API and webhooks.",
+    "apiEyebrow": "Developers",
+    "apiTitle": "One-stop API for BTC, ETH, USDT & more",
+    "apiDescription": "Full control with the Crypto Pay API. Clear documentation, webhooks, and support for custom checkout flows.",
+    "apiCta": "Go to API docs",
+    "getStartedTitle": "Ready to get started?",
+    "getStartedDescription": "Join now to access payment technology that delivers smooth, quick checkout experiences for your customers.",
+    "steps": {
+      "1": {
+        "title": "Connect your wallet",
+        "description": "Add the public address where you want to receive payments. No private keys required."
+      },
+      "2": {
+        "title": "Create a payment request",
+        "description": "Set amount, coin, and reference. Share a link or call the API from your backend."
+      },
+      "3": {
+        "title": "Track on-chain confirmation",
+        "description": "We detect the transaction and update status from unpaid → in process → paid."
+      }
+    },
+    "benefits": {
+      "directSettlement": {
+        "title": "Wallet to wallet",
+        "description": "Funds never sit in a pooled merchant account. Settlement is direct to your wallet."
+      },
+      "noChargebacks": {
+        "title": "No chargebacks",
+        "description": "On-chain payments are final once confirmed — no card-style reversals."
+      },
+      "limitedKyc": {
+        "title": "Limited KYC",
+        "description": "We do not process or store payments. Requirements depend on risk assessment, not custody."
+      },
+      "unifiedApi": {
+        "title": "Unified API",
+        "description": "One integration for payment links, charges, status, and webhook callbacks."
+      }
+    }
+  }
+}

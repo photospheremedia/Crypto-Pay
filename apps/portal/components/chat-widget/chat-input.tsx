@@ -63,7 +63,7 @@ export function ChatInput({
           }}
           placeholder="Ask me anything..."
           disabled={isLoading || disabled}
-          className="flex-1 min-h-[44px] max-h-[200px] resize-none text-sm border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-orange-500 dark:bg-slate-800 dark:text-white rounded-xl transition-all"
+          className="flex-1 min-h-[44px] max-h-[200px] resize-none text-sm border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-emerald-500 dark:bg-slate-800 dark:text-white rounded-xl transition-all"
           rows={1}
         />
         <TooltipProvider>
@@ -73,7 +73,7 @@ export function ChatInput({
                 type="submit"
                 disabled={isLoading || !input.trim() || disabled}
                 size="icon"
-                className="h-11 w-11 shrink-0 rounded-xl bg-linear-to-r from-orange-500 to-orange-500 hover:from-orange-600 hover:to-orange-500 shadow-lg hover:shadow-orange-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="h-11 w-11 shrink-0 rounded-xl bg-linear-to-r from-emerald-500 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 shadow-lg hover:shadow-emerald-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send className="h-4 w-4" />
               </Button>

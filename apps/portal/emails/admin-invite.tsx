@@ -52,7 +52,7 @@ const roleConfig = {
   },
   admin: {
     name: 'Administrator',
-    color: '#f0531c',
+    color: '#10b981',
     icon: '⭐',
     permissions: [
       'Manage leads and orders',
@@ -112,8 +112,8 @@ export const AdminInviteEmail = ({
           theme: {
             extend: {
               colors: {
-                brand: '#f0531c',
-                'brand-dark': '#c24215',
+                brand: '#10b981',
+                'brand-dark': '#059669',
               },
             },
           },

@@ -87,8 +87,8 @@ function ErrorContent() {
         <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
             <div className="max-w-md w-full bg-white p-8 rounded-xl shadow-lg text-center">
                 {/* Error Icon */}
-                <div className="mx-auto w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-6">
-                    <AlertCircle className="w-8 h-8 text-orange-500" />
+                <div className="mx-auto w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mb-6">
+                    <AlertCircle className="w-8 h-8 text-emerald-500" />
                 </div>
 
                 {/* User-friendly title */}
@@ -102,7 +102,7 @@ function ErrorContent() {
                 <div className="space-y-3">
                     <Link
                         href="/login"
-                        className="inline-block w-full bg-orange-500 text-white px-6 py-3 rounded-full font-medium hover:bg-orange-600 transition"
+                        className="inline-block w-full bg-emerald-500 text-white px-6 py-3 rounded-full font-medium hover:bg-emerald-600 transition"
                     >
                         Try Again
                     </Link>
@@ -117,7 +117,7 @@ function ErrorContent() {
                 {/* Support link */}
                 <p className="mt-6 text-xs text-slate-400">
                     Need help?{' '}
-                    <Link href="/contact" className="text-orange-500 hover:underline">
+                    <Link href="/contact" className="text-emerald-500 hover:underline">
                         Contact Support
                     </Link>
                 </p>

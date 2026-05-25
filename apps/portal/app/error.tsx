@@ -45,7 +45,7 @@ export default function Error({
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
             onClick={reset}
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors font-medium"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-emerald-500 text-white rounded-lg hover:bg-emerald-600 transition-colors font-medium"
           >
             <RefreshCw className="h-4 w-4" />
             Try again
@@ -62,7 +62,7 @@ export default function Error({
         
         <p className="mt-8 text-sm text-slate-500">
           If this problem persists, please{" "}
-          <Link href="/contact" className="text-orange-500 hover:underline">
+          <Link href="/contact" className="text-emerald-500 hover:underline">
             contact support
           </Link>
         </p>

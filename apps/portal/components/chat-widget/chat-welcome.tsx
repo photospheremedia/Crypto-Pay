@@ -10,9 +10,9 @@ interface ChatWelcomeProps {
 export function ChatWelcome({ message }: ChatWelcomeProps) {
   return (
     <div className="flex gap-3 items-start animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <Avatar className="h-8 w-8 border border-orange-200 flex-shrink-0">
-        <AvatarFallback className="bg-orange-100 dark:bg-orange-900">
-          <Bot className="h-4 w-4 text-orange-500 dark:text-orange-400" />
+      <Avatar className="h-8 w-8 border border-emerald-200 flex-shrink-0">
+        <AvatarFallback className="bg-emerald-100 dark:bg-emerald-900">
+          <Bot className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
         </AvatarFallback>
       </Avatar>
       <div className="flex-1 space-y-3">
@@ -33,7 +33,7 @@ export function ChatWelcome({ message }: ChatWelcomeProps) {
 
 function QuickAction({ text }: { text: string }) {
   return (
-    <button className="text-xs px-3 py-1.5 rounded-full bg-orange-100 dark:bg-orange-900/50 text-orange-600 dark:text-orange-300 hover:bg-orange-200 dark:hover:bg-orange-900 transition-colors border border-orange-200 dark:border-orange-800">
+    <button className="text-xs px-3 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-300 hover:bg-emerald-200 dark:hover:bg-emerald-900 transition-colors border border-emerald-200 dark:border-emerald-800">
       {text}
     </button>
   );

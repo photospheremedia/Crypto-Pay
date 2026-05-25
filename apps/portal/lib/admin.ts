@@ -7,7 +7,7 @@ export async function isRhsAdmin(userId: string) {
     .select("id")
     .eq("user_id", userId)
     .eq("status", "active")
-    .in("role", ["rhs_admin"])
+    .in("role", ["cp_admin", "rhs_admin"])
     .maybeSingle();
 
   return Boolean(data);

@@ -1,18 +1,21 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Menu, X } from "lucide-react";
 import type { AuthChangeEvent, Session, User } from "@supabase/supabase-js";
 import { getSupabaseBrowserClientOptional } from "@crypto-pay/db/supabaseClient";
 import { Button } from "@/components/ui/button";
-import { CryptoPayLogo } from "./crypto-pay-logo";
+import { LocaleSwitcher } from "@/components/locale-switcher";
+import { Link, usePathname } from "@/i18n/navigation";
 import { NAV_LINKS } from "@/lib/cryptopay/constants";
 import { cn } from "@/lib/utils";
+import { CryptoPayLogo } from "./crypto-pay-logo";
 
 export function CryptoPayHeader() {
   const pathname = usePathname();
+  const t = useTranslations("Navigation");
+  const tCommon = useTranslations("Common");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isAuthed, setIsAuthed] = useState(false);
 
@@ -26,7 +29,7 @@ export function CryptoPayHeader() {
     const { data: sub } = supabase.auth.onAuthStateChange(
       (_event: AuthChangeEvent, session: Session | null) => {
         setIsAuthed(!!session?.user);
-      }
+      },
     );
     return () => sub.subscription.unsubscribe();
   }, []);
@@ -50,27 +53,28 @@ export function CryptoPayHeader() {
                   : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800",
               )}
             >
-              {link.label}
+              {t(link.key)}
             </Link>
           ))}
         </nav>
 
         <div className="hidden items-center gap-2 sm:flex">
+          <LocaleSwitcher className="h-9 w-[140px] border-slate-200 dark:border-slate-700" />
           {isAuthed ? (
             <Button asChild variant="outline" size="sm" className="rounded-full">
-              <Link href="/account">Dashboard</Link>
+              <Link href="/account">{tCommon("dashboard")}</Link>
             </Button>
           ) : (
             <>
               <Button asChild variant="ghost" size="sm" className="rounded-full">
-                <Link href="/login">Log in</Link>
+                <Link href="/login">{tCommon("logIn")}</Link>
               </Button>
               <Button
                 asChild
                 size="sm"
-                className="rounded-full bg-gradient-to-r from-orange-500 to-emerald-600 text-white hover:from-orange-400 hover:to-emerald-500"
+                className="rounded-full bg-linear-to-r from-emerald-500 to-cyan-600 text-white hover:from-emerald-400 hover:to-cyan-500"
               >
-                <Link href="/signup">Start Accepting Crypto</Link>
+                <Link href="/signup">{tCommon("getStartedFree")}</Link>
               </Button>
             </>
           )}
@@ -80,7 +84,7 @@ export function CryptoPayHeader() {
           type="button"
           className="rounded-lg border border-slate-200 p-2 md:hidden dark:border-slate-700"
           onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          aria-label={mobileOpen ? tCommon("closeMenu") : tCommon("openMenu")}
         >
           {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
@@ -88,6 +92,9 @@ export function CryptoPayHeader() {
 
       {mobileOpen && (
         <div className="border-t border-slate-200 px-4 py-4 md:hidden dark:border-slate-800">
+          <div className="mb-4">
+            <LocaleSwitcher className="w-full border-slate-200 dark:border-slate-700" />
+          </div>
           <nav className="flex flex-col gap-1">
             {NAV_LINKS.map((link) => (
               <Link
@@ -95,19 +102,22 @@ export function CryptoPayHeader() {
                 href={link.href}
                 className="rounded-lg px-3 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-200"
               >
-                {link.label}
+                {t(link.key)}
               </Link>
             ))}
           </nav>
           <div className="mt-4 flex flex-col gap-2">
             <Button asChild variant="outline" className="w-full rounded-full">
               <Link href={isAuthed ? "/account" : "/login"}>
-                {isAuthed ? "Dashboard" : "Log in"}
+                {isAuthed ? tCommon("dashboard") : tCommon("logIn")}
               </Link>
             </Button>
             {!isAuthed && (
-              <Button asChild className="w-full rounded-full bg-emerald-600">
-                <Link href="/signup">Start Accepting Crypto</Link>
+              <Button
+                asChild
+                className="w-full rounded-full bg-linear-to-r from-emerald-500 to-cyan-600"
+              >
+                <Link href="/signup">{tCommon("getStartedFree")}</Link>
               </Button>
             )}
           </div>

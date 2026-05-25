@@ -37,7 +37,7 @@
   <!-- After -->
   <rect x="460" y="110" width="400" height="450" rx="24" fill="white" stroke="#7C3AED" stroke-width="2"/>
   <rect x="475" y="125" width="80" height="28" rx="6" fill="#10B981" opacity="0.2"/>
-  <text x="498" y="144" fill="#059669" font-family="system-ui" font-size="11" font-weight="600">AFTER</text>
+  <text x="498" y="144" fill="#c24215" font-family="system-ui" font-size="11" font-weight="600">AFTER</text>
   
   <!-- New Menu Style -->
   <rect x="475" y="165" width="370" height="380" rx="16" fill="#FAFAFA"/>
@@ -78,5 +78,5 @@
   
   <!-- Results Card -->
   <rect x="475" y="540" width="340" height="22" rx="6" fill="#ECFDF5"/>
-  <text x="490" y="556" fill="#059669" font-family="system-ui" font-size="10" font-weight="500">+34% conversion rate | +$2.40 avg ticket</text>
+  <text x="490" y="556" fill="#c24215" font-family="system-ui" font-size="10" font-weight="500">+34% conversion rate | +$2.40 avg ticket</text>
 </svg>

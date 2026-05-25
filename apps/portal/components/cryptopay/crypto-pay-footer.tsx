@@ -1,24 +1,38 @@
-import Link from "next/link";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { BRAND } from "@/lib/cryptopay/constants";
 import { CryptoPayLogo } from "./crypto-pay-logo";
 
-const footerLinks = {
-  Product: [
-    { label: "Pricing", href: "/pricing" },
-    { label: "How It Works", href: "/how-it-works" },
-    { label: "Developers", href: "/developers" },
-  ],
-  Company: [
-    { label: "Contact", href: "/contact" },
-    { label: "FAQ", href: "/faq" },
-  ],
-  Legal: [
-    { label: "Privacy Policy", href: "/privacy-policy" },
-    { label: "Terms of Service", href: "/terms-of-service" },
-  ],
-};
+const footerSections = [
+  {
+    section: "product" as const,
+    links: [
+      { labelKey: "pricing" as const, labelNs: "Navigation" as const, href: "/pricing" },
+      { labelKey: "howItWorks" as const, labelNs: "Navigation" as const, href: "/how-it-works" },
+      { labelKey: "developers" as const, labelNs: "Navigation" as const, href: "/developers" },
+    ],
+  },
+  {
+    section: "company" as const,
+    links: [
+      { labelKey: "contact" as const, labelNs: "Footer" as const, href: "/contact" },
+      { labelKey: "faq" as const, labelNs: "Footer" as const, href: "/faq" },
+    ],
+  },
+  {
+    section: "legal" as const,
+    links: [
+      { labelKey: "privacyPolicy" as const, labelNs: "Footer" as const, href: "/privacy-policy" },
+      { labelKey: "termsOfService" as const, labelNs: "Footer" as const, href: "/terms-of-service" },
+    ],
+  },
+];
 
-export function CryptoPayFooter() {
+export async function CryptoPayFooter() {
+  const tFooter = await getTranslations("Footer");
+  const tNav = await getTranslations("Navigation");
+  const tCommon = await getTranslations("Common");
+
   return (
     <footer className="border-t border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
@@ -26,20 +40,22 @@ export function CryptoPayFooter() {
           <div className="space-y-4">
             <CryptoPayLogo />
             <p className="max-w-sm text-sm text-slate-600 dark:text-slate-400">
-              {BRAND.tagline}
+              {tCommon("tagline")}
             </p>
             <p className="text-sm text-slate-600">{BRAND.email}</p>
           </div>
-          {Object.entries(footerLinks).map(([title, links]) => (
-            <div key={title}>
+          {footerSections.map(({ section, links }) => (
+            <div key={section}>
               <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
-                {title}
+                {tFooter(section)}
               </p>
               <ul className="mt-4 space-y-2 text-sm text-slate-600 dark:text-slate-400">
                 {links.map((link) => (
                   <li key={link.href}>
                     <Link href={link.href} className="hover:text-emerald-600">
-                      {link.label}
+                      {link.labelNs === "Navigation"
+                        ? tNav(link.labelKey)
+                        : tFooter(link.labelKey)}
                     </Link>
                   </li>
                 ))}
@@ -48,7 +64,7 @@ export function CryptoPayFooter() {
           ))}
         </div>
         <p className="mt-10 text-xs text-slate-500">
-          © {new Date().getFullYear()} {BRAND.name}. All rights reserved.
+          © {new Date().getFullYear()} {tCommon("brandName")}. {tCommon("allRightsReserved")}
         </p>
       </div>
     </footer>

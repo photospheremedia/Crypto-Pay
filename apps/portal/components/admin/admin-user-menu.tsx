@@ -56,7 +56,7 @@ export function AdminUserMenu({ isSuperAdmin }: AdminUserMenuProps) {
     <div className="relative" ref={menuRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="h-8 w-8 rounded-full bg-orange-500 flex items-center justify-center text-white text-sm font-medium ring-2 ring-orange-100 hover:ring-orange-200 transition-all"
+        className="h-8 w-8 rounded-full bg-emerald-500 flex items-center justify-center text-white text-sm font-medium ring-2 ring-emerald-100 hover:ring-emerald-200 transition-all"
         aria-label="Open user menu"
       >
         {initials}
@@ -67,7 +67,7 @@ export function AdminUserMenu({ isSuperAdmin }: AdminUserMenuProps) {
           {/* User Info */}
           <div className="border-b border-slate-200 px-4 py-3">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-orange-500 flex items-center justify-center text-white text-sm font-medium shrink-0">
+              <div className="h-10 w-10 rounded-full bg-emerald-500 flex items-center justify-center text-white text-sm font-medium shrink-0">
                 {initials}
               </div>
               <div className="min-w-0 flex-1">

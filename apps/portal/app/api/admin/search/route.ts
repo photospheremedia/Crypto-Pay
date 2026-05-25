@@ -4,97 +4,86 @@ import { createClient } from "@/lib/supabase/server";
 
 interface SearchResult {
   id: string;
-  type: "product" | "order" | "customer";
+  type: "merchant" | "wallet" | "lead";
   title: string;
   subtitle: string;
   href: string;
 }
 
-export const GET = withAdminAuth(async (req, { user }) => {
+export const GET = withAdminAuth(async (req) => {
   try {
     const { searchParams } = new URL(req.url);
     const query = searchParams.get("q") || "";
 
     if (query.trim().length < 2) {
-      return NextResponse.json({
-        success: true,
-        results: [],
-      });
+      return NextResponse.json({ success: true, results: [] });
     }
 
     const supabase = await createClient();
     const results: SearchResult[] = [];
     const searchTerm = `%${query}%`;
 
-    // Search products with explicit filter (RLS + explicit filter for optimizer)
-    const { data: products } = await supabase
-      .from("products")
-      .select("id, name, internal_sku, resale_price")
-      .or(`name.ilike.${searchTerm},internal_sku.ilike.${searchTerm}`)
-      .eq("is_active", true) // Explicit filter helps query planner
+    const { data: merchants } = await supabase
+      .from("user_profiles")
+      .select("id, email, full_name")
+      .or(`email.ilike.${searchTerm},full_name.ilike.${searchTerm}`)
       .limit(5);
 
-    if (products) {
+    if (merchants) {
       results.push(
-        ...products.map((p) => ({
-          id: p.id,
-          type: "product" as const,
-          title: p.name,
-          subtitle: `SKU: ${p.internal_sku} • $${p.resale_price || 0}`,
-          href: `/admin/products/${p.id}`,
-        }))
+        ...merchants.map((m) => ({
+          id: m.id,
+          type: "merchant" as const,
+          title: m.full_name || m.email || "Merchant",
+          subtitle: m.email || "Account",
+          href: `/admin/users/${m.id}`,
+        })),
       );
     }
 
-    // Search orders with explicit filters
-    const { data: orders } = await supabase
-      .from("orders")
-      .select("id, order_number, status, total_cents")
-      .ilike("order_number", searchTerm)
-      .order("created_at", { ascending: false }) // Use indexed column
+    const { data: wallets } = await supabase
+      .from("user_wallet_profiles")
+      .select("user_id, wallet_network, wallet_address, wallet_verified")
+      .ilike("wallet_address", searchTerm)
       .limit(5);
 
-    if (orders) {
+    if (wallets) {
       results.push(
-        ...orders.map((o) => ({
-          id: o.id,
-          type: "order" as const,
-          title: `Order #${o.order_number}`,
-          subtitle: `${o.status} • $${((o.total_cents || 0) / 100).toFixed(2)}`,
-          href: `/admin/orders/${o.id}`,
-        }))
+        ...wallets.map((w) => ({
+          id: w.user_id,
+          type: "wallet" as const,
+          title: `${w.wallet_network.toUpperCase()} wallet`,
+          subtitle: w.wallet_verified ? "Verified" : "Pending verification",
+          href: `/admin/users/${w.user_id}`,
+        })),
       );
     }
 
-    // Search customers with explicit filters
-    const { data: customers } = await supabase
-      .from("customers")
-      .select("id, name")
-      .ilike("name", searchTerm)
-      .eq("status", "active") // Explicit filter helps query planner
+    const { data: leads } = await supabase
+      .from("chat_conversations")
+      .select("id, guest_name, guest_email, lead_status")
+      .eq("contact_captured", true)
+      .or(`guest_name.ilike.${searchTerm},guest_email.ilike.${searchTerm}`)
       .limit(5);
 
-    if (customers) {
+    if (leads) {
       results.push(
-        ...customers.map((c) => ({
-          id: c.id,
-          type: "customer" as const,
-          title: c.name,
-          subtitle: "Customer",
-          href: `/admin/customers/${c.id}`,
-        }))
+        ...leads.map((l) => ({
+          id: l.id,
+          type: "lead" as const,
+          title: l.guest_name || l.guest_email || "Lead",
+          subtitle: l.lead_status || "new",
+          href: `/admin/leads?id=${l.id}`,
+        })),
       );
     }
 
     return NextResponse.json({
       success: true,
-      results: results.slice(0, 10), // Limit to 10 total results
+      results: results.slice(0, 10),
     });
   } catch (error) {
     console.error("Search failed:", error);
-    return NextResponse.json(
-      { error: "Search failed" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Search failed" }, { status: 500 });
   }
 });

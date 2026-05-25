@@ -3,12 +3,12 @@ import { MetadataRoute } from "next";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Crypto Pay",
-    short_name: "RHS",
-    description: "All-in-one platform for restaurant delivery management, supplies, and technology solutions",
+    short_name: "Crypto Pay",
+    description: "Accept crypto payments instantly, securely, and globally.",
     start_url: "/",
     display: "standalone",
     background_color: "#f8fafc",
-    theme_color: "#f0531c",
+    theme_color: "#10b981",
     orientation: "portrait-primary",
     icons: [
       {
@@ -29,29 +29,6 @@ export default function manifest(): MetadataRoute.Manifest {
         type: "image/svg+xml",
       },
     ],
-    categories: ["business", "food", "productivity"],
-    screenshots: [
-      {
-        src: "/screenshots/dashboard.png",
-        sizes: "1280x720",
-        type: "image/png",
-        form_factor: "wide",
-        label: "Crypto Pay Dashboard",
-      },
-    ],
-    shortcuts: [
-      {
-        name: "Dashboard",
-        short_name: "Dashboard",
-        url: "/app",
-        icons: [{ src: "/icons/dashboard-96.svg", sizes: "96x96", type: "image/svg+xml" }],
-      },
-      {
-        name: "Shop Supplies",
-        short_name: "Shop",
-        url: "/shop",
-        icons: [{ src: "/icons/shop-96.svg", sizes: "96x96", type: "image/svg+xml" }],
-      },
-    ],
+    categories: ["finance", "business", "productivity"],
   };
 }

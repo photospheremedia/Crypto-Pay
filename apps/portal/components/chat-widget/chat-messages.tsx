@@ -53,9 +53,9 @@ export function ChatMessages({
     <div className="flex-1 overflow-y-auto p-4 space-y-4">
       {messages.length === 0 && !isLoading && (
         <div className="flex gap-3 items-start">
-          <Avatar className="h-8 w-8 border border-orange-200 flex-shrink-0">
-            <AvatarFallback className="bg-orange-100 dark:bg-orange-900">
-              <Bot className="h-4 w-4 text-orange-500 dark:text-orange-400" />
+          <Avatar className="h-8 w-8 border border-emerald-200 flex-shrink-0">
+            <AvatarFallback className="bg-emerald-100 dark:bg-emerald-900">
+              <Bot className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
             </AvatarFallback>
           </Avatar>
           <div className="bg-white dark:bg-slate-800 px-4 py-3 rounded-2xl rounded-tl-md shadow-sm border border-slate-100 dark:border-slate-700 max-w-[85%]">
@@ -78,9 +78,9 @@ export function ChatMessages({
             }`}
           >
             {!isUser && (
-              <Avatar className="h-8 w-8 border border-orange-200 flex-shrink-0">
-                <AvatarFallback className="bg-orange-100 dark:bg-orange-900">
-                  <Bot className="h-4 w-4 text-orange-500 dark:text-orange-400" />
+              <Avatar className="h-8 w-8 border border-emerald-200 flex-shrink-0">
+                <AvatarFallback className="bg-emerald-100 dark:bg-emerald-900">
+                  <Bot className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
                 </AvatarFallback>
               </Avatar>
             )}
@@ -89,7 +89,7 @@ export function ChatMessages({
               <div
                 className={`inline-block max-w-[85%] px-4 py-3 rounded-2xl shadow-sm ${
                   isUser
-                    ? "bg-linear-to-r from-orange-500 to-orange-500 text-white rounded-tr-md"
+                    ? "bg-linear-to-r from-emerald-500 to-cyan-600 text-white rounded-tr-md"
                     : "bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-tl-md"
                 }`}
               >
@@ -118,7 +118,7 @@ export function ChatMessages({
                         code: ({ children, ...props }) => {
                           const isInline = !props.className;
                           return isInline ? (
-                            <code className="bg-slate-100 dark:bg-slate-900 px-1.5 py-0.5 rounded text-xs font-mono text-orange-500 dark:text-orange-400">
+                            <code className="bg-slate-100 dark:bg-slate-900 px-1.5 py-0.5 rounded text-xs font-mono text-emerald-500 dark:text-emerald-400">
                               {children}
                             </code>
                           ) : (
@@ -147,7 +147,7 @@ export function ChatMessages({
                           className="h-7 w-7 p-0"
                         >
                           {copiedId === message.id ? (
-                            <Check className="h-3 w-3 text-orange-500" />
+                            <Check className="h-3 w-3 text-emerald-500" />
                           ) : (
                             <Copy className="h-3 w-3" />
                           )}
@@ -178,16 +178,16 @@ export function ChatMessages({
 
       {isLoading && (
         <div className="flex gap-3 items-start">
-          <Avatar className="h-8 w-8 border border-orange-200 flex-shrink-0">
-            <AvatarFallback className="bg-orange-100 dark:bg-orange-900">
-              <Bot className="h-4 w-4 text-orange-500 dark:text-orange-400 animate-pulse" />
+          <Avatar className="h-8 w-8 border border-emerald-200 flex-shrink-0">
+            <AvatarFallback className="bg-emerald-100 dark:bg-emerald-900">
+              <Bot className="h-4 w-4 text-emerald-500 dark:text-emerald-400 animate-pulse" />
             </AvatarFallback>
           </Avatar>
           <div className="bg-white dark:bg-slate-800 px-4 py-3 rounded-2xl rounded-tl-md shadow-sm border border-slate-100 dark:border-slate-700">
             <div className="flex gap-1.5">
-              <span className="w-2 h-2 bg-orange-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-              <span className="w-2 h-2 bg-orange-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-              <span className="w-2 h-2 bg-orange-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+              <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+              <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+              <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
             </div>
           </div>
         </div>

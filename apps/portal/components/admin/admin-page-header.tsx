@@ -59,7 +59,7 @@ export function AdminPageHeader({
       <nav className="flex items-center gap-1 text-sm text-slate-500 mb-3">
         <Link
           href="/admin/dashboard"
-          className="flex items-center gap-1 hover:text-orange-500 transition-colors"
+          className="flex items-center gap-1 hover:text-emerald-500 transition-colors"
         >
           <Home className="h-4 w-4" />
           <span className="sr-only">Dashboard</span>
@@ -70,7 +70,7 @@ export function AdminPageHeader({
             {item.href ? (
               <Link
                 href={item.href}
-                className="hover:text-orange-500 transition-colors"
+                className="hover:text-emerald-500 transition-colors"
               >
                 {item.label}
               </Link>

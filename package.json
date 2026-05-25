@@ -8,10 +8,9 @@
   ],
   "scripts": {
     "build": "pnpm --filter @crypto-pay/portal build",
-    "dev:storefront": "pnpm --filter @crypto-pay/storefront dev --port 3000",
     "dev:portal": "pnpm --filter @crypto-pay/portal dev --port 3001",
-    "build:storefront": "pnpm --filter @crypto-pay/storefront build",
     "build:portal": "pnpm --filter @crypto-pay/portal build",
+    "typecheck:portal": "pnpm --filter @crypto-pay/portal typecheck",
     "test": "pnpm --filter @crypto-pay/portal test",
     "test:ui": "pnpm --filter @crypto-pay/portal test:ui",
     "test:headed": "pnpm --filter @crypto-pay/portal test:headed",
@@ -29,7 +28,6 @@
     "check:env": "./scripts/check-env.sh"
   },
   "devDependencies": {
-    "next": "16.1.6",
     "vercel": "^50.9.6"
   }
 }

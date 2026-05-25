@@ -46,7 +46,7 @@ export function ChatHeader({
   // Close confirmation overlay
   if (showCloseConfirm) {
     return (
-      <div className="flex flex-col bg-linear-to-r from-orange-500 to-orange-500 text-white rounded-t-2xl border-b border-orange-400/20 flex-shrink-0">
+      <div className="flex flex-col bg-linear-to-r from-emerald-500 to-cyan-600 text-white rounded-t-2xl border-b border-emerald-400/20 flex-shrink-0">
         <div className="px-4 py-3 text-center">
           <p className="text-sm font-medium mb-3">End this conversation?</p>
           <div className="flex gap-2 justify-center">
@@ -54,7 +54,7 @@ export function ChatHeader({
               onClick={() => setShowCloseConfirm(false)}
               size="sm"
               variant="ghost"
-              className="text-white hover:bg-orange-500/50 text-xs px-3"
+              className="text-white hover:bg-emerald-500/50 text-xs px-3"
             >
               Keep chatting
             </Button>
@@ -72,10 +72,10 @@ export function ChatHeader({
   }
 
   return (
-    <div className="flex items-center justify-between px-4 py-3.5 bg-linear-to-r from-orange-500 to-orange-500 text-white rounded-t-2xl border-b border-orange-400/20 flex-shrink-0">
+    <div className="flex items-center justify-between px-4 py-3.5 bg-linear-to-r from-emerald-500 to-cyan-600 text-white rounded-t-2xl border-b border-emerald-400/20 flex-shrink-0">
       <div className="flex items-center gap-3 min-w-0">
-        <Avatar className="h-9 w-9 border-2 border-orange-400/50 flex-shrink-0">
-          <AvatarFallback className="bg-orange-500">
+        <Avatar className="h-9 w-9 border-2 border-emerald-400/50 flex-shrink-0">
+          <AvatarFallback className="bg-emerald-500">
             <Bot className="h-5 w-5" />
           </AvatarFallback>
         </Avatar>
@@ -85,15 +85,15 @@ export function ChatHeader({
             {isLoading && <Sparkles className="h-3 w-3 animate-pulse flex-shrink-0" />}
           </h3>
           {!isMinimized && (
-            <p className="text-xs text-orange-100 flex items-center gap-1 truncate">
+            <p className="text-xs text-emerald-100 flex items-center gap-1 truncate">
               {isLoading ? (
                 <>
-                  <span className="inline-block w-1.5 h-1.5 bg-orange-200 rounded-full animate-pulse flex-shrink-0" />
+                  <span className="inline-block w-1.5 h-1.5 bg-emerald-200 rounded-full animate-pulse flex-shrink-0" />
                   Thinking...
                 </>
               ) : (
                 <>
-                  <span className="inline-block w-1.5 h-1.5 bg-orange-200 rounded-full flex-shrink-0" />
+                  <span className="inline-block w-1.5 h-1.5 bg-emerald-200 rounded-full flex-shrink-0" />
                   Online
                 </>
               )}
@@ -110,7 +110,7 @@ export function ChatHeader({
                   onClick={onMinimize}
                   size="sm"
                   variant="ghost"
-                  className="h-8 w-8 p-0 hover:bg-orange-500/50 text-white"
+                  className="h-8 w-8 p-0 hover:bg-emerald-500/50 text-white"
                 >
                   <Minus className="h-4 w-4" />
                 </Button>
@@ -127,7 +127,7 @@ export function ChatHeader({
                 onClick={handleCloseClick}
                 size="sm"
                 variant="ghost"
-                className="h-8 w-8 p-0 hover:bg-orange-500/50 text-white"
+                className="h-8 w-8 p-0 hover:bg-emerald-500/50 text-white"
               >
                 <X className="h-4 w-4" />
               </Button>

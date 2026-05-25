@@ -54,7 +54,7 @@ const emailTemplates: Record<EmailTemplate, { subject: string; generateHtml: (da
         </head>
         <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; padding: 20px;">
           <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden;">
-            <div style="background: linear-gradient(135deg, #f0531c 0%, #c24215 100%); padding: 40px 20px; text-align: center;">
+            <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px 20px; text-align: center;">
               <h1 style="color: white; margin: 0; font-size: 28px;">Welcome to Crypto Pay!</h1>
             </div>
             <div style="padding: 30px;">
@@ -65,7 +65,7 @@ const emailTemplates: Record<EmailTemplate, { subject: string; generateHtml: (da
                 Thank you for joining Crypto Pay! We're excited to help you streamline your restaurant supply chain.
               </p>
               <div style="background: #fff7ed; border-radius: 8px; padding: 20px; margin: 20px 0;">
-                <h3 style="color: #c24215; margin-top: 0;">Here's what you can do next:</h3>
+                <h3 style="color: #059669; margin-top: 0;">Here's what you can do next:</h3>
                 <ul style="color: #374151; line-height: 1.8;">
                   <li>Complete your store profile</li>
                   <li>Browse our extensive product catalog</li>
@@ -74,11 +74,11 @@ const emailTemplates: Record<EmailTemplate, { subject: string; generateHtml: (da
                 </ul>
               </div>
               <a href="${data.dashboardUrl || "https://cryptopay.sale/account"}" 
-                 style="display: inline-block; background: #f0531c; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; margin-top: 10px;">
+                 style="display: inline-block; background: #10b981; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; margin-top: 10px;">
                 Get Started →
               </a>
               <p style="font-size: 14px; color: #6b7280; margin-top: 30px;">
-                Need help? Reply to this email or visit our <a href="https://cryptopay.sale/faq" style="color: #f0531c;">Help Center</a>.
+                Need help? Reply to this email or visit our <a href="https://cryptopay.sale/faq" style="color: #10b981;">Help Center</a>.
               </p>
             </div>
             <div style="background: #f9fafb; padding: 20px; text-align: center; border-top: 1px solid #e5e7eb;">
@@ -103,9 +103,9 @@ const emailTemplates: Record<EmailTemplate, { subject: string; generateHtml: (da
         </head>
         <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; padding: 20px;">
           <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; overflow: hidden;">
-            <div style="background: #f0531c; padding: 30px 20px; text-align: center;">
+            <div style="background: #10b981; padding: 30px 20px; text-align: center;">
               <div style="background: white; width: 60px; height: 60px; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center;">
-                <span style="font-size: 30px; color: #f0531c;">✓</span>
+                <span style="font-size: 30px; color: #10b981;">✓</span>
               </div>
               <h1 style="color: white; margin: 0; font-size: 24px;">Order Confirmed!</h1>
             </div>
@@ -135,12 +135,12 @@ const emailTemplates: Record<EmailTemplate, { subject: string; generateHtml: (da
                 <tfoot>
                   <tr>
                     <td style="padding: 15px 0; font-weight: 600; color: #111827;">Total</td>
-                    <td style="padding: 15px 0; font-weight: 600; color: #f0531c; text-align: right; font-size: 18px;">$${data.total}</td>
+                    <td style="padding: 15px 0; font-weight: 600; color: #10b981; text-align: right; font-size: 18px;">$${data.total}</td>
                   </tr>
                 </tfoot>
               </table>
               <a href="${data.orderUrl || '#'}" 
-                 style="display: inline-block; background: #f0531c; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600;">
+                 style="display: inline-block; background: #10b981; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600;">
                 Track Order
               </a>
             </div>
@@ -173,7 +173,7 @@ const emailTemplates: Record<EmailTemplate, { subject: string; generateHtml: (da
             </div>
             <p style="color: #6b7280; font-size: 14px;">
               No action needed if you wish to continue. To manage your subscription, 
-              <a href="${data.manageUrl || '#'}" style="color: #f0531c;">click here</a>.
+              <a href="${data.manageUrl || '#'}" style="color: #10b981;">click here</a>.
             </p>
           </div>
         </body>
@@ -199,10 +199,10 @@ const emailTemplates: Record<EmailTemplate, { subject: string; generateHtml: (da
             </p>
             <div style="background: #f9fafb; border-radius: 8px; padding: 20px; margin: 20px 0;">
               <p style="margin: 0 0 5px; color: #6b7280; font-size: 14px;">Cart Total</p>
-              <p style="margin: 0; font-size: 24px; font-weight: 600; color: #f0531c;">$${data.cartTotal}</p>
+              <p style="margin: 0; font-size: 24px; font-weight: 600; color: #10b981;">$${data.cartTotal}</p>
             </div>
             <a href="${data.cartUrl || '#'}" 
-               style="display: inline-block; background: #f0531c; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600;">
+               style="display: inline-block; background: #10b981; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600;">
               Complete Order
             </a>
           </div>
@@ -224,7 +224,7 @@ const emailTemplates: Record<EmailTemplate, { subject: string; generateHtml: (da
             <p style="color: #374151; line-height: 1.6;">
               It's been a while since your last order. We've added new products and features you might love!
             </p>
-            <div style="background: linear-gradient(135deg, #f0531c 0%, #c24215 100%); border-radius: 8px; padding: 30px; margin: 20px 0; color: white;">
+            <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 8px; padding: 30px; margin: 20px 0; color: white;">
               <p style="margin: 0 0 10px; font-size: 14px;">EXCLUSIVE OFFER</p>
               <p style="margin: 0; font-size: 36px; font-weight: 700;">15% OFF</p>
               <p style="margin: 10px 0 0; font-size: 14px;">Use code: <strong>COMEBACK15</strong></p>
@@ -256,7 +256,7 @@ const emailTemplates: Record<EmailTemplate, { subject: string; generateHtml: (da
               </div>
               ${data.ctaText ? `
                 <a href="${data.ctaUrl || '#'}" 
-                   style="display: inline-block; background: #f0531c; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; margin-top: 20px;">
+                   style="display: inline-block; background: #10b981; color: white; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; margin-top: 20px;">
                   ${data.ctaText}
                 </a>
               ` : ''}

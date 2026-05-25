@@ -55,7 +55,8 @@ export async function updateSession(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith("/admin") && user) {
     // Get user role from JWT claims (set by Auth Hook from memberships table)
     const userRole = user.user_metadata?.user_role;
-    if (!userRole || (userRole !== 'rhs_admin' && userRole !== 'admin')) {
+    const adminRoles = ["cp_admin", "rhs_admin", "admin", "owner", "manager", "staff"];
+    if (!userRole || !adminRoles.includes(userRole)) {
       // User doesn't have admin access - redirect to account
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = "/account";

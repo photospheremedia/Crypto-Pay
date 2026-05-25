@@ -194,7 +194,7 @@ export function SupportChatWidget() {
             <Button
               onClick={() => setIsOpen(true)}
               size="lg"
-              className="fixed bottom-6 right-6 z-50 h-14 rounded-full shadow-2xl hover:shadow-orange-500/50 transition-all hover:scale-105 bg-linear-to-r from-orange-500 to-orange-500 hover:from-orange-600 hover:to-orange-500"
+              className="fixed bottom-6 right-6 z-50 h-14 rounded-full shadow-2xl hover:shadow-emerald-500/50 transition-all hover:scale-105 bg-linear-to-r from-emerald-500 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500"
             >
               <MessageCircle className="h-5 w-5 mr-2" />
               <span className="font-medium">Need Help?</span>
@@ -218,10 +218,10 @@ export function SupportChatWidget() {
       }`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3.5 bg-linear-to-r from-orange-500 to-orange-500 text-white rounded-t-2xl border-b border-orange-400/20">
+      <div className="flex items-center justify-between px-4 py-3.5 bg-linear-to-r from-emerald-500 to-cyan-600 text-white rounded-t-2xl border-b border-emerald-400/20">
         <div className="flex items-center gap-3">
-          <Avatar className="h-9 w-9 border-2 border-orange-400/50">
-            <AvatarFallback className="bg-orange-500">
+          <Avatar className="h-9 w-9 border-2 border-emerald-400/50">
+            <AvatarFallback className="bg-emerald-500">
               <Bot className="h-5 w-5" />
             </AvatarFallback>
           </Avatar>
@@ -231,15 +231,15 @@ export function SupportChatWidget() {
               {isLoading && <Sparkles className="h-3 w-3 animate-pulse" />}
             </h3>
             {!isMinimized && (
-              <p className="text-xs text-orange-100 flex items-center gap-1">
+              <p className="text-xs text-emerald-100 flex items-center gap-1">
                 {isLoading ? (
                   <>
-                    <span className="inline-block w-1.5 h-1.5 bg-orange-200 rounded-full animate-pulse" />
+                    <span className="inline-block w-1.5 h-1.5 bg-emerald-200 rounded-full animate-pulse" />
                     Thinking...
                   </>
                 ) : (
                   <>
-                    <span className="inline-block w-1.5 h-1.5 bg-orange-200 rounded-full" />
+                    <span className="inline-block w-1.5 h-1.5 bg-emerald-200 rounded-full" />
                     Online • Instant replies
                   </>
                 )}
@@ -255,7 +255,7 @@ export function SupportChatWidget() {
                   onClick={() => setIsMinimized(!isMinimized)}
                   size="sm"
                   variant="ghost"
-                  className="h-8 w-8 p-0 hover:bg-orange-500/50 text-white"
+                  className="h-8 w-8 p-0 hover:bg-emerald-500/50 text-white"
                 >
                   {isMinimized ? (
                     <Maximize2 className="h-4 w-4" />
@@ -275,7 +275,7 @@ export function SupportChatWidget() {
                   onClick={() => setIsOpen(false)}
                   size="sm"
                   variant="ghost"
-                  className="h-8 w-8 p-0 hover:bg-orange-500/50 text-white"
+                  className="h-8 w-8 p-0 hover:bg-emerald-500/50 text-white"
                 >
                   <X className="h-4 w-4" />
                 </Button>
@@ -294,9 +294,9 @@ export function SupportChatWidget() {
           <div className="flex-1 overflow-y-auto p-4 space-y-4 h-[calc(100%-140px)] bg-linear-to-b from-slate-50/50 to-white dark:from-slate-900 dark:to-slate-900">
             {/* Static welcome message */}
             <div className="flex gap-3 items-start animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <Avatar className="h-8 w-8 border border-orange-200">
-                <AvatarFallback className="bg-orange-100 dark:bg-orange-900">
-                  <Bot className="h-4 w-4 text-orange-500 dark:text-orange-400" />
+              <Avatar className="h-8 w-8 border border-emerald-200">
+                <AvatarFallback className="bg-emerald-100 dark:bg-emerald-900">
+                  <Bot className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 space-y-2">
@@ -310,8 +310,8 @@ export function SupportChatWidget() {
             
             {/* Name prompt for guests */}
             {showNamePrompt && !userName && (
-              <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 bg-linear-to-r from-orange-50 to-teal-50 dark:from-orange-950 dark:to-teal-950 border-2 border-orange-200 dark:border-orange-800 rounded-xl p-4 shadow-sm">
-                <p className="text-sm font-medium text-orange-900 dark:text-orange-100 mb-3 flex items-center gap-2">
+              <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 bg-linear-to-r from-emerald-50 to-teal-50 dark:from-emerald-950 dark:to-teal-950 border-2 border-emerald-200 dark:border-emerald-800 rounded-xl p-4 shadow-sm">
+                <p className="text-sm font-medium text-emerald-900 dark:text-emerald-100 mb-3 flex items-center gap-2">
                   <Sparkles className="h-4 w-4" />
                   What's your name? This helps me provide personalized service!
                 </p>
@@ -322,12 +322,12 @@ export function SupportChatWidget() {
                     onChange={(e) => setTempName(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleNameSubmit()}
                     placeholder="Your name..."
-                    className="flex-1 px-3 py-2 text-sm border-2 border-orange-300 dark:border-orange-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 dark:bg-slate-800 dark:text-white"
+                    className="flex-1 px-3 py-2 text-sm border-2 border-emerald-300 dark:border-emerald-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:bg-slate-800 dark:text-white"
                   />
                   <Button
                     onClick={handleNameSubmit}
                     size="sm"
-                    className="bg-orange-500 hover:bg-orange-600"
+                    className="bg-emerald-500 hover:bg-emerald-600"
                   >
                     Save
                   </Button>
@@ -335,7 +335,7 @@ export function SupportChatWidget() {
                     onClick={() => setShowNamePrompt(false)}
                     size="sm"
                     variant="ghost"
-                    className="text-orange-600 dark:text-orange-300"
+                    className="text-emerald-600 dark:text-emerald-300"
                   >
                     Skip
                   </Button>
@@ -357,9 +357,9 @@ export function SupportChatWidget() {
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
                   {!isUser && (
-                    <Avatar className="h-8 w-8 border border-orange-200">
-                      <AvatarFallback className="bg-orange-100 dark:bg-orange-900">
-                        <Bot className="h-4 w-4 text-orange-500 dark:text-orange-400" />
+                    <Avatar className="h-8 w-8 border border-emerald-200">
+                      <AvatarFallback className="bg-emerald-100 dark:bg-emerald-900">
+                        <Bot className="h-4 w-4 text-emerald-500 dark:text-emerald-400" />
                       </AvatarFallback>
                     </Avatar>
                   )}
@@ -368,7 +368,7 @@ export function SupportChatWidget() {
                     <div
                       className={`inline-block max-w-[85%] px-4 py-3 rounded-2xl shadow-sm transition-all hover:shadow-md ${
                         isUser
-                          ? "bg-linear-to-r from-orange-500 to-orange-500 text-white rounded-tr-md"
+                          ? "bg-linear-to-r from-emerald-500 to-cyan-600 text-white rounded-tr-md"
                           : "bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-tl-md"
                       }`}
                     >
@@ -388,7 +388,7 @@ export function SupportChatWidget() {
                               code: ({ children, ...props }) => {
                                 const isInline = !props.className;
                                 return isInline ? (
-                                  <code className="bg-slate-100 dark:bg-slate-900 px-1.5 py-0.5 rounded text-xs font-mono text-orange-500 dark:text-orange-400">
+                                  <code className="bg-slate-100 dark:bg-slate-900 px-1.5 py-0.5 rounded text-xs font-mono text-emerald-500 dark:text-emerald-400">
                                     {children}
                                   </code>
                                 ) : (
@@ -419,7 +419,7 @@ export function SupportChatWidget() {
                                 className="h-7 w-7 p-0"
                               >
                                 {copiedMessageId === message.id ? (
-                                  <Check className="h-3 w-3 text-orange-500" />
+                                  <Check className="h-3 w-3 text-emerald-500" />
                                 ) : (
                                   <Copy className="h-3 w-3" />
                                 )}
@@ -466,16 +466,16 @@ export function SupportChatWidget() {
             {/* Loading indicator */}
             {isLoading && (
               <div className="flex gap-3 items-start animate-in fade-in duration-300">
-                <Avatar className="h-8 w-8 border border-orange-200">
-                  <AvatarFallback className="bg-orange-100 dark:bg-orange-900">
-                    <Bot className="h-4 w-4 text-orange-500 dark:text-orange-400 animate-pulse" />
+                <Avatar className="h-8 w-8 border border-emerald-200">
+                  <AvatarFallback className="bg-emerald-100 dark:bg-emerald-900">
+                    <Bot className="h-4 w-4 text-emerald-500 dark:text-emerald-400 animate-pulse" />
                   </AvatarFallback>
                 </Avatar>
                 <div className="bg-white dark:bg-slate-800 px-4 py-3 rounded-2xl rounded-tl-md shadow-sm border border-slate-100 dark:border-slate-700">
                   <div className="flex gap-1.5 items-center">
-                    <span className="w-2 h-2 bg-orange-400 rounded-full animate-bounce" />
-                    <span className="w-2 h-2 bg-orange-400 rounded-full animate-bounce" style={{ animationDelay: "0.15s" }} />
-                    <span className="w-2 h-2 bg-orange-400 rounded-full animate-bounce" style={{ animationDelay: "0.3s" }} />
+                    <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" />
+                    <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: "0.15s" }} />
+                    <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: "0.3s" }} />
                   </div>
                 </div>
               </div>
@@ -535,7 +535,7 @@ export function SupportChatWidget() {
                 }}
                 placeholder="Type your message..."
                 disabled={isLoading || !!error}
-                className="flex-1 min-h-11 max-h-50 resize-none text-sm border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-orange-500 dark:bg-slate-800 dark:text-white rounded-xl"
+                className="flex-1 min-h-11 max-h-50 resize-none text-sm border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-emerald-500 dark:bg-slate-800 dark:text-white rounded-xl"
                 rows={1}
               />
               <TooltipProvider>
@@ -545,7 +545,7 @@ export function SupportChatWidget() {
                       type="submit"
                       disabled={isLoading || !inputValue.trim() || !!error}
                       size="icon"
-                      className="h-11 w-11 shrink-0 rounded-xl bg-linear-to-r from-orange-500 to-orange-500 hover:from-orange-600 hover:to-orange-500 shadow-lg hover:shadow-orange-500/50 transition-all"
+                      className="h-11 w-11 shrink-0 rounded-xl bg-linear-to-r from-emerald-500 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 shadow-lg hover:shadow-emerald-500/50 transition-all"
                     >
                       <Send className="h-4 w-4" />
                     </Button>
@@ -558,7 +558,7 @@ export function SupportChatWidget() {
             </div>
             <p className="text-[10px] text-slate-400 dark:text-slate-600 text-center mt-2 flex items-center justify-center gap-1">
               <Sparkles className="h-3 w-3" />
-              Powered by FREE Groq AI • <a href="/privacy-policy" className="underline hover:text-orange-500">Privacy</a>
+              Powered by FREE Groq AI • <a href="/privacy-policy" className="underline hover:text-emerald-500">Privacy</a>
             </p>
           </form>
         </>

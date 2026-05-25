@@ -3,8 +3,10 @@ import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { getLocale } from "next-intl/server";
 import { CookieConsent } from "@/components/cookie-consent";
 import { ToastProvider } from "@/hooks/use-toast";
+import { isRtlLocale } from "@/i18n/routing";
 
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL || "https://cryptopay.sale";
 
@@ -48,7 +50,8 @@ export const metadata: Metadata = {
     url: siteUrl,
     siteName: "Crypto Pay",
     title: "Crypto Pay — Accept Crypto Payments Instantly",
-    description: "Accept crypto payments instantly with direct wallet checkout, settlement tracking, and merchant-ready APIs.",
+    description:
+      "Accept crypto payments instantly with direct wallet checkout, settlement tracking, and merchant-ready APIs.",
     images: [
       {
         url: "/og-image.png",
@@ -62,7 +65,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Crypto Pay — Accept Crypto Payments Instantly",
-    description: "Merchant crypto checkout for fast, secure wallet-to-wallet payments.",
+    description:
+      "Merchant crypto checkout for fast, secure wallet-to-wallet payments.",
     images: ["/og-image.png"],
     creator: "@resthubsolution",
   },
@@ -90,20 +94,22 @@ export const viewport: Viewport = {
 
 const manrope = Manrope({ subsets: ["latin"] });
 
-export default function RootLayout({
-  children
+export default async function RootLayout({
+  children,
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await getLocale();
+  const dir = isRtlLocale(locale) ? "rtl" : "ltr";
+
   return (
     <html
-      lang="en"
+      lang={locale}
+      dir={dir}
       className={`bg-white dark:bg-gray-950 text-black dark:text-white ${manrope.className}`}
     >
       <body className="min-h-dvh bg-gray-50">
-        <ToastProvider>
-          {children}
-        </ToastProvider>
+        <ToastProvider>{children}</ToastProvider>
         <CookieConsent />
         <Analytics />
         <SpeedInsights />

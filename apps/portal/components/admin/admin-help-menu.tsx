@@ -80,7 +80,7 @@ export function AdminHelpMenu() {
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noopener noreferrer" : undefined}
               >
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-100 text-orange-600 shrink-0 group-hover:bg-orange-200 transition-colors">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 text-emerald-600 shrink-0 group-hover:bg-emerald-200 transition-colors">
                   <link.icon className="h-4 w-4" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -106,7 +106,7 @@ export function AdminHelpMenu() {
               Need urgent help?{" "}
               <a
                 href="tel:+1234567890"
-                className="font-medium text-orange-500 hover:text-orange-600"
+                className="font-medium text-emerald-500 hover:text-emerald-600"
               >
                 Call us
               </a>

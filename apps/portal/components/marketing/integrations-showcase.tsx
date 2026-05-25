@@ -45,7 +45,7 @@ const trustedBusinesss = [
 
 export function IntegrationsShowcase() {
   return (
-    <section className="py-10 bg-gradient-to-b from-white to-slate-50">
+    <section className="py-10 bg-linear-to-b from-white to-slate-50">
       <div className="mx-auto max-w-7xl px-6">
         {/* Header */}
         <div className="text-center mb-8">
@@ -57,7 +57,7 @@ export function IntegrationsShowcase() {
           >
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900">
               Connect Everything.{" "}
-              <span className="text-orange-600">Manage Anywhere.</span>
+              <span className="text-emerald-600">Manage Anywhere.</span>
             </h2>
             <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">
               Integrate all your delivery platforms and POS systems into one unified dashboard. 
@@ -76,12 +76,12 @@ export function IntegrationsShowcase() {
             transition={{ duration: 0.6 }}
             className="relative overflow-hidden rounded-3xl bg-white border border-slate-200 p-8 shadow-xl"
           >
-            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-orange-100/50 to-transparent rounded-full -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-linear-to-bl from-emerald-100/50 to-transparent rounded-full -translate-y-1/2 translate-x-1/2" />
             
             <div className="relative">
               <div className="flex items-center gap-3 mb-6">
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-100">
-                  <Tablet className="h-6 w-6 text-orange-600" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100">
+                  <Tablet className="h-6 w-6 text-emerald-600" />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-slate-900">Delivery Platforms</h3>
@@ -102,7 +102,7 @@ export function IntegrationsShowcase() {
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.05 }}
-                    className="flex flex-col items-center justify-center p-3 rounded-xl bg-slate-50 hover:bg-orange-50 hover:shadow-md transition-all group"
+                    className="flex flex-col items-center justify-center p-3 rounded-xl bg-slate-50 hover:bg-emerald-50 hover:shadow-md transition-all group"
                   >
                     <img
                       src={getLogoUrl(platform.domain)}
@@ -116,7 +116,7 @@ export function IntegrationsShowcase() {
               
               <div className="mt-6 pt-6 border-t border-slate-100 flex items-center justify-between">
                 <span className="text-sm text-slate-500">+ Talabat, Zomato, Swiggy, Glovo...</span>
-                <Link href="/integrations" className="flex items-center gap-1 text-sm font-semibold text-orange-600 hover:gap-2 transition-all">
+                <Link href="/integrations" className="flex items-center gap-1 text-sm font-semibold text-emerald-600 hover:gap-2 transition-all">
                   See all <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
@@ -131,7 +131,7 @@ export function IntegrationsShowcase() {
             transition={{ duration: 0.6 }}
             className="relative overflow-hidden rounded-3xl bg-white border border-slate-200 p-8 shadow-xl"
           >
-            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-blue-100/50 to-transparent rounded-full -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-linear-to-bl from-blue-100/50 to-transparent rounded-full -translate-y-1/2 translate-x-1/2" />
             
             <div className="relative">
               <div className="flex items-center gap-3 mb-6">
@@ -188,7 +188,7 @@ export function IntegrationsShowcase() {
           className="rounded-3xl bg-slate-900 p-8 md:p-12"
         >
           <div className="text-center mb-10">
-            <p className="text-sm font-semibold text-orange-400 uppercase tracking-wider">
+            <p className="text-sm font-semibold text-emerald-400 uppercase tracking-wider">
               Trusted by Industry Leaders
             </p>
             <h3 className="mt-2 text-2xl md:text-3xl font-bold text-white">
@@ -233,7 +233,7 @@ export function IntegrationsShowcase() {
                 transition={{ delay: index * 0.1 }}
                 className="text-center"
               >
-                <p className="text-3xl md:text-4xl font-bold text-orange-400">{stat.value}</p>
+                <p className="text-3xl md:text-4xl font-bold text-emerald-400">{stat.value}</p>
                 <p className="mt-1 text-sm text-slate-400">{stat.label}</p>
               </motion.div>
             ))}
@@ -249,7 +249,7 @@ export function IntegrationsShowcase() {
         >
           <Link
             href="/contact?demo=integrations"
-            className="inline-flex items-center gap-2 rounded-full bg-orange-600 px-8 py-4 text-lg font-semibold text-white shadow-xl hover:bg-orange-700 transition-all hover:scale-105"
+            className="inline-flex items-center gap-2 rounded-full bg-emerald-600 px-8 py-4 text-lg font-semibold text-white shadow-xl hover:bg-emerald-700 transition-all hover:scale-105"
           >
             Get a Free Demo
             <ArrowRight className="h-5 w-5" />

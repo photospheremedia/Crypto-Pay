@@ -15,61 +15,32 @@ interface ChatContext {
   userEmail?: string;
   isGuest: boolean;
   userId?: string;
-  recentOrders?: Array<{ orderNumber: string; status: string; total: string; date: string; shipping: string }>;
-  orderStats?: string;
+  walletLinked?: boolean;
 }
 
-interface OrderRecord {
-  id: string;
-  order_number: string;
-  status: string;
-  total_cents: number;
-  created_at: string;
-  shipping_method?: string;
-}
-
-/**
- * Build system prompt with optional customer context
- * Context helps personalize responses but is gracefully optional
- */
 function buildSystemPrompt(context?: ChatContext): string {
-  let prompt = `You are a friendly and knowledgeable AI assistant for Crypto Pay, a B2B SaaS platform that helps restaurant operators manage their business more efficiently.
+  let prompt = `You are a helpful assistant for Crypto Pay — a platform for businesses to accept cryptocurrency payments directly to their own wallet.
 
-CORE SERVICES:
-1. **Delivery Integration (via Urban Piper)**: Consolidate 15+ delivery platforms (Uber Eats, DoorDash, Grubhub, etc.) into one dashboard
-2. **Supply Chain Marketplace**: Direct ordering from suppliers with real-time pricing and automated reorders
-3. **Technology Services**: Branded storefronts, AI chatbots, analytics, and POS integrations
+WHAT CRYPTO PAY DOES:
+- Merchants connect a wallet address (BTC first; more assets planned)
+- They create payment links or API charges
+- Customers pay on-chain; Crypto Pay tracks payment status
+- Funds settle to the merchant wallet (not a pooled custody account)
 
-PRICING TIERS:
-- Basic: $99/mo + $199 setup - Single location, delivery integration, basic analytics
-- Pro: $199/mo + $299 setup - Multi-location, advanced analytics, API access
-- Enterprise: Custom pricing + $499+ setup - Custom integrations, dedicated support, SLA
+PRICING:
+- Standard: transparent fee per successful transaction
+- Business Scale: custom volume pricing — direct users to /contact for sales
 
-COMMUNICATION STYLE:
-- Be warm, professional, and helpful
-- Use simple language, avoid jargon
-- Be concise but thorough
-- If unsure about specific details, acknowledge it and offer to connect them with a human
-- Encourage scheduling a demo for complex questions`;
+COMMUNICATION:
+- Be accurate and concise. Do not invent features or metrics.
+- If you do not know something, say so and suggest /contact or /faq.
+- Do not reference restaurant, delivery, supply chain, or shop features.`;
 
   if (context && !context.isGuest) {
-    const contextParts: string[] = [];
-    
-    if (context.userName) {
-      contextParts.push(`Customer name: ${context.userName}`);
-    }
-    
-    if (context.recentOrders?.length) {
-      contextParts.push(`Recent orders: ${context.recentOrders.map(o => `${o.orderNumber} (${o.status})`).join(', ')}`);
-    }
-    
-    if (context.orderStats) {
-      contextParts.push(`Order history: ${context.orderStats}`);
-    }
-    
-    if (contextParts.length > 0) {
-      prompt += `\n\nCUSTOMER CONTEXT:\n${contextParts.join('\n')}`;
-    }
+    const parts: string[] = [];
+    if (context.userName) parts.push(`Signed-in user: ${context.userName}`);
+    if (context.walletLinked) parts.push("Wallet: linked on account");
+    if (parts.length) prompt += `\n\nUSER CONTEXT:\n${parts.join("\n")}`;
   }
 
   return prompt;
@@ -151,60 +122,30 @@ export async function POST(req: Request) {
       enhancedMessages = simpleMessages;
     }
 
-    // Fetch user's order history if authenticated
-    let recentOrders: any[] = [];
-    let orderStats = { totalOrders: 0, totalSpent: 0 };
-    
+    // Optional wallet context for signed-in merchants
+    let walletLinked = false;
     if (!isGuestUser && bodyUserId) {
       try {
         const supabase = await createClient();
-        
-        // Get recent orders (last 5)
-        const { data: orders } = await supabase
-          .from('orders')
-          .select('id, order_number, status, total_cents, created_at, shipping_method')
-          .eq('user_id', bodyUserId)
-          .order('created_at', { ascending: false })
-          .limit(5);
-        
-        if (orders && orders.length > 0) {
-          recentOrders = orders.map(o => ({
-            orderNumber: o.order_number,
-            status: o.status,
-            total: `$${(o.total_cents / 100).toFixed(2)}`,
-            date: new Date(o.created_at).toLocaleDateString(),
-            shipping: o.shipping_method || 'Standard'
-          }));
-          
-          // Get order stats
-          const { data: stats } = await supabase
-            .from('orders')
-            .select('total_cents')
-            .eq('user_id', bodyUserId);
-          
-          if (stats) {
-            orderStats.totalOrders = stats.length;
-            orderStats.totalSpent = stats.reduce((sum, o) => sum + (o.total_cents || 0), 0) / 100;
-          }
-        }
-        console.log(`[Chat API] Loaded ${recentOrders.length} orders for user context`);
-      } catch (err) {
-        console.log('[Chat API] Could not fetch order history:', err);
+        const { data: wallet } = await supabase
+          .from("user_wallet_profiles")
+          .select("wallet_address")
+          .eq("user_id", bodyUserId)
+          .maybeSingle();
+        walletLinked = Boolean(wallet?.wallet_address);
+      } catch {
+        // non-blocking
       }
     }
 
     console.log('[Chat API] Calling AI model...');
     
-    // Build context object for system prompt
     const context: ChatContext = {
       userName,
       userEmail,
       isGuest: isGuestUser,
       userId: bodyUserId,
-      ...(recentOrders.length > 0 && {
-        recentOrders,
-        orderStats: `${orderStats.totalOrders} orders, $${orderStats.totalSpent.toFixed(2)} total spent`
-      })
+      walletLinked,
     };
 
     // Use Groq as primary provider (fast, free tier)

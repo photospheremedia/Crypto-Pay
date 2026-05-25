@@ -28,11 +28,11 @@ export function getReplyTo(): string {
   return process.env.EMAIL_REPLY_TO || EMAIL.replyTo;
 }
 
-/** Emerald theme for HTML templates (matches portal UI) */
+/** Logo brand colors for HTML templates */
 export const emailBrandColors = {
-  primary: "#10b981",
-  primaryDark: "#059669",
-  primaryLight: "#34d399",
+  primary: BRAND.colors.primary,
+  primaryDark: BRAND.colors.primaryDark,
+  primaryLight: BRAND.colors.primaryLight,
   secondary: "#111827",
   background: "#f9fafb",
   surface: "#ffffff",
@@ -40,7 +40,7 @@ export const emailBrandColors = {
   textLight: "#6b7280",
   textMuted: "#9ca3af",
   border: "#e5e7eb",
-  success: "#10b981",
+  success: BRAND.colors.primary,
   warning: "#f59e0b",
   error: "#ef4444",
 } as const;

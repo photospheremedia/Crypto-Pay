@@ -75,7 +75,7 @@ export async function GET(request: NextRequest) {
       .select("role")
       .eq("user_id", data.session.user.id)
       .eq("status", "active")
-      .in("role", ["rhs_admin", "admin", "owner", "manager", "staff"])
+      .in("role", ["cp_admin", "rhs_admin", "admin", "owner", "manager", "staff"])
       .maybeSingle();
 
     if (membership || isAdminEmail(data.session.user.email)) {

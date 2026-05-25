@@ -10,27 +10,17 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: [
           "/api/",
-          "/app/",           // Protected dashboard area
-          "/admin/",         // Admin area
-          "/account/",       // User account area
-          "/auth/",          // Auth callbacks
-          "/_next/",         // Next.js internals
-          "/checkout/",      // Checkout process
-          "/cart/",          // Shopping cart
+          "/app/",
+          "/admin/",
+          "/account/",
+          "/auth/",
+          "/_next/",
         ],
       },
       {
         userAgent: "Googlebot",
         allow: "/",
-        disallow: [
-          "/api/",
-          "/app/",
-          "/admin/",
-          "/account/",
-          "/auth/",
-          "/checkout/",
-          "/cart/",
-        ],
+        disallow: ["/api/", "/app/", "/admin/", "/account/", "/auth/"],
       },
     ],
     sitemap: `${BASE_URL}/sitemap.xml`,

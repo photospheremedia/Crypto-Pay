@@ -103,8 +103,8 @@ function StatCard({ stat, index }: { stat: typeof stats[0]; index: number }) {
       
       <div className="relative">
         <div className="flex items-start justify-between">
-          <div className="rounded-2xl bg-orange-100 p-3">
-            <Icon className="h-6 w-6 text-orange-600" />
+          <div className="rounded-2xl bg-emerald-100 p-3">
+            <Icon className="h-6 w-6 text-emerald-600" />
           </div>
         </div>
 
@@ -123,7 +123,7 @@ export function AnimatedStats() {
   return (
     <section className="mx-auto w-full max-w-6xl px-6 py-20">
       <div className="mb-12 text-center">
-        <p className="text-xs uppercase tracking-[0.2em] text-orange-600">Trusted by hundreds</p>
+        <p className="text-xs uppercase tracking-[0.2em] text-emerald-600">Trusted by hundreds</p>
         <h2 className="font-display mt-3 text-3xl font-bold text-slate-900 md:text-4xl">
           Powering business operations nationwide
         </h2>

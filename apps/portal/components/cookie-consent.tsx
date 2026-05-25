@@ -43,8 +43,8 @@ export const COOKIE_TIERS = {
   ADVERTISING: 'advertising',
 } as const;
 
-const COOKIE_CONSENT_KEY = 'rhs-cookie-consent';
-const COOKIE_PREFERENCES_KEY = 'rhs-cookie-preferences';
+const COOKIE_CONSENT_KEY = 'cryptopay-cookie-consent';
+const COOKIE_PREFERENCES_KEY = 'cryptopay-cookie-preferences';
 const CONSENT_VERSION = '2.0.0'; // Bump this to re-ask for consent
 const CONSENT_EXPIRY_MONTHS = 13; // GDPR requirement
 

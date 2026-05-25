@@ -151,7 +151,7 @@ export function CryptoConverter({ className, compact }: CryptoConverterProps) {
         </div>
       </div>
 
-      <div className="mt-6 flex items-center gap-3 rounded-xl bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 px-4 py-4 dark:from-emerald-500/15 dark:to-cyan-500/15">
+      <div className="mt-6 flex items-center gap-3 rounded-xl bg-linear-to-r from-emerald-500/10 to-emerald-500/10 px-4 py-4 dark:from-emerald-500/15 dark:to-emerald-500/15">
         <ArrowLeftRight className="h-5 w-5 shrink-0 text-emerald-600" />
         <div className="min-w-0 flex-1">
           {error ? (

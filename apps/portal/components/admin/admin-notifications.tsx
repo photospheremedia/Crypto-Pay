@@ -121,7 +121,7 @@ export function AdminNotifications() {
               {unreadCount > 0 && (
                 <button
                   onClick={markAllAsRead}
-                  className="text-xs text-orange-500 hover:text-orange-600 font-medium"
+                  className="text-xs text-emerald-500 hover:text-emerald-600 font-medium"
                 >
                   Mark all read
                 </button>
@@ -233,7 +233,7 @@ export function AdminNotifications() {
               <Link
                 href="/admin/notifications"
                 onClick={() => setIsOpen(false)}
-                className="block text-center text-xs font-medium text-orange-500 hover:text-orange-600 py-1"
+                className="block text-center text-xs font-medium text-emerald-500 hover:text-emerald-600 py-1"
               >
                 View all notifications
               </Link>
