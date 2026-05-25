@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { CheckCircle2, Link2, Radio, ShieldCheck, Wallet } from "lucide-react";
 import { CtaButton, Section, SectionHeading } from "@/components/cryptopay/marketing-section";
-import { cn } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -52,24 +51,19 @@ const steps = [
 export default function HowItWorksPage() {
   return (
     <>
-      <Section className="pb-10 pt-0 sm:pb-12">
+      <Section belowHeader>
         <SectionHeading
           eyebrow="How it works"
           title="Track and accept crypto payments"
           description="Privacy oriented. Wallet to wallet. From first link to confirmed payment."
-          className="mb-8"
         />
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-6">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {steps.map((step, index) => (
             <article
               key={step.title}
-              className={cn(
-                "rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900 lg:col-span-2",
-                index === 3 && "lg:col-start-2",
-                index === 4 && "lg:col-start-4",
-              )}
+              className="rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900"
             >
-              <div className="mb-3 flex items-center gap-3">
+              <div className="mb-4 flex items-center gap-3">
                 <div className="rounded-xl bg-emerald-50 p-2 dark:bg-emerald-950/50">
                   <step.icon className="h-5 w-5 text-emerald-600" />
                 </div>
@@ -88,7 +82,7 @@ export default function HowItWorksPage() {
         </div>
       </Section>
 
-      <Section className="pb-12 pt-0 sm:pb-16">
+      <Section>
         <Card className="mx-auto max-w-xl border-slate-200/80 text-center dark:border-slate-800">
           <CardHeader>
             <CardTitle>Ready to get started?</CardTitle>

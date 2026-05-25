@@ -18,7 +18,7 @@ Config: `.cursor/mcp.json` → `scripts/mcp-netlify.sh` (loads `.env.netlify`).
 
 ## Canonical site (only one)
 
-- **Keep:** `crypto-pay-portal` (matches `NETLIFY_SITE_NAME` in `scripts/lib/netlify-site.sh`).
+- **Keep:** `dazzling-pithivier-e119b1` (production `cryptopay.sale`; see `NETLIFY_SITE_ID` in `scripts/lib/netlify-site.sh`).
 - **Delete extras:** e.g. a second site from Git import named `Crypto-Pay`.
 - Production domain: `cryptopay.sale` → must match `NETLIFY_SITE_HOSTNAME` in `.env.porkbun`.
 

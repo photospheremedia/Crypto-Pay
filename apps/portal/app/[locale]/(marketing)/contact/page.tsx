@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { MarketingPageShell } from "@/components/cryptopay/marketing-section";
 import { useState } from "react";
 import {
   Mail,
@@ -111,7 +112,8 @@ export default function ContactPage() {
 
   if (isSubmitted) {
     return (
-      <section className="mx-auto w-full max-w-2xl px-6 pb-16 text-center">
+      <MarketingPageShell narrow className="text-center">
+        <div className="mx-auto max-w-2xl">
         <div className="rounded-3xl border border-green-200 bg-green-50 p-10">
           <CheckCircle2 className="mx-auto h-16 w-16 text-green-500" />
           <h1 className="font-display mt-6 text-3xl font-semibold text-slate-900">
@@ -145,12 +147,13 @@ export default function ContactPage() {
             </Link>
           </div>
         </div>
-      </section>
+        </div>
+      </MarketingPageShell>
     );
   }
 
   return (
-    <section className="mx-auto w-full max-w-6xl px-6 pb-16">
+    <MarketingPageShell>
       <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
         {/* Left column - Info */}
         <div>
@@ -428,6 +431,6 @@ export default function ContactPage() {
           Book a demo
         </Link>
       </div>
-    </section>
+    </MarketingPageShell>
   );
 }

@@ -1,7 +1,6 @@
 import { Fraunces } from "next/font/google";
 import { CryptoPayHeader } from "@/components/cryptopay/crypto-pay-header";
 import { CryptoPayFooter } from "@/components/cryptopay/crypto-pay-footer";
-import { mainBelowHeaderClass } from "@/lib/layout-spacing";
 import { ScrollToTop } from "./components/scroll-to-top";
 
 const display = Fraunces({
@@ -25,7 +24,7 @@ export default function MarketingLayout({
         <div className="pointer-events-none absolute -right-64 top-60 h-96 w-96 rounded-full bg-cyan-200/20 blur-[120px] dark:bg-cyan-900/20" />
 
         <CryptoPayHeader />
-        <main id="main-content" className={`relative z-10 ${mainBelowHeaderClass}`}>
+        <main id="main-content" className="relative z-10">
           {children}
         </main>
         <ScrollToTop />

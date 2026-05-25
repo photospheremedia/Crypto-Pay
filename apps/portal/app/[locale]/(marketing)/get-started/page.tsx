@@ -19,15 +19,12 @@ const checklist = [
 export default function GetStartedPage() {
   return (
     <>
-      <Section className="pb-8 pt-0">
+      <Section belowHeader>
         <SectionHeading
           eyebrow="Get Started"
           title="Launch your crypto checkout in one short sprint"
           description="Follow this rollout path to move from setup to first live payment quickly."
         />
-      </Section>
-
-      <Section className="pt-0">
         <div className="mx-auto max-w-3xl rounded-3xl border border-slate-200 bg-white p-8">
           <ol className="space-y-4">
             {checklist.map((item, idx) => (

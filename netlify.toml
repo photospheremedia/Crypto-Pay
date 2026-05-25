@@ -2,13 +2,15 @@
 # Do not create a second site from Git import; run: pnpm netlify:audit
 # Dashboard: https://app.netlify.com/sites/crypto-pay-portal
 
+# Monorepo: Netlify site uses package_path apps/portal — run install from repo root.
 [build]
-  command = "corepack enable && pnpm install && pnpm --filter @crypto-pay/portal build"
-  publish = "apps/portal/.next"
+  base = "apps/portal"
+  command = "cd ../.. && pnpm install --frozen-lockfile && pnpm --filter @crypto-pay/portal build"
+  publish = ".next"
 
 [build.environment]
   NODE_VERSION = "24"
-  # Root package.json has packageManager = pnpm — Netlify uses corepack
+  PNPM_VERSION = "9.15.5"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

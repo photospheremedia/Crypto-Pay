@@ -6,6 +6,7 @@ Accept crypto payments instantly, securely, and globally. Non-custodial wallet-t
 
 - **GitHub:** https://github.com/photospheremedia/Crypto-Pay
 - **App:** Next.js portal in `apps/portal` (port **3001**)
+- **Contributing (Git & PRs):** [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Stack
 

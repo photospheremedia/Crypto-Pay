@@ -72,7 +72,7 @@ if [[ -f "$ROOT/.netlify/state.json" ]]; then
   [[ -n "$site" ]] && echo "    Site ID: $site"
 else
   echo "==> Step 1: Import or open existing site (browser)"
-  echo "    Prefer existing site name: crypto-pay-portal (do NOT create a second Crypto-Pay site)"
+  echo "    Prefer existing site: dazzling-pithivier-e119b1 (cryptopay.sale) — do NOT create a second Crypto-Pay site"
   echo "    $IMPORT_URL"
   echo "    Team: PhotoSphere | Branch: master | Build: uses netlify.toml"
   echo "    If using GitHub Actions (.github/workflows/netlify.yml):"
@@ -84,7 +84,7 @@ else
   echo ""
   echo "==> Step 2: Link CLI (Terminal)"
   echo "    pnpm netlify:login"
-  echo "    pnpm netlify:link"
+  echo "    pnpm netlify:link    # links apps/portal → dazzling-pithivier-e119b1"
 fi
 
 echo ""

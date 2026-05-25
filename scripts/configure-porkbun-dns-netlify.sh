@@ -47,6 +47,10 @@ NETLIFY_HOST="${NETLIFY_SITE_HOSTNAME:-}"
 
 if [[ -z "${PORKBUN_API_KEY:-}" || -z "${PORKBUN_SECRET_API_KEY:-}" ]]; then
   echo "Set PORKBUN_API_KEY and PORKBUN_SECRET_API_KEY in $ENV_FILE"
+  echo "  Porkbun → Account → API Access → copy pk1_ and sk1_ (enable API on ${DOMAIN})"
+  if [[ -n "${PORKBUN_API_KEY:-}" && -z "${PORKBUN_SECRET_API_KEY:-}" ]]; then
+    echo "  PORKBUN_SECRET_API_KEY is empty — DNS cannot be updated until sk1_ is set."
+  fi
   exit 1
 fi
 

@@ -1,4 +1,5 @@
-import { Metadata } from 'next'
+import { Metadata } from "next";
+import { MarketingPageShell } from "@/components/cryptopay/marketing-section";
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | Crypto Pay',
@@ -7,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPolicyPage() {
   return (
-    <section className="mx-auto w-full max-w-4xl px-6 pb-16">
+    <MarketingPageShell narrow>
       <p className="text-xs uppercase tracking-[0.2em] text-emerald-600">Legal</p>
       <h1 className="font-display mt-3 text-4xl font-semibold text-slate-900">Privacy Policy</h1>
       <p className="mt-3 text-sm text-slate-600">Last Updated: February 3, 2026</p>
@@ -227,6 +228,6 @@ export default function PrivacyPolicyPage() {
               </p>
             </div>
           </div>
-    </section>
-  )
+    </MarketingPageShell>
+  );
 }

@@ -1,8 +1,6 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { getLocale } from "next-intl/server";
 import { CookieConsent } from "@/components/cookie-consent";
 import { ToastProvider } from "@/hooks/use-toast";
@@ -111,8 +109,6 @@ export default async function RootLayout({
       <body className="min-h-dvh bg-gray-50">
         <ToastProvider>{children}</ToastProvider>
         <CookieConsent />
-        <Analytics />
-        <SpeedInsights />
       </body>
     </html>
   );

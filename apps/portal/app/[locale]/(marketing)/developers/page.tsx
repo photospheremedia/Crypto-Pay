@@ -46,15 +46,12 @@ const example = `POST /api/charges
 export default function DevelopersPage() {
   return (
     <>
-      <Section className="pb-8 pt-0">
+      <Section belowHeader>
         <SectionHeading
           eyebrow="Developers"
           title="One-stop unified API for BTC, ETH, USDT & more"
           description="Have full control with the Crypto Pay API. Documentation, webhooks, and support for custom checkout flows."
         />
-      </Section>
-
-      <Section className="pt-0">
         <div className="grid gap-6 md:grid-cols-2">
           {blocks.map((block) => (
             <article
@@ -73,7 +70,7 @@ export default function DevelopersPage() {
         </div>
       </Section>
 
-      <Section className="pt-0 pb-24">
+      <Section>
         <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="rounded-2xl border border-slate-200 bg-slate-950 p-6 text-slate-100">
             <p className="mb-3 text-xs uppercase tracking-wide text-emerald-400">

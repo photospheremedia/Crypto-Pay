@@ -12,6 +12,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 # shellcheck source=lib/netlify-site.sh
 source "$ROOT/scripts/lib/netlify-site.sh"
+export NETLIFY_SITE_ID
 ENV_FILE="${NETLIFY_ENV_FILE:-$ROOT/.env.netlify}"
 
 nl() {
@@ -42,9 +43,9 @@ if load_token; then
     nl api whoami 2>&1 || true
   fi
   echo ""
-  if [[ ! -f "$ROOT/.netlify/state.json" ]]; then
-    echo "==> Linking site $NETLIFY_SITE_NAME..."
-    nl link --name "$NETLIFY_SITE_NAME" -y 2>&1 || nl init -y 2>&1 || true
+  if [[ ! -f "$ROOT/.netlify/state.json" && ! -f "$ROOT/apps/portal/.netlify/state.json" ]]; then
+    echo "==> Linking site $NETLIFY_SITE_NAME ($NETLIFY_SITE_ID)..."
+    (cd "$ROOT/apps/portal" && nl link --id "$NETLIFY_SITE_ID") 2>&1 || nl link --id "$NETLIFY_SITE_ID" 2>&1 || true
   else
     echo "==> Already linked:"
     nl status 2>&1 || true

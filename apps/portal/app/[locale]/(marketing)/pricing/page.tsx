@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Check, Receipt, Building2 } from "lucide-react";
-import { CtaButton, Section, SectionHeading } from "@/components/cryptopay/marketing-section";
+import { Section, SectionHeading } from "@/components/cryptopay/marketing-section";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -59,15 +59,12 @@ const planCards = [
 export default function PricingPage() {
   return (
     <>
-      <Section className="pb-8 pt-0">
+      <Section belowHeader>
         <SectionHeading
           eyebrow="Pricing"
           title="Simple pricing for serious teams"
           description="Start quickly with transparent transaction pricing, then move to custom commercial terms as your volume scales."
         />
-      </Section>
-
-      <Section className="pt-0">
         <div className="grid gap-6 md:grid-cols-2">
           {planCards.map((plan) => {
             const Icon = plan.icon;
@@ -125,7 +122,7 @@ export default function PricingPage() {
         </div>
       </Section>
 
-      <Section className="pb-24 pt-0">
+      <Section>
         <Card className="mx-auto max-w-xl border-slate-200/80 text-center dark:border-slate-800">
           <CardHeader>
             <CardTitle>Multi-location setup?</CardTitle>

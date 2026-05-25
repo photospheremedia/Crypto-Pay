@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { MarketingPageShell } from "@/components/cryptopay/marketing-section";
 import {
   Users,
   Target,
@@ -82,7 +83,7 @@ const milestones = [
 
 export default function AboutPage() {
   return (
-    <section className="mx-auto w-full max-w-6xl px-6 pb-16">
+    <MarketingPageShell>
       {/* Hero */}
       <div className="grid gap-10 md:grid-cols-[1.1fr_0.9fr]">
         <div>
@@ -276,6 +277,6 @@ export default function AboutPage() {
           </div>
         </div>
       </div>
-    </section>
+    </MarketingPageShell>
   );
 }

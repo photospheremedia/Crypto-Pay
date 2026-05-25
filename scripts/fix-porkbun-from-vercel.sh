@@ -24,4 +24,4 @@ if [[ ! -f "$ROOT/.env.porkbun" ]]; then
 fi
 
 echo "==> Step 2: Apply Netlify DNS via Porkbun API"
-exec "$ROOT/scripts/configure-porkbun-dns-netlify.sh" --apply "$@"
+exec python3 "$ROOT/scripts/porkbun-dns-netlify.py" --apply "$@"

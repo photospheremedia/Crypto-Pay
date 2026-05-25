@@ -82,11 +82,11 @@ export default async function MarketingHome({ params }: Props) {
 
   return (
     <>
-      <Section className="pb-8 pt-0">
+      <Section belowHeader className="pb-8 sm:pb-10">
         <HomeHero />
       </Section>
 
-      <Section className="pt-0">
+      <Section tightTop>
         <SectionHeading
           eyebrow={t("highlightsEyebrow")}
           title={t("highlightsTitle")}
@@ -164,7 +164,7 @@ export default async function MarketingHome({ params }: Props) {
         </div>
       </Section>
 
-      <Section className="pb-24">
+      <Section>
         <Card className="mx-auto max-w-2xl border-slate-200/80 text-center dark:border-slate-800">
           <CardHeader>
             <CardTitle>{t("getStartedTitle")}</CardTitle>

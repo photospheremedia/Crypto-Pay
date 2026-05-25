@@ -14,6 +14,10 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 ENV_FILE="${NETLIFY_ENV_FILE:-$ROOT/.env.netlify}"
 REPO="${GITHUB_REPO:-photospheremedia/Crypto-Pay}"
 STATE_FILE="$ROOT/.netlify/state.json"
+if [[ ! -f "$STATE_FILE" && -f "$ROOT/apps/portal/.netlify/state.json" ]]; then
+  STATE_FILE="$ROOT/apps/portal/.netlify/state.json"
+fi
+NETLIFY_SITE_ID="${NETLIFY_SITE_ID:-d54f3b5a-17e4-4ddd-b01d-166716dd4dc5}"
 
 if [[ -f "$ENV_FILE" ]]; then
   set -a

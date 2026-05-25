@@ -37,13 +37,13 @@ export default function FaqPage() {
     <>
       <JsonLd data={faqJsonLd} />
 
-      <Section className="pb-8 pt-0">
+      <Section belowHeader>
         <SectionHeading
           eyebrow="FAQ"
           title="Answers for operators and owners"
           description="If you have a unique workflow, reach out and we'll design a plan for you."
         />
-        <div className="flex flex-wrap justify-center gap-2">
+        <div className="mb-8 flex flex-wrap justify-center gap-2">
           {FAQ_CATEGORIES.map((cat) => (
             <Link
               key={cat}
@@ -54,13 +54,10 @@ export default function FaqPage() {
             </Link>
           ))}
         </div>
-      </Section>
-
-      <Section className="pt-0">
         <FaqAccordion items={CRYPTO_FAQS} categories={[...FAQ_CATEGORIES]} />
       </Section>
 
-      <Section className="pb-24 pt-0">
+      <Section>
         <Card className="mx-auto max-w-xl border-slate-200/80 text-center dark:border-slate-800">
           <CardHeader>
             <CardTitle>Still have questions?</CardTitle>
