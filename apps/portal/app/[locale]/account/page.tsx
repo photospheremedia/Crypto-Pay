@@ -1,7 +1,8 @@
-import { redirect } from "next/navigation";
-import { getSupabaseServerClient } from "@crypto-pay/db/supabaseServer";
 import { AccountDashboard } from "@/components/account/account-dashboard";
-import { listUserMerchantWallets } from "@/lib/wallets/db";
+import {
+  getMerchantAuth,
+  getMerchantWalletsCached,
+} from "@/lib/account/merchant-data";
 
 const VALID_TABS = ["overview", "wallets", "activity"] as const;
 
@@ -20,16 +21,8 @@ export default async function AccountPage({ searchParams }: AccountPageProps) {
   const { tab: tabParam } = await searchParams;
   const initialTab = parseTab(tabParam);
 
-  const supabase = await getSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
-
-  const wallets = await listUserMerchantWallets(supabase, user.id);
+  const { user } = await getMerchantAuth();
+  const wallets = await getMerchantWalletsCached(user.id);
 
   return (
     <AccountDashboard

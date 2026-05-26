@@ -1,6 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getMerchantAuth } from "@/lib/account/merchant-data";
 import { Mail, Shield, Smartphone, Key, Clock, AlertTriangle } from "lucide-react";
 import PasswordChangeForm from "./PasswordChangeForm";
 import TwoFactorSettings from "./TwoFactorSettings";
@@ -15,13 +14,7 @@ export async function generateMetadata() {
 
 export default async function SecurityPage() {
   const t = await getTranslations("Account.security");
-  const supabase = await createClient();
-
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
-
-  if (userError || !user) {
-    redirect("/login");
-  }
+  const { user } = await getMerchantAuth();
 
   const hasPassword = !!(user.app_metadata?.provider !== 'oauth' || user.app_metadata?.providers?.includes('email'));
   const identities = user.identities || [];

@@ -133,21 +133,6 @@ export async function resolveRealmForUser(
     return "admin";
   }
 
-  const { data: membership } = await supabase
-    .from("memberships")
-    .select("role, tenants!inner(slug)")
-    .eq("user_id", user.id)
-    .eq("status", "active")
-    .eq("tenants.slug", PLATFORM_ADMIN_TENANT_SLUG)
-    .in("role", [...PLATFORM_STAFF_ROLES])
-    .order("role", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
-  if (membership && isPlatformStaffRole(membership.role)) {
-    return "admin";
-  }
-
   try {
     const { data: claimsData } = await supabase.auth.getClaims();
     const fromJwt = realmFromJwtClaims(
@@ -157,7 +142,26 @@ export async function resolveRealmForUser(
       return fromJwt;
     }
   } catch {
-    // JWT claims unavailable — treat as merchant
+    // JWT claims unavailable — fall back to membership lookup
+  }
+
+  try {
+    const { data: membership } = await supabase
+      .from("memberships")
+      .select("role, tenants!inner(slug)")
+      .eq("user_id", user.id)
+      .eq("status", "active")
+      .eq("tenants.slug", PLATFORM_ADMIN_TENANT_SLUG)
+      .in("role", [...PLATFORM_STAFF_ROLES])
+      .order("role", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (membership && isPlatformStaffRole(membership.role)) {
+      return "admin";
+    }
+  } catch (error) {
+    console.error("[resolveRealmForUser] membership lookup failed:", error);
   }
 
   return "merchant";

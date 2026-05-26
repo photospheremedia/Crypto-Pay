@@ -11,7 +11,7 @@ import {
   LayoutDashboard,
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import { signOut } from "@/app/[locale]/(login)/actions";
+import { signOutMerchant } from "@/app/[locale]/(login)/actions";
 
 export interface AccountUserMenuProps {
   email: string;
@@ -124,7 +124,7 @@ export function AccountUserMenu({
           </div>
 
           <div className="border-t border-slate-200 py-2">
-            <form action={signOut}>
+            <form action={signOutMerchant}>
               <button
                 type="submit"
                 role="menuitem"

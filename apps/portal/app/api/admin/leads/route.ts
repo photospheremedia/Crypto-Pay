@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { getSupabaseServiceClient } from "@crypto-pay/db/supabaseServer";
 import { withAdminAuth, checkAdminAccess } from "@/lib/admin-auth";
 
 // Get all chat leads with filtering
@@ -51,7 +52,8 @@ export const GET = withAdminAuth(async (req, { user }) => {
     }
 
     // Get stats
-    const { data: stats } = await (supabase as any).rpc("get_chat_leads_stats").single();
+    const service = getSupabaseServiceClient();
+    const { data: stats } = await service.rpc("get_chat_leads_stats").single();
 
     return NextResponse.json({
       leads: data,

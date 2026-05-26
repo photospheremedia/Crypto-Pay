@@ -1,56 +1,18 @@
-import { redirect } from "next/navigation";
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
 import { ProfileForm } from "./profile-form";
-import { User, Mail, Phone, Building2, MapPin } from "lucide-react";
+import { Mail } from "lucide-react";
 import { AvatarUpload } from "@/components/account/avatar-upload";
+import { getMerchantProfileBundle } from "@/lib/account/merchant-data";
 
 export const metadata = {
   title: "Profile - Account Settings",
   description: "Manage your profile information and personal details",
 };
 
-async function getUserProfile() {
-  const cookieStore = await cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-      },
-    }
-  );
-  
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
-
-  // Fetch user profile
-  const { data: profile } = await supabase
-    .from("user_profiles")
-    .select("*")
-    .eq("user_id", user.id)
-    .single();
-
-  return {
-    user,
-    profile,
-  };
-}
-
 export default async function ProfilePage() {
-  const { user, profile } = await getUserProfile();
+  const { user, profile } = await getMerchantProfileBundle();
 
   return (
     <div className="space-y-8">
-      {/* Page Header - More elegant */}
       <div>
         <h1 className="text-3xl font-bold bg-linear-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
           Profile Settings
@@ -60,7 +22,6 @@ export default async function ProfilePage() {
         </p>
       </div>
 
-      {/* Profile Avatar Section - Enhanced */}
       <div className="rounded-xl border border-slate-200/60 bg-linear-to-br from-white to-slate-50/50 p-8 shadow-sm">
         <div className="flex flex-col sm:flex-row items-start gap-6">
           <AvatarUpload
@@ -77,10 +38,8 @@ export default async function ProfilePage() {
         </div>
       </div>
 
-      {/* Profile Information Form */}
       <ProfileForm user={user} profile={profile} />
 
-      {/* Account Information (Read-only) - Enhanced styling */}
       <div className="rounded-xl border border-slate-200/60 bg-linear-to-br from-white to-slate-50/50 p-8 shadow-sm">
         <h3 className="text-lg font-semibold text-slate-900 mb-6 flex items-center gap-2">
           <Mail className="h-5 w-5 text-slate-600" />
@@ -115,10 +74,10 @@ export default async function ProfilePage() {
             </label>
             <input
               type="text"
-              value={new Date(user.created_at).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
+              value={new Date(user.created_at).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
               })}
               disabled
               title="Account creation date"

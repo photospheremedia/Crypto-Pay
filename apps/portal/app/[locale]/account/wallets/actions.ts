@@ -3,7 +3,6 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { getSupabaseServerClient } from "@crypto-pay/db/supabaseServer";
 import { merchantWallets } from "@/lib/wallets/db";
 import { RESEND_IDEMPOTENCY_MS, notifyAdminWalletReview } from "@/lib/wallets/notify-admin";
 import { scheduleEmailWork } from "@/lib/email/schedule";
@@ -14,7 +13,10 @@ import {
 } from "@/lib/email/workflows";
 import { notifyMerchantWalletSubmitted } from "@/lib/wallets/notify-admin";
 import { ACCOUNT_SETUP_LEGACY_PATH } from "@/lib/account/paths";
-import { requireMerchantSession } from "@/lib/auth/session";
+import {
+  getMerchantAuth,
+  revalidateMerchantWallets,
+} from "@/lib/account/merchant-data";
 import { merchantWalletSchema } from "@/lib/wallets/validation";
 import type { MerchantWallet } from "@/types/crypto-pay-db";
 
@@ -23,20 +25,19 @@ export type WalletFormState = {
   success?: string;
 };
 
-function revalidateAccountWallets() {
+function revalidateAccountWallets(userId: string) {
+  revalidateMerchantWallets(userId);
   revalidatePath("/account");
   revalidatePath("/account/get-started");
   revalidatePath(ACCOUNT_SETUP_LEGACY_PATH);
 }
 
 async function requireUser() {
-  const { user } = await requireMerchantSession();
-  const supabase = await getSupabaseServerClient();
-  return { supabase, user };
+  return getMerchantAuth();
 }
 
 async function syncLegacyPrimaryWallet(
-  supabase: Awaited<ReturnType<typeof getSupabaseServerClient>>,
+  supabase: Awaited<ReturnType<typeof getMerchantAuth>>["supabase"],
   userId: string,
 ) {
   const { data: primary } = await merchantWallets(supabase)
@@ -198,7 +199,7 @@ export async function saveMerchantWallet(
   }
 
   await syncLegacyPrimaryWallet(supabase, user.id);
-  revalidateAccountWallets();
+  revalidateAccountWallets(user.id);
 
   return { success: t("savedPending") };
 }
@@ -258,7 +259,7 @@ export async function resendWalletVerification(
     return { error: t("requestUpdateFailed") };
   }
 
-  revalidateAccountWallets();
+  revalidateAccountWallets(user.id);
   return { success: t("reminderSent") };
 }
 
@@ -279,6 +280,6 @@ export async function deleteMerchantWallet(
   }
 
   await syncLegacyPrimaryWallet(supabase, user.id);
-  revalidateAccountWallets();
+  revalidateAccountWallets(user.id);
   return { success: t("deleted") };
 }

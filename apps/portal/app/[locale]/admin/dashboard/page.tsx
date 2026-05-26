@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { useAdminStats } from "@/components/admin/admin-stats-provider";
 import { Link } from "@/i18n/navigation";
@@ -42,9 +42,19 @@ type Stats = {
 
 export default function AdminDashboard() {
   const t = useTranslations("Admin.dashboard");
-  const { stats: rawStats, isSuperAdmin, loading, refreshing, refresh } =
-    useAdminStats();
+  const {
+    stats: rawStats,
+    isSuperAdmin,
+    loading,
+    refreshing,
+    refresh,
+    loadFullStats,
+  } = useAdminStats();
   const stats = rawStats as Stats | null;
+
+  useEffect(() => {
+    if (!stats) void loadFullStats();
+  }, [stats, loadFullStats]);
 
   const conversionRate = useMemo(() => {
     if (!stats || stats.totalLeads === 0 || !stats.convertedLeads) return "0.0";

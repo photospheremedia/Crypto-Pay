@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { getSupabaseServiceClient } from "@crypto-pay/db/supabaseServer";
 import { checkAdminAccess, canManageRole, ADMIN_ROLES, type AdminRole } from "@/lib/admin-auth";
 
 // GET - List all users (staff, admins, and regular users)
@@ -179,7 +180,7 @@ export async function POST(req: NextRequest) {
     
     // Log the action
     try {
-      await supabase.rpc("log_audit_event", {
+      await getSupabaseServiceClient().rpc("log_audit_event", {
         p_action: "invite_staff",
         p_resource_type: "staff",
         p_description: `Invited ${email} as ${newRole}`,
@@ -266,7 +267,7 @@ export async function PATCH(req: NextRequest) {
 
     // Log the action
     try {
-      await supabase.rpc("log_audit_event", {
+      await getSupabaseServiceClient().rpc("log_audit_event", {
         p_action: "update_staff",
         p_resource_type: "staff",
         p_resource_id: membershipId,
@@ -338,7 +339,7 @@ export async function DELETE(req: NextRequest) {
 
     // Log the action
     try {
-      await supabase.rpc("log_audit_event", {
+      await getSupabaseServiceClient().rpc("log_audit_event", {
         p_action: "remove_staff",
         p_resource_type: "staff",
         p_resource_id: membershipId,

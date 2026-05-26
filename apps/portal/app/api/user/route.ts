@@ -1,7 +1,7 @@
 import { getSupabaseServerClient } from "@crypto-pay/db/supabaseServer";
 
-// Cache user data for 24 hours - stable during session, revalidates on logout
-export const revalidate = 86400;
+// Must stay dynamic — stale user JSON after logout is a session leak in the UI.
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   const supabase = await getSupabaseServerClient();

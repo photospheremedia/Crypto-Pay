@@ -14,6 +14,23 @@ export const ADMIN_STATS_CACHE_TAG = "admin-stats";
 
 async function fetchNavCountsUncached(): Promise<AdminNavCounts> {
   const supabase = getSupabaseServiceClient();
+  const { data, error } = await supabase.rpc("admin_nav_counts");
+
+  if (!error && data && typeof data === "object") {
+    const row = data as Record<string, unknown>;
+    return {
+      pendingWallets: Number(row.pendingWallets ?? 0),
+      newLeads: Number(row.newLeads ?? 0),
+    };
+  }
+
+  if (error) {
+    console.warn(
+      "[admin-stats] RPC admin_nav_counts unavailable, using parallel counts:",
+      error.message,
+    );
+  }
+
   return getAdminNavCounts(supabase);
 }
 

@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { AdminStatsProvider } from "@/components/admin/admin-stats-provider";
-import {
-  getCachedAdminDashboardStats,
-  getCachedAdminNavCounts,
-} from "@/lib/admin/admin-stats-cache";
+import { getCachedAdminNavCounts } from "@/lib/admin/admin-stats-cache";
 import { requireAdminSession } from "@/lib/auth/session";
 import { AdminLayoutClient } from "./admin-layout-client";
 
@@ -19,25 +16,21 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { isSuperAdmin } = await requireAdminSession();
+  const { isSuperAdmin, permissions } = await requireAdminSession();
 
   let initialNavCounts = { pendingWallets: 0, newLeads: 0 };
-  let initialStats: Record<string, unknown> | null = null;
 
   try {
-    [initialNavCounts, initialStats] = await Promise.all([
-      getCachedAdminNavCounts(),
-      getCachedAdminDashboardStats(isSuperAdmin),
-    ]);
+    initialNavCounts = await getCachedAdminNavCounts();
   } catch (error) {
-    console.error("[AdminLayout] Failed to prefetch stats:", error);
+    console.error("[AdminLayout] Failed to prefetch nav counts:", error);
   }
 
   return (
     <AdminStatsProvider
       initialNavCounts={initialNavCounts}
-      initialStats={initialStats}
       initialIsSuperAdmin={isSuperAdmin}
+      initialPermissions={permissions}
     >
       <AdminLayoutClient isSuperAdmin={isSuperAdmin}>{children}</AdminLayoutClient>
     </AdminStatsProvider>

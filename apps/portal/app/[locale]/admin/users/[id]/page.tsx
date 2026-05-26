@@ -24,6 +24,7 @@ import { MerchantWalletsPanel } from "@/components/admin/merchant-wallets-panel"
 import { MerchantSupabaseTools } from "@/components/admin/merchant-supabase-tools";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "@/i18n/navigation";
+import { useAdminStats } from "@/components/admin/admin-stats-provider";
 import { parseAdminApiResponse } from "@/lib/admin/parse-admin-api-response";
 
 type UserDetail = {
@@ -129,19 +130,11 @@ export default function AdminUserDetailPage() {
     }
   }, [searchParams]);
 
+  const { isSuperAdmin, permissions } = useAdminStats();
+
   useEffect(() => {
-    void fetch("/api/admin/stats")
-      .then((r) => r.json())
-      .then((data) => {
-        if (
-          data.success &&
-          (data.isSuperAdmin || data.permissions?.canManageStaff)
-        ) {
-          setCanDeleteMerchant(true);
-        }
-      })
-      .catch(() => setCanDeleteMerchant(false));
-  }, []);
+    setCanDeleteMerchant(Boolean(isSuperAdmin || permissions?.canManageStaff));
+  }, [isSuperAdmin, permissions]);
 
   const onSave = async (e: FormEvent) => {
     e.preventDefault();

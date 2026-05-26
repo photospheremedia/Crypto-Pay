@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { createBrowserClient } from "@supabase/ssr";
 import { useRouter } from "next/navigation";
+import { refreshMerchantProfileCache } from "@/app/[locale]/account/actions";
 import type { User } from "@supabase/supabase-js";
 import { Loader2, User as UserIcon, Phone, Building2, MapPin, Globe } from "lucide-react";
 
@@ -55,6 +56,7 @@ export function ProfileForm({ user, profile }: ProfileFormProps) {
 
       if (error) throw error;
 
+      await refreshMerchantProfileCache();
       setMessage({ type: "success", text: "Profile updated successfully!" });
       router.refresh();
     } catch (error: any) {

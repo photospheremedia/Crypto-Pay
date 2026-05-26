@@ -2,14 +2,15 @@ import "server-only";
 
 import { redirect } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
-import { createClient } from "@/lib/supabase/server";
 import { checkAdminAccess } from "@/lib/admin-auth";
+import { getMerchantAuth } from "@/lib/account/merchant-data";
 import {
   ADMIN_HOME_PATH,
   MERCHANT_HOME_PATH,
   resolveRealmForUser,
   type UserRealm,
 } from "@/lib/auth/user-realm";
+import { createClient } from "@/lib/supabase/server";
 
 export type VerifiedSession = {
   user: User;
@@ -57,15 +58,6 @@ export async function requireAdminSession() {
 
 /** Merchant-only routes (`/account/*`, merchant server actions). Staff → admin home. */
 export async function requireMerchantSession(): Promise<VerifiedSession> {
-  const session = await verifySession();
-
-  if (!session) {
-    redirect(`/login?redirect=${encodeURIComponent(MERCHANT_HOME_PATH)}`);
-  }
-
-  if (session.realm === "admin") {
-    redirect(ADMIN_HOME_PATH);
-  }
-
-  return session;
+  const { user } = await getMerchantAuth();
+  return { user, realm: "merchant" };
 }

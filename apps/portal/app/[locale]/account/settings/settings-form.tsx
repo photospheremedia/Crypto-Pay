@@ -6,6 +6,7 @@ import { createBrowserClient } from "@supabase/ssr";
 import { useRouter } from "@/i18n/navigation";
 import type { User } from "@supabase/supabase-js";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { refreshMerchantProfileCache } from "@/app/[locale]/account/actions";
 
 function getSupabaseBrowserClient() {
   return createBrowserClient(
@@ -65,6 +66,7 @@ export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
 
       if (settingsError) throw settingsError;
 
+      await refreshMerchantProfileCache();
       setMessage({ type: "success", text: t("savedSuccess") });
       router.refresh();
     } catch (error: any) {

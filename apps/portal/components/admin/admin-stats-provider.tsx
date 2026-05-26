@@ -11,14 +11,19 @@ import {
   type ReactNode,
 } from "react";
 import type { AdminNavCounts } from "@/lib/admin/admin-stats";
+import type { Permission } from "@/lib/admin-auth";
+
+type AdminPermissions = Record<Permission, boolean> | null;
 
 type AdminStatsContextValue = {
   stats: Record<string, unknown> | null;
   navCounts: AdminNavCounts;
   isSuperAdmin: boolean;
+  permissions: AdminPermissions;
   loading: boolean;
   refreshing: boolean;
   refresh: () => Promise<void>;
+  loadFullStats: () => Promise<void>;
 };
 
 const defaultNavCounts: AdminNavCounts = {
@@ -33,11 +38,13 @@ export function AdminStatsProvider({
   initialNavCounts,
   initialStats,
   initialIsSuperAdmin = false,
+  initialPermissions = null,
 }: {
   children: ReactNode;
   initialNavCounts?: AdminNavCounts;
   initialStats?: Record<string, unknown> | null;
   initialIsSuperAdmin?: boolean;
+  initialPermissions?: AdminPermissions;
 }) {
   const [stats, setStats] = useState<Record<string, unknown> | null>(
     initialStats ?? null,
@@ -46,6 +53,9 @@ export function AdminStatsProvider({
     initialNavCounts ?? defaultNavCounts,
   );
   const [isSuperAdmin, setIsSuperAdmin] = useState(initialIsSuperAdmin);
+  const [permissions, setPermissions] = useState<AdminPermissions>(
+    initialPermissions,
+  );
   const [loading, setLoading] = useState(!initialStats);
   const [refreshing, setRefreshing] = useState(false);
 
@@ -59,6 +69,7 @@ export function AdminStatsProvider({
       if (data.success) {
         setStats(data.stats ?? null);
         setIsSuperAdmin(Boolean(data.isSuperAdmin));
+        setPermissions(data.permissions ?? null);
         setNavCounts({
           pendingWallets: Number(data.stats?.pendingWallets ?? 0),
           newLeads: Number(data.stats?.newLeadsToday ?? 0),
@@ -72,13 +83,17 @@ export function AdminStatsProvider({
     }
   }, []);
 
-  const skipInitialSpinner = useRef(Boolean(initialStats));
+  const statsLoaded = useRef(Boolean(initialStats));
 
   useEffect(() => {
-    void refresh({ silent: skipInitialSpinner.current });
-    skipInitialSpinner.current = false;
+    if (!statsLoaded.current) return;
     const interval = setInterval(() => void refresh({ silent: true }), 60_000);
     return () => clearInterval(interval);
+  }, [refresh]);
+
+  const loadFullStats = useCallback(async () => {
+    await refresh({ silent: statsLoaded.current });
+    statsLoaded.current = true;
   }, [refresh]);
 
   const value = useMemo(
@@ -86,11 +101,22 @@ export function AdminStatsProvider({
       stats,
       navCounts,
       isSuperAdmin,
+      permissions,
       loading,
       refreshing,
       refresh: () => refresh({ silent: false }),
+      loadFullStats,
     }),
-    [stats, navCounts, isSuperAdmin, loading, refreshing, refresh],
+    [
+      stats,
+      navCounts,
+      isSuperAdmin,
+      permissions,
+      loading,
+      refreshing,
+      refresh,
+      loadFullStats,
+    ],
   );
 
   return (

@@ -8,15 +8,16 @@ import {
   ACCOUNT_WALLET_SETUP_PATH,
   accountWalletSetupCallbackUrl,
 } from "@/lib/account/paths";
+import { resolveRealmForUserEdge } from "@/lib/auth/resolve-realm-edge";
 import {
   getHomePathForRealm,
   merchantOnboardingPath,
-  resolveRealmForUser,
   sanitizePostAuthRedirect,
 } from "@/lib/auth/user-realm";
 import { scheduleEmailWork } from "@/lib/email/schedule";
 import { runWelcomeEmailWorkflow } from "@/lib/email/workflows";
 import { listUserMerchantWallets } from "@/lib/wallets/db";
+import { signOutForRealm } from "@/lib/auth/sign-out";
 import { assertBotProtectionForForm } from "@/lib/security/bot-protection";
 
 export type ActionState = {
@@ -77,7 +78,7 @@ export async function signIn(
     redirect("/login");
   }
 
-  const realm = await resolveRealmForUser(supabase, data.user);
+  const realm = await resolveRealmForUserEdge(supabase, data.user);
 
   revalidatePath("/", "layout");
 
@@ -190,7 +191,7 @@ export async function signUp(
     redirect(`/login?created=1&verify=1&email=${encodeURIComponent(email)}`);
   }
 
-  const realm = await resolveRealmForUser(supabase, data.session.user);
+  const realm = await resolveRealmForUserEdge(supabase, data.session.user);
   const dashboardUrl =
     realm === "admin"
       ? `${appUrl}${getHomePathForRealm("admin")}`
@@ -207,8 +208,27 @@ export async function signUp(
   redirect(realm === "admin" ? getHomePathForRealm("admin") : merchantOnboardingPath());
 }
 
+/** Merchant account / app — requires merchant realm. */
+export async function signOutMerchant() {
+  return signOutForRealm("merchant");
+}
+
+/** Admin console — requires admin realm; writes audit log. */
+export async function signOutAdmin() {
+  return signOutForRealm("admin");
+}
+
+/** Login / signup pages — resolves realm from session. */
 export async function signOut() {
   const supabase = await getSupabaseServerClient();
-  await supabase.auth.signOut();
-  redirect("/");
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const realm = await resolveRealmForUserEdge(supabase, user);
+  return signOutForRealm(realm);
 }

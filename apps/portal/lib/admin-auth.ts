@@ -1,4 +1,7 @@
+import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { getSupabaseServiceClient } from "@crypto-pay/db/supabaseServer";
 import { isAdminEmail } from "@/lib/admin-email";
 import {
   isPlatformStaffRole,
@@ -98,12 +101,73 @@ export function isSuperAdminRole(role: string | null | undefined): boolean {
   return role === "cp_admin" || role === "rhs_admin";
 }
 
-export async function checkAdminAccess() {
+function staffAccessFromJwtRole(jwtRole: string) {
+  if (!ADMIN_ROLE_SET.has(jwtRole)) return null;
+  const role = jwtRole as AdminRole;
+  return {
+    role,
+    tenantId: null as string | null,
+    isAdmin: true as const,
+    isSuperAdmin: isSuperAdminRole(role),
+    permissions: ROLE_PERMISSIONS[role] ?? ROLE_PERMISSIONS.staff,
+    roleLevel: ROLE_HIERARCHY[role] ?? 0,
+  };
+}
+
+async function resolveAdminRoleFromDb(userId: string) {
+  const supabase = getSupabaseServiceClient();
+  const { data: membership } = await supabase
+    .from("memberships")
+    .select("role, tenant_id, tenants!inner(slug)")
+    .eq("user_id", userId)
+    .eq("status", "active")
+    .eq("tenants.slug", PLATFORM_ADMIN_TENANT_SLUG)
+    .in("role", [...PLATFORM_STAFF_ROLES])
+    .order("role", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (!membership) {
+    return {
+      role: null,
+      tenantId: null,
+      isAdmin: false,
+      isSuperAdmin: false,
+      permissions: null,
+      roleLevel: 0,
+    };
+  }
+
+  const role = membership.role as AdminRole;
+  const permissions = ROLE_PERMISSIONS[role] ?? ROLE_PERMISSIONS.staff;
+
+  return {
+    role,
+    tenantId: membership.tenant_id,
+    isAdmin: true as const,
+    isSuperAdmin: isSuperAdminRole(role),
+    permissions,
+    roleLevel: ROLE_HIERARCHY[role] ?? 0,
+  };
+}
+
+function getCachedAdminRoleFromDb(userId: string) {
+  return unstable_cache(
+    () => resolveAdminRoleFromDb(userId),
+    ["admin-role-db", userId],
+    { revalidate: 60, tags: [`admin-role-${userId}`] },
+  )();
+}
+
+export const checkAdminAccess = cache(async () => {
   const supabase = await createClient();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const [userResult, claimsResult] = await Promise.all([
+    supabase.auth.getUser(),
+    supabase.auth.getClaims().catch(() => ({ data: null as { claims?: Record<string, unknown> } | null })),
+  ]);
+
+  const user = userResult.data.user;
 
   if (!user) {
     return { user: null, role: null, isAdmin: false, isSuperAdmin: false, permissions: null };
@@ -121,34 +185,17 @@ export async function checkAdminAccess() {
     };
   }
 
-  const { data: membership } = await supabase
-    .from("memberships")
-    .select("role, tenant_id, tenants!inner(slug)")
-    .eq("user_id", user.id)
-    .eq("status", "active")
-    .eq("tenants.slug", PLATFORM_ADMIN_TENANT_SLUG)
-    .in("role", [...PLATFORM_STAFF_ROLES])
-    .order("role", { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
-  if (!membership) {
-    return { user, role: null, isAdmin: false, isSuperAdmin: false, permissions: null };
+  const jwtRole = claimsResult.data?.claims?.user_role;
+  if (typeof jwtRole === "string" && isPlatformStaffRole(jwtRole)) {
+    const fromJwt = staffAccessFromJwtRole(jwtRole);
+    if (fromJwt) {
+      return { user, ...fromJwt };
+    }
   }
 
-  const role = membership.role as AdminRole;
-  const permissions = ROLE_PERMISSIONS[role] ?? ROLE_PERMISSIONS.staff;
-
-  return {
-    user,
-    role,
-    tenantId: membership.tenant_id,
-    isAdmin: true,
-    isSuperAdmin: isSuperAdminRole(role),
-    permissions,
-    roleLevel: ROLE_HIERARCHY[role] ?? 0,
-  };
-}
+  const fromDb = await getCachedAdminRoleFromDb(user.id);
+  return { user, ...fromDb };
+});
 
 export async function hasPermission(permission: Permission): Promise<boolean> {
   const { permissions } = await checkAdminAccess();

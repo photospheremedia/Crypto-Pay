@@ -1,6 +1,5 @@
-import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { getSupabaseServerClient } from "@crypto-pay/db/supabaseServer";
+import { getMerchantProfileBundle } from "@/lib/account/merchant-data";
 import { SettingsForm } from "./settings-form";
 
 export async function generateMetadata() {
@@ -11,33 +10,9 @@ export async function generateMetadata() {
   };
 }
 
-async function getUserSettings() {
-  const supabase = await getSupabaseServerClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect("/login");
-  }
-
-  // Fetch user profile and settings
-  const [{ data: profile }, { data: settings }] = await Promise.all([
-    supabase.from("user_profiles").select("*").eq("id", user.id).single(),
-    supabase.from("user_settings").select("*").eq("user_id", user.id).single(),
-  ]);
-
-  return {
-    user,
-    profile,
-    settings,
-  };
-}
-
 export default async function SettingsPage() {
   const t = await getTranslations("Account.settings");
-  const { user, profile, settings } = await getUserSettings();
+  const { user, profile, settings } = await getMerchantProfileBundle();
 
   return (
     <div className="mx-auto max-w-4xl px-6 py-12">
@@ -46,11 +21,7 @@ export default async function SettingsPage() {
         <p className="mt-2 text-slate-600">{t("description")}</p>
       </div>
 
-      <SettingsForm
-        user={user}
-        profile={profile}
-        settings={settings}
-      />
+      <SettingsForm user={user} profile={profile} settings={settings} />
     </div>
   );
 }

@@ -14,6 +14,7 @@ import {
   isStaffOnlyPath,
   type UserRealm,
 } from "@/lib/auth/user-realm";
+import { hasSupabaseSessionCookie } from "@/lib/auth/has-supabase-session-cookie";
 import { mergeIntlMiddlewareResponse } from "@/lib/i18n/merge-intl-middleware-response";
 import { stripLocale } from "@/lib/i18n/strip-locale";
 import { isMetadataRoute } from "@/lib/routing/metadata-routes";
@@ -100,9 +101,20 @@ async function handleProxy(request: NextRequest) {
     },
   });
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const shouldResolveUser =
+    isProtectedRoute ||
+    isAdminRoute ||
+    isAuthRoute ||
+    hasSupabaseSessionCookie(request);
+
+  let user: Awaited<
+    ReturnType<typeof supabase.auth.getUser>
+  >["data"]["user"] = null;
+
+  if (shouldResolveUser) {
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  }
 
   const localizedPath = (path: string) => {
     const locale =
@@ -125,7 +137,7 @@ async function handleProxy(request: NextRequest) {
       (isAuthRoute && pathname !== "/app"));
 
   let realm: UserRealm | null = null;
-  if (needsRealm) {
+  if (needsRealm && user) {
     realm = await resolveRealmForUserEdge(supabase, user);
   }
 
