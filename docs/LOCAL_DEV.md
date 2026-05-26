@@ -77,8 +77,8 @@ Override credentials: `PLAYWRIGHT_USER_EMAIL` / `PLAYWRIGHT_USER_PASSWORD` (or `
 demo merchant example:
 
 ```bash
-LOCAL_DEV_EMAIL=merchant@example.com pnpm dev:setup
-pnpm playwright:connect:merchant
+LOCAL_DEV_EMAIL=merchant@example.com LOCAL_DEV_ADMIN=0 pnpm dev:setup
+pnpm playwright:connect:merchant   # merchant → /account (not admin)
 ```
 
 Playwright signs in via Supabase session cookies by default (avoids `/login` server-action stalls). To test the HTML form instead: `PLAYWRIGHT_LOGIN_UI=1 pnpm playwright:connect`.

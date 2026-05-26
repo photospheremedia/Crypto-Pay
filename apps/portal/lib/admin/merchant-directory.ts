@@ -1,6 +1,9 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { ADMIN_ROLES } from "@/lib/admin-auth";
 import { isAdminEmail } from "@/lib/admin-email";
+import {
+  PLATFORM_ADMIN_TENANT_SLUG,
+  PLATFORM_STAFF_ROLES,
+} from "@/lib/admin/platform-tenant";
 
 export type MerchantProfileRow = {
   id: string;
@@ -18,9 +21,10 @@ export async function getStaffUserIds(
 ): Promise<Set<string>> {
   const { data, error } = await supabase
     .from("memberships")
-    .select("user_id")
+    .select("user_id, tenants!inner(slug)")
     .eq("status", "active")
-    .in("role", [...ADMIN_ROLES]);
+    .eq("tenants.slug", PLATFORM_ADMIN_TENANT_SLUG)
+    .in("role", [...PLATFORM_STAFF_ROLES]);
 
   if (error) {
     console.error("[merchant-directory] staff lookup error:", error);

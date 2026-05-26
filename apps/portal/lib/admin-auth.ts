@@ -1,5 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
 import { isAdminEmail } from "@/lib/admin-email";
+import {
+  isPlatformStaffRole,
+  PLATFORM_ADMIN_TENANT_SLUG,
+  PLATFORM_STAFF_ROLES,
+} from "@/lib/admin/platform-tenant";
 
 /** Crypto Pay platform super-admin (legacy DB value: rhs_admin) */
 export const SUPER_ADMIN_ROLES = ["cp_admin", "rhs_admin"] as const;
@@ -26,9 +31,9 @@ export type AdminRole = (typeof ADMIN_ROLES)[number];
 
 const ADMIN_ROLE_SET = new Set<string>(ADMIN_ROLES);
 
-/** True when role is a staff / platform admin role (matches JWT `user_role` + memberships). */
+/** True for platform staff roles on `crypto-pay-admin` (not merchant tenant `owner`). */
 export function isStaffRole(role: string | null | undefined): boolean {
-  return !!role && ADMIN_ROLE_SET.has(role);
+  return isPlatformStaffRole(role);
 }
 
 const superAdminPermissions = {
@@ -118,10 +123,13 @@ export async function checkAdminAccess() {
 
   const { data: membership } = await supabase
     .from("memberships")
-    .select("role, tenant_id")
+    .select("role, tenant_id, tenants!inner(slug)")
     .eq("user_id", user.id)
     .eq("status", "active")
-    .in("role", [...ADMIN_ROLES])
+    .eq("tenants.slug", PLATFORM_ADMIN_TENANT_SLUG)
+    .in("role", [...PLATFORM_STAFF_ROLES])
+    .order("role", { ascending: false })
+    .limit(1)
     .maybeSingle();
 
   if (!membership) {

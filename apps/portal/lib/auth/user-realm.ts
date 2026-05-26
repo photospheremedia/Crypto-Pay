@@ -1,13 +1,12 @@
 import type { User } from "@supabase/supabase-js";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { ACCOUNT_WALLET_SETUP_PATH } from "@/lib/account/paths";
-import {
-  ADMIN_ROLES,
-  checkAdminAccess,
-  isStaffRole,
-  type AdminRole,
-} from "@/lib/admin-auth";
+import { checkAdminAccess, isStaffRole, type AdminRole } from "@/lib/admin-auth";
 import { isAdminEmail } from "@/lib/admin-email";
+import {
+  PLATFORM_ADMIN_TENANT_SLUG,
+  PLATFORM_STAFF_ROLES,
+} from "@/lib/admin/platform-tenant";
 
 /**
  * Platform realms (UI + routing). Enforced in proxy, layouts, and server actions.
@@ -136,10 +135,11 @@ export async function resolveRealmForUser(
 
   const { data: membership } = await supabase
     .from("memberships")
-    .select("role")
+    .select("role, tenants!inner(slug)")
     .eq("user_id", user.id)
     .eq("status", "active")
-    .in("role", [...ADMIN_ROLES])
+    .eq("tenants.slug", PLATFORM_ADMIN_TENANT_SLUG)
+    .in("role", [...PLATFORM_STAFF_ROLES])
     .order("role", { ascending: false })
     .limit(1)
     .maybeSingle();

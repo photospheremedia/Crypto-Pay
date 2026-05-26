@@ -62,8 +62,12 @@ export async function updateSession(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith("/admin") && user) {
     // Get user role from JWT claims (set by Auth Hook from memberships table)
     const userRole = user.user_metadata?.user_role;
-    const adminRoles = ["cp_admin", "rhs_admin", "admin", "owner", "manager", "staff"];
-    if (!userRole || !adminRoles.includes(userRole)) {
+    const platformStaffRoles = ["cp_admin", "rhs_admin", "admin", "manager", "staff"];
+    const platformRealm = user.user_metadata?.platform_realm;
+    const hasAdminAccess =
+      platformRealm === "admin" ||
+      (!!userRole && platformStaffRoles.includes(userRole));
+    if (!hasAdminAccess) {
       // User doesn't have admin access - redirect to account
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = "/account";

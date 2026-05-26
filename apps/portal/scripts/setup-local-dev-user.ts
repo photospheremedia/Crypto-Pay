@@ -9,6 +9,7 @@ import { config } from "dotenv";
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { resolve } from "path";
 import { createClient } from "@supabase/supabase-js";
+import { isAdminEmail } from "../lib/admin-email";
 
 const portalRoot = resolve(__dirname, "..");
 config({ path: resolve(portalRoot, ".env.local") });
@@ -20,7 +21,9 @@ const email = (
   process.env.LOCAL_DEV_EMAIL || "photospheremedia00@gmail.com"
 ).toLowerCase();
 const password = process.env.LOCAL_DEV_PASSWORD || "CryptoPayDev!2026";
-const grantAdmin = process.env.LOCAL_DEV_ADMIN !== "0";
+const grantAdmin =
+  process.env.LOCAL_DEV_ADMIN === "1" ||
+  (process.env.LOCAL_DEV_ADMIN !== "0" && isAdminEmail(email));
 const localAppUrl = "http://localhost:3001";
 const ADMIN_TENANT_SLUG = "crypto-pay-admin";
 
