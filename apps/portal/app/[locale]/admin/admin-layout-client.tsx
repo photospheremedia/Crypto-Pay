@@ -11,7 +11,7 @@ import { AdminUserMenu } from "@/components/admin/admin-user-menu";
 import { AdminHelpMenu } from "@/components/admin/admin-help-menu";
 import { AdminSearch } from "@/components/admin/admin-search";
 import { LocaleSwitcher } from "@/components/locale-switcher";
-import { mainBelowHeaderClass } from "@/lib/layout-spacing";
+import { mainBelowHeaderClass, siteHeaderStackClass } from "@/lib/layout-spacing";
 import { cn } from "@/lib/utils";
 
 const emptyCounts: AdminNavCounts = {
@@ -111,7 +111,12 @@ export function AdminLayoutClient({
       </aside>
 
       <div className="flex min-h-screen min-w-0 flex-col">
-        <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b border-slate-200 bg-white px-4 shadow-sm sm:gap-3 sm:px-6">
+        <header
+          className={cn(
+            siteHeaderStackClass,
+            "flex h-14 shrink-0 items-center gap-2 border-b border-slate-200 bg-white px-4 shadow-sm sm:gap-3 sm:px-6",
+          )}
+        >
           <button
             type="button"
             onClick={() => setSidebarOpen(true)}
@@ -138,7 +143,7 @@ export function AdminLayoutClient({
             <AdminSearch />
           </div>
 
-          <div className="ml-auto flex shrink-0 items-center gap-0.5 sm:gap-1.5">
+          <div className="relative z-[110] ml-auto flex shrink-0 items-center gap-0.5 sm:gap-1.5">
             <LocaleSwitcher size="toolbar" />
             <AdminNotifications />
             <AdminHelpMenu />

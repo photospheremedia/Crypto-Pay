@@ -1,6 +1,7 @@
 import { hasLocale } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
+import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { IntlProvider } from "@/components/providers/intl-provider";
 import { routing } from "@/i18n/routing";
 
 type Props = {
@@ -20,6 +21,11 @@ export default async function LocaleLayout({ children, params }: Props) {
   }
 
   setRequestLocale(locale);
+  const messages = await getMessages();
 
-  return children;
+  return (
+    <IntlProvider locale={locale} messages={messages}>
+      {children}
+    </IntlProvider>
+  );
 }

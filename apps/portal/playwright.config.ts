@@ -7,8 +7,8 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './tests',
   
-  // Only run .spec.ts files (exclude .test.ts which are direct Supabase tests)
-  testMatch: '**/*.spec.ts',
+  // .spec.ts for suites; auth.setup.ts for saved login state
+  testMatch: ['**/*.spec.ts', '**/auth.setup.ts'],
   
   // Run tests in parallel
   fullyParallel: true,
@@ -43,8 +43,22 @@ export default defineConfig({
   // Configure projects for major browsers
   projects: [
     {
+      name: 'setup',
+      testMatch: /auth\.setup\.ts/,
+    },
+    {
       name: 'chromium',
+      testMatch: '**/*.spec.ts',
       use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'chromium-authenticated',
+      testMatch: '**/*.spec.ts',
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'playwright/.auth/user.json',
+      },
+      dependencies: ['setup'],
     },
     // Uncomment for additional browser coverage
     // {

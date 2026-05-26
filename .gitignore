@@ -19,7 +19,8 @@ backups/
 .env*.local
 .env.porkbun
 .env.netlify
-.env.netlify
+.env.supabase.legacy-account
+docs/ACCOUNT-CREDENTIALS.local.md
 
 # Legacy Restaurant Hub docs / captures (may contain OAuth tokens)
 GOOGLE_*.md

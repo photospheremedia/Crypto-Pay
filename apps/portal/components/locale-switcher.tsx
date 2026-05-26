@@ -1,10 +1,9 @@
 "use client";
 
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { Check, ChevronDown, Languages } from "lucide-react";
-import { usePathname, useRouter } from "@/i18n/navigation";
 import { localeCodes, type Locale } from "@/lib/i18n/locale-config";
-import { persistUserLocale } from "@/lib/i18n/locale-actions";
+import { useSwitchLocale } from "@/lib/i18n/use-switch-locale";
 import { useIsClient } from "@/lib/hooks/use-is-client";
 import { Button } from "@/components/ui/button";
 import {
@@ -44,10 +43,14 @@ type LocaleSwitcherProps = {
   appearance?: "default" | "marketing";
 };
 
-const menuContentClassName = "z-[100] min-w-44";
+const popoverLayerClassName = "z-[200]";
 
-const marketingMenuContentClassName =
-  "z-[100] w-60 rounded-2xl border-slate-200/90 bg-white/95 p-2 shadow-xl backdrop-blur-md dark:border-slate-700 dark:bg-slate-900/95";
+const menuContentClassName = cn(popoverLayerClassName, "min-w-44 bg-white dark:bg-slate-950");
+
+const marketingMenuContentClassName = cn(
+  popoverLayerClassName,
+  "w-60 rounded-2xl border-slate-200 bg-white p-2 shadow-xl dark:border-slate-700 dark:bg-slate-950",
+);
 
 const marketingRadioItemClassName =
   "rounded-lg py-2.5 pl-8 text-slate-700 focus:bg-emerald-50 focus:text-emerald-900 data-[state=checked]:bg-emerald-50 data-[state=checked]:text-emerald-900 dark:text-slate-200 dark:focus:bg-emerald-950/50 dark:focus:text-emerald-300 dark:data-[state=checked]:bg-emerald-950/40 dark:data-[state=checked]:text-emerald-300";
@@ -56,16 +59,6 @@ function localeShortCode(locale: Locale): string {
   if (locale === "de-AT") return "AT";
   const base = locale.split("-")[0];
   return base.toUpperCase();
-}
-
-function useSwitchLocale() {
-  const router = useRouter();
-  const pathname = usePathname();
-
-  return (next: Locale) => {
-    void persistUserLocale(next);
-    router.replace(pathname, { locale: next });
-  };
 }
 
 function LocaleMenuPlaceholder({
@@ -125,12 +118,13 @@ function LocaleMenuPlaceholder({
 function LocaleGrid({
   className,
   appearance = "default",
+  isPending = false,
 }: {
   className?: string;
   appearance?: "default" | "marketing";
+  isPending?: boolean;
 }) {
-  const locale = useLocale() as Locale;
-  const switchLocale = useSwitchLocale();
+  const { switchLocale, locale } = useSwitchLocale();
   const t = useTranslations("LocaleSwitcher");
   const isMarketing = appearance === "marketing";
 
@@ -158,9 +152,10 @@ function LocaleGrid({
             type="button"
             role="option"
             aria-selected={selected}
+            disabled={isPending}
             onClick={() => switchLocale(code)}
             className={cn(
-              "relative rounded-xl border px-3 py-2.5 text-left transition-all",
+              "relative rounded-xl border px-3 py-2.5 text-left transition-all disabled:opacity-60",
               selected
                 ? "border-emerald-300/80 bg-emerald-50 text-emerald-900 shadow-sm ring-1 ring-emerald-200/80 dark:border-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-200 dark:ring-emerald-800/60"
                 : "border-slate-200/80 bg-white text-slate-700 hover:border-emerald-200 hover:bg-emerald-50/50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-emerald-800 dark:hover:bg-emerald-950/30",
@@ -192,12 +187,12 @@ export function LocaleSwitcher({
   size = "default",
   appearance = "default",
 }: LocaleSwitcherProps) {
-  const locale = useLocale() as Locale;
-  const switchLocale = useSwitchLocale();
+  const { switchLocale, isPending, locale } = useSwitchLocale();
   const t = useTranslations("LocaleSwitcher");
   const isClient = useIsClient();
   const shortCode = localeShortCode(locale);
   const isMarketing = appearance === "marketing";
+  const pendingClass = isPending ? "pointer-events-none opacity-60" : undefined;
 
   if (variant === "grid") {
     if (!isClient) {
@@ -211,7 +206,13 @@ export function LocaleSwitcher({
         />
       );
     }
-    return <LocaleGrid className={className} appearance={appearance} />;
+    return (
+      <LocaleGrid
+        className={cn(pendingClass, className)}
+        appearance={appearance}
+        isPending={isPending}
+      />
+    );
   }
 
   if (variant === "select") {
@@ -230,9 +231,14 @@ export function LocaleSwitcher({
     }
 
     return (
-      <Select value={locale} onValueChange={(next) => switchLocale(next as Locale)}>
+      <Select
+        value={locale}
+        disabled={isPending}
+        onValueChange={(next) => switchLocale(next as Locale)}
+      >
         <SelectTrigger
           className={cn(
+            pendingClass,
             isMarketing &&
               "h-11 rounded-xl border-slate-200/80 bg-white/90 shadow-sm dark:border-slate-700 dark:bg-slate-900/80",
             className,
@@ -241,7 +247,7 @@ export function LocaleSwitcher({
         >
           <SelectValue />
         </SelectTrigger>
-        <SelectContent align="start" className="z-[100] rounded-xl">
+        <SelectContent align="start" className={cn(popoverLayerClassName, "rounded-xl")}>
           <SelectGroup>
             {localeCodes.map((code) => (
               <SelectItem key={code} value={code}>
@@ -269,6 +275,7 @@ export function LocaleSwitcher({
   }
 
   const triggerClassName = cn(
+    pendingClass,
     isMarketing
       ? "h-9 shrink-0 gap-1.5 rounded-full px-3 text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
       : size === "toolbar"

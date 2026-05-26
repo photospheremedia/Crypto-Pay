@@ -65,7 +65,7 @@ export function AccountHelpMenu() {
       {isOpen && (
         <div
           role="menu"
-          className="absolute right-0 top-full z-50 mt-2 w-72 animate-in fade-in-0 slide-in-from-top-2 rounded-xl border border-slate-200 bg-white shadow-xl"
+          className="absolute right-0 top-full z-[200] mt-2 w-72 animate-in fade-in-0 slide-in-from-top-2 rounded-xl border border-slate-200 bg-white shadow-xl"
         >
           <div className="border-b border-slate-200 px-4 py-3">
             <h3 className="text-sm font-semibold text-slate-900">{t("title")}</h3>

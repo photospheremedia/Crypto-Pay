@@ -58,7 +58,7 @@ export function AdminUserMenu({ isSuperAdmin }: AdminUserMenuProps) {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-64 rounded-xl border border-slate-200 bg-white shadow-xl animate-in slide-in-from-top-2 fade-in-0 z-50">
+        <div className="absolute right-0 top-full z-[200] mt-2 w-64 rounded-xl border border-slate-200 bg-white shadow-xl animate-in slide-in-from-top-2 fade-in-0">
           {/* User Info */}
           <div className="border-b border-slate-200 px-4 py-3">
             <div className="flex items-center gap-3">

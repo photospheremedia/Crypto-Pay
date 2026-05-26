@@ -81,7 +81,7 @@ export function AdminHelpMenu() {
       </button>
 
       {isOpen ? (
-        <div className="absolute right-0 top-full z-50 mt-2 w-72 rounded-xl border border-slate-200 bg-white shadow-xl">
+        <div className="absolute right-0 top-full z-[200] mt-2 w-72 rounded-xl border border-slate-200 bg-white shadow-xl">
           <div className="border-b border-slate-200 px-4 py-3">
             <h3 className="text-sm font-semibold text-slate-900">Quick links</h3>
             <p className="mt-0.5 text-xs text-slate-500">

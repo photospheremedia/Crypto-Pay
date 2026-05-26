@@ -68,7 +68,7 @@ export function AccountUserMenu({
       {isOpen && (
         <div
           role="menu"
-          className="absolute right-0 top-full z-50 mt-2 w-64 animate-in fade-in-0 slide-in-from-top-2 rounded-xl border border-slate-200 bg-white shadow-xl"
+          className="absolute right-0 top-full z-[200] mt-2 w-64 animate-in fade-in-0 slide-in-from-top-2 rounded-xl border border-slate-200 bg-white shadow-xl"
         >
           <div className="border-b border-slate-200 px-4 py-3">
             <div className="flex items-center gap-3">

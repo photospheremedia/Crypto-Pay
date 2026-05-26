@@ -1,4 +1,74 @@
-import type { Page } from "@playwright/test";
+import { config as loadEnv } from "dotenv";
+import { resolve } from "path";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { expect, type Cookie, type Page } from "@playwright/test";
+
+const portalRoot = resolve(__dirname, "..");
+loadEnv({ path: resolve(portalRoot, ".env.local") });
+
+/** Defaults match `scripts/setup-local-dev-user.ts` / `pnpm dev:setup`. */
+export const DEV_USER_EMAIL = (
+  process.env.PLAYWRIGHT_USER_EMAIL ??
+  process.env.LOCAL_DEV_EMAIL ??
+  "photospheremedia00@gmail.com"
+).toLowerCase();
+
+export const DEV_USER_PASSWORD =
+  process.env.PLAYWRIGHT_USER_PASSWORD ??
+  process.env.LOCAL_DEV_PASSWORD ??
+  "CryptoPayDev!2026";
+
+export const AUTH_STORAGE_PATH = "playwright/.auth/user.json";
+
+type StoredAuthCookie = {
+  value: string;
+  options?: CookieOptions;
+};
+
+/** Captures cookies from @supabase/ssr setAll (see Context7 /supabase/ssr docs). */
+function createSupabasePlaywrightCookieStore() {
+  const jar = new Map<string, StoredAuthCookie>();
+
+  return {
+    getAll: () =>
+      Array.from(jar.entries()).map(([name, { value }]) => ({ name, value })),
+    setAll: (cookies: { name: string; value: string; options?: CookieOptions }[]) => {
+      for (const { name, value, options } of cookies) {
+        if (value) {
+          jar.set(name, { value, options });
+        } else {
+          jar.delete(name);
+        }
+      }
+    },
+    toPlaywrightCookies: (domain = "localhost"): Cookie[] =>
+      Array.from(jar.entries()).map(([name, { value, options }]) => {
+        const sameSite = options?.sameSite;
+        const playwrightSameSite: Cookie["sameSite"] =
+          sameSite === "strict"
+            ? "Strict"
+            : sameSite === "none"
+              ? "None"
+              : "Lax";
+
+        const cookie: Cookie = {
+          name,
+          value,
+          domain,
+          path: options?.path ?? "/",
+          httpOnly: options?.httpOnly ?? false,
+          secure: options?.secure ?? false,
+          sameSite: playwrightSameSite,
+        };
+
+        if (options?.maxAge != null) {
+          cookie.expires = Math.floor(Date.now() / 1000) + options.maxAge;
+        }
+
+        return cookie;
+      }),
+  };
+}
 
 /** Dismiss cookie banner when present (blocks clicks on marketing pages). */
 export async function dismissCookieConsent(page: Page) {
@@ -20,4 +90,120 @@ export async function completeSignupForm(
   await page.locator("#email").fill(email);
   await page.locator("#password").fill(password);
   await page.getByRole("button", { name: /sign up/i }).click();
+}
+
+/**
+ * Sign in with the local dev user (`pnpm dev:setup`).
+ * Default: Supabase SSR session cookies via createServerClient (Context7 /supabase/ssr).
+ * Set PLAYWRIGHT_LOGIN_UI=1 to exercise the /login server-action form.
+ */
+export async function loginAsDevUser(
+  page: Page,
+  options?: { redirectPath?: string },
+) {
+  if (process.env.PLAYWRIGHT_LOGIN_UI === "1") {
+    await loginAsDevUserViaForm(page, options);
+    return;
+  }
+  await loginAsDevUserViaSupabase(page, options);
+}
+
+/**
+ * Sign in with createServerClient + inject cookies into Playwright.
+ * @see https://github.com/supabase/ssr — setAll must persist path/sameSite/maxAge
+ * @see https://github.com/microsoft/playwright/blob/main/docs/src/auth.md — wait for final URL
+ */
+export async function loginAsDevUserViaSupabase(
+  page: Page,
+  options?: { redirectPath?: string },
+) {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
+  if (!url || !anonKey) {
+    throw new Error(
+      "Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY in apps/portal/.env.local",
+    );
+  }
+
+  const cookieStore = createSupabasePlaywrightCookieStore();
+  const supabase = createServerClient(url, anonKey, {
+    cookies: {
+      getAll: () => cookieStore.getAll(),
+      setAll: (cookies) => cookieStore.setAll(cookies),
+    },
+  });
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email: DEV_USER_EMAIL,
+    password: DEV_USER_PASSWORD,
+  });
+  if (error) {
+    throw new Error(
+      `Supabase sign-in failed for ${DEV_USER_EMAIL}: ${error.message}. Run \`LOCAL_DEV_EMAIL=${DEV_USER_EMAIL} pnpm dev:setup\`.`,
+    );
+  }
+
+  const cookies = cookieStore.toPlaywrightCookies();
+  if (cookies.length === 0) {
+    throw new Error("Supabase sign-in succeeded but no auth cookies were set.");
+  }
+
+  await page.context().clearCookies();
+  await page.context().addCookies(cookies);
+
+  const destination = options?.redirectPath ?? "/account";
+  await page.goto(destination, { waitUntil: "domcontentloaded", timeout: 30_000 });
+
+  await dismissCookieConsent(page);
+
+  await page.waitForURL(
+    (url) => {
+      const href = url.toString();
+      const path = new URL(href).pathname;
+      return !path.includes("/login") && !href.includes("error=admin_required");
+    },
+    { timeout: 30_000 },
+  );
+}
+
+/** Sign in through the /login form (PLAYWRIGHT_LOGIN_UI=1). */
+export async function loginAsDevUserViaForm(
+  page: Page,
+  options?: { redirectPath?: string },
+) {
+  const loginPath = options?.redirectPath
+    ? `/login?redirect=${encodeURIComponent(options.redirectPath)}`
+    : "/login";
+
+  await page.context().clearCookies();
+  await page.goto(loginPath);
+  await dismissCookieConsent(page);
+
+  await page.locator("#email").fill(DEV_USER_EMAIL);
+  await page.locator("#password").fill(DEV_USER_PASSWORD);
+
+  const signInButton = page.getByRole("button", {
+    name: "Sign in",
+    exact: true,
+  });
+  await expect(signInButton).toBeEnabled({ timeout: 20_000 });
+
+  await signInButton.click();
+
+  await page.waitForURL(
+    (url) => {
+      const path = new URL(url.toString()).pathname;
+      return (
+        path.includes("/account") ||
+        path.includes("/admin") ||
+        (!path.includes("/login") && path !== "/")
+      );
+    },
+    { timeout: 30_000 },
+  ).catch(async () => {
+    const errorText = await page.locator(".text-red-600").first().textContent();
+    throw new Error(
+      `Login failed for ${DEV_USER_EMAIL}. ${errorText?.trim() ?? "Still on /login."} Run \`pnpm dev:setup\` first.`,
+    );
+  });
 }

@@ -39,12 +39,31 @@ export function isStaffAccount(
   return false;
 }
 
-/** Merchant accounts only — excludes staff memberships and admin allowlist emails. */
+/** Playwright / QA signups that create real auth users but are not real merchants. */
+export function isTestMerchantEmail(email: string | null | undefined): boolean {
+  if (!email) return false;
+  const normalized = email.trim().toLowerCase();
+  return (
+    /@playwright\.test$/i.test(normalized) ||
+    /^qa-signup-\d+@/i.test(normalized) ||
+    /^lead-\d+@playwright\.test$/i.test(normalized)
+  );
+}
+
+function shouldHideTestMerchants(): boolean {
+  return process.env.ADMIN_SHOW_TEST_MERCHANTS !== "1";
+}
+
+/** Merchant accounts only — excludes staff, admin allowlist, and (by default) QA test signups. */
 export function filterMerchantProfiles<T extends { id: string; email?: string | null }>(
   profiles: T[],
   staffUserIds: Set<string>,
 ): T[] {
-  return profiles.filter((p) => !isStaffAccount(p, staffUserIds));
+  return profiles.filter((p) => {
+    if (isStaffAccount(p, staffUserIds)) return false;
+    if (shouldHideTestMerchants() && isTestMerchantEmail(p.email)) return false;
+    return true;
+  });
 }
 
 export async function assertMerchantAccount(

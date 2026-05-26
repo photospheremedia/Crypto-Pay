@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Link, usePathname } from "@/i18n/navigation";
 import { NAV_LINKS } from "@/lib/cryptopay/constants";
+import { siteHeaderStackClass } from "@/lib/layout-spacing";
 import { cn } from "@/lib/utils";
 import { CryptoPayLogo } from "./crypto-pay-logo";
 
@@ -37,7 +38,12 @@ export function CryptoPayHeader() {
   useEffect(() => setMobileOpen(false), [pathname]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/90 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/90">
+    <header
+      className={cn(
+        siteHeaderStackClass,
+        "border-b border-slate-200/70 bg-white/95 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/95",
+      )}
+    >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
         <CryptoPayLogo />
 
@@ -58,7 +64,7 @@ export function CryptoPayHeader() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-1.5 md:flex">
+        <div className="relative z-[110] hidden items-center gap-1.5 md:flex">
           <LocaleSwitcher appearance="marketing" />
           <span
             className="mx-0.5 hidden h-5 w-px bg-slate-200 lg:block dark:bg-slate-700"
@@ -103,7 +109,7 @@ export function CryptoPayHeader() {
       </div>
 
       {mobileOpen ? (
-        <div className="border-t border-slate-200/80 bg-white/95 px-4 py-5 backdrop-blur-md md:hidden dark:border-slate-800 dark:bg-slate-950/95">
+        <div className="relative z-[110] border-t border-slate-200/80 bg-white px-4 py-5 shadow-lg md:hidden dark:border-slate-800 dark:bg-slate-950">
           <LocaleSwitcher appearance="marketing" variant="grid" className="mb-5" />
           <nav className="flex flex-col gap-0.5" aria-label="Main">
             {NAV_LINKS.map((link) => (

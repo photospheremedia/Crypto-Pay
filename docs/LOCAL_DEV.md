@@ -50,6 +50,47 @@ Email logos use `NEXT_PUBLIC_APP_URL/email/logo.png`. In dev, mail clients canno
 - **Site URL:** `http://localhost:3001` (or keep production; both can work for password login)
 - **Redirect URLs:** add `http://localhost:3001/auth/callback`
 
+## Playwright: open the app as the dev user
+
+With the portal running on port 3001:
+
+```bash
+pnpm dev:setup                  # once — creates/resets dev user
+pnpm playwright:connect:login   # opens /login, fills email, signs in, keeps browser open
+```
+
+Use this when you are on the login page and want Playwright to sign in for you (dev user from `dev:setup`).
+
+Other commands (from repo root or `apps/portal`):
+
+| Command | Purpose |
+|---------|---------|
+| `pnpm playwright:connect` | Same as `connect:login` → then `/account` |
+| `pnpm playwright:connect:admin` | Login → `/admin/dashboard` |
+| `pnpm playwright:login` | Save session headlessly (no visible browser) |
+| `pnpm playwright:open` | Open `/account` with saved session only |
+| `pnpm playwright:open:admin` | Open `/admin/dashboard` with saved session |
+| `pnpm test:authenticated` | Run Playwright specs logged in |
+
+Override credentials: `PLAYWRIGHT_USER_EMAIL` / `PLAYWRIGHT_USER_PASSWORD` (or `LOCAL_DEV_*`).
+
+demo merchant example:
+
+```bash
+LOCAL_DEV_EMAIL=merchant@example.com pnpm dev:setup
+pnpm playwright:connect:merchant
+```
+
+Playwright signs in via Supabase session cookies by default (avoids `/login` server-action stalls). To test the HTML form instead: `PLAYWRIGHT_LOGIN_UI=1 pnpm playwright:connect`.
+
+### Why QA users appear under Admin → Merchants
+
+Playwright’s **signup test** (`tests/auth.spec.ts`) creates **real** Supabase users (name “QA User”, emails like `qa-signup-<timestamp>@playwright.test`). They show in the merchant directory until removed.
+
+- **Hidden by default** in the admin merchants list (`isTestMerchantEmail` in `lib/admin/merchant-directory.ts`).
+- Set `ADMIN_SHOW_TEST_MERCHANTS=1` on the portal if you need to see them while debugging tests.
+- Old rows (`@outlook.com` QA signups, manual typos like `colcolli990@gmail.comà`) are not auto-hidden — delete them in Supabase Auth / user detail if unwanted.
+
 ## Test the merchant onboarding flow
 
 After `pnpm dev:portal`, you can walk through signup → add wallet:

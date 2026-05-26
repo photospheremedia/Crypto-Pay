@@ -141,7 +141,7 @@ export function AdminSearch() {
       {isOpen && results.length > 0 ? (
         <div
           ref={dropdownRef}
-          className="absolute top-full z-50 mt-2 max-h-96 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-xl"
+          className="absolute top-full z-[200] mt-2 max-h-96 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white shadow-xl"
         >
           <div className="py-2">
             {results.map((result) => (
@@ -178,7 +178,7 @@ export function AdminSearch() {
       {isOpen && query.trim().length >= 2 && results.length === 0 && !loading ? (
         <div
           ref={dropdownRef}
-          className="absolute top-full z-50 mt-2 w-full rounded-xl border border-slate-200 bg-white shadow-xl"
+          className="absolute top-full z-[200] mt-2 w-full rounded-xl border border-slate-200 bg-white shadow-xl"
         >
           <div className="flex flex-col items-center justify-center px-4 py-8 text-center">
             <Search className="mb-2 h-8 w-8 text-slate-300" />

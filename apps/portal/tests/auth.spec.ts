@@ -34,7 +34,7 @@ test.describe("Authentication Flow", () => {
     await page.goto("/signup");
     await dismissCookieConsent(page);
 
-    const uniqueEmail = `qa-signup-${Date.now()}@outlook.com`;
+    const uniqueEmail = `qa-signup-${Date.now()}@playwright.test`;
     await completeSignupForm(page, uniqueEmail, "StrongPass123!");
 
     await expect

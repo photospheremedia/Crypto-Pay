@@ -7,3 +7,4 @@
 | [ACCOUNT_SETUP_WORKFLOW.md](./ACCOUNT_SETUP_WORKFLOW.md) | Merchant signup, multiple payout wallets, email policy, admin verification |
 | [ERROR_HANDLING.md](./ERROR_HANDLING.md) | next-intl, error boundaries, API routes, safe JSON |
 | [PORKBUN-SECRETS.md](./PORKBUN-SECRETS.md) | Domain API secrets (ops) |
+| [ACCOUNT-CREDENTIALS.md](./ACCOUNT-CREDENTIALS.md) | demo merchant & PhotoSphere logins (secrets in gitignored `ACCOUNT-CREDENTIALS.local.md`) |

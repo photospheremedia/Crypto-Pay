@@ -11,6 +11,9 @@
 /** Sticky site header inner bar height */
 export const siteHeaderHeightClass = "h-16";
 
+/** Keeps header chrome and in-header menus above page content. */
+export const siteHeaderStackClass = "sticky top-0 z-[100] isolate";
+
 /** Gap between sticky header and first page content */
 export const sectionBelowHeaderClass = "pt-8 sm:pt-10";
 

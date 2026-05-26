@@ -1,6 +1,7 @@
 "use server";
 
 import { z } from "zod";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getSupabaseServerClient } from "@crypto-pay/db/supabaseServer";
 import {
@@ -77,6 +78,8 @@ export async function signIn(
   }
 
   const realm = await resolveRealmForUser(supabase, data.user);
+
+  revalidatePath("/", "layout");
 
   if (redirectPath) {
     redirect(sanitizePostAuthRedirect(redirectPath, realm));

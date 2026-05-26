@@ -18,7 +18,11 @@ import { LocaleSwitcher } from "@/components/locale-switcher";
 import { CryptoPayLogo } from "@/components/cryptopay/crypto-pay-logo";
 import { AccountUserMenu } from "@/components/account/account-user-menu";
 import { AccountHelpMenu } from "@/components/account/account-help-menu";
-import { mainBelowHeaderClass, stickyBelowHeaderClass } from "@/lib/layout-spacing";
+import {
+  mainBelowHeaderClass,
+  siteHeaderStackClass,
+  stickyBelowHeaderClass,
+} from "@/lib/layout-spacing";
 import { cn } from "@/lib/utils";
 
 export interface AccountLayoutClientProps {
@@ -146,7 +150,12 @@ export function AccountLayoutClient({
         <div className="flex-1 overflow-y-auto">{sidebarNav}</div>
       </aside>
 
-      <header className="sticky top-0 z-30 flex h-16 min-w-0 items-center gap-2 border-b border-slate-200 bg-white px-4 shadow-sm sm:gap-4 sm:px-6">
+      <header
+        className={cn(
+          siteHeaderStackClass,
+          "flex h-16 min-w-0 items-center gap-2 border-b border-slate-200 bg-white px-4 shadow-sm sm:gap-4 sm:px-6",
+        )}
+      >
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <button
             type="button"
@@ -161,7 +170,7 @@ export function AccountLayoutClient({
 
         <div className="flex-1" />
 
-        <div className="flex shrink-0 items-center gap-0.5 sm:gap-1.5">
+        <div className="relative z-[110] flex shrink-0 items-center gap-0.5 sm:gap-1.5">
           <div className="hidden md:flex">
             <LocaleSwitcher size="toolbar" />
           </div>

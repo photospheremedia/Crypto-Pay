@@ -8,14 +8,13 @@ import {
 import createIntlMiddleware from "next-intl/middleware";
 import { hasLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
-import { isAdminEmail } from "@/lib/admin-email";
 import {
   getHomePathForRealm,
   isAdminPath,
   isStaffOnlyPath,
   resolveRealmForUser,
 } from "@/lib/auth/user-realm";
-import { ADMIN_ROLES } from "@/lib/admin-auth";
+import { mergeIntlMiddlewareResponse } from "@/lib/i18n/merge-intl-middleware-response";
 import { stripLocale } from "@/lib/i18n/strip-locale";
 import { isMetadataRoute } from "@/lib/routing/metadata-routes";
 
@@ -89,6 +88,7 @@ export async function proxy(request: NextRequest) {
         response = NextResponse.next({
           request,
         });
+        mergeIntlMiddlewareResponse(intlResponse, response);
         cookiesToSet.forEach(({ name, value, options }) =>
           response.cookies.set(name, value, options),
         );
@@ -99,7 +99,6 @@ export async function proxy(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  const hasAdminEmail = isAdminEmail(user?.email);
 
   const localizedPath = (path: string, localeOverride?: string) => {
     const locale =
@@ -117,15 +116,8 @@ export async function proxy(request: NextRequest) {
   }
 
   if (isAdminRoute && user) {
-    const { data: membership } = await supabase
-      .from("memberships")
-      .select("role")
-      .eq("user_id", user.id)
-      .eq("status", "active")
-      .in("role", [...ADMIN_ROLES])
-      .maybeSingle();
-
-    if (!membership && !hasAdminEmail) {
+    const realm = await resolveRealmForUser(supabase, user);
+    if (realm !== "admin") {
       const redirectUrl = new URL(localizedPath("/account"), request.url);
       redirectUrl.searchParams.set("error", "admin_required");
       return NextResponse.redirect(redirectUrl);

@@ -125,12 +125,26 @@ function realmFromJwtClaims(claims: Record<string, unknown> | undefined): UserRe
   return null;
 }
 
-/** Resolve realm: allowlisted email → JWT claims → active staff membership (server). */
+/** Resolve realm: allowlisted email → active staff membership → JWT claims (server). */
 export async function resolveRealmForUser(
   supabase: SupabaseClient,
   user: Pick<User, "id" | "email">,
 ): Promise<UserRealm> {
   if (isAdminEmail(user.email)) {
+    return "admin";
+  }
+
+  const { data: membership } = await supabase
+    .from("memberships")
+    .select("role")
+    .eq("user_id", user.id)
+    .eq("status", "active")
+    .in("role", [...ADMIN_ROLES])
+    .order("role", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (membership && isStaffRole(membership.role)) {
     return "admin";
   }
 
@@ -143,18 +157,10 @@ export async function resolveRealmForUser(
       return fromJwt;
     }
   } catch {
-    // JWT claims unavailable — fall back to database
+    // JWT claims unavailable — treat as merchant
   }
 
-  const { data: membership } = await supabase
-    .from("memberships")
-    .select("role")
-    .eq("user_id", user.id)
-    .eq("status", "active")
-    .in("role", [...ADMIN_ROLES])
-    .maybeSingle();
-
-  return membership && isStaffRole(membership.role) ? "admin" : "merchant";
+  return "merchant";
 }
 
 export async function resolveUserRealm(): Promise<{

@@ -24,7 +24,7 @@ export default function MarketingLayout({
         <div className="pointer-events-none absolute -right-64 top-60 h-96 w-96 rounded-full bg-cyan-200/20 blur-[120px] dark:bg-cyan-900/20" />
 
         <CryptoPayHeader />
-        <main id="main-content" className="relative z-10">
+        <main id="main-content" className="relative z-0">
           {children}
         </main>
         <ScrollToTop />

@@ -1,8 +1,7 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
-import { getLocale, getMessages } from "next-intl/server";
-import { IntlProvider } from "@/components/providers/intl-provider";
+import { getLocale } from "next-intl/server";
 import { CookieConsent } from "@/components/cookie-consent";
 import { ToastProvider } from "@/hooks/use-toast";
 import { isRtlLocale } from "@/i18n/routing";
@@ -105,8 +104,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const locale = await getLocale();
-  const messages = await getMessages();
-  const timeZone = process.env.NEXT_PUBLIC_TIMEZONE ?? "UTC";
   const dir = isRtlLocale(locale) ? "rtl" : "ltr";
 
   return (
@@ -116,9 +113,7 @@ export default async function RootLayout({
       className={`bg-white dark:bg-gray-950 text-black dark:text-white ${manrope.className}`}
     >
       <body className="min-h-dvh bg-gray-50">
-        <IntlProvider locale={locale} messages={messages} timeZone={timeZone}>
-          <ToastProvider>{children}</ToastProvider>
-        </IntlProvider>
+        <ToastProvider>{children}</ToastProvider>
         <CookieConsent />
       </body>
     </html>
