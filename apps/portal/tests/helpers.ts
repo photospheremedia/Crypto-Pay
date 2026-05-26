@@ -16,9 +16,48 @@ export const DEV_USER_EMAIL = (
 export const DEV_USER_PASSWORD =
   process.env.PLAYWRIGHT_USER_PASSWORD ??
   process.env.LOCAL_DEV_PASSWORD ??
+  process.env.PLAYWRIGHT_PROD_PASSWORD ??
   "CryptoPayDev!2026";
 
+/** Production smoke defaults (override via env; never commit passwords). */
+export const PROD_BASE_URL =
+  process.env.PLAYWRIGHT_PROD_BASE_URL?.trim() ||
+  process.env.NEXT_PUBLIC_APP_URL?.trim() ||
+  "https://cryptopay.sale";
+
+export const PROD_ADMIN_EMAIL = (
+  process.env.PLAYWRIGHT_ADMIN_EMAIL ?? "photospheremedia00@gmail.com"
+).toLowerCase();
+
+export const PROD_MERCHANT_EMAIL = (
+  process.env.PLAYWRIGHT_MERCHANT_EMAIL ??
+  process.env.PLAYWRIGHT_MERCHANT_EMAIL ??
+  "merchant@example.com"
+).toLowerCase();
+
+export function prodPasswordFor(email: string): string {
+  const normalized = email.toLowerCase();
+  if (
+    normalized === PROD_MERCHANT_EMAIL &&
+    process.env.PLAYWRIGHT_MERCHANT_PASSWORD?.trim()
+  ) {
+    return process.env.PLAYWRIGHT_MERCHANT_PASSWORD.trim();
+  }
+  if (
+    normalized === PROD_ADMIN_EMAIL &&
+    process.env.PLAYWRIGHT_ADMIN_PASSWORD?.trim()
+  ) {
+    return process.env.PLAYWRIGHT_ADMIN_PASSWORD.trim();
+  }
+  return DEV_USER_PASSWORD;
+}
+
 export const AUTH_STORAGE_PATH = "playwright/.auth/user.json";
+
+export function cookieDomainForBaseUrl(baseUrl: string): string {
+  const host = new URL(baseUrl).hostname;
+  return host === "localhost" ? "localhost" : host;
+}
 
 type StoredAuthCookie = {
   value: string;
@@ -113,9 +152,14 @@ export async function loginAsDevUser(
  * @see https://github.com/supabase/ssr — setAll must persist path/sameSite/maxAge
  * @see https://github.com/microsoft/playwright/blob/main/docs/src/auth.md — wait for final URL
  */
-export async function loginAsDevUserViaSupabase(
+export async function loginWithSupabaseSession(
   page: Page,
-  options?: { redirectPath?: string },
+  params: {
+    email: string;
+    password: string;
+    redirectPath?: string;
+    baseURL?: string;
+  },
 ) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
@@ -124,6 +168,9 @@ export async function loginAsDevUserViaSupabase(
       "Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY in apps/portal/.env.local",
     );
   }
+
+  const baseURL = params.baseURL ?? PROD_BASE_URL;
+  const cookieDomain = cookieDomainForBaseUrl(baseURL);
 
   const cookieStore = createSupabasePlaywrightCookieStore();
   const supabase = createServerClient(url, anonKey, {
@@ -134,16 +181,16 @@ export async function loginAsDevUserViaSupabase(
   });
 
   const { error } = await supabase.auth.signInWithPassword({
-    email: DEV_USER_EMAIL,
-    password: DEV_USER_PASSWORD,
+    email: params.email,
+    password: params.password,
   });
   if (error) {
     throw new Error(
-      `Supabase sign-in failed for ${DEV_USER_EMAIL}: ${error.message}. Run \`LOCAL_DEV_EMAIL=${DEV_USER_EMAIL} pnpm dev:setup\`.`,
+      `Supabase sign-in failed for ${params.email}: ${error.message}`,
     );
   }
 
-  const cookies = cookieStore.toPlaywrightCookies();
+  const cookies = cookieStore.toPlaywrightCookies(cookieDomain);
   if (cookies.length === 0) {
     throw new Error("Supabase sign-in succeeded but no auth cookies were set.");
   }
@@ -151,19 +198,36 @@ export async function loginAsDevUserViaSupabase(
   await page.context().clearCookies();
   await page.context().addCookies(cookies);
 
-  const destination = options?.redirectPath ?? "/account";
-  await page.goto(destination, { waitUntil: "domcontentloaded", timeout: 30_000 });
+  const destination = params.redirectPath ?? "/account";
+  const isProd =
+    !baseURL.includes("localhost") && !baseURL.includes("127.0.0.1");
+
+  await page.goto(destination, {
+    waitUntil: isProd ? "commit" : "domcontentloaded",
+    timeout: isProd ? 90_000 : 45_000,
+  });
 
   await dismissCookieConsent(page);
 
   await page.waitForURL(
-    (url) => {
-      const href = url.toString();
-      const path = new URL(href).pathname;
-      return !path.includes("/login") && !href.includes("error=admin_required");
+    (href) => {
+      const path = new URL(href.toString()).pathname;
+      return !path.includes("/login") && !href.toString().includes("error=");
     },
-    { timeout: 30_000 },
+    { timeout: isProd ? 90_000 : 45_000 },
   );
+}
+
+export async function loginAsDevUserViaSupabase(
+  page: Page,
+  options?: { redirectPath?: string },
+) {
+  await loginWithSupabaseSession(page, {
+    email: DEV_USER_EMAIL,
+    password: DEV_USER_PASSWORD,
+    redirectPath: options?.redirectPath,
+    baseURL: process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:3001",
+  });
 }
 
 /** Sign in through the /login form (PLAYWRIGHT_LOGIN_UI=1). */
