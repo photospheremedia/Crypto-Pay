@@ -11,6 +11,8 @@ import { Loader2, ArrowRight, ArrowLeft, Check, Building2, MapPin, Mail } from '
 import { getSupabaseBrowserClient } from '@crypto-pay/db/supabaseClient';
 import { Logo } from '@/components/logo';
 import { signUp, type ActionState } from './actions';
+import { SecurityCheckField } from '@/components/auth/security-check-field';
+import { isTurnstileEnabled } from '@/lib/security/turnstile-config';
 
 const STEPS = [
   { id: 1, title: 'Business Info', icon: Building2 },
@@ -52,6 +54,9 @@ export function SignupForm() {
 
   const [step, setStep] = useState(1);
   const [existingUser, setExistingUser] = useState(false);
+  const [securityCheckPassed, setSecurityCheckPassed] = useState(
+    () => !isTurnstileEnabled(),
+  );
 
   // Form data
   const [formData, setFormData] = useState({
@@ -94,7 +99,10 @@ export function SignupForm() {
   const canProceedStep1 = formData.org_name.length >= 2 && formData.org_type &&
     (formData.org_type !== 'other' || formData.org_type_other.length >= 2);
   const canProceedStep2 = formData.city && formData.state && formData.phone.length >= 6;
-  const canSubmit = formData.email && formData.password.length >= 8;
+  const canSubmit =
+    formData.email &&
+    formData.password.length >= 8 &&
+    securityCheckPassed;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,7 +113,6 @@ export function SignupForm() {
     Object.entries(formData).forEach(([key, value]) => {
       fd.set(key, String(value));
     });
-
     formAction(fd);
   };
 
@@ -185,7 +192,7 @@ export function SignupForm() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="relative">
             <input type="hidden" name="redirect" value={redirect || ''} />
             <input type="hidden" name="priceId" value={priceId || ''} />
 
@@ -474,7 +481,13 @@ export function SignupForm() {
                   </div>
                 )}
 
-                <div className="flex gap-3 mt-4">
+                <SecurityCheckField
+                  resetTrigger={state?.error}
+                  onCanSubmitChange={setSecurityCheckPassed}
+                  className="mt-2"
+                />
+
+                <div className="flex gap-3 mt-4 pt-1">
                   <Button
                     type="button"
                     variant="outline"

@@ -2,8 +2,15 @@
  * Verify Resend + email env for Crypto Pay.
  * Usage: npx tsx scripts/verify-resend-config.ts [--send-test admin@example.com]
  */
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { config } from "dotenv";
 import { resolve } from "path";
+import {
+  EMAIL_LOGO_STATIC_PATH,
+  getEmailAssetOrigin,
+  getEmailLogoImageUrl,
+} from "../lib/email/brand-assets";
 
 config({ path: resolve(process.cwd(), ".env.local") });
 config({ path: resolve(process.cwd(), ".env.development.local") });
@@ -57,6 +64,32 @@ async function main() {
     console.warn(
       `⚠ EMAIL_REPLY_TO=${replyTo} — ensure this inbox is monitored (or forward to photospheremedia00@gmail.com).`,
     );
+  }
+
+  const logoPath = join(process.cwd(), "public", EMAIL_LOGO_STATIC_PATH);
+  if (!existsSync(logoPath)) {
+    console.error(`✗ Missing ${logoPath} — run: pnpm email:logo`);
+    ok = false;
+  } else {
+    console.log(`✓ Email logo file: public${EMAIL_LOGO_STATIC_PATH}`);
+  }
+
+  const logoUrl = getEmailLogoImageUrl();
+  const origin = getEmailAssetOrigin();
+  console.log(`  Asset origin: ${origin}`);
+  console.log(`  Logo URL: ${logoUrl}`);
+
+  try {
+    const head = await fetch(logoUrl, { method: "HEAD", redirect: "follow" });
+    if (head.ok) {
+      console.log(`✓ Logo reachable at ${logoUrl} (${head.headers.get("content-type") ?? "unknown type"})`);
+    } else {
+      console.warn(
+        `⚠ Logo URL returned HTTP ${head.status} — deploy public/email/*.png or set EMAIL_LOGO_URL`,
+      );
+    }
+  } catch (err) {
+    console.warn(`⚠ Could not HEAD logo URL: ${err instanceof Error ? err.message : err}`);
   }
 
   if (!ok) {

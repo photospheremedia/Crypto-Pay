@@ -1,8 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { checkRateLimit, createRateLimitResponse } from '@/lib/rate-limit';
+import { getClientIpFromRequest } from '@/lib/security/client-ip';
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = getClientIpFromRequest(req);
+    const rateLimitResult = await checkRateLimit('public-api', ip);
+    if (!rateLimitResult.success) {
+      return createRateLimitResponse(
+        rateLimitResult.limit,
+        rateLimitResult.remaining,
+        rateLimitResult.reset,
+      );
+    }
+
     const body = await req.json();
     const { event_type, metadata, tenant_id, user_id } = body;
 

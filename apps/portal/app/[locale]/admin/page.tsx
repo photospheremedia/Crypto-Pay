@@ -1,16 +1,11 @@
-"use client";
+import { redirect } from "@/i18n/navigation";
+import type { Locale } from "@/i18n/routing";
 
-import { useEffect } from "react";
+type Props = {
+  params: Promise<{ locale: string }>;
+};
 
-// Redirect /admin to /admin/dashboard
-export default function AdminIndexPage() {
-  useEffect(() => {
-    window.location.href = "/admin/dashboard";
-  }, []);
-
-  return (
-    <div className="flex items-center justify-center min-h-[400px]">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500" />
-    </div>
-  );
+export default async function AdminIndexPage({ params }: Props) {
+  const { locale } = await params;
+  redirect({ href: "/admin/dashboard", locale: locale as Locale });
 }

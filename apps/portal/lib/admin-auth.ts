@@ -24,6 +24,13 @@ export const ADMIN_ROLES = [
 
 export type AdminRole = (typeof ADMIN_ROLES)[number];
 
+const ADMIN_ROLE_SET = new Set<string>(ADMIN_ROLES);
+
+/** True when role is a staff / platform admin role (matches JWT `user_role` + memberships). */
+export function isStaffRole(role: string | null | undefined): boolean {
+  return !!role && ADMIN_ROLE_SET.has(role);
+}
+
 const superAdminPermissions = {
   canManageAllTenants: true,
   canManageStaff: true,

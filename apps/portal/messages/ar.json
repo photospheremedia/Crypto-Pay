@@ -151,6 +151,24 @@
       "signOut": "تسجيل الخروج",
       "adminDashboard": "لوحة المسؤول"
     },
+    "header": {
+      "openMenu": "فتح قائمة التنقل",
+      "closeMenu": "إغلاق قائمة التنقل",
+      "sidebarNav": "تنقل الحساب",
+      "userMenu": "فتح قائمة الحساب",
+      "profile": "الملف الشخصي"
+    },
+    "help": {
+      "menuLabel": "المساعدة والدعم",
+      "title": "المساعدة والدعم",
+      "subtitle": "التوثيق وأمان الحساب",
+      "documentation": "وثائق المطورين",
+      "documentationDescription": "الرسوم والويب هوك وأدلة التكامل",
+      "security": "الأمان",
+      "securityDescription": "كلمة المرور والمصادقة الثنائية والجلسات",
+      "emailUs": "راسلنا",
+      "emailAddress": "support@cryptopay.sale"
+    },
     "dashboard": {
       "welcome": "مرحباً بعودتك، {name}",
       "subtitle": "اقبل مدفوعات العملات المشفرة — أدر محافظ الدفع والنشاط",
@@ -412,6 +430,45 @@
     "contactSales": "تواصل مع المبيعات",
     "createAccount": "إنشاء حساب"
   },
+  "Admin": {
+    "nav": {
+      "brand": "Crypto Pay",
+      "brandTagline": "لوحة الإدارة",
+      "overview": "نظرة عامة",
+      "merchantOps": "عمليات التجار",
+      "insights": "رؤى",
+      "platform": "المنصة",
+      "growth": "النمو",
+      "superAdmin": "المسؤول الأعلى",
+      "dashboard": "لوحة التحكم",
+      "walletReview": "مراجعة محافظ الدفع",
+      "merchants": "التجار",
+      "leads": "العملاء المحتملون والدردشة",
+      "analytics": "التحليلات",
+      "settings": "الإعدادات",
+      "notifications": "الإشعارات",
+      "security": "الأمان",
+      "campaigns": "حملات البريد",
+      "automations": "الأتمتة",
+      "templates": "القوالب",
+      "contacts": "جهات الاتصال",
+      "staff": "إدارة الفريق",
+      "audit": "سجلات التدقيق",
+      "exitAdmin": "الخروج إلى الموقع"
+    },
+    "dashboard": {
+      "title": "نظرة تشغيلية",
+      "subtitle": "مراجعة محافظ الدفع والتجار والعملاء المحتملين.",
+      "pendingWallets": "محافظ قيد المراجعة",
+      "verifiedWallets": "محافظ موثقة",
+      "merchantAccounts": "حسابات التجار",
+      "newLeadsToday": "عملاء جدد اليوم",
+      "reviewWallets": "مراجعة المحافظ",
+      "viewMerchants": "عرض التجار",
+      "openInbox": "صندوق العملاء المحتملين",
+      "quickActions": "إجراءات سريعة"
+    }
+  },
   "Auth": {
     "welcomeBack": "مرحباً بعودتك",
     "signInTitle": "تسجيل الدخول إلى حسابك",
@@ -452,5 +509,27 @@
     "sendResetLink": "إرسال رابط إعادة التعيين",
     "backToSignIn": "العودة لتسجيل الدخول",
     "resetPassword": "إعادة تعيين كلمة المرور"
+  },
+  "Legal": {
+    "terms": {
+      "eyebrow": "قانوني",
+      "title": "شروط الخدمة",
+      "metaTitle": "شروط الخدمة | Crypto Pay",
+      "metaDescription": "شروط خدمة Crypto Pay — قبول مدفوعات العملات المشفرة غير الحاضنة وحسابات التجار واستخدام واجهة البرمجة.",
+      "openGraphTitle": "Crypto Pay — شروط الخدمة",
+      "openGraphDescription": "شروط التجار لقبول مدفوعات العملات المشفرة مع التسوية من محفظة إلى محفظة.",
+      "lastUpdated": "آخر تحديث: {date}",
+      "footerNote": "باستخدامك Crypto Pay، فإنك تقر بأنك قرأت وفهمت ووافقت على شروط الخدمة هذه."
+    },
+    "privacy": {
+      "eyebrow": "قانوني",
+      "title": "سياسة الخصوصية",
+      "metaTitle": "سياسة الخصوصية | Crypto Pay",
+      "metaDescription": "كيف تجمع Crypto Pay وتستخدم وتحمي بيانات التجار والمعاملات لخدمات الدفع بالعملات المشفرة.",
+      "openGraphTitle": "Crypto Pay — سياسة الخصوصية",
+      "openGraphDescription": "ممارسات الخصوصية للتجار الذين يستخدمون Crypto Pay لقبول وتتبع مدفوعات العملات المشفرة.",
+      "lastUpdated": "آخر تحديث: {date}",
+      "footerNote": "تصف سياسة الخصوصية هذه كيفية تعاملنا مع المعلومات عند استخدامك Crypto Pay."
+    }
   }
 }

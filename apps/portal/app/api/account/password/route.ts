@@ -1,11 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
+import { parseRequestJson } from "@/lib/api/parse-request-json";
+import { routeError } from "@/lib/api/route-error";
 import { createClient } from "@/lib/supabase/server";
 import { checkRateLimit, createRateLimitResponse } from '@/lib/rate-limit';
 
 export async function POST(request: NextRequest) {
   try {
+    const body = await parseRequestJson<{
+      currentPassword?: string;
+      newPassword?: string;
+    }>(request);
+    if (body instanceof Response) return body;
+
     const supabase = await createClient();
-    const { currentPassword, newPassword } = await request.json();
+    const { currentPassword, newPassword } = body;
     const normalizedPassword = String(newPassword || "");
 
     // Get current user
@@ -59,11 +67,7 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
-    console.error("Password update error:", error);
-    return NextResponse.json(
-      { error: error.message || "Failed to update password" },
-      { status: 500 }
-    );
+  } catch (error) {
+    return routeError(error, { logContext: "account/password POST" });
   }
 }

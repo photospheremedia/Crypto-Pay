@@ -1,0 +1,24 @@
+---
+description: Dev workflow — health-check Next/portal/backend while coding; docs via skills → Context7 MCP → domain MCP → CLI → web
+alwaysApply: true
+---
+
+# Development workflow
+
+Follow `.agents/skills/dev-workflow/SKILL.md` during implementation.
+
+## While coding
+
+- After portal edits: `ReadLints` on touched files; run `pnpm typecheck:portal` when types/API change.
+- Watch dev-server terminal for Next/runtime errors when `pnpm dev:portal` is running.
+- DB/auth/API: use **Supabase MCP** (advisors, logs) — do not guess RLS or schema.
+
+## Documentation order (mandatory)
+
+1. **Project skill** in `.agents/skills/` (see `dev-workflow/library-index.md`)
+2. **Context7 MCP** — `resolve-library-id` then `query-docs` (read tool schemas first)
+3. **Domain MCP** — `supabase`, `shadcn`, `netlify` per `.cursor/mcp.json`
+4. **CLI** (`--help`, `supabase`, `netlify`, `shadcn`, etc.)
+5. **Web** only if the above do not answer
+
+Do not rely on training data for version-specific Next.js, Supabase, or library APIs.

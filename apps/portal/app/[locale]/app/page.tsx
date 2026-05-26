@@ -1,12 +1,18 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { LayoutDashboard, Settings, Wallet, User } from "lucide-react";
 import { CryptoConverter } from "@/components/cryptopay/crypto-converter";
 import { getAccountContext } from "@/lib/account-context";
+import { ADMIN_HOME_PATH } from "@/lib/auth/user-realm";
+import { isStaffRole } from "@/lib/admin-auth";
 
 export default async function AppHomePage() {
   const { user, tenant, membership } = await getAccountContext();
   const role = String(membership?.role ?? "member");
-  const isAdminUser = ["cp_admin", "rhs_admin", "admin", "owner", "manager", "staff"].includes(role);
+
+  if (isStaffRole(role)) {
+    redirect(ADMIN_HOME_PATH);
+  }
 
   return (
     <div className="mx-auto max-w-4xl space-y-6 px-4 py-10 sm:px-6">
@@ -68,18 +74,6 @@ export default async function AppHomePage() {
         </div>
       </div>
 
-      {isAdminUser ? (
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-6">
-          <h3 className="font-semibold text-slate-900">Admin Access</h3>
-          <p className="mt-1 text-sm text-slate-600">You have elevated permissions for organization management.</p>
-          <Link
-            href="/admin/dashboard"
-            className="mt-4 inline-flex rounded-md bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600"
-          >
-            Open Admin Dashboard
-          </Link>
-        </div>
-      ) : null}
     </div>
   );
 }

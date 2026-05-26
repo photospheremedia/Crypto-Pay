@@ -2,16 +2,19 @@
 
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { PRICING } from "@/lib/cryptopay/constants";
 
 export function BenefitsSection() {
+  const platformFee = `${PRICING.standard.baseFeePercent}%`;
+
   const benefits = [
     {
-      category: "💰 Zero Fees",
-      title: "Keep 100% of every payment",
+      category: "💰 Low platform fee",
+      title: "Wallet-to-wallet settlement",
       description:
-        "No middlemen, no chargebacks, no processing fees. Funds go directly wallet-to-wallet the moment a customer pays.",
+        "No card networks or chargebacks. Customers pay your wallet directly; Crypto Pay charges a simple platform fee on successful payments.",
       metrics: [
-        { label: "Processing fee", value: "0%" },
+        { label: "Platform fee", value: platformFee },
         { label: "Settlement time", value: "Instant" },
         { label: "Chargeback risk", value: "None" },
       ],

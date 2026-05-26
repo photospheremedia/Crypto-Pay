@@ -10,6 +10,8 @@ import { Label } from '@/components/ui/label';
 import { Loader2 } from 'lucide-react';
 import { getSupabaseBrowserClientOptional } from '@crypto-pay/db/supabaseClient';
 import { signIn, signUp, type ActionState } from './actions';
+import { SecurityCheckField } from '@/components/auth/security-check-field';
+import { isTurnstileEnabled } from '@/lib/security/turnstile-config';
 
 export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
   const t = useTranslations('Auth');
@@ -21,6 +23,9 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
   const verificationPending = searchParams.get('verify') === '1';
   const pendingEmail = searchParams.get('email');
   const [existingUser, setExistingUser] = useState(false);
+  const [securityCheckPassed, setSecurityCheckPassed] = useState(
+    () => !isTurnstileEnabled(),
+  );
   const [state, formAction, pending] = useActionState<ActionState, FormData>(
     mode === 'signin' ? signIn : signUp,
     { error: '' },
@@ -155,7 +160,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
             </div>
           )}
 
-          <form className="space-y-6 mt-6" action={formAction}>
+          <form className="relative space-y-6 mt-6" action={formAction}>
             <input type="hidden" name="redirect" value={redirect || ''} />
             <input type="hidden" name="priceId" value={priceId || ''} />
             {mode === 'signup' && (
@@ -273,11 +278,16 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
               </div>
             )}
 
-            <div>
+            <SecurityCheckField
+              resetTrigger={state?.error}
+              onCanSubmitChange={setSecurityCheckPassed}
+            />
+
+            <div className="pt-1">
               <Button
                 type="submit"
-                className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-full shadow-sm text-sm font-medium text-white bg-linear-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
-                disabled={pending}
+                className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-full shadow-sm text-sm font-medium text-white bg-linear-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-60"
+                disabled={pending || !securityCheckPassed}
               >
                 {pending ? (
                   <>

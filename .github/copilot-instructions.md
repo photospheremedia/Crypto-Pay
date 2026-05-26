@@ -198,16 +198,21 @@ Required:
 
 ## MCP & Agent Skills
 
-Project MCP config: `.cursor/mcp.json`. Agent skills: `.agents/skills/`.
+**Master workflow:** `.agents/skills/dev-workflow/SKILL.md` (always-on Cursor rule: `.cursor/rules/dev-workflow.mdc`).
 
-| Priority | MCP server | Skill | Use for |
-|----------|------------|-------|---------|
-| 1 | `plugin-supabase-supabase` | `supabase`, `supabase-postgres-best-practices` | DB, migrations, RLS, Postgres |
-| 2 | `netlify` (`.cursor/mcp.json` → `scripts/mcp-netlify.sh`) | — | Sites, deploys, env, duplicates — **use MCP first** (see `.cursor/rules/netlify-mcp.mdc`) |
-| 3 | `plugin-resend-resend` | — | Email send, templates, domains |
-| 4 | `context7` | `context7-mcp` | Library/framework docs (resolve-library-id → query-docs) |
-| 5 | `shadcn` (cwd: `apps/portal`) | `shadcn` | shadcn/ui components, registries, presets |
-| 6 | CLI fallback | — | `supabase`, `netlify`, `vercel`, `pnpm exec shadcn` when MCP lacks a tool |
+While coding: lint/typecheck portal (`pnpm typecheck:portal`), watch dev server output, use Supabase MCP advisors/logs for backend.
+
+**Documentation order:** project skill → Context7 MCP → domain MCP → CLI → web (last).
+
+Project MCP config: `.cursor/mcp.json`. Agent skills: `.agents/skills/`. Library map: `dev-workflow/library-index.md`.
+
+| Step | Source | Use for |
+|------|--------|---------|
+| 1 | Project skills | `supabase`, `multilingual-website`, `shadcn`, `context7-mcp`, etc. |
+| 2 | `context7` | Library/framework docs (`resolve-library-id` → `query-docs`) |
+| 3 | Domain MCP | `supabase`, `shadcn` (cwd `apps/portal`), `netlify` — see `.cursor/rules/netlify-mcp.mdc` |
+| 4 | CLI | `supabase`, `netlify`, `vercel`, `pnpm exec shadcn` when MCP lacks a tool |
+| 5 | Web | WebSearch/WebFetch only if 1–4 fail |
 
 ### Context7
 

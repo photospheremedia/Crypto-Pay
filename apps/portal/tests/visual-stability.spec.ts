@@ -167,28 +167,20 @@ test.describe('Visual Stability Tests', () => {
   });
 
   test.describe('Hydration Stability', () => {
-    test('interactive elements should not flash/change state on hydration', async ({ page }) => {
+    test('main layout stays stable after hydration', async ({ page }) => {
       await page.goto('/');
-      
-      // Get buttons and interactive elements
-      const buttons = page.locator('button, a.btn, [role="button"]');
-      const buttonCount = await buttons.count();
-      
-      // Take a snapshot of button states
-      const initialStates: string[] = [];
-      for (let i = 0; i < Math.min(buttonCount, 5); i++) {
-        const classList = await buttons.nth(i).getAttribute('class') || '';
-        initialStates.push(classList);
-      }
-      
-      // Wait for hydration
+      await expect(page.locator('main')).toBeVisible();
+      const nav = page.locator('header nav, nav').first();
+      await expect(nav).toBeVisible();
+
+      const mainBoxBefore = await page.locator('main').boundingBox();
       await page.waitForTimeout(500);
-      
-      // Check states haven't dramatically changed
-      for (let i = 0; i < Math.min(buttonCount, 5); i++) {
-        const currentClass = await buttons.nth(i).getAttribute('class') || '';
-        // Classes might change slightly but core structure should remain
-        expect(currentClass.length).toBeGreaterThan(0);
+      const mainBoxAfter = await page.locator('main').boundingBox();
+
+      expect(mainBoxBefore).not.toBeNull();
+      expect(mainBoxAfter).not.toBeNull();
+      if (mainBoxBefore && mainBoxAfter) {
+        expect(Math.abs(mainBoxBefore.height - mainBoxAfter.height)).toBeLessThan(200);
       }
     });
 

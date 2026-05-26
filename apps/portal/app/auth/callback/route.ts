@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getSupabaseServerClient } from "@crypto-pay/db/supabaseServer";
-import { isAdminEmail } from "@/lib/admin-email";
 import { ACCOUNT_WALLET_SETUP_PATH } from "@/lib/account/paths";
+import {
+  getHomePathForRealm,
+  merchantOnboardingPath,
+  resolveRealmForUser,
+  sanitizePostAuthRedirect,
+} from "@/lib/auth/user-realm";
 import { scheduleEmailWork } from "@/lib/email/schedule";
 import { runWelcomeEmailWorkflow } from "@/lib/email/workflows";
 import { listUserMerchantWallets } from "@/lib/wallets/db";
@@ -31,8 +36,10 @@ export async function GET(request: NextRequest) {
   const next = searchParams.get("next");
   const mode = searchParams.get("mode") ?? "signin";
 
-  const safeNext =
-    next && next.startsWith("/") && next !== "/" ? next : null;
+  const rawNext =
+    next && next.startsWith("/") && !next.startsWith("//") && next !== "/"
+      ? next
+      : null;
 
   // No authorization code - redirect to error page
   if (!code) {
@@ -69,17 +76,10 @@ export async function GET(request: NextRequest) {
         ? `https://${forwardedHost}`
         : origin;
 
-    // Check for admin/staff role first
-    const { data: membership } = await supabase
-      .from("memberships")
-      .select("role")
-      .eq("user_id", data.session.user.id)
-      .eq("status", "active")
-      .in("role", ["cp_admin", "rhs_admin", "admin", "owner", "manager", "staff"])
-      .maybeSingle();
+    const realm = await resolveRealmForUser(supabase, data.session.user);
 
-    if (membership || isAdminEmail(data.session.user.email)) {
-      const target = safeNext ?? "/admin/dashboard";
+    if (realm === "admin") {
+      const target = sanitizePostAuthRedirect(rawNext, "admin");
       return NextResponse.redirect(new URL(target, baseUrl));
     }
 
@@ -98,17 +98,20 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    let target = safeNext;
+    let target = rawNext
+      ? sanitizePostAuthRedirect(rawNext, "merchant")
+      : null;
+
     if (!target) {
       if (mode === "signup") {
-        target = ACCOUNT_WALLET_SETUP_PATH;
+        target = merchantOnboardingPath();
       } else {
         const wallets = await listUserMerchantWallets(
           supabase,
           data.session.user.id,
         );
         target =
-          wallets.length === 0 ? ACCOUNT_WALLET_SETUP_PATH : "/account";
+          wallets.length === 0 ? merchantOnboardingPath() : getHomePathForRealm("merchant");
       }
     }
 

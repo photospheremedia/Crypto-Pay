@@ -3,14 +3,20 @@
 import { z } from "zod";
 import { redirect } from "next/navigation";
 import { getSupabaseServerClient } from "@crypto-pay/db/supabaseServer";
-import { isAdminEmail } from "@/lib/admin-email";
 import {
   ACCOUNT_WALLET_SETUP_PATH,
   accountWalletSetupCallbackUrl,
 } from "@/lib/account/paths";
+import {
+  getHomePathForRealm,
+  merchantOnboardingPath,
+  resolveRealmForUser,
+  sanitizePostAuthRedirect,
+} from "@/lib/auth/user-realm";
 import { scheduleEmailWork } from "@/lib/email/schedule";
 import { runWelcomeEmailWorkflow } from "@/lib/email/workflows";
 import { listUserMerchantWallets } from "@/lib/wallets/db";
+import { assertBotProtectionForForm } from "@/lib/security/bot-protection";
 
 export type ActionState = {
   error?: string;
@@ -42,6 +48,15 @@ export async function signIn(
     };
   }
 
+  const botCheck = await assertBotProtectionForForm({
+    formData,
+    limitType: "login",
+    email: parsed.data.email,
+  });
+  if (!botCheck.ok) {
+    return { error: botCheck.error, email: parsed.data.email };
+  }
+
   const { email, password, redirect: redirectPath } = parsed.data;
   const supabase = await getSupabaseServerClient();
   const { data, error } = await supabase.auth.signInWithPassword({ email, password });
@@ -57,34 +72,26 @@ export async function signIn(
     return { error: userMessage, email };
   }
 
-  // If explicit redirect path provided, use it
-  if (redirectPath && redirectPath.startsWith("/")) {
-    redirect(redirectPath);
+  if (!data.user) {
+    redirect("/login");
   }
 
-  // Check if user has admin/staff role in memberships table (authoritative source)
-  if (data.user) {
-    const { data: membership } = await supabase
-      .from("memberships")
-      .select("role")
-      .eq("user_id", data.user.id)
-      .eq("status", "active")
-      .in("role", ["cp_admin", "rhs_admin", "admin", "owner", "manager", "staff"])
-      .maybeSingle();
+  const realm = await resolveRealmForUser(supabase, data.user);
 
-    if (membership || isAdminEmail(data.user.email)) {
-      // Staff/Admin user → admin dashboard
-      redirect("/admin/dashboard");
-    }
-
-    const wallets = await listUserMerchantWallets(supabase, data.user.id);
-    if (wallets.length === 0) {
-      redirect(ACCOUNT_WALLET_SETUP_PATH);
-    }
+  if (redirectPath) {
+    redirect(sanitizePostAuthRedirect(redirectPath, realm));
   }
 
-  // Regular customer user → account dashboard
-  redirect("/account");
+  if (realm === "admin") {
+    redirect(getHomePathForRealm("admin"));
+  }
+
+  const wallets = await listUserMerchantWallets(supabase, data.user.id);
+  if (wallets.length === 0) {
+    redirect(merchantOnboardingPath());
+  }
+
+  redirect(getHomePathForRealm("merchant"));
 }
 
 const signUpSchema = z.object({
@@ -114,6 +121,15 @@ export async function signUp(
       error: firstError.message || 'Please check your information and try again.', 
       email: payload.email 
     };
+  }
+
+  const botCheck = await assertBotProtectionForForm({
+    formData,
+    limitType: "signup",
+    email: parsed.data.email,
+  });
+  if (!botCheck.ok) {
+    return { error: botCheck.error, email: parsed.data.email };
   }
 
   const {
@@ -171,16 +187,21 @@ export async function signUp(
     redirect(`/login?created=1&verify=1&email=${encodeURIComponent(email)}`);
   }
 
-  // Welcome only when session exists (skip if Supabase sends confirm email instead).
+  const realm = await resolveRealmForUser(supabase, data.session.user);
+  const dashboardUrl =
+    realm === "admin"
+      ? `${appUrl}${getHomePathForRealm("admin")}`
+      : `${appUrl}${merchantOnboardingPath()}`;
+
   scheduleEmailWork(`user.welcome.${email}`, () =>
     runWelcomeEmailWorkflow({
       email,
       firstName,
-      dashboardUrl: `${appUrl}${ACCOUNT_WALLET_SETUP_PATH}`,
+      dashboardUrl,
     }),
   );
 
-  redirect(ACCOUNT_WALLET_SETUP_PATH);
+  redirect(realm === "admin" ? getHomePathForRealm("admin") : merchantOnboardingPath());
 }
 
 export async function signOut() {

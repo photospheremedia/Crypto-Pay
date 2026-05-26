@@ -47,7 +47,11 @@ export function emailImgTag(
   height: number,
   extraStyle = "",
 ): string {
-  return `<img src="${src}" alt="${alt}" width="${width}" height="${height}" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;${extraStyle}" />`;
+  const srcset =
+    src === getEmailLogoImageUrl(false)
+      ? ` srcset="${getEmailLogoImageUrl(true)} 2x"`
+      : "";
+  return `<img src="${src}" alt="${alt}" width="${width}" height="${height}"${srcset} style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;${extraStyle}" />`;
 }
 
 /** Site-aligned mark: gradient tile + Bitcoin icon (no extra white card). */

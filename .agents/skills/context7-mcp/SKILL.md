@@ -5,6 +5,8 @@ description: This skill should be used when the user asks about libraries, frame
 
 When the user asks about libraries, frameworks, or needs code examples, use Context7 to fetch current documentation instead of relying on training data.
 
+**Workflow order** (full dev session): see `.agents/skills/dev-workflow/SKILL.md` — project skill → Context7 MCP → domain MCP → CLI → web.
+
 ## When to Use This Skill
 
 Activate this skill when the user:

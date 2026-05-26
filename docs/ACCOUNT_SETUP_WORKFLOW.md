@@ -207,7 +207,7 @@ All current onboarding-related sends are **transactional** (user-initiated or re
 | 3 | Wallet saved or updated (`saveMerchantWallet`) | Merchant | `wallet_submitted_merchant` | **1** per save |
 | 4 | Same | Admin (`ADMIN_REVIEW_EMAIL`) | `wallet_pending_admin` | **1** per save |
 | 5 | Merchant clicks **Resend** on pending wallet | Admin only | `wallet_pending_admin` (`kind: resend`) | **1** per click — **no cooldown in code** |
-| 6 | Admin approves or rejects wallet | Merchant | `wallet_status_merchant` | **1** per review action |
+| 6 | Admin approves or rejects wallet | Merchant | `wallet_status_merchant` | **1** per pending review cycle (deduped in DB + Resend) |
 
 **Not emailed today:** “still pending” reminders to merchants, nudges to add a first wallet, or digest summaries. Status is shown **in-app** (dashboard checklist + Wallets tab).
 
@@ -273,7 +273,7 @@ URLs are built in `apps/portal/lib/email/routing.ts` (`appAbsoluteUrl`, `EMAIL_R
 | Admin verify/reject | `app/[locale]/admin/wallets` → `PATCH /api/admin/wallets` | `runWalletStatusEmailWorkflow` (awaited; merchant notified) |
 | Runner API wallet upsert | `supabase/functions/runner-api` | Resend + idempotency header |
 
-Guards: merchant status email only when `pending → verified|rejected`; admin pending email skipped on label-only edits; Resend **idempotency keys** per event+wallet+recipient (24h). Side effects use Next.js [`after()`](https://nextjs.org/docs/app/api-reference/functions/after) via `lib/email/schedule.ts` so forms and redirects are not blocked.
+Guards: merchant status email only when `pending → verified|rejected`; **at most one** status email per `verification_requested_at` (`merchant_status_emailed_for_request`); admin PATCH uses `status = pending` conditional update; merchant **label-only** edits do not re-open verification; address/network change starts a new cycle; Resend idempotency keys include wallet + request timestamp. Side effects use Next.js [`after()`](https://nextjs.org/docs/app/api-reference/functions/after) via `lib/email/schedule.ts` so forms and redirects are not blocked.
 
 ### Resend dashboard — what to use (Crypto Pay)
 

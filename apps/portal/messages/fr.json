@@ -151,6 +151,24 @@
       "signOut": "Se déconnecter",
       "adminDashboard": "Tableau de bord admin"
     },
+    "header": {
+      "openMenu": "Ouvrir le menu de navigation",
+      "closeMenu": "Fermer le menu de navigation",
+      "sidebarNav": "Navigation du compte",
+      "userMenu": "Ouvrir le menu du compte",
+      "profile": "Profil"
+    },
+    "help": {
+      "menuLabel": "Aide et support",
+      "title": "Aide et support",
+      "subtitle": "Documentation et sécurité du compte",
+      "documentation": "Documentation développeur",
+      "documentationDescription": "Charges, webhooks et guides d'intégration",
+      "security": "Sécurité",
+      "securityDescription": "Mot de passe, 2FA et sessions actives",
+      "emailUs": "Nous écrire",
+      "emailAddress": "support@cryptopay.sale"
+    },
     "dashboard": {
       "welcome": "Bon retour, {name}",
       "subtitle": "Acceptez les paiements crypto — gérez les portefeuilles de paiement et l'activité",
@@ -412,6 +430,45 @@
     "contactSales": "Contacter les ventes",
     "createAccount": "Créer un compte"
   },
+  "Admin": {
+    "nav": {
+      "brand": "Crypto Pay",
+      "brandTagline": "Console admin",
+      "overview": "Vue d'ensemble",
+      "merchantOps": "Opérations marchands",
+      "insights": "Analyses",
+      "platform": "Plateforme",
+      "growth": "Croissance",
+      "superAdmin": "Super admin",
+      "dashboard": "Tableau de bord",
+      "walletReview": "Vérification des portefeuilles",
+      "merchants": "Marchands",
+      "leads": "Leads et chat",
+      "analytics": "Analytique",
+      "settings": "Paramètres",
+      "notifications": "Notifications",
+      "security": "Sécurité",
+      "campaigns": "Campagnes e-mail",
+      "automations": "Automatisations",
+      "templates": "Modèles",
+      "contacts": "Contacts",
+      "staff": "Gestion de l'équipe",
+      "audit": "Journaux d'audit",
+      "exitAdmin": "Quitter l'admin"
+    },
+    "dashboard": {
+      "title": "Vue opérationnelle",
+      "subtitle": "Vérifier les portefeuilles, les marchands et les leads entrants.",
+      "pendingWallets": "Portefeuilles en attente",
+      "verifiedWallets": "Portefeuilles vérifiés",
+      "merchantAccounts": "Comptes marchands",
+      "newLeadsToday": "Nouveaux leads aujourd'hui",
+      "reviewWallets": "Vérifier les portefeuilles",
+      "viewMerchants": "Voir les marchands",
+      "openInbox": "Boîte des leads",
+      "quickActions": "Actions rapides"
+    }
+  },
   "Auth": {
     "welcomeBack": "Bon retour",
     "signInTitle": "Connectez-vous à votre compte",
@@ -452,5 +509,27 @@
     "sendResetLink": "Envoyer le lien",
     "backToSignIn": "Retour à la connexion",
     "resetPassword": "Réinitialiser le mot de passe"
+  },
+  "Legal": {
+    "terms": {
+      "eyebrow": "Mentions légales",
+      "title": "Conditions d'utilisation",
+      "metaTitle": "Conditions d'utilisation | Crypto Pay",
+      "metaDescription": "Conditions d'utilisation de Crypto Pay — paiements crypto non dépositaires, comptes marchands et API.",
+      "openGraphTitle": "Crypto Pay — Conditions d'utilisation",
+      "openGraphDescription": "Conditions marchands pour accepter les paiements en cryptomonnaie avec règlement portefeuille à portefeuille.",
+      "lastUpdated": "Dernière mise à jour : {date}",
+      "footerNote": "En utilisant Crypto Pay, vous reconnaissez avoir lu, compris et accepté ces conditions d'utilisation."
+    },
+    "privacy": {
+      "eyebrow": "Mentions légales",
+      "title": "Politique de confidentialité",
+      "metaTitle": "Politique de confidentialité | Crypto Pay",
+      "metaDescription": "Comment Crypto Pay collecte, utilise et protège les données marchands et de transaction pour les paiements crypto.",
+      "openGraphTitle": "Crypto Pay — Politique de confidentialité",
+      "openGraphDescription": "Pratiques de confidentialité pour les marchands utilisant Crypto Pay pour accepter et suivre les paiements crypto.",
+      "lastUpdated": "Dernière mise à jour : {date}",
+      "footerNote": "Cette politique de confidentialité décrit comment nous traitons les informations lorsque vous utilisez Crypto Pay."
+    }
   }
 }

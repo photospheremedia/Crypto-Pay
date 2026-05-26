@@ -1,19 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
 import { checkAdminAccess } from "@/lib/admin-auth";
+import {
+  filterMerchantProfiles,
+  getStaffUserIds,
+} from "@/lib/admin/merchant-directory";
+import { getMerchantWalletCountsByUser } from "@/lib/admin/merchant-wallets";
+import { routeUnauthorized } from "@/lib/api/route-error";
+import { getSupabaseServiceClient } from "@crypto-pay/db/supabaseServer";
 
 export async function GET(req: NextRequest) {
   try {
     const { user, isAdmin, permissions } = await checkAdminAccess();
-    if (!user || !isAdmin || !permissions?.canManageStaff) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!user || !isAdmin || !permissions?.canViewMerchants) {
+      return routeUnauthorized();
     }
 
-    const supabase = await createClient();
+    const supabase = getSupabaseServiceClient();
     const { searchParams } = new URL(req.url);
     const search = (searchParams.get("search") || "").trim().toLowerCase();
+    const filter = searchParams.get("filter") || "all";
     const page = Math.max(1, Number(searchParams.get("page") || "1"));
     const limit = Math.min(100, Math.max(5, Number(searchParams.get("limit") || "20")));
+
+    const staffUserIds = await getStaffUserIds(supabase);
 
     const { data: profiles, error: profilesError } = await supabase
       .from("user_profiles")
@@ -21,51 +30,16 @@ export async function GET(req: NextRequest) {
       .order("created_at", { ascending: false });
 
     if (profilesError) {
-      console.error("[Admin Users] profiles error:", profilesError);
-      return NextResponse.json({ error: "Failed to load users" }, { status: 500 });
+      console.error("[Admin Merchants] profiles error:", profilesError);
+      return NextResponse.json({ error: "Failed to load merchants" }, { status: 500 });
     }
 
-    const userIds = (profiles || []).map((p) => p.id);
-    let membershipsByUser = new Map<string, { role: string; status: string; tenant_id: string }>();
-    let walletByUser = new Map<string, { wallet_network: string; wallet_verified: boolean }>();
+    const merchantsOnly = filterMerchantProfiles(profiles ?? [], staffUserIds);
+    const userIds = merchantsOnly.map((p) => p.id);
+    const walletCounts = await getMerchantWalletCountsByUser(supabase, userIds);
 
-    if (userIds.length > 0) {
-      const [membershipsRes, walletsRes] = await Promise.all([
-        supabase
-          .from("memberships")
-          .select("user_id, role, status, tenant_id, created_at")
-          .in("user_id", userIds)
-          .order("created_at", { ascending: false }),
-        supabase
-          .from("user_wallet_profiles")
-          .select("user_id, wallet_network, wallet_verified")
-          .in("user_id", userIds),
-      ]);
-
-      if (membershipsRes.data) {
-        for (const membership of membershipsRes.data) {
-          if (!membershipsByUser.has(membership.user_id)) {
-            membershipsByUser.set(membership.user_id, {
-              role: membership.role,
-              status: membership.status,
-              tenant_id: membership.tenant_id,
-            });
-          }
-        }
-      }
-      if (walletsRes.data) {
-        for (const wallet of walletsRes.data) {
-          walletByUser.set(wallet.user_id, {
-            wallet_network: wallet.wallet_network,
-            wallet_verified: wallet.wallet_verified,
-          });
-        }
-      }
-    }
-
-    const merged = (profiles || []).map((profile) => {
-      const membership = membershipsByUser.get(profile.id);
-      const wallet = walletByUser.get(profile.id);
+    const merged = merchantsOnly.map((profile) => {
+      const counts = walletCounts.get(profile.id);
       return {
         id: profile.id,
         email: profile.email,
@@ -74,32 +48,50 @@ export async function GET(req: NextRequest) {
         company_name: profile.company_name,
         created_at: profile.created_at,
         updated_at: profile.updated_at,
-        role: membership?.role || "customer",
-        membership_status: membership?.status || "none",
-        tenant_id: membership?.tenant_id || null,
-        has_wallet: Boolean(wallet),
-        wallet_network: wallet?.wallet_network || null,
-        wallet_verified: wallet?.wallet_verified ?? false,
+        wallet_counts: counts ?? {
+          total: 0,
+          pending: 0,
+          verified: 0,
+          rejected: 0,
+        },
+        has_wallet: (counts?.total ?? 0) > 0,
+        pending_wallets: counts?.pending ?? 0,
+        wallet_verified: (counts?.verified ?? 0) > 0,
       };
     });
 
-    const filtered = search
+    let filtered = search
       ? merged.filter((u) =>
-          [u.email, u.full_name || "", u.phone || "", u.company_name || "", u.role]
+          [u.email, u.full_name || "", u.phone || "", u.company_name || ""]
             .join(" ")
             .toLowerCase()
             .includes(search),
         )
       : merged;
 
+    if (filter === "pending") {
+      filtered = filtered.filter((u) => u.pending_wallets > 0);
+    } else if (filter === "with_wallets") {
+      filtered = filtered.filter((u) => u.has_wallet);
+    } else if (filter === "no_wallets") {
+      filtered = filtered.filter((u) => !u.has_wallet);
+    }
+
     const total = filtered.length;
     const totalPages = Math.max(1, Math.ceil(total / limit));
     const start = (page - 1) * limit;
     const users = filtered.slice(start, start + limit);
 
+    const summary = {
+      totalMerchants: merged.length,
+      withWallets: merged.filter((u) => u.has_wallet).length,
+      pendingWalletRequests: merged.reduce((n, u) => n + u.pending_wallets, 0),
+    };
+
     return NextResponse.json({
       success: true,
       users,
+      summary,
       pagination: {
         page,
         limit,
@@ -108,7 +100,7 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("[Admin Users] fatal error:", error);
+    console.error("[Admin Merchants] fatal error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

@@ -1,10 +1,19 @@
 import { NextResponse } from "next/server";
 import { withAdminAuth } from "@/lib/admin-auth";
+import { createClient } from "@/lib/supabase/server";
+import {
+  buildAdminNotifications,
+  getReadNotificationIds,
+  markAllNotificationsRead,
+} from "@/lib/admin/notifications-feed";
 
-export const POST = withAdminAuth(async (req, { user }) => {
+export const POST = withAdminAuth(async (_req, { user }) => {
   try {
-    // In production, mark all notifications as read in the database
-    console.log(`Marking all notifications as read for user ${user.id}`);
+    const supabase = await createClient();
+    const readIds = await getReadNotificationIds(user.id);
+    const notifications = await buildAdminNotifications(supabase, readIds);
+    const ids = notifications.map((n) => n.id);
+    await markAllNotificationsRead(user.id, ids);
 
     return NextResponse.json({
       success: true,
@@ -14,7 +23,7 @@ export const POST = withAdminAuth(async (req, { user }) => {
     console.error("Failed to mark all notifications as read:", error);
     return NextResponse.json(
       { error: "Failed to mark all notifications as read" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 });

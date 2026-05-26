@@ -2,7 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Check, X } from "lucide-react";
+import { Link } from "@/i18n/navigation";
+import { Check, Mail, User, X } from "lucide-react";
+import { MerchantEmailDialog } from "@/components/admin/merchant-email-dialog";
 import { walletNetworkLabel, walletStatusLabel } from "@/lib/wallets/constants";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,9 +26,12 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useToast } from "@/hooks/use-toast";
+import { parseAdminApiResponse } from "@/lib/admin/parse-admin-api-response";
 
 type AdminWalletRow = {
   id: string;
+  user_id: string;
   label: string;
   wallet_network: string;
   wallet_address: string;
@@ -36,8 +41,10 @@ type AdminWalletRow = {
 };
 
 export default function AdminWalletsPage() {
+  const { toast } = useToast();
   const searchParams = useSearchParams();
   const highlightWalletId = searchParams.get("wallet");
+  const filterUserId = searchParams.get("user");
 
   const [filter, setFilter] = useState(
     highlightWalletId ? "pending" : "pending",
@@ -54,13 +61,30 @@ export default function AdminWalletsPage() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/admin/wallets?status=${filter}`);
-      const json = await res.json();
-      setWallets(json.wallets ?? []);
+      const qs = new URLSearchParams({ status: filter });
+      if (filterUserId) qs.set("user", filterUserId);
+      const res = await fetch(`/api/admin/wallets?${qs.toString()}`);
+      const parsed = await parseAdminApiResponse<{
+        success: boolean;
+        wallets?: AdminWalletRow[];
+      }>(
+        res,
+        "Failed to load wallets",
+      );
+      if (!parsed.ok) {
+        toast({
+          title: "Could not load wallets",
+          description: parsed.error,
+          variant: "destructive",
+        });
+        setWallets([]);
+        return;
+      }
+      setWallets(parsed.data.wallets ?? []);
     } finally {
       setLoading(false);
     }
-  }, [filter]);
+  }, [filter, filterUserId]);
 
   useEffect(() => {
     void load();
@@ -80,6 +104,45 @@ export default function AdminWalletsPage() {
     });
   }, [highlightWalletId, loading, wallets]);
 
+  async function resendWalletVerification(walletId: string, userId: string) {
+    setActing(walletId);
+    setBanner(null);
+    try {
+      const res = await fetch(`/api/admin/users/${userId}/actions`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "resend_wallet_verification",
+          walletId,
+        }),
+      });
+      const parsed = await parseAdminApiResponse<{ success: boolean; message?: string }>(
+        res,
+        "Could not resend verification",
+      );
+      if (!parsed.ok) {
+        toast({
+          title: "Resend failed",
+          description: parsed.error,
+          variant: "destructive",
+        });
+        setBanner({ type: "error", message: parsed.error });
+        return;
+      }
+      toast({
+        title: "Verification emails sent",
+        description: parsed.data.message ?? "Sent via Resend.",
+      });
+      setBanner({
+        type: "success",
+        message: parsed.data.message ?? "Verification reminder emails sent.",
+      });
+      await load();
+    } finally {
+      setActing(null);
+    }
+  }
+
   async function review(id: string, status: "verified" | "rejected") {
     const rejection_reason =
       status === "rejected"
@@ -94,21 +157,22 @@ export default function AdminWalletsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, status, rejection_reason }),
       });
-      const json = (await res.json()) as {
-        success?: boolean;
-        error?: string;
+      const parsed = await parseAdminApiResponse<{
+        success: boolean;
         merchantNotification?: { sent: boolean; skipped?: string; error?: string };
-      };
+      }>(res, "Could not update wallet status");
 
-      if (!res.ok || !json.success) {
-        setBanner({
-          type: "error",
-          message: json.error ?? "Could not update wallet status.",
+      if (!parsed.ok) {
+        toast({
+          title: "Wallet update failed",
+          description: parsed.error,
+          variant: "destructive",
         });
+        setBanner({ type: "error", message: parsed.error });
         return;
       }
 
-      const merchant = json.merchantNotification;
+      const merchant = parsed.data.merchantNotification;
       if (merchant?.error) {
         setBanner({
           type: "error",
@@ -206,8 +270,25 @@ export default function AdminWalletsPage() {
                       <TableCell className="text-sm">
                         <div>{w.merchant?.full_name ?? "—"}</div>
                         <div className="text-muted-foreground">
-                          {w.merchant?.email ?? w.id}
+                          {w.merchant?.email ?? "—"}
                         </div>
+                        {w.merchant?.email ? (
+                          <div className="mt-2 flex flex-wrap gap-1">
+                            <Button size="sm" variant="ghost" className="h-7 px-2" asChild>
+                              <Link href={`/admin/users/${w.user_id}`}>
+                                <User className="size-3" data-icon="inline-start" />
+                                Merchant
+                              </Link>
+                            </Button>
+                            <MerchantEmailDialog
+                              merchantUserId={w.user_id}
+                              merchantEmail={w.merchant.email}
+                              walletId={w.id}
+                              defaultSubject={`Payout wallet “${w.label}”`}
+                              triggerLabel="Email"
+                            />
+                          </div>
+                        ) : null}
                       </TableCell>
                       <TableCell>{w.label}</TableCell>
                       <TableCell>{walletNetworkLabel(w.wallet_network)}</TableCell>
@@ -238,6 +319,17 @@ export default function AdminWalletsPage() {
                             >
                               <X data-icon="inline-start" />
                               Reject
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="secondary"
+                              disabled={acting === w.id}
+                              onClick={() =>
+                                void resendWalletVerification(w.id, w.user_id)
+                              }
+                            >
+                              <Mail data-icon="inline-start" />
+                              Resend
                             </Button>
                           </div>
                         ) : (

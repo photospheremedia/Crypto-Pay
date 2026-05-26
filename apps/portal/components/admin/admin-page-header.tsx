@@ -1,14 +1,14 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
 import { ChevronRight, Home, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-interface BreadcrumbItem {
-  label: string;
-  href?: string;
-}
+import {
+  buildAdminBreadcrumbs,
+  pathnameWithoutLocale,
+  type AdminBreadcrumbItem,
+} from "@/lib/admin/admin-breadcrumbs";
 
 interface AdminPageHeaderProps {
   title: string;
@@ -16,29 +16,28 @@ interface AdminPageHeaderProps {
   backHref?: string;
   backLabel?: string;
   actions?: React.ReactNode;
-  breadcrumbs?: BreadcrumbItem[];
+  breadcrumbs?: AdminBreadcrumbItem[];
 }
 
-// Auto-generate breadcrumbs from pathname
-function generateBreadcrumbs(pathname: string): BreadcrumbItem[] {
-  const segments = pathname.split("/").filter(Boolean);
-  const breadcrumbs: BreadcrumbItem[] = [];
-  
+function generateBreadcrumbs(pathname: string): AdminBreadcrumbItem[] {
+  const path = pathnameWithoutLocale(pathname);
+  const segments = path.split("/").filter(Boolean);
+  const breadcrumbs: AdminBreadcrumbItem[] = [];
+
   let currentPath = "";
   for (let i = 0; i < segments.length; i++) {
     currentPath += `/${segments[i]}`;
     const label = segments[i]
       .replace(/-/g, " ")
       .replace(/\b\w/g, (c) => c.toUpperCase());
-    
-    // Don't make the last item a link
+
     if (i === segments.length - 1) {
       breadcrumbs.push({ label });
     } else {
       breadcrumbs.push({ label, href: currentPath });
     }
   }
-  
+
   return breadcrumbs;
 }
 
@@ -51,57 +50,63 @@ export function AdminPageHeader({
   breadcrumbs: customBreadcrumbs,
 }: AdminPageHeaderProps) {
   const pathname = usePathname();
-  const breadcrumbs = customBreadcrumbs || generateBreadcrumbs(pathname);
+  const tDashboard = useTranslations("Admin.dashboard");
+  const operationsOverviewLabel = tDashboard("title");
+
+  const path = pathnameWithoutLocale(pathname);
+  const breadcrumbs =
+    customBreadcrumbs ??
+    (path.startsWith("/admin")
+      ? buildAdminBreadcrumbs(pathname, operationsOverviewLabel)
+      : generateBreadcrumbs(pathname));
 
   return (
     <div className="mb-6">
-      {/* Breadcrumbs */}
-      <nav className="flex items-center gap-1 text-sm text-slate-500 mb-3">
+      <nav className="mb-3 flex flex-wrap items-center gap-1 text-sm text-slate-500">
         <Link
           href="/admin/dashboard"
-          className="flex items-center gap-1 hover:text-emerald-500 transition-colors"
+          className="flex items-center gap-1 transition-colors hover:text-emerald-600"
         >
           <Home className="h-4 w-4" />
-          <span className="sr-only">Dashboard</span>
+          <span className="sr-only">{operationsOverviewLabel}</span>
         </Link>
         {breadcrumbs.map((item, index) => (
-          <div key={index} className="flex items-center gap-1">
+          <div key={`${item.label}-${index}`} className="flex items-center gap-1">
             <ChevronRight className="h-4 w-4 text-slate-300" />
             {item.href ? (
               <Link
                 href={item.href}
-                className="hover:text-emerald-500 transition-colors"
+                className="transition-colors hover:text-emerald-600"
               >
                 {item.label}
               </Link>
             ) : (
-              <span className="text-slate-900 font-medium">{item.label}</span>
+              <span className="font-medium text-slate-900">{item.label}</span>
             )}
           </div>
         ))}
       </nav>
 
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-start gap-4">
-          {backHref && (
+          {backHref ? (
             <Link href={backHref}>
               <Button variant="outline" size="sm" className="gap-1">
                 <ArrowLeft className="h-4 w-4" />
                 {backLabel}
               </Button>
             </Link>
-          )}
+          ) : null}
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
               {title}
             </h1>
-            {description && (
-              <p className="text-sm text-slate-500 mt-1">{description}</p>
-            )}
+            {description ? (
+              <p className="mt-1 text-sm text-slate-500">{description}</p>
+            ) : null}
           </div>
         </div>
-        {actions && <div className="flex items-center gap-2">{actions}</div>}
+        {actions ? <div className="flex items-center gap-2">{actions}</div> : null}
       </div>
     </div>
   );

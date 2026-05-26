@@ -1,6 +1,7 @@
 import { sendEmail } from "@/lib/email/sender";
 import {
   EMAIL_WORKFLOW_EVENTS,
+  walletStatusEmailIdempotencyKey,
   workflowIdempotencyKey,
 } from "@/lib/email/workflow-keys";
 import { getAdminReviewRecipients } from "@/lib/email/admin-recipients";
@@ -114,12 +115,21 @@ export async function notifyMerchantWalletStatus(params: {
   walletId: string;
   label: string;
   status: "verified" | "rejected";
+  verificationRequestedAt: string;
   walletNetwork?: string;
   walletAddress?: string;
   rejectionReason?: string | null;
 }): Promise<{ success: boolean; error?: string }> {
-  const { merchantEmail, walletId, label, status, rejectionReason, walletNetwork, walletAddress } =
-    params;
+  const {
+    merchantEmail,
+    walletId,
+    label,
+    status,
+    verificationRequestedAt,
+    rejectionReason,
+    walletNetwork,
+    walletAddress,
+  } = params;
   const verified = status === "verified";
   const event = verified
     ? EMAIL_WORKFLOW_EVENTS.walletVerified
@@ -144,7 +154,12 @@ export async function notifyMerchantWalletStatus(params: {
       actionUrl: verified ? EMAIL_ROUTES.account() : EMAIL_ROUTES.accountWallets(),
     },
     tags: ["wallet", "merchant_status", status],
-    idempotencyKey: workflowIdempotencyKey(event, walletId, merchantEmail),
+    idempotencyKey: walletStatusEmailIdempotencyKey(
+      event,
+      walletId,
+      verificationRequestedAt,
+      merchantEmail,
+    ),
     workflow: { event, entityId: walletId },
   });
 }

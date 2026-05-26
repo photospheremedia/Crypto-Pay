@@ -151,6 +151,24 @@
       "signOut": "Abmelden",
       "adminDashboard": "Admin-Dashboard"
     },
+    "header": {
+      "openMenu": "Navigationsmenü öffnen",
+      "closeMenu": "Navigationsmenü schließen",
+      "sidebarNav": "Kontonavigation",
+      "userMenu": "Kontomenü öffnen",
+      "profile": "Profil"
+    },
+    "help": {
+      "menuLabel": "Hilfe und Support",
+      "title": "Hilfe & Support",
+      "subtitle": "Dokumentation und Kontosicherheit",
+      "documentation": "Entwicklerdokumentation",
+      "documentationDescription": "Charges, Webhooks und Integrationsleitfäden",
+      "security": "Sicherheit",
+      "securityDescription": "Passwort, 2FA und aktive Sitzungen",
+      "emailUs": "E-Mail",
+      "emailAddress": "support@cryptopay.sale"
+    },
     "dashboard": {
       "welcome": "Willkommen zurück, {name}",
       "subtitle": "Krypto-Zahlungen akzeptieren — Auszahlungs-Wallets und Aktivität verwalten",
@@ -404,6 +422,45 @@
     "contactSales": "Vertrieb kontaktieren",
     "createAccount": "Konto erstellen"
   },
+  "Admin": {
+    "nav": {
+      "brand": "Crypto Pay",
+      "brandTagline": "Admin-Konsole",
+      "overview": "Übersicht",
+      "merchantOps": "Händlerbetrieb",
+      "insights": "Einblicke",
+      "platform": "Plattform",
+      "growth": "Wachstum",
+      "superAdmin": "Super-Admin",
+      "dashboard": "Dashboard",
+      "walletReview": "Auszahlungs-Wallets prüfen",
+      "merchants": "Händler",
+      "leads": "Leads & Chat",
+      "analytics": "Analysen",
+      "settings": "Einstellungen",
+      "notifications": "Benachrichtigungen",
+      "security": "Sicherheit",
+      "campaigns": "E-Mail-Kampagnen",
+      "automations": "Automatisierungen",
+      "templates": "Vorlagen",
+      "contacts": "Kontakte",
+      "staff": "Teamverwaltung",
+      "audit": "Audit-Protokolle",
+      "exitAdmin": "Zur Website"
+    },
+    "dashboard": {
+      "title": "Betriebsübersicht",
+      "subtitle": "Auszahlungs-Wallets, Händler und eingehende Leads prüfen.",
+      "pendingWallets": "Wallets zur Prüfung",
+      "verifiedWallets": "Verifizierte Auszahlungs-Wallets",
+      "merchantAccounts": "Händlerkonten",
+      "newLeadsToday": "Neue Leads heute",
+      "reviewWallets": "Wallets prüfen",
+      "viewMerchants": "Händler anzeigen",
+      "openInbox": "Lead-Posteingang",
+      "quickActions": "Schnellaktionen"
+    }
+  },
   "Auth": {
     "welcomeBack": "Willkommen zurück",
     "signInTitle": "Bei Ihrem Konto anmelden",
@@ -444,5 +501,27 @@
     "sendResetLink": "Reset-Link senden",
     "backToSignIn": "Zurück zur Anmeldung",
     "resetPassword": "Passwort zurücksetzen"
+  },
+  "Legal": {
+    "terms": {
+      "eyebrow": "Rechtliches",
+      "title": "Nutzungsbedingungen",
+      "metaTitle": "Nutzungsbedingungen | Crypto Pay",
+      "metaDescription": "Nutzungsbedingungen für Crypto Pay — nicht-verwahrende Krypto-Zahlungen, Händlerkonten und API-Nutzung.",
+      "openGraphTitle": "Crypto Pay — Nutzungsbedingungen",
+      "openGraphDescription": "Händlerbedingungen für die Annahme von Kryptowährungszahlungen mit Wallet-zu-Wallet-Abwicklung.",
+      "lastUpdated": "Zuletzt aktualisiert: {date}",
+      "footerNote": "Mit der Nutzung von Crypto Pay bestätigen Sie, dass Sie diese Nutzungsbedingungen gelesen, verstanden und akzeptiert haben."
+    },
+    "privacy": {
+      "eyebrow": "Rechtliches",
+      "title": "Datenschutzerklärung",
+      "metaTitle": "Datenschutzerklärung | Crypto Pay",
+      "metaDescription": "Wie Crypto Pay Händler- und Transaktionsdaten für Krypto-Zahlungsdienste erhebt, nutzt und schützt.",
+      "openGraphTitle": "Crypto Pay — Datenschutzerklärung",
+      "openGraphDescription": "Datenschutzpraktiken für Händler, die mit Crypto Pay Kryptozahlungen annehmen und verfolgen.",
+      "lastUpdated": "Zuletzt aktualisiert: {date}",
+      "footerNote": "Diese Datenschutzerklärung beschreibt, wie wir Informationen bei der Nutzung von Crypto Pay behandeln."
+    }
   }
 }

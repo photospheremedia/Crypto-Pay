@@ -7,6 +7,7 @@ export const EMAIL_WORKFLOW_EVENTS = {
   walletVerificationResend: "wallet.verification_resend",
   walletVerified: "wallet.verified",
   walletRejected: "wallet.rejected",
+  adminMerchantMessage: "admin.merchant_message",
 } as const;
 
 export function workflowIdempotencyKey(
@@ -20,4 +21,19 @@ export function workflowIdempotencyKey(
     recipientEmail?.trim().toLowerCase(),
   ].filter(Boolean);
   return parts.join("/").slice(0, 256);
+}
+
+/** One status email per wallet + verification request (pending → verified/rejected). */
+export function walletStatusEmailIdempotencyKey(
+  event: string,
+  walletId: string,
+  verificationRequestedAt: string,
+  merchantEmail: string,
+): string {
+  const requestToken = verificationRequestedAt.replace(/[:.]/g, "-");
+  return workflowIdempotencyKey(
+    event,
+    `${walletId}/${requestToken}`,
+    merchantEmail,
+  );
 }

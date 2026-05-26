@@ -25,6 +25,8 @@ export type MerchantWallet = {
   external_id?: string | null;
   verification_requested_at: string;
   last_admin_reminder_at?: string | null;
+  merchant_status_emailed_at?: string | null;
+  merchant_status_emailed_for_request?: string | null;
   verified_at: string | null;
   verified_by: string | null;
   rejection_reason: string | null;

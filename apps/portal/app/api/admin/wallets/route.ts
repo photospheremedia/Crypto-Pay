@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { parseRequestJson } from "@/lib/api/parse-request-json";
+import { routeError, routeUnauthorized } from "@/lib/api/route-error";
 import { checkAdminAccess } from "@/lib/admin-auth";
-import { createClient } from "@/lib/supabase/server";
+import { assertMerchantAccount } from "@/lib/admin/merchant-directory";
+import { routeForbidden } from "@/lib/api/route-error";
 import { getSupabaseServiceClient } from "@crypto-pay/db/supabaseServer";
 import { logEmailWorkflow, runWalletStatusEmailWorkflow } from "@/lib/email/workflows";
 import { merchantWallets } from "@/lib/wallets/db";
@@ -8,18 +11,35 @@ import type { MerchantWallet } from "@/types/crypto-pay-db";
 
 export async function GET(req: NextRequest) {
   try {
-    const { user, isAdmin } = await checkAdminAccess();
-    if (!user || !isAdmin) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const { user, isAdmin, permissions } = await checkAdminAccess();
+    if (!user || !isAdmin || !permissions?.canViewMerchants) {
+      return routeUnauthorized();
     }
 
     const status = req.nextUrl.searchParams.get("status") ?? "pending";
-    const supabase = await createClient();
+    const userId = req.nextUrl.searchParams.get("user")?.trim();
+    const supabase = getSupabaseServiceClient();
+
+    if (userId) {
+      const peek = await supabase
+        .from("user_profiles")
+        .select("email")
+        .eq("id", userId)
+        .maybeSingle();
+      const check = await assertMerchantAccount(supabase, userId, peek.data?.email);
+      if (!check.ok) {
+        return routeForbidden(check.error);
+      }
+    }
 
     let query = merchantWallets(supabase)
       .select("*")
       .order("verification_requested_at", { ascending: false })
       .limit(100);
+
+    if (userId) {
+      query = query.eq("user_id", userId);
+    }
 
     if (status !== "all") {
       query = query.eq("status", status);
@@ -52,28 +72,25 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ success: true, wallets });
   } catch (error) {
-    console.error("[Admin Wallets] GET fatal:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return routeError(error, { logContext: "admin/wallets GET" });
   }
 }
 
 export async function PATCH(req: NextRequest) {
   try {
-    const { user, isAdmin } = await checkAdminAccess();
-    if (!user || !isAdmin) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const { user, isAdmin, permissions } = await checkAdminAccess();
+    if (!user || !isAdmin || !permissions?.canViewMerchants) {
+      return routeUnauthorized();
     }
 
-    const body = await req.json();
-    const {
-      id,
-      status,
-      rejection_reason,
-    }: {
+    const body = await parseRequestJson<{
       id?: string;
       status?: "verified" | "rejected";
       rejection_reason?: string;
-    } = body;
+    }>(req);
+    if (body instanceof Response) return body;
+
+    const { id, status, rejection_reason } = body;
 
     if (!id || !status || !["verified", "rejected"].includes(status)) {
       return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
@@ -82,7 +99,9 @@ export async function PATCH(req: NextRequest) {
     const supabase = getSupabaseServiceClient();
 
     const { data: existing, error: loadError } = await merchantWallets(supabase)
-      .select("id, user_id, label, status")
+      .select(
+        "id, user_id, label, status, verification_requested_at, merchant_status_emailed_for_request",
+      )
       .eq("id", id)
       .maybeSingle();
 
@@ -90,6 +109,18 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({ error: "Wallet not found" }, { status: 404 });
     }
 
+    if (existing.status !== "pending") {
+      return NextResponse.json({
+        success: true,
+        status: existing.status,
+        merchantNotification: {
+          sent: false,
+          skipped: "not_from_pending",
+        },
+      });
+    }
+
+    const verificationRequestedAt = existing.verification_requested_at;
     const updates = {
       status,
       verified_at: new Date().toISOString(),
@@ -97,13 +128,24 @@ export async function PATCH(req: NextRequest) {
       rejection_reason: status === "rejected" ? rejection_reason ?? null : null,
     };
 
-    const { error: updateError } = await merchantWallets(supabase)
+    const { data: updated, error: updateError } = await merchantWallets(supabase)
       .update(updates)
-      .eq("id", id);
+      .eq("id", id)
+      .eq("status", "pending")
+      .select("id")
+      .maybeSingle();
 
     if (updateError) {
       console.error("[Admin Wallets] patch error:", updateError);
       return NextResponse.json({ error: "Update failed" }, { status: 500 });
+    }
+
+    if (!updated) {
+      return NextResponse.json({
+        success: true,
+        status,
+        merchantNotification: { sent: false, skipped: "concurrent_review" },
+      });
     }
 
     if (status === "verified") {
@@ -149,6 +191,8 @@ export async function PATCH(req: NextRequest) {
         label: existing.label,
         status,
         previousStatus,
+        verificationRequestedAt: verificationRequestedAt,
+        statusEmailedForRequest: existing.merchant_status_emailed_for_request,
         rejectionReason: rejection_reason,
         walletNetwork: walletRow?.wallet_network,
         walletAddress: walletRow?.wallet_address,
@@ -166,6 +210,15 @@ export async function PATCH(req: NextRequest) {
           error: result.success ? undefined : result.error,
         };
         logEmailWorkflow(`wallet.status.${id}.${status}`, result);
+
+        if (result.success) {
+          await merchantWallets(supabase)
+            .update({
+              merchant_status_emailed_at: new Date().toISOString(),
+              merchant_status_emailed_for_request: verificationRequestedAt,
+            })
+            .eq("id", id);
+        }
       }
     }
 
@@ -175,7 +228,6 @@ export async function PATCH(req: NextRequest) {
       merchantNotification,
     });
   } catch (error) {
-    console.error("[Admin Wallets] PATCH fatal:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return routeError(error, { logContext: "admin/wallets PATCH" });
   }
 }

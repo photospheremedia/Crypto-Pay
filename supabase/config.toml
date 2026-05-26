@@ -399,6 +399,9 @@ verify_jwt = false
 [functions.rate-limit-check]
 verify_jwt = false
 
+[functions.verify-turnstile]
+verify_jwt = false
+
 [functions.runner-api]
 verify_jwt = false
 

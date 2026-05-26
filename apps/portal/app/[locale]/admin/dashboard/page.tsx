@@ -1,8 +1,17 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
-import { Activity, Building2, Crown, MessageSquare, RefreshCw, Users } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import {
+  Activity,
+  Crown,
+  MessageSquare,
+  RefreshCw,
+  Users,
+  Wallet,
+  UserCircle,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -19,8 +28,11 @@ type Lead = {
 type Stats = {
   totalLeads: number;
   newLeadsToday: number;
-  qualifiedLeads: number;
-  convertedLeads: number;
+  qualifiedLeads?: number;
+  convertedLeads?: number;
+  pendingWallets?: number;
+  verifiedMerchantWallets?: number;
+  merchantAccounts?: number;
   totalUsers?: number;
   staffCount?: number;
   totalTenants?: number;
@@ -28,6 +40,7 @@ type Stats = {
 };
 
 export default function AdminDashboard() {
+  const t = useTranslations("Admin.dashboard");
   const [stats, setStats] = useState<Stats | null>(null);
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -57,7 +70,7 @@ export default function AdminDashboard() {
   }, []);
 
   const conversionRate = useMemo(() => {
-    if (!stats || stats.totalLeads === 0) return "0.0";
+    if (!stats || stats.totalLeads === 0 || !stats.convertedLeads) return "0.0";
     return ((stats.convertedLeads / stats.totalLeads) * 100).toFixed(1);
   }, [stats]);
 
@@ -81,8 +94,8 @@ export default function AdminDashboard() {
               Super Admin
             </Badge>
           )}
-          <h1 className="text-2xl font-bold tracking-tight text-slate-900">Crypto Pay Admin</h1>
-          <p className="text-sm text-slate-500">Minimal control center for conversations, users, and growth.</p>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">{t("title")}</h1>
+          <p className="text-sm text-slate-500">{t("subtitle")}</p>
         </div>
         <Button onClick={() => { setRefreshing(true); fetchStats(); }} disabled={refreshing} variant="outline" size="sm">
           <RefreshCw className={`mr-2 h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />
@@ -90,20 +103,41 @@ export default function AdminDashboard() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-        <MetricCard title="Total Conversations" value={stats?.totalLeads ?? 0} icon={MessageSquare} />
-        <MetricCard title="New Today" value={stats?.newLeadsToday ?? 0} icon={Activity} />
-        <MetricCard title="Qualified" value={stats?.qualifiedLeads ?? 0} icon={Users} />
-        <MetricCard title="Conversion" value={`${conversionRate}%`} icon={Building2} />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <MetricCard
+          title={t("pendingWallets")}
+          value={stats?.pendingWallets ?? 0}
+          icon={Wallet}
+          href="/admin/wallets"
+          highlight={(stats?.pendingWallets ?? 0) > 0}
+        />
+        <MetricCard
+          title={t("verifiedWallets")}
+          value={stats?.verifiedMerchantWallets ?? 0}
+          icon={Wallet}
+          href="/admin/wallets"
+        />
+        <MetricCard
+          title={t("merchantAccounts")}
+          value={stats?.merchantAccounts ?? 0}
+          icon={UserCircle}
+          href="/admin/users"
+        />
+        <MetricCard
+          title={t("newLeadsToday")}
+          value={stats?.newLeadsToday ?? 0}
+          icon={MessageSquare}
+          href="/admin/leads"
+        />
       </div>
 
-      {isSuperAdmin && (
+      {isSuperAdmin ? (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <MetricCard title="Active Businesses" value={stats?.totalTenants ?? 0} icon={Building2} />
-          <MetricCard title="Active Operators" value={stats?.staffCount ?? 0} icon={Users} />
-          <MetricCard title="Active Members" value={stats?.totalUsers ?? 0} icon={Crown} />
+          <MetricCard title="Staff" value={stats?.staffCount ?? 0} icon={Users} />
+          <MetricCard title="Active memberships" value={stats?.totalUsers ?? 0} icon={Crown} />
+          <MetricCard title="Lead conversion" value={`${conversionRate}%`} icon={Activity} />
         </div>
-      )}
+      ) : null}
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <section className="rounded-xl border border-slate-200 bg-white shadow-sm">
@@ -133,13 +167,29 @@ export default function AdminDashboard() {
 
         <section className="rounded-xl border border-slate-200 bg-white shadow-sm">
           <div className="border-b border-slate-100 p-4">
-            <h2 className="font-semibold text-slate-900">Quick Actions</h2>
+            <h2 className="font-semibold text-slate-900">{t("quickActions")}</h2>
           </div>
           <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2">
-            <QuickAction href="/admin/leads" title="Conversation Inbox" description="Qualify and follow up quickly" />
-            <QuickAction href="/admin/customers" title="Customers" description="Manage user and account records" />
-            <QuickAction href="/admin/marketing" title="Email Campaigns" description="Run simple lifecycle campaigns" />
-            <QuickAction href="/admin/analytics" title="Analytics" description="Track activation and conversion" />
+            <QuickAction
+              href="/admin/wallets"
+              title={t("reviewWallets")}
+              description="Approve or reject merchant payout addresses"
+            />
+            <QuickAction
+              href="/admin/users"
+              title={t("viewMerchants")}
+              description="Browse merchant accounts and wallet status"
+            />
+            <QuickAction
+              href="/admin/leads"
+              title={t("openInbox")}
+              description="Qualify inbound chat and contact requests"
+            />
+            <QuickAction
+              href="/admin/analytics"
+              title="Analytics"
+              description="Track activation and conversion"
+            />
           </div>
         </section>
       </div>
@@ -151,13 +201,21 @@ function MetricCard({
   title,
   value,
   icon: Icon,
+  href,
+  highlight = false,
 }: {
   title: string;
   value: number | string;
   icon: React.ComponentType<{ className?: string }>;
+  href?: string;
+  highlight?: boolean;
 }) {
-  return (
-    <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+  const card = (
+    <div
+      className={`rounded-xl border bg-white p-4 shadow-sm transition-colors ${
+        highlight ? "border-amber-300 ring-1 ring-amber-200" : "border-slate-200"
+      } ${href ? "hover:border-emerald-300 hover:bg-emerald-50/30" : ""}`}
+    >
       <div className="flex items-center justify-between">
         <p className="text-sm text-slate-500">{title}</p>
         <div className="rounded-lg bg-emerald-50 p-2 text-emerald-600">
@@ -167,6 +225,16 @@ function MetricCard({
       <p className="mt-2 text-2xl font-bold text-slate-900">{value}</p>
     </div>
   );
+
+  if (href) {
+    return (
+      <Link href={href} className="block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500">
+        {card}
+      </Link>
+    );
+  }
+
+  return card;
 }
 
 function QuickAction({ href, title, description }: { href: string; title: string; description: string }) {

@@ -79,6 +79,16 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      // Email template logos (Resend / Supabase auth mailers load these by absolute URL)
+      {
+        source: '/email/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
       {
         source: '/_next/static/:path*',
         headers: [
@@ -104,6 +114,8 @@ const nextConfig: NextConfig = {
   // Experimental features
   experimental: {
     optimizeCss: true,
+    // Per-icon imports; reduces Turbopack HMR issues with lucide-react barrels
+    optimizePackageImports: ["lucide-react"],
   },
   
   // Compiler options

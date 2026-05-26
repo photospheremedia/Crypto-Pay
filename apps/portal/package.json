@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev --turbopack --port 3001",
+    "dev:portal": "next dev --turbopack --port 3001",
+    "dev:clean": "bash ../../scripts/kill-port.sh 3001 && node -e \"require('fs').rmSync('.next',{recursive:true,force:true})\" && next dev --turbopack --port 3001",
     "dev:setup": "npx tsx scripts/setup-local-dev-user.ts",
     "runner:client": "npx tsx scripts/create-runner-api-client.ts",
     "runner:test": "npx tsx scripts/test-runner-api.ts",
@@ -13,6 +15,7 @@
     "email:sync-auth:push": "npx tsx scripts/sync-supabase-auth-templates.ts --push",
     "email:test-suite": "npx tsx scripts/send-onboarding-email-suite.ts",
     "email:logo": "npx tsx scripts/generate-email-logo.tsx",
+    "prebuild": "pnpm email:logo",
     "build": "next build",
     "typecheck": "tsc --noEmit",
     "start": "next start",

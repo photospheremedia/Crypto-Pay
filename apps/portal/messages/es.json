@@ -151,6 +151,24 @@
       "signOut": "Cerrar sesión",
       "adminDashboard": "Panel de admin"
     },
+    "header": {
+      "openMenu": "Abrir menú de navegación",
+      "closeMenu": "Cerrar menú de navegación",
+      "sidebarNav": "Navegación de la cuenta",
+      "userMenu": "Abrir menú de cuenta",
+      "profile": "Perfil"
+    },
+    "help": {
+      "menuLabel": "Ayuda y soporte",
+      "title": "Ayuda y soporte",
+      "subtitle": "Documentación y seguridad de la cuenta",
+      "documentation": "Documentación para desarrolladores",
+      "documentationDescription": "Cargos, webhooks y guías de integración",
+      "security": "Seguridad",
+      "securityDescription": "Contraseña, 2FA y sesiones activas",
+      "emailUs": "Escríbenos",
+      "emailAddress": "support@cryptopay.sale"
+    },
     "dashboard": {
       "welcome": "Bienvenido de nuevo, {name}",
       "subtitle": "Acepta pagos cripto — gestiona wallets de pago y actividad",
@@ -376,6 +394,45 @@
     "contactSales": "Contactar ventas",
     "createAccount": "Crear cuenta"
   },
+  "Admin": {
+    "nav": {
+      "brand": "Crypto Pay",
+      "brandTagline": "Consola de admin",
+      "overview": "Resumen",
+      "merchantOps": "Operaciones de comercios",
+      "insights": "Información",
+      "platform": "Plataforma",
+      "growth": "Crecimiento",
+      "superAdmin": "Super admin",
+      "dashboard": "Panel",
+      "walletReview": "Revisión de monederos",
+      "merchants": "Comercios",
+      "leads": "Leads y chat",
+      "analytics": "Analítica",
+      "settings": "Ajustes",
+      "notifications": "Notificaciones",
+      "security": "Seguridad",
+      "campaigns": "Campañas de email",
+      "automations": "Automatizaciones",
+      "templates": "Plantillas",
+      "contacts": "Contactos",
+      "staff": "Gestión de equipo",
+      "audit": "Registros de auditoría",
+      "exitAdmin": "Salir al sitio"
+    },
+    "dashboard": {
+      "title": "Resumen operativo",
+      "subtitle": "Revisa monederos de pago, comercios y leads entrantes.",
+      "pendingWallets": "Monederos pendientes",
+      "verifiedWallets": "Monederos verificados",
+      "merchantAccounts": "Cuentas de comercio",
+      "newLeadsToday": "Nuevos leads hoy",
+      "reviewWallets": "Revisar monederos",
+      "viewMerchants": "Ver comercios",
+      "openInbox": "Bandeja de leads",
+      "quickActions": "Acciones rápidas"
+    }
+  },
   "Auth": {
     "welcomeBack": "Bienvenido de nuevo",
     "signInTitle": "Inicia sesión en tu cuenta",
@@ -416,5 +473,27 @@
     "sendResetLink": "Enviar enlace",
     "backToSignIn": "Volver a iniciar sesión",
     "resetPassword": "Restablecer contraseña"
+  },
+  "Legal": {
+    "terms": {
+      "eyebrow": "Legal",
+      "title": "Términos de servicio",
+      "metaTitle": "Términos de servicio | Crypto Pay",
+      "metaDescription": "Términos de servicio de Crypto Pay — pagos cripto no custodiales, cuentas de comercio y uso de API.",
+      "openGraphTitle": "Crypto Pay — Términos de servicio",
+      "openGraphDescription": "Términos para comercios que aceptan pagos en criptomonedas con liquidación de wallet a wallet.",
+      "lastUpdated": "Última actualización: {date}",
+      "footerNote": "Al usar Crypto Pay, reconoces que has leído, entendido y aceptas estos Términos de servicio."
+    },
+    "privacy": {
+      "eyebrow": "Legal",
+      "title": "Política de privacidad",
+      "metaTitle": "Política de privacidad | Crypto Pay",
+      "metaDescription": "Cómo Crypto Pay recopila, usa y protege datos de comercios y transacciones para pagos cripto.",
+      "openGraphTitle": "Crypto Pay — Política de privacidad",
+      "openGraphDescription": "Prácticas de privacidad para comercios que usan Crypto Pay para aceptar y rastrear pagos cripto.",
+      "lastUpdated": "Última actualización: {date}",
+      "footerNote": "Esta Política de privacidad describe cómo tratamos la información cuando usas Crypto Pay."
+    }
   }
 }

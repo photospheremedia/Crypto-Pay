@@ -1,19 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
+import { parseRequestJson } from "@/lib/api/parse-request-json";
+import { routeError } from "@/lib/api/route-error";
 import { createClient } from "@/lib/supabase/server";
-import { checkRateLimit, createRateLimitResponse } from '@/lib/rate-limit';
+import { assertBotProtectionForRequest } from '@/lib/security/bot-protection';
 
 export async function POST(request: NextRequest) {
   try {
-    // Rate limiting - 3 attempts per hour per IP (via Edge Function)
-    const ip = request.headers.get('x-forwarded-for') ?? request.headers.get('x-real-ip') ?? 'unknown';
-    const rateLimitResult = await checkRateLimit('password-reset', ip);
+    const parsed = await parseRequestJson<{ email?: string; turnstile_token?: string }>(request);
+    if (parsed instanceof Response) return parsed;
 
-    if (!rateLimitResult.success) {
-      return createRateLimitResponse(rateLimitResult.limit, rateLimitResult.remaining, rateLimitResult.reset);
+    const botCheck = await assertBotProtectionForRequest(request, {
+      limitType: 'password-reset',
+      turnstileToken: parsed.turnstile_token,
+    });
+    if (!botCheck.ok) {
+      return NextResponse.json({ error: botCheck.error }, { status: botCheck.status });
     }
 
     const supabase = await createClient();
-    const { email } = await request.json();
+    const { email } = parsed;
     const normalizedEmail = String(email || "").trim().toLowerCase();
 
     if (!normalizedEmail) {
@@ -47,11 +52,7 @@ export async function POST(request: NextRequest) {
       success: true,
       message: "If an account exists for this email, a reset link has been sent." 
     });
-  } catch (error: any) {
-    console.error("Password reset error:", error);
-    return NextResponse.json(
-      { error: error.message || "Failed to send reset email" },
-      { status: 500 }
-    );
+  } catch (error) {
+    return routeError(error, { logContext: "account/password-reset POST" });
   }
 }

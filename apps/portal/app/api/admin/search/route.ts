@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { withAdminAuth } from "@/lib/admin-auth";
-import { createClient } from "@/lib/supabase/server";
+import {
+  filterMerchantProfiles,
+  getStaffUserIds,
+} from "@/lib/admin/merchant-directory";
+import { merchantWallets } from "@/lib/wallets/db";
+import { getSupabaseServiceClient } from "@crypto-pay/db/supabaseServer";
 
 interface SearchResult {
   id: string;
@@ -19,42 +24,49 @@ export const GET = withAdminAuth(async (req) => {
       return NextResponse.json({ success: true, results: [] });
     }
 
-    const supabase = await createClient();
+    const supabase = getSupabaseServiceClient();
     const results: SearchResult[] = [];
-    const searchTerm = `%${query}%`;
+    const searchTerm = `%${query.trim()}%`;
+    const staffUserIds = await getStaffUserIds(supabase);
 
-    const { data: merchants } = await supabase
+    const { data: merchantRows } = await supabase
       .from("user_profiles")
-      .select("id, email, full_name")
-      .or(`email.ilike.${searchTerm},full_name.ilike.${searchTerm}`)
-      .limit(5);
+      .select("id, email, full_name, company_name")
+      .or(
+        `email.ilike.${searchTerm},full_name.ilike.${searchTerm},company_name.ilike.${searchTerm}`,
+      )
+      .limit(10);
 
-    if (merchants) {
+    const merchants = filterMerchantProfiles(merchantRows ?? [], staffUserIds).slice(
+      0,
+      5,
+    );
+
+    if (merchants.length > 0) {
       results.push(
         ...merchants.map((m) => ({
           id: m.id,
           type: "merchant" as const,
-          title: m.full_name || m.email || "Merchant",
-          subtitle: m.email || "Account",
+          title: m.full_name || m.company_name || m.email || "Merchant",
+          subtitle: m.email || "Merchant account",
           href: `/admin/users/${m.id}`,
         })),
       );
     }
 
-    const { data: wallets } = await supabase
-      .from("user_wallet_profiles")
-      .select("user_id, wallet_network, wallet_address, wallet_verified")
-      .ilike("wallet_address", searchTerm)
+    const { data: payoutWallets } = await merchantWallets(supabase)
+      .select("id, user_id, label, wallet_network, wallet_address, status")
+      .or(`wallet_address.ilike.${searchTerm},label.ilike.${searchTerm}`)
       .limit(5);
 
-    if (wallets) {
+    if (payoutWallets) {
       results.push(
-        ...wallets.map((w) => ({
-          id: w.user_id,
+        ...payoutWallets.map((w) => ({
+          id: w.id,
           type: "wallet" as const,
-          title: `${w.wallet_network.toUpperCase()} wallet`,
-          subtitle: w.wallet_verified ? "Verified" : "Pending verification",
-          href: `/admin/users/${w.user_id}`,
+          title: w.label || `${String(w.wallet_network).toUpperCase()} wallet`,
+          subtitle: `${w.status} · ${w.wallet_address.slice(0, 10)}…`,
+          href: `/admin/wallets`,
         })),
       );
     }
@@ -80,7 +92,7 @@ export const GET = withAdminAuth(async (req) => {
 
     return NextResponse.json({
       success: true,
-      results: results.slice(0, 10),
+      results: results.slice(0, 12),
     });
   } catch (error) {
     console.error("Search failed:", error);

@@ -63,7 +63,8 @@ export async function POST(req: Request) {
     
     // Rate limiting to protect API keys
     const rateLimitIdentifier = bodyUserId || req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-    const rateLimitResult = await checkRateLimit(bodyUserId ? 'api' : 'anon', rateLimitIdentifier);
+    const rateLimitType = bodyUserId ? 'api' : 'chat';
+    const rateLimitResult = await checkRateLimit(rateLimitType, rateLimitIdentifier);
     
     if (!rateLimitResult.success) {
       return createRateLimitResponse(rateLimitResult.limit, rateLimitResult.remaining, rateLimitResult.reset);

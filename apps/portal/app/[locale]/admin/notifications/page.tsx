@@ -1,36 +1,21 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
-import { Bell, CheckCircle2, AlertCircle, Package, ShoppingCart, MessageSquare } from "lucide-react";
+import { Bell } from "lucide-react";
+import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
+import { AdminNotificationTypeIcon } from "@/components/admin/admin-notification-type-icon";
+import type { AdminNotificationType } from "@/lib/admin/notifications-feed";
 
 type NotificationItem = {
   id: string;
-  type: "lead" | "order" | "product" | "alert" | "success";
+  type: AdminNotificationType;
   title: string;
   message: string;
   href?: string;
   read: boolean;
-  createdAt: string | Date;
+  createdAt: string;
 };
-
-function notificationIcon(type: NotificationItem["type"]) {
-  switch (type) {
-    case "lead":
-      return <MessageSquare className="h-4 w-4 text-blue-600" />;
-    case "order":
-      return <ShoppingCart className="h-4 w-4 text-emerald-600" />;
-    case "product":
-      return <Package className="h-4 w-4 text-purple-600" />;
-    case "alert":
-      return <AlertCircle className="h-4 w-4 text-red-600" />;
-    case "success":
-      return <CheckCircle2 className="h-4 w-4 text-emerald-600" />;
-    default:
-      return <Bell className="h-4 w-4 text-slate-600" />;
-  }
-}
 
 export default function AdminNotificationsPage() {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
@@ -50,14 +35,19 @@ export default function AdminNotificationsPage() {
   }
 
   useEffect(() => {
-    loadNotifications();
+    void loadNotifications();
   }, []);
 
-  const unreadCount = useMemo(() => notifications.filter((n) => !n.read).length, [notifications]);
+  const unreadCount = useMemo(
+    () => notifications.filter((n) => !n.read).length,
+    [notifications],
+  );
 
   async function markAsRead(id: string) {
     await fetch(`/api/admin/notifications/${id}/read`, { method: "POST" });
-    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === id ? { ...n, read: true } : n)),
+    );
   }
 
   async function markAllAsRead() {
@@ -70,13 +60,15 @@ export default function AdminNotificationsPage() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Notifications</h1>
-          <p className="text-sm text-slate-500">View and clear system events from across the admin panel.</p>
+          <p className="text-sm text-slate-500">
+            Pending payout wallets and new leads from Supabase.
+          </p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={loadNotifications} disabled={loading}>
+          <Button variant="outline" onClick={() => void loadNotifications()} disabled={loading}>
             Refresh
           </Button>
-          <Button onClick={markAllAsRead} disabled={unreadCount === 0}>
+          <Button onClick={() => void markAllAsRead()} disabled={unreadCount === 0}>
             Mark all read
           </Button>
         </div>
@@ -87,7 +79,9 @@ export default function AdminNotificationsPage() {
           {unreadCount} unread of {notifications.length} total
         </div>
         {loading ? (
-          <div className="px-6 py-10 text-sm text-slate-500">Loading notifications...</div>
+          <div className="px-6 py-10 text-sm text-slate-500">
+            Loading notifications…
+          </div>
         ) : notifications.length === 0 ? (
           <div className="px-6 py-10 text-center text-slate-500">
             <Bell className="mx-auto mb-2 h-8 w-8 text-slate-300" />
@@ -104,10 +98,12 @@ export default function AdminNotificationsPage() {
               >
                 <div className="flex min-w-0 items-start gap-3">
                   <span className="mt-0.5 rounded-lg bg-slate-100 p-2">
-                    {notificationIcon(notification.type)}
+                    <AdminNotificationTypeIcon type={notification.type} />
                   </span>
                   <div className="min-w-0">
-                    <p className="font-medium text-slate-900">{notification.title}</p>
+                    <p className="font-medium text-slate-900">
+                      {notification.title}
+                    </p>
                     <p className="text-sm text-slate-600">{notification.message}</p>
                     <p className="mt-1 text-xs text-slate-400">
                       {new Date(notification.createdAt).toLocaleString()}
@@ -124,7 +120,11 @@ export default function AdminNotificationsPage() {
                     </Link>
                   ) : null}
                   {!notification.read ? (
-                    <Button variant="ghost" size="sm" onClick={() => markAsRead(notification.id)}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => void markAsRead(notification.id)}
+                    >
                       Mark read
                     </Button>
                   ) : null}

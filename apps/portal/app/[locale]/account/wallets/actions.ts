@@ -14,6 +14,7 @@ import {
 } from "@/lib/email/workflows";
 import { notifyMerchantWalletSubmitted } from "@/lib/wallets/notify-admin";
 import { ACCOUNT_SETUP_LEGACY_PATH } from "@/lib/account/paths";
+import { requireMerchantSession } from "@/lib/auth/session";
 import { merchantWalletSchema } from "@/lib/wallets/validation";
 import type { MerchantWallet } from "@/types/crypto-pay-db";
 
@@ -29,11 +30,8 @@ function revalidateAccountWallets() {
 }
 
 async function requireUser() {
+  const { user } = await requireMerchantSession();
   const supabase = await getSupabaseServerClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
   return { supabase, user };
 }
 
@@ -85,11 +83,13 @@ export async function saveMerchantWallet(
   let previousWallet: {
     wallet_network: string;
     wallet_address: string;
+    status: string;
+    verification_requested_at: string;
   } | null = null;
 
   if (id) {
     const { data: existing } = await merchantWallets(supabase)
-      .select("wallet_network, wallet_address")
+      .select("wallet_network, wallet_address, status, verification_requested_at")
       .eq("id", id)
       .eq("user_id", user.id)
       .maybeSingle();
@@ -102,15 +102,32 @@ export async function saveMerchantWallet(
       .eq("user_id", user.id);
   }
 
-  const row = {
+  const materialChange =
+    isCreate ||
+    !previousWallet ||
+    previousWallet.wallet_network !== walletNetwork ||
+    previousWallet.wallet_address !== walletAddress;
+
+  const row: Record<string, unknown> = {
     user_id: user.id,
     label,
     wallet_network: walletNetwork,
     wallet_address: walletAddress,
-    status: "pending" as const,
     is_primary: isPrimary ?? false,
-    verification_requested_at: new Date().toISOString(),
   };
+
+  if (isCreate) {
+    row.status = "pending";
+    row.verification_requested_at = new Date().toISOString();
+  } else if (materialChange) {
+    row.status = "pending";
+    row.verification_requested_at = new Date().toISOString();
+    row.verified_at = null;
+    row.verified_by = null;
+    row.rejection_reason = null;
+    row.merchant_status_emailed_at = null;
+    row.merchant_status_emailed_for_request = null;
+  }
 
   let walletId = id;
   if (id) {
@@ -144,14 +161,16 @@ export async function saveMerchantWallet(
     .single();
 
   if (saved && saved.status === "pending") {
-    const notifyAdmin = shouldNotifyAdminWalletPending({
-      isCreate,
-      previous: previousWallet as Pick<
-        MerchantWallet,
-        "wallet_network" | "wallet_address"
-      > | null,
-      next: saved,
-    });
+    const notifyAdmin =
+      materialChange &&
+      shouldNotifyAdminWalletPending({
+        isCreate,
+        previous: previousWallet as Pick<
+          MerchantWallet,
+          "wallet_network" | "wallet_address"
+        > | null,
+        next: saved,
+      });
 
     if (notifyAdmin) {
       const merchantEmail = user.email ?? "";

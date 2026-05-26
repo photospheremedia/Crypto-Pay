@@ -13,8 +13,17 @@
 /**
  * Helper to check rate limit via Edge Function
  */
+export type RateLimitType =
+  | 'login'
+  | 'signup'
+  | 'password-reset'
+  | 'chat'
+  | 'api'
+  | 'anon'
+  | 'public-api';
+
 export async function checkRateLimit(
-  limitType: 'login' | 'signup' | 'password-reset' | 'api' | 'anon',
+  limitType: RateLimitType,
   identifier: string
 ): Promise<{
   success: boolean;

@@ -14,6 +14,7 @@ export type EmailTemplate =
   | "wallet_pending_admin"
   | "wallet_status_merchant"
   | "wallet_submitted_merchant"
+  | "admin_message_merchant"
   | "order_confirmation"
   | "order_shipped"
   | "order_delivered"

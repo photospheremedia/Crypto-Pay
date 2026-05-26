@@ -26,11 +26,13 @@ interface RateLimitConfig {
 
 const limitConfigs: Record<string, RateLimitConfig> = {
   login: { maxRequests: 5, windowSeconds: 900 }, // 5 per 15 min (brute force protection)
-  signup: { maxRequests: 5, windowSeconds: 3600 }, // 5 per hour (allow retries with different emails)
-  passwordReset: { maxRequests: 3, windowSeconds: 3600 }, // 3 per hour (abuse prevention)
-  chat: { maxRequests: 20, windowSeconds: 900 }, // 20 per 15 min (spam prevention, allows conversation)
-  api: { maxRequests: 300, windowSeconds: 3600 }, // 300 per hour (active dashboard usage)
-  anon: { maxRequests: 30, windowSeconds: 3600 }, // 30 per hour (guest usage)
+  signup: { maxRequests: 5, windowSeconds: 3600 }, // 5 per hour
+  "password-reset": { maxRequests: 3, windowSeconds: 3600 },
+  passwordReset: { maxRequests: 3, windowSeconds: 3600 }, // legacy alias
+  chat: { maxRequests: 20, windowSeconds: 900 }, // 20 per 15 min
+  api: { maxRequests: 300, windowSeconds: 3600 }, // authenticated dashboard
+  anon: { maxRequests: 30, windowSeconds: 3600 }, // guest / anonymous
+  "public-api": { maxRequests: 120, windowSeconds: 3600 }, // analytics, misc public POST
 };
 
 interface RateLimitRequest {

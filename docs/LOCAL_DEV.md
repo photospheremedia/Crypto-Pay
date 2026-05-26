@@ -17,8 +17,17 @@ Default dev user (override with env vars):
 
 | Variable | Default |
 |----------|---------|
-| `LOCAL_DEV_EMAIL` | `merchant@example.com` |
-| `LOCAL_DEV_PASSWORD` | `CryptoPayDev!2026` |
+| `LOCAL_DEV_EMAIL` | `photospheremedia00@gmail.com` |
+| `LOCAL_DEV_PASSWORD` | `CryptoPayDev!2026` (set your own in the shell; never commit passwords) |
+| `LOCAL_DEV_ADMIN` | `1` — grants `cp_admin` on `crypto-pay-admin` tenant |
+
+Example with a custom password:
+
+```bash
+LOCAL_DEV_EMAIL=photospheremedia00@gmail.com LOCAL_DEV_PASSWORD='YourSecurePass!' pnpm dev:setup
+```
+
+`photospheremedia00@gmail.com` is also in the app admin allowlist (`lib/admin-email.ts`), so `/admin/dashboard` works after login.
 
 ## Why `NEXT_PUBLIC_APP_URL` matters locally
 
@@ -55,8 +64,26 @@ Full sequence diagrams, redirect rules, and file map: [ACCOUNT_SETUP_WORKFLOW.md
 
 | Issue | Fix |
 |-------|-----|
+| `Event handlers cannot be passed to Client Component` + `onError` on intl provider | Remove `onError` from `i18n/request.ts` — handlers live in `IntlProvider` only (next-intl 4 inheritance) |
+| Favicon / `/icon` redirects to login or 500 | Metadata routes must skip `proxy.ts` — see `lib/routing/metadata-routes.ts` |
+| `SyntaxError: Unexpected non-whitespace character after JSON` on `/en` or `/login` | Corrupted Turbopack cache — run `pnpm dev:portal:clean` (or VS Code task **Dev: Portal (clean .next)**) |
+| Port 3001 already in use | Stop the other dev server, or let the VS Code dev task kill it first |
 | "Email or password is incorrect" | Run `pnpm dev:setup` again |
 | Login works but session lost | Confirm `NEXT_PUBLIC_SUPABASE_ANON_KEY` in `.env.local` |
 | Redirects to production after OAuth | Use `.env.development.local` with localhost URL |
-| Admin vs account | Users with `owner`+ membership may go to `/admin/dashboard` |
-| 404 after signup on `/account/setup` | Should redirect automatically; see [ACCOUNT_SETUP_WORKFLOW.md](./ACCOUNT_SETUP_WORKFLOW.md) |
+| Admin vs account | `photospheremedia00@gmail.com` + `pnpm dev:setup` → `/admin/dashboard` |
+| 404 after signup on `/account/setup` | Redirects to `/account?tab=wallets`; see [ACCOUNT_SETUP_WORKFLOW.md](./ACCOUNT_SETUP_WORKFLOW.md) |
+
+Use **pnpm** from the **repo root** (`pnpm dev:portal`), or from `apps/portal` (`pnpm dev:portal` — same port).
+
+### VS Code / Cursor tasks
+
+Run **Terminal → Run Task** and pick:
+
+| Task | What it does |
+|------|----------------|
+| **Dev: Portal (Next.js)** | Frees port 3001, starts http://localhost:3001 |
+| **Dev: Portal (clean .next)** | Kill port + delete `.next` + start (fixes Turbopack JSON/cache glitches) |
+| **Dev: Setup local user** | `pnpm dev:setup` — confirmed dev login |
+
+Open the **monorepo root** (`crypto-pay`) as the workspace folder so `cwd` resolves correctly. If a task “fails” instantly while the server is running, reload the window once — background tasks now wait for Next.js `Ready in`.

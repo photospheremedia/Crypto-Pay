@@ -7,6 +7,7 @@ import {
   Megaphone, Cog, Check,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { safeJsonParse, safeJsonParseObject } from '@/lib/errors';
 import {
   Dialog,
   DialogContent,
@@ -47,6 +48,33 @@ const COOKIE_CONSENT_KEY = 'cryptopay-cookie-consent';
 const COOKIE_PREFERENCES_KEY = 'cryptopay-cookie-preferences';
 const CONSENT_VERSION = '2.0.0'; // Bump this to re-ask for consent
 const CONSENT_EXPIRY_MONTHS = 13; // GDPR requirement
+
+function clearCorruptConsentStorage(): void {
+  if (typeof window === 'undefined') return;
+  localStorage.removeItem(COOKIE_CONSENT_KEY);
+  localStorage.removeItem(COOKIE_PREFERENCES_KEY);
+}
+
+function readStoredPreferences(): CookiePreferences {
+  return safeJsonParseObject<CookiePreferences>(
+    typeof window !== 'undefined' ? localStorage.getItem(COOKIE_PREFERENCES_KEY) : null,
+    defaultPreferences,
+    { context: 'cookiePreferences', clearKey: clearCorruptConsentStorage },
+  );
+}
+
+function readConsentRecord(): ConsentRecord | null {
+  const record = safeJsonParse<ConsentRecord | null>(
+    typeof window !== 'undefined' ? localStorage.getItem(COOKIE_CONSENT_KEY) : null,
+    null,
+    { context: 'cookieConsent', clearKey: clearCorruptConsentStorage },
+  );
+  if (!record?.preferences || !record.timestamp || !record.version) {
+    clearCorruptConsentStorage();
+    return null;
+  }
+  return record;
+}
 
 const defaultPreferences: CookiePreferences = {
   essential: true,
@@ -279,24 +307,16 @@ function initializeTracking(preferences: CookiePreferences): void {
 function isConsentExpired(): boolean {
   if (typeof window === 'undefined') return false;
   
-  const consentData = localStorage.getItem(COOKIE_CONSENT_KEY);
-  if (!consentData) return true;
-  
-  try {
-    const record: ConsentRecord = JSON.parse(consentData);
-    
-    // Check version - if version changed, re-ask for consent
-    if (record.version !== CONSENT_VERSION) return true;
-    
-    // Check expiry
-    const consentDate = new Date(record.timestamp);
-    const expiryDate = new Date(consentDate);
-    expiryDate.setMonth(expiryDate.getMonth() + CONSENT_EXPIRY_MONTHS);
-    
-    return new Date() > expiryDate;
-  } catch {
-    return true;
-  }
+  const record = readConsentRecord();
+  if (!record) return true;
+
+  if (record.version !== CONSENT_VERSION) return true;
+
+  const consentDate = new Date(record.timestamp);
+  const expiryDate = new Date(consentDate);
+  expiryDate.setMonth(expiryDate.getMonth() + CONSENT_EXPIRY_MONTHS);
+
+  return new Date() > expiryDate;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -320,10 +340,9 @@ export function CookieConsent() {
       setIsAnimating(true);
     } else {
       // Load saved preferences and initialize tracking
-      const savedPrefs = localStorage.getItem(COOKIE_PREFERENCES_KEY);
-      if (savedPrefs) {
-        const prefs = JSON.parse(savedPrefs);
-        setPreferences(prefs);
+      const prefs = readStoredPreferences();
+      setPreferences(prefs);
+      if (localStorage.getItem(COOKIE_PREFERENCES_KEY)) {
         initializeTracking(prefs);
       }
     }
@@ -708,10 +727,7 @@ export function useCookieConsent() {
   const [consent, setConsent] = useState<CookiePreferences | null>(null);
 
   useEffect(() => {
-    const savedPrefs = localStorage.getItem(COOKIE_PREFERENCES_KEY);
-    if (savedPrefs) {
-      setConsent(JSON.parse(savedPrefs));
-    }
+    setConsent(readStoredPreferences());
 
     const handleConsentChange = (e: CustomEvent<CookiePreferences>) => {
       setConsent(e.detail);
@@ -738,13 +754,10 @@ export function useCookieConsent() {
 export function isCookieCategoryAllowed(category: keyof CookiePreferences): boolean {
   if (typeof window === 'undefined') return false;
   
-  const savedPrefs = localStorage.getItem(COOKIE_PREFERENCES_KEY);
-  if (!savedPrefs) return category === 'essential';
-  
-  try {
-    const prefs: CookiePreferences = JSON.parse(savedPrefs);
-    return prefs[category] ?? false;
-  } catch {
+  if (!localStorage.getItem(COOKIE_PREFERENCES_KEY)) {
     return category === 'essential';
   }
+
+  const prefs = readStoredPreferences();
+  return prefs[category] ?? false;
 }

@@ -1,21 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
 import { canManageRole, checkAdminAccess, type AdminRole } from "@/lib/admin-auth";
+import {
+  getMerchantWalletCountsByUser,
+  listMerchantWalletsForUser,
+} from "@/lib/admin/merchant-wallets";
+import { assertMerchantAccount } from "@/lib/admin/merchant-directory";
+import { notifyMerchantAccountDeleted } from "@/lib/admin/merchant-account-emails";
+import {
+  routeForbidden,
+  routeUnauthorized,
+} from "@/lib/api/route-error";
 import { getSupabaseServiceClient } from "@crypto-pay/db/supabaseServer";
+import { deleteMerchantInSupabase } from "@/lib/admin/merchant-supabase-admin";
+import { isUuid } from "@/lib/admin/is-uuid";
 
 type Params = {
   params: Promise<{ id: string }>;
 };
 
-function isUuid(value: string): boolean {
-  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
-}
-
 export async function GET(_req: NextRequest, { params }: Params) {
   try {
     const { user, isAdmin, permissions } = await checkAdminAccess();
-    if (!user || !isAdmin || !permissions?.canManageStaff) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!user || !isAdmin || !permissions?.canViewMerchants) {
+      return routeUnauthorized();
     }
 
     const { id } = await params;
@@ -23,16 +30,26 @@ export async function GET(_req: NextRequest, { params }: Params) {
       return NextResponse.json({ error: "Invalid user id" }, { status: 400 });
     }
 
-    const supabase = await createClient();
-    const service = getSupabaseServiceClient();
+    const supabase = getSupabaseServiceClient();
+    const service = supabase;
 
-    const [
-      profileRes,
-      membershipsRes,
-      walletRes,
-      leadsRes,
-      authUserRes,
-    ] = await Promise.all([
+    const profilePeek = await supabase
+      .from("user_profiles")
+      .select("email")
+      .eq("id", id)
+      .maybeSingle();
+
+    const merchantCheck = await assertMerchantAccount(
+      supabase,
+      id,
+      profilePeek.data?.email,
+    );
+    if (!merchantCheck.ok) {
+      return routeForbidden(merchantCheck.error);
+    }
+
+    const [profileRes, membershipsRes, walletRes, leadsRes, authUserRes, merchantWallets] =
+      await Promise.all([
       supabase
         .from("user_profiles")
         .select("*")
@@ -55,7 +72,11 @@ export async function GET(_req: NextRequest, { params }: Params) {
         .order("started_at", { ascending: false })
         .limit(10),
       service.auth.admin.getUserById(id),
+      listMerchantWalletsForUser(supabase, id),
     ]);
+
+    const walletCounts = await getMerchantWalletCountsByUser(supabase, [id]);
+    const counts = walletCounts.get(id);
 
     if (profileRes.error) {
       console.error("[Admin User Detail] profile error:", profileRes.error);
@@ -103,10 +124,19 @@ export async function GET(_req: NextRequest, { params }: Params) {
         auth: safeAuth,
         memberships: membershipsRes.data ?? [],
         wallet: walletRes.data ?? null,
+        merchant_wallets: merchantWallets,
+        wallet_counts: counts ?? {
+          total: 0,
+          pending: 0,
+          verified: 0,
+          rejected: 0,
+        },
         stats: {
-          wallet_linked: Boolean(walletRes.data?.wallet_address),
-          wallet_verified: walletRes.data?.wallet_verified ?? false,
+          wallet_linked: Boolean(walletRes.data?.wallet_address) || (counts?.total ?? 0) > 0,
+          wallet_verified:
+            walletRes.data?.wallet_verified ?? (counts?.verified ?? 0) > 0,
           leads_count: leadsRes.data?.length ?? 0,
+          pending_wallets: counts?.pending ?? 0,
         },
         recent_leads: leadsRes.data ?? [],
       },
@@ -120,8 +150,8 @@ export async function GET(_req: NextRequest, { params }: Params) {
 export async function PATCH(req: NextRequest, { params }: Params) {
   try {
     const { user, isAdmin, role, permissions } = await checkAdminAccess();
-    if (!user || !isAdmin || !role || !permissions?.canManageStaff) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!user || !isAdmin || !role || !permissions?.canViewMerchants) {
+      return routeUnauthorized();
     }
 
     const { id } = await params;
@@ -144,7 +174,23 @@ export async function PATCH(req: NextRequest, { params }: Params) {
       membership_status?: "active" | "inactive" | "suspended";
     } = body || {};
 
-    const supabase = await createClient();
+    const supabase = getSupabaseServiceClient();
+
+    const profilePeek = await supabase
+      .from("user_profiles")
+      .select("email")
+      .eq("id", id)
+      .maybeSingle();
+
+    const merchantCheck = await assertMerchantAccount(
+      supabase,
+      id,
+      profilePeek.data?.email,
+    );
+    if (!merchantCheck.ok) {
+      return routeForbidden(merchantCheck.error);
+    }
+
     const profileUpdates: Record<string, string | null> = {};
 
     if (typeof full_name === "string") profileUpdates.full_name = full_name.trim();
@@ -165,6 +211,13 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     }
 
     if (membership_role || membership_status) {
+      if (!permissions.canManageStaff) {
+        return NextResponse.json(
+          { error: "Staff membership changes require elevated permissions" },
+          { status: 403 },
+        );
+      }
+
       const { data: membership, error: membershipError } = await supabase
         .from("memberships")
         .select("id, role")
@@ -231,30 +284,59 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
       return NextResponse.json({ error: "You cannot delete yourself" }, { status: 400 });
     }
 
-    const supabase = await createClient();
-    const service = getSupabaseServiceClient();
+    const supabase = getSupabaseServiceClient();
+    const service = supabase;
 
-    const { data: targetMembership } = await supabase
-      .from("memberships")
-      .select("role")
-      .eq("user_id", id)
-      .eq("status", "active")
+    const { data: profile } = await supabase
+      .from("user_profiles")
+      .select("email, full_name")
+      .eq("id", id)
       .maybeSingle();
 
-    if (targetMembership) {
-      const targetRole = targetMembership.role as AdminRole;
-      if (!canManageRole(role, targetRole)) {
-        return NextResponse.json(
-          { error: "You cannot delete a user with equal or higher role" },
-          { status: 403 },
-        );
+    const merchantCheck = await assertMerchantAccount(
+      supabase,
+      id,
+      profile?.email,
+    );
+
+    if (merchantCheck.ok) {
+      const { data: authUser } = await service.auth.admin.getUserById(id);
+      const merchantEmail = authUser?.user?.email;
+      if (merchantEmail) {
+        await notifyMerchantAccountDeleted({
+          merchantUserId: id,
+          merchantEmail,
+          merchantName: profile?.full_name ?? null,
+          adminEmail: user.email ?? "",
+          adminUserId: user.id,
+        });
+      }
+    } else {
+      const { data: targetMembership } = await supabase
+        .from("memberships")
+        .select("role")
+        .eq("user_id", id)
+        .eq("status", "active")
+        .maybeSingle();
+
+      if (targetMembership) {
+        const targetRole = targetMembership.role as AdminRole;
+        if (!canManageRole(role, targetRole)) {
+          return NextResponse.json(
+            { error: "You cannot delete a user with equal or higher role" },
+            { status: 403 },
+          );
+        }
       }
     }
 
-    const { error: deleteError } = await service.auth.admin.deleteUser(id);
-    if (deleteError) {
-      console.error("[Admin User Detail] delete user error:", deleteError);
-      return NextResponse.json({ error: "Failed to delete user" }, { status: 500 });
+    const deleteResult = await deleteMerchantInSupabase(id);
+    if (!deleteResult.success) {
+      console.error("[Admin User Detail] delete user error:", deleteResult.error);
+      return NextResponse.json(
+        { error: deleteResult.error ?? "Failed to delete user" },
+        { status: 500 },
+      );
     }
 
     return NextResponse.json({ success: true });

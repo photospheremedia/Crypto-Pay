@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import { requireAdminSession } from "@/lib/auth/session";
 import { AdminLayoutClient } from "./admin-layout-client";
 
-// Prevent search engines from indexing admin area
 export const metadata: Metadata = {
   robots: {
     index: false,
@@ -9,10 +9,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <AdminLayoutClient>{children}</AdminLayoutClient>;
+  const { isSuperAdmin } = await requireAdminSession();
+
+  return (
+    <AdminLayoutClient isSuperAdmin={isSuperAdmin}>{children}</AdminLayoutClient>
+  );
 }

@@ -117,6 +117,8 @@ export async function runWalletStatusEmailWorkflow(params: {
   label: string;
   status: "verified" | "rejected";
   previousStatus: string;
+  verificationRequestedAt: string;
+  statusEmailedForRequest?: string | null;
   rejectionReason?: string | null;
   walletNetwork?: string;
   walletAddress?: string;
@@ -128,11 +130,18 @@ export async function runWalletStatusEmailWorkflow(params: {
     return { skipped: true, reason: "not_from_pending" };
   }
 
+  const emailedFor = params.statusEmailedForRequest?.trim();
+  const requestAt = params.verificationRequestedAt.trim();
+  if (emailedFor && emailedFor === requestAt) {
+    return { skipped: true, reason: "already_notified_this_request" };
+  }
+
   return notifyMerchantWalletStatus({
     merchantEmail: params.merchantEmail,
     walletId: params.walletId,
     label: params.label,
     status: params.status,
+    verificationRequestedAt: requestAt,
     rejectionReason: params.rejectionReason,
     walletNetwork: params.walletNetwork,
     walletAddress: params.walletAddress,

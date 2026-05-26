@@ -16,9 +16,13 @@ config({ path: resolve(portalRoot, ".env.development.local"), override: true });
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const email = (process.env.LOCAL_DEV_EMAIL || "merchant@example.com").toLowerCase();
+const email = (
+  process.env.LOCAL_DEV_EMAIL || "photospheremedia00@gmail.com"
+).toLowerCase();
 const password = process.env.LOCAL_DEV_PASSWORD || "CryptoPayDev!2026";
+const grantAdmin = process.env.LOCAL_DEV_ADMIN !== "0";
 const localAppUrl = "http://localhost:3001";
+const ADMIN_TENANT_SLUG = "crypto-pay-admin";
 
 function ensureDevelopmentEnvFile() {
   const devEnvPath = resolve(portalRoot, ".env.development.local");
@@ -99,6 +103,57 @@ async function main() {
     process.exit(1);
   }
 
+  if (grantAdmin) {
+    const { data: tenant, error: tenantError } = await supabase
+      .from("tenants")
+      .select("id")
+      .eq("slug", ADMIN_TENANT_SLUG)
+      .maybeSingle();
+
+    if (tenantError) {
+      console.warn("Tenant lookup failed:", tenantError.message);
+    } else if (!tenant?.id) {
+      console.warn(
+        `Tenant "${ADMIN_TENANT_SLUG}" not found — run Supabase migrations. isAdminEmail still grants /admin for allowlisted emails.`,
+      );
+    } else {
+      const { data: existing } = await supabase
+        .from("memberships")
+        .select("id, role")
+        .eq("user_id", user.id)
+        .eq("tenant_id", tenant.id)
+        .maybeSingle();
+
+      if (existing?.id) {
+        const { error: memError } = await supabase
+          .from("memberships")
+          .update({ role: "cp_admin", status: "active" })
+          .eq("id", existing.id);
+        if (memError) console.warn("Membership update:", memError.message);
+        else console.log("Membership updated to cp_admin");
+      } else {
+        const { error: memError } = await supabase.from("memberships").insert({
+          user_id: user.id,
+          tenant_id: tenant.id,
+          role: "cp_admin",
+          status: "active",
+        });
+        if (memError) console.warn("Membership insert:", memError.message);
+        else console.log("Membership created: cp_admin on", ADMIN_TENANT_SLUG);
+      }
+    }
+
+    await supabase.from("user_profiles").upsert(
+      {
+        id: user.id,
+        email,
+        full_name: user.user_metadata?.full_name || "Crypto Pay Admin",
+        role: "cp_admin",
+      },
+      { onConflict: "id" },
+    );
+  }
+
   const { error: signInError } = await createClient(
     url,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -116,7 +171,12 @@ async function main() {
   console.log("2. Open:       http://localhost:3001/login");
   console.log("3. Email:      ", email);
   console.log("4. Password:   ", password);
-  console.log("\nAfter login you may land on /admin/dashboard (owner role) or /account.");
+  console.log(
+    "\nAdmin:",
+    grantAdmin
+      ? "cp_admin membership + allowlisted email → /admin/dashboard"
+      : "disabled (LOCAL_DEV_ADMIN=0)",
+  );
   console.log(
     "\nSupabase Auth → URL config: add redirect",
     `${localAppUrl}/auth/callback`,

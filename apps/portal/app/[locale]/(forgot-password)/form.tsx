@@ -7,11 +7,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, ArrowLeft, Mail, CheckCircle2, AlertCircle } from "lucide-react";
+import { SecurityCheckField } from "@/components/auth/security-check-field";
+import { isTurnstileEnabled } from "@/lib/security/turnstile-config";
 
 export function ForgotPasswordForm() {
   const t = useTranslations("Auth");
   const tCommon = useTranslations("Common");
   const [email, setEmail] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [securityCheckPassed, setSecurityCheckPassed] = useState(
+    () => !isTurnstileEnabled(),
+  );
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
@@ -26,7 +32,7 @@ export function ForgotPasswordForm() {
       const response = await fetch("/api/account/password-reset", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, turnstile_token: turnstileToken || undefined }),
       });
       const payload = await response.json();
 
@@ -107,7 +113,7 @@ export function ForgotPasswordForm() {
         </div>
 
         <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/50 px-8 py-10">
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="relative space-y-5">
             <div>
               <Label htmlFor="email" className="text-sm font-medium text-slate-700">
                 Email address
@@ -135,10 +141,16 @@ export function ForgotPasswordForm() {
               </div>
             )}
 
+            <SecurityCheckField
+              resetTrigger={status === "error" ? errorMessage : undefined}
+              onCanSubmitChange={setSecurityCheckPassed}
+              onTokenChange={setTurnstileToken}
+            />
+
             <Button
               type="submit"
-              disabled={loading || !email}
-              className="w-full rounded-xl bg-linear-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 h-11"
+              disabled={loading || !email || !securityCheckPassed}
+              className="w-full rounded-xl bg-linear-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 h-11 disabled:opacity-60"
             >
               {loading ? (
                 <>

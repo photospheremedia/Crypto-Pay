@@ -9,7 +9,15 @@ import createIntlMiddleware from "next-intl/middleware";
 import { hasLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
 import { isAdminEmail } from "@/lib/admin-email";
+import {
+  getHomePathForRealm,
+  isAdminPath,
+  isStaffOnlyPath,
+  resolveRealmForUser,
+} from "@/lib/auth/user-realm";
+import { ADMIN_ROLES } from "@/lib/admin-auth";
 import { stripLocale } from "@/lib/i18n/strip-locale";
+import { isMetadataRoute } from "@/lib/routing/metadata-routes";
 
 const handleIntl = createIntlMiddleware(routing);
 
@@ -20,21 +28,25 @@ const handleIntl = createIntlMiddleware(routing);
 const protectedPrefixes = ["/app", "/account"];
 const authPrefixes = ["/login", "/signup", "/sign-in", "/sign-up"];
 const adminPrefixes = ["/admin"];
-const ADMIN_ROLES = ["cp_admin", "rhs_admin", "admin", "owner", "manager", "staff"];
 
 export async function proxy(request: NextRequest) {
-  const intlResponse = handleIntl(request);
-
   const { pathname: rawPathname } = request.nextUrl;
+  const pathname = stripLocale(rawPathname);
+
+  // Favicon / OG / manifest — never locale-prefix or run auth redirects
+  if (isMetadataRoute(pathname) || isMetadataRoute(rawPathname)) {
+    return NextResponse.next();
+  }
+
+  const intlResponse = handleIntl(request);
 
   if (
     rawPathname.startsWith("/auth/callback") ||
-    rawPathname.startsWith("/auth/confirm")
+    rawPathname.startsWith("/auth/confirm") ||
+    rawPathname.startsWith("/auth/auth-code-error")
   ) {
-    return intlResponse;
+    return NextResponse.next();
   }
-
-  const pathname = stripLocale(rawPathname);
 
   if (intlResponse.status >= 300 && intlResponse.status < 400) {
     return intlResponse;
@@ -110,11 +122,36 @@ export async function proxy(request: NextRequest) {
       .select("role")
       .eq("user_id", user.id)
       .eq("status", "active")
-      .in("role", ADMIN_ROLES)
+      .in("role", [...ADMIN_ROLES])
       .maybeSingle();
 
     if (!membership && !hasAdminEmail) {
       const redirectUrl = new URL(localizedPath("/account"), request.url);
+      redirectUrl.searchParams.set("error", "admin_required");
+      return NextResponse.redirect(redirectUrl);
+    }
+  }
+
+  // Staff must use /admin/* — block merchant account and /app surfaces
+  if (user && isStaffOnlyPath(pathname)) {
+    const realm = await resolveRealmForUser(supabase, user);
+    if (realm === "admin") {
+      const redirectUrl = new URL(
+        localizedPath(getHomePathForRealm("admin")),
+        request.url,
+      );
+      return NextResponse.redirect(redirectUrl);
+    }
+  }
+
+  // Merchants must not access admin routes (handled above for unauthenticated)
+  if (user && isAdminPath(pathname)) {
+    const realm = await resolveRealmForUser(supabase, user);
+    if (realm === "merchant") {
+      const redirectUrl = new URL(
+        localizedPath(getHomePathForRealm("merchant")),
+        request.url,
+      );
       redirectUrl.searchParams.set("error", "admin_required");
       return NextResponse.redirect(redirectUrl);
     }
@@ -127,13 +164,7 @@ export async function proxy(request: NextRequest) {
   }
 
   if (isAuthRoute && user && pathname !== "/app") {
-    const { data: membership } = await supabase
-      .from("memberships")
-      .select("role")
-      .eq("user_id", user.id)
-      .eq("status", "active")
-      .in("role", ADMIN_ROLES)
-      .maybeSingle();
+    const realm = await resolveRealmForUser(supabase, user);
 
     let preferredLocale: string | null = null;
     const { data: settings } = await supabase
@@ -146,10 +177,10 @@ export async function proxy(request: NextRequest) {
       preferredLocale = settings.language;
     }
 
-    const destination =
-      membership || hasAdminEmail
-        ? localizedPath("/admin/dashboard", preferredLocale ?? undefined)
-        : localizedPath("/account", preferredLocale ?? undefined);
+    const destination = localizedPath(
+      getHomePathForRealm(realm),
+      preferredLocale ?? undefined,
+    );
     return NextResponse.redirect(new URL(destination, request.url));
   }
 
@@ -178,11 +209,16 @@ export async function proxy(request: NextRequest) {
     );
   }
 
+  if (pathname.startsWith("/api/")) {
+    response.headers.set("X-Robots-Tag", "noindex, nofollow");
+  }
+
   return response;
 }
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)",
+    // Skip API, static assets, metadata routes, and files with extensions
+    "/((?!api|_next/static|_next/image|favicon.ico|favicon.svg|icon|apple-icon|opengraph-image|twitter-image|manifest|sitemap|robots|icons|.*\\..*).*)",
   ],
 };

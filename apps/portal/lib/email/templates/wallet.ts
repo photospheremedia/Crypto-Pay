@@ -193,4 +193,35 @@ export const walletEmailTemplates = {
       );
     },
   },
+
+  admin_message_merchant: {
+    subject: "[Crypto Pay] {{subjectLine}}",
+    generateHtml: (data: Record<string, unknown>) => {
+      const accountUrl = String(data.accountUrl || EMAIL_ROUTES.account());
+      const walletsUrl = String(data.walletsUrl || EMAIL_ROUTES.accountWallets());
+      const body = String(data.messageBody || "").replace(/\n/g, "<br />");
+      return generateBaseTemplate(
+        `
+      ${components.iconHero("Message", "Message from Crypto Pay", String(data.subjectLine || "Account update"))}
+      ${components.contentOpen()}
+          ${components.paragraph(`Hi ${data.merchantName || "there"},`)}
+          ${components.paragraph(`<strong>${data.adminName || "Crypto Pay team"}</strong> sent you a message regarding your merchant account:`)}
+          ${components.card(
+            `<p style="margin:0;font-size:15px;line-height:1.6;color:${brandColors.secondary};">${body}</p>`,
+            { highlight: true },
+          )}
+          ${data.walletReviewNote ? components.paragraph(String(data.walletReviewNote), { muted: true }) : ""}
+          ${components.button("Open your account", accountUrl)}
+          ${components.button("View payout wallets", walletsUrl, "outline")}
+          ${components.paragraph(
+            `Reply to this email to reach <a href="mailto:${data.adminEmail || MERCHANT_SUPPORT_REPLY}" style="color:${brandColors.primary};font-weight:600;">${data.adminEmail || MERCHANT_SUPPORT_REPLY}</a> directly.`,
+            { muted: true, center: true },
+          )}
+          ${supportFooter()}
+      ${components.contentClose()}
+    `,
+        { preheader: String(data.subjectLine || "Message from Crypto Pay") },
+      );
+    },
+  },
 } as const;

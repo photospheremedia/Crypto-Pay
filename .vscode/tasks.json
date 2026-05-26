@@ -4,22 +4,79 @@
     {
       "label": "🚀 Dev: Portal (Next.js)",
       "type": "shell",
-      "command": "lsof -ti:3001 | xargs kill -9 2>/dev/null || true && pnpm dev:portal",
+      "command": "bash scripts/kill-port.sh 3001 && pnpm dev:portal",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
       "presentation": {
         "reveal": "always",
         "panel": "dedicated",
         "clear": true
       },
       "isBackground": true,
+      "problemMatcher": {
+        "owner": "nextjs",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".",
+          "endsPattern": "(Ready in|Local:\\s+http://localhost:3001)"
+        }
+      },
       "group": {
         "kind": "build",
         "isDefault": true
       }
     },
     {
+      "label": "🧹 Dev: Portal (clean .next)",
+      "type": "shell",
+      "command": "pnpm dev:portal:clean",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "nextjs",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".",
+          "endsPattern": "(Ready in|Local:\\s+http://localhost:3001)"
+        }
+      },
+      "group": "build"
+    },
+    {
+      "label": "👤 Dev: Setup local user",
+      "type": "shell",
+      "command": "pnpm dev:setup",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "clear": true
+      },
+      "group": "build"
+    },
+    {
       "label": "🏗️ Build: Portal",
       "type": "shell",
       "command": "pnpm build:portal",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
       "presentation": {
         "reveal": "always",
         "panel": "dedicated",
@@ -32,6 +89,9 @@
       "label": "📦 Install Dependencies",
       "type": "shell",
       "command": "pnpm install",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
       "presentation": {
         "reveal": "always",
         "panel": "dedicated",
@@ -43,6 +103,9 @@
       "label": "🧪 Test: All",
       "type": "shell",
       "command": "pnpm test",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
       "presentation": {
         "reveal": "always",
         "panel": "dedicated",
@@ -54,6 +117,9 @@
       "label": "🔄 DB: Regenerate Types",
       "type": "shell",
       "command": "pnpm db:types",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
       "presentation": {
         "reveal": "always",
         "panel": "dedicated",
@@ -65,6 +131,9 @@
       "label": "🔄 DB: Push Migrations",
       "type": "shell",
       "command": "pnpm db:push",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
       "presentation": {
         "reveal": "always",
         "panel": "dedicated",
@@ -75,36 +144,19 @@
     {
       "label": "🌐 Type Check: Portal",
       "type": "shell",
-      "command": "pnpm --filter @crypto-pay/portal exec tsc --noEmit",
+      "command": "pnpm typecheck:portal",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "runOptions": {
+        "instanceLimit": 1
+      },
       "presentation": {
         "reveal": "always",
         "panel": "dedicated",
         "clear": true
       },
       "problemMatcher": ["$tsc"],
-      "group": "build"
-    },
-    {
-      "label": "🎨 Lint: Fix",
-      "type": "shell",
-      "command": "pnpm lint --fix",
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "clear": true
-      },
-      "group": "build"
-    },
-    {
-      "label": "🏠 Local Run: Portal (npm)",
-      "type": "shell",
-      "command": "lsof -ti:3001 | xargs kill -9 2>/dev/null || true && npm run dev:portal",
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "clear": true
-      },
-      "isBackground": true,
       "group": "build"
     }
   ]
