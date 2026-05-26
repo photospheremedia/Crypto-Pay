@@ -8,6 +8,7 @@
 
 import { sendEmail, type EmailResult, type EmailRecipient } from './sender';
 import { EMAIL_ROUTES, MERCHANT_SUPPORT_REPLY } from './routing';
+import { EMAIL_WORKFLOW_EVENTS, workflowIdempotencyKey } from './workflow-keys';
 
 // ============================================
 // ONBOARDING & AUTHENTICATION
@@ -31,7 +32,8 @@ export async function sendWelcomeEmail(
       dashboardUrl: data.dashboardUrl ?? EMAIL_ROUTES.accountWallets(),
     },
     tags: ["onboarding", "welcome"],
-    workflow: { event: "user.welcome", entityId: email },
+    idempotencyKey: workflowIdempotencyKey(EMAIL_WORKFLOW_EVENTS.userWelcome, email, email),
+    workflow: { event: EMAIL_WORKFLOW_EVENTS.userWelcome, entityId: email },
   });
 }
 

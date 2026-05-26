@@ -13,3 +13,6 @@
 export { sendEmail, type EmailOptions, type EmailResult, type EmailRecipient } from './sender';
 export { emailTemplates, type EmailTemplate } from './templates';
 export * from './triggers';
+export { scheduleEmailWork } from './schedule';
+export * from './workflows';
+export { EMAIL_WORKFLOW_EVENTS, workflowIdempotencyKey } from './workflow-keys';

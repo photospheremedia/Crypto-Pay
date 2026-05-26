@@ -34,6 +34,8 @@ ALLOW=(
   RESEND_API_KEY
   EMAIL_FROM
   EMAIL_REPLY_TO
+  ADMIN_REVIEW_EMAIL
+  ADMIN_ALLOWED_EMAILS
   NEXT_PUBLIC_TURNSTILE_SITE_KEY
   TURNSTILE_SECRET_KEY
   GROQ_API_KEY
@@ -64,4 +66,4 @@ cd "$LINK_DIR"
 pnpm exec netlify env:import "$OUT" --replace-existing
 rm -f "$OUT"
 echo "Done."
-pnpm exec netlify env:list 2>&1 | head -20
+pnpm exec netlify env:list 2>&1 | head -20 || true

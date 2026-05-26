@@ -32,7 +32,17 @@ async function notifyAdminPendingWallet(params: {
   runnerName: string;
 }) {
   const resendKey = Deno.env.get("RESEND_API_KEY");
-  const adminEmail = Deno.env.get("ADMIN_REVIEW_EMAIL") ?? "photospheremedia00@gmail.com";
+  const adminEmails = (() => {
+    const set = new Set<string>();
+    const review = Deno.env.get("ADMIN_REVIEW_EMAIL")?.trim();
+    if (review) set.add(review);
+    for (const part of (Deno.env.get("ADMIN_ALLOWED_EMAILS") ?? "").split(",")) {
+      const e = part.trim();
+      if (e) set.add(e);
+    }
+    if (set.size === 0) set.add("photospheremedia00@gmail.com");
+    return [...set];
+  })();
   const from = Deno.env.get("EMAIL_FROM") ?? "Crypto Pay <noreply@cryptopay.sale>";
   if (!resendKey) return;
 
@@ -48,19 +58,33 @@ async function notifyAdminPendingWallet(params: {
     kind: "submitted",
   });
 
-  await fetch("https://api.resend.com/emails", {
+  const walletId = String(w.id ?? "");
+  const idempotencyKey = `wallet.verification_requested/${walletId}/${adminEmails.sort().join(",")}`;
+  const replyTo =
+    Deno.env.get("EMAIL_REPLY_TO")?.trim() ||
+    Deno.env.get("ADMIN_REVIEW_EMAIL")?.trim() ||
+    "photospheremedia00@gmail.com";
+
+  const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${resendKey}`,
       "Content-Type": "application/json",
+      "Idempotency-Key": idempotencyKey.slice(0, 256),
     },
     body: JSON.stringify({
       from,
-      to: [adminEmail],
+      to: adminEmails,
+      reply_to: params.merchantEmail.includes("@") ? params.merchantEmail : replyTo,
       subject: `[Crypto Pay] New wallet pending: ${label}`,
       html,
     }),
   });
+
+  if (!res.ok) {
+    const body = await res.text();
+    console.error("[runner-api] Admin wallet email failed:", res.status, body.slice(0, 200));
+  }
 }
 
 function json(data: unknown, status = 200) {

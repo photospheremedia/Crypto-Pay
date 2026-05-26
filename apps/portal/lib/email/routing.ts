@@ -4,13 +4,18 @@
 
 import { ACCOUNT_WALLET_SETUP_PATH } from "@/lib/account/paths";
 
-/** Internal ops inbox — wallet review, admin alerts */
-export const INTERNAL_OPS_EMAIL =
-  process.env.ADMIN_REVIEW_EMAIL?.trim() || "photospheremedia00@gmail.com";
+import { getAdminReviewRecipientEmails } from "./admin-recipients";
 
-/** Merchant-facing Reply-To (replies from merchants land here) */
+/** Primary ops inbox (first configured admin review address). */
+export const INTERNAL_OPS_EMAIL =
+  getAdminReviewRecipientEmails()[0] ?? "photospheremedia00@gmail.com";
+
+/**
+ * Merchant-facing Reply-To — must be an inbox you monitor.
+ * Defaults to ADMIN_REVIEW_EMAIL / photospheremedia00@gmail.com (not support@, unless forwarded).
+ */
 export const MERCHANT_SUPPORT_REPLY =
-  process.env.EMAIL_REPLY_TO?.trim() || "support@cryptopay.sale";
+  process.env.EMAIL_REPLY_TO?.trim() || INTERNAL_OPS_EMAIL;
 
 export function getAppOrigin(): string {
   const raw =

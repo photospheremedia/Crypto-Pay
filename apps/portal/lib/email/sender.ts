@@ -132,8 +132,13 @@ export async function sendEmail(options: EmailOptions): Promise<EmailResult> {
       );
 
       if (error) {
+        const msg = error.message ?? String(error);
+        if (/idempotency|already sent|duplicate/i.test(msg)) {
+          console.info(`Email skipped (idempotent): ${subject}`);
+          return { success: true };
+        }
         console.error("Resend error:", error);
-        return { success: false, error: error.message };
+        return { success: false, error: msg };
       }
 
       console.log(

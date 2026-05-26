@@ -39,7 +39,7 @@ for v in RESEND_API_KEY EMAIL_FROM; do
   printf -v "$v" '%s' "$val"
 done
 EMAIL_REPLY_TO="${EMAIL_REPLY_TO%\"}"; EMAIL_REPLY_TO="${EMAIL_REPLY_TO#\"}"
-EMAIL_REPLY_TO="${EMAIL_REPLY_TO:-support@cryptopay.sale}"
+EMAIL_REPLY_TO="${EMAIL_REPLY_TO:-photospheremedia00@gmail.com}"
 APP_URL="${APP_URL%\"}"; APP_URL="${APP_URL#\"}"
 
 if [[ -z "$RESEND_API_KEY" || "$RESEND_API_KEY" == __PASTE* ]]; then

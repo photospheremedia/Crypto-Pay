@@ -48,6 +48,17 @@ async function main() {
     console.warn("⚠ EMAIL_FROM should use verified domain @cryptopay.sale");
   }
 
+  const replyTo =
+    process.env.EMAIL_REPLY_TO?.trim() || "photospheremedia00@gmail.com";
+  if (
+    replyTo.endsWith("@cryptopay.sale") &&
+    replyTo !== "noreply@cryptopay.sale"
+  ) {
+    console.warn(
+      `⚠ EMAIL_REPLY_TO=${replyTo} — ensure this inbox is monitored (or forward to photospheremedia00@gmail.com).`,
+    );
+  }
+
   if (!ok) {
     console.error("\nFix .env.local then re-run.");
     process.exit(1);

@@ -5,13 +5,17 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getSupabaseServerClient } from "@crypto-pay/db/supabaseServer";
 import { merchantWallets } from "@/lib/wallets/db";
+import { RESEND_IDEMPOTENCY_MS, notifyAdminWalletReview } from "@/lib/wallets/notify-admin";
+import { scheduleEmailWork } from "@/lib/email/schedule";
+import { logEmailWorkflow } from "@/lib/email/workflows";
 import {
-  notifyAdminWalletReview,
-  notifyMerchantWalletSubmitted,
-  RESEND_IDEMPOTENCY_MS,
-} from "@/lib/wallets/notify-admin";
+  runWalletPendingAdminNotifyWorkflow,
+  shouldNotifyAdminWalletPending,
+} from "@/lib/email/workflows";
+import { notifyMerchantWalletSubmitted } from "@/lib/wallets/notify-admin";
 import { ACCOUNT_SETUP_LEGACY_PATH } from "@/lib/account/paths";
 import { merchantWalletSchema } from "@/lib/wallets/validation";
+import type { MerchantWallet } from "@/types/crypto-pay-db";
 
 export type WalletFormState = {
   error?: string;
@@ -76,6 +80,21 @@ export async function saveMerchantWallet(
 
   const { supabase, user } = await requireUser();
   const { id, label, walletNetwork, walletAddress, isPrimary } = parsed.data;
+  const isCreate = !id;
+
+  let previousWallet: {
+    wallet_network: string;
+    wallet_address: string;
+  } | null = null;
+
+  if (id) {
+    const { data: existing } = await merchantWallets(supabase)
+      .select("wallet_network, wallet_address")
+      .eq("id", id)
+      .eq("user_id", user.id)
+      .maybeSingle();
+    previousWallet = existing;
+  }
 
   if (isPrimary) {
     await merchantWallets(supabase)
@@ -124,23 +143,38 @@ export async function saveMerchantWallet(
     .eq("id", walletId!)
     .single();
 
-  if (saved) {
-    const emailResult = await notifyAdminWalletReview({
-      kind: "submitted",
-      wallet: saved,
-      merchantEmail: user.email ?? "unknown",
-      merchantUserId: user.id,
+  if (saved && saved.status === "pending") {
+    const notifyAdmin = shouldNotifyAdminWalletPending({
+      isCreate,
+      previous: previousWallet as Pick<
+        MerchantWallet,
+        "wallet_network" | "wallet_address"
+      > | null,
+      next: saved,
     });
-    if (!emailResult.success) {
-      console.error("[Wallet] Admin notify failed:", emailResult.error);
-    }
 
-    if (user.email) {
-      await notifyMerchantWalletSubmitted({
-        merchantEmail: user.email,
-        label: saved.label,
-        walletNetwork: saved.wallet_network,
+    if (notifyAdmin) {
+      const merchantEmail = user.email ?? "";
+      const reason = isCreate ? "created" : "updated_material";
+
+      const adminResult = await runWalletPendingAdminNotifyWorkflow({
+        reason,
+        wallet: saved,
+        merchantEmail,
+        merchantUserId: user.id,
       });
+      logEmailWorkflow(`wallet.pending.admin.${saved.id}`, adminResult);
+
+      if (isCreate && merchantEmail) {
+        scheduleEmailWork(`wallet.pending.merchant.${saved.id}`, () =>
+          notifyMerchantWalletSubmitted({
+            merchantEmail,
+            walletId: saved.id,
+            label: saved.label,
+            walletNetwork: saved.wallet_network,
+          }),
+        );
+      }
     }
   }
 

@@ -13,14 +13,27 @@ const BRAND = {
   surface: "#f9fafb",
 };
 
+const PRODUCTION_ORIGIN = "https://cryptopay.sale";
+const TAGLINE =
+  "Track and accept crypto payments. Privacy oriented. Wallet to wallet.";
+
 function siteUrl(): string {
-  return (Deno.env.get("NEXT_PUBLIC_APP_URL") || "https://cryptopay.sale").replace(/\/$/, "");
+  return (Deno.env.get("NEXT_PUBLIC_APP_URL") || PRODUCTION_ORIGIN).replace(/\/$/, "");
+}
+
+/** Email img src — never localhost (clients cannot load it). */
+function emailAssetOrigin(): string {
+  const custom = Deno.env.get("EMAIL_ASSET_ORIGIN")?.trim();
+  if (custom) return custom.replace(/\/$/, "");
+  const raw = siteUrl();
+  if (/localhost|127\.0\.0\.1/.test(raw)) return PRODUCTION_ORIGIN;
+  return raw;
 }
 
 function emailLogoUrl(): string {
   const custom = Deno.env.get("EMAIL_LOGO_URL")?.trim();
   if (custom) return custom;
-  return `${siteUrl()}/email/logo.png`;
+  return `${emailAssetOrigin()}/email/logo.png`;
 }
 
 function networkLabel(network: string): string {
@@ -57,9 +70,9 @@ export function buildWalletPendingAdminHtml(params: {
       <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="max-width:600px;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08);">
         <tr>
           <td style="background:linear-gradient(135deg,${BRAND.primary} 0%,${BRAND.primaryDark} 55%,#0891b2 100%);padding:36px 32px;text-align:center;">
-            <img src="${emailLogoUrl()}" alt="Crypto Pay" width="56" height="56" style="display:block;margin:0 auto 16px;border:0;border-radius:12px;outline:none;" />
+            <img src="${emailLogoUrl()}" alt="Crypto Pay logo" width="56" height="56" style="display:block;margin:0 auto 12px;border:0;border-radius:14px;outline:none;box-shadow:0 10px 30px rgba(16,185,129,0.25);" />
             <p style="margin:0 0 4px;font-size:22px;font-weight:700;color:#fff;">Crypto Pay</p>
-            <p style="margin:0;font-size:14px;color:rgba(255,255,255,0.92);">Wallet-to-wallet crypto payments</p>
+            <p style="margin:0;font-size:14px;color:rgba(255,255,255,0.92);">${TAGLINE}</p>
           </td>
         </tr>
         <tr><td style="padding:40px 32px;">

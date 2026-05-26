@@ -1,7 +1,11 @@
 import { sendEmail } from "@/lib/email/sender";
 import {
+  EMAIL_WORKFLOW_EVENTS,
+  workflowIdempotencyKey,
+} from "@/lib/email/workflow-keys";
+import { getAdminReviewRecipients } from "@/lib/email/admin-recipients";
+import {
   EMAIL_ROUTES,
-  INTERNAL_OPS_EMAIL,
   MERCHANT_SUPPORT_REPLY,
 } from "@/lib/email/routing";
 import type { MerchantWallet } from "@/types/crypto-pay-db";
@@ -26,15 +30,29 @@ export async function notifyAdminWalletReview(params: {
   const subjectPrefix =
     kind === "resend" ? "Reminder — wallet pending" : "New wallet pending";
 
+  const adminRecipients = getAdminReviewRecipients();
+  const recipientKey = adminRecipients.map((r) => r.email).sort().join(",");
+
   const dayBucket = new Date().toISOString().slice(0, 10);
   const idempotencyKey =
     params.idempotencyKey ??
     (kind === "resend"
-      ? `wallet-admin-resend/${wallet.id}/${dayBucket}`
-      : `wallet-admin-new/${wallet.id}`);
+      ? workflowIdempotencyKey(
+          EMAIL_WORKFLOW_EVENTS.walletVerificationResend,
+          `${wallet.id}/${dayBucket}`,
+          recipientKey,
+        )
+      : workflowIdempotencyKey(
+          EMAIL_WORKFLOW_EVENTS.walletVerificationRequested,
+          wallet.id,
+          recipientKey,
+        ));
+
+  const to =
+    adminRecipients.length === 1 ? adminRecipients[0]! : adminRecipients;
 
   return sendEmail({
-    to: { email: INTERNAL_OPS_EMAIL, name: "Crypto Pay Operations" },
+    to,
     replyTo: merchantEmail || MERCHANT_SUPPORT_REPLY,
     subject: `[Crypto Pay] ${subjectPrefix}: ${wallet.label}`,
     template: "wallet_pending_admin",
@@ -65,6 +83,7 @@ export { RESEND_IDEMPOTENCY_MS };
 
 export async function notifyMerchantWalletSubmitted(params: {
   merchantEmail: string;
+  walletId: string;
   label: string;
   walletNetwork: string;
 }): Promise<{ success: boolean; error?: string }> {
@@ -78,21 +97,33 @@ export async function notifyMerchantWalletSubmitted(params: {
       actionUrl: EMAIL_ROUTES.accountWallets(),
     },
     tags: ["wallet", "merchant", "submitted"],
-    workflow: { event: "wallet.submitted", entityId: params.label },
+    idempotencyKey: workflowIdempotencyKey(
+      EMAIL_WORKFLOW_EVENTS.walletSubmittedMerchant,
+      params.walletId,
+      params.merchantEmail,
+    ),
+    workflow: {
+      event: EMAIL_WORKFLOW_EVENTS.walletSubmittedMerchant,
+      entityId: params.walletId,
+    },
   });
 }
 
 export async function notifyMerchantWalletStatus(params: {
   merchantEmail: string;
+  walletId: string;
   label: string;
   status: "verified" | "rejected";
   walletNetwork?: string;
   walletAddress?: string;
   rejectionReason?: string | null;
 }): Promise<{ success: boolean; error?: string }> {
-  const { merchantEmail, label, status, rejectionReason, walletNetwork, walletAddress } =
+  const { merchantEmail, walletId, label, status, rejectionReason, walletNetwork, walletAddress } =
     params;
   const verified = status === "verified";
+  const event = verified
+    ? EMAIL_WORKFLOW_EVENTS.walletVerified
+    : EMAIL_WORKFLOW_EVENTS.walletRejected;
 
   return sendEmail({
     to: { email: merchantEmail },
@@ -113,6 +144,7 @@ export async function notifyMerchantWalletStatus(params: {
       actionUrl: verified ? EMAIL_ROUTES.account() : EMAIL_ROUTES.accountWallets(),
     },
     tags: ["wallet", "merchant_status", status],
-    workflow: { event: `wallet.${status}`, entityId: label },
+    idempotencyKey: workflowIdempotencyKey(event, walletId, merchantEmail),
+    workflow: { event, entityId: walletId },
   });
 }

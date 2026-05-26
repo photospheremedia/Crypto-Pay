@@ -95,7 +95,7 @@ export function generateBrandedHeader(minimal = false): string {
         markSize: 52,
         showWordmark: true,
         brandName: EMAIL.brandName,
-        tagline: "Accept crypto. Settle to your wallet.",
+        tagline: EMAIL.tagline,
       })}
     </td>
   </tr>`;

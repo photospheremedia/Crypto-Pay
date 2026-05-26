@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkAdminAccess } from "@/lib/admin-auth";
 import { createClient } from "@/lib/supabase/server";
 import { getSupabaseServiceClient } from "@crypto-pay/db/supabaseServer";
-import { notifyMerchantWalletStatus } from "@/lib/wallets/notify-admin";
+import { logEmailWorkflow, runWalletStatusEmailWorkflow } from "@/lib/email/workflows";
 import { merchantWallets } from "@/lib/wallets/db";
 import type { MerchantWallet } from "@/types/crypto-pay-db";
 
@@ -130,23 +130,50 @@ export async function PATCH(req: NextRequest) {
     const { data: authUser } = await service.auth.admin.getUserById(existing.user_id);
     const merchantEmail = authUser?.user?.email;
 
+    let merchantNotification: {
+      sent: boolean;
+      skipped?: string;
+      error?: string;
+    } = { sent: false };
+
     if (merchantEmail) {
       const { data: walletRow } = await merchantWallets(supabase)
         .select("wallet_network, wallet_address")
         .eq("id", id)
         .single();
 
-      await notifyMerchantWalletStatus({
+      const previousStatus = existing.status;
+      const result = await runWalletStatusEmailWorkflow({
+        walletId: id,
         merchantEmail,
         label: existing.label,
         status,
+        previousStatus,
         rejectionReason: rejection_reason,
         walletNetwork: walletRow?.wallet_network,
         walletAddress: walletRow?.wallet_address,
       });
+
+      if ("skipped" in result) {
+        merchantNotification = { sent: false, skipped: result.reason };
+        logEmailWorkflow(`wallet.status.${id}.${status}`, {
+          success: true,
+          error: `skipped:${result.reason}`,
+        });
+      } else {
+        merchantNotification = {
+          sent: result.success,
+          error: result.success ? undefined : result.error,
+        };
+        logEmailWorkflow(`wallet.status.${id}.${status}`, result);
+      }
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({
+      success: true,
+      status,
+      merchantNotification,
+    });
   } catch (error) {
     console.error("[Admin Wallets] PATCH fatal:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

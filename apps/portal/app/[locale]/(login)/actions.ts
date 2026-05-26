@@ -8,7 +8,8 @@ import {
   ACCOUNT_WALLET_SETUP_PATH,
   accountWalletSetupCallbackUrl,
 } from "@/lib/account/paths";
-import { sendWelcomeEmail } from "@/lib/email/triggers";
+import { scheduleEmailWork } from "@/lib/email/schedule";
+import { runWelcomeEmailWorkflow } from "@/lib/email/workflows";
 import { listUserMerchantWallets } from "@/lib/wallets/db";
 
 export type ActionState = {
@@ -171,14 +172,13 @@ export async function signUp(
   }
 
   // Welcome only when session exists (skip if Supabase sends confirm email instead).
-  try {
-    await sendWelcomeEmail(email, {
+  scheduleEmailWork(`user.welcome.${email}`, () =>
+    runWelcomeEmailWorkflow({
+      email,
       firstName,
       dashboardUrl: `${appUrl}${ACCOUNT_WALLET_SETUP_PATH}`,
-    });
-  } catch (welcomeError) {
-    console.error("[Auth] Welcome email failed:", welcomeError);
-  }
+    }),
+  );
 
   redirect(ACCOUNT_WALLET_SETUP_PATH);
 }

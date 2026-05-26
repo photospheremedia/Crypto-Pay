@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Check, X } from "lucide-react";
 import { walletNetworkLabel, walletStatusLabel } from "@/lib/wallets/constants";
 import { Badge } from "@/components/ui/badge";
@@ -22,6 +23,7 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 type AdminWalletRow = {
   id: string;
@@ -34,10 +36,20 @@ type AdminWalletRow = {
 };
 
 export default function AdminWalletsPage() {
-  const [filter, setFilter] = useState("pending");
+  const searchParams = useSearchParams();
+  const highlightWalletId = searchParams.get("wallet");
+
+  const [filter, setFilter] = useState(
+    highlightWalletId ? "pending" : "pending",
+  );
   const [wallets, setWallets] = useState<AdminWalletRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [acting, setActing] = useState<string | null>(null);
+  const [banner, setBanner] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
+  const highlightedRowRef = useRef<HTMLTableRowElement | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -54,6 +66,20 @@ export default function AdminWalletsPage() {
     void load();
   }, [load]);
 
+  useEffect(() => {
+    if (highlightWalletId) {
+      setFilter("pending");
+    }
+  }, [highlightWalletId]);
+
+  useEffect(() => {
+    if (!highlightWalletId || loading) return;
+    highlightedRowRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+  }, [highlightWalletId, loading, wallets]);
+
   async function review(id: string, status: "verified" | "rejected") {
     const rejection_reason =
       status === "rejected"
@@ -61,13 +87,50 @@ export default function AdminWalletsPage() {
         : undefined;
 
     setActing(id);
+    setBanner(null);
     try {
       const res = await fetch("/api/admin/wallets", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, status, rejection_reason }),
       });
-      if (res.ok) await load();
+      const json = (await res.json()) as {
+        success?: boolean;
+        error?: string;
+        merchantNotification?: { sent: boolean; skipped?: string; error?: string };
+      };
+
+      if (!res.ok || !json.success) {
+        setBanner({
+          type: "error",
+          message: json.error ?? "Could not update wallet status.",
+        });
+        return;
+      }
+
+      const merchant = json.merchantNotification;
+      if (merchant?.error) {
+        setBanner({
+          type: "error",
+          message: `Wallet marked ${status}, but merchant email failed: ${merchant.error}`,
+        });
+      } else if (status === "verified") {
+        setBanner({
+          type: "success",
+          message: merchant?.skipped
+            ? "Wallet verified (merchant was already notified)."
+            : "Wallet verified — merchant notified by email.",
+        });
+      } else {
+        setBanner({
+          type: "success",
+          message: merchant?.skipped
+            ? "Wallet rejected."
+            : "Wallet rejected — merchant notified by email.",
+        });
+      }
+
+      await load();
     } finally {
       setActing(null);
     }
@@ -78,9 +141,17 @@ export default function AdminWalletsPage() {
       <div>
         <h1 className="text-2xl font-semibold">Wallet verification</h1>
         <p className="text-sm text-muted-foreground">
-          Review merchant payout addresses submitted from account dashboards.
+          Review merchant payout addresses. New submissions email all addresses in{" "}
+          <code className="text-xs">ADMIN_REVIEW_EMAIL</code> /{" "}
+          <code className="text-xs">ADMIN_ALLOWED_EMAILS</code>.
         </p>
       </div>
+
+      {banner ? (
+        <Alert variant={banner.type === "error" ? "destructive" : "default"}>
+          <AlertDescription>{banner.message}</AlertDescription>
+        </Alert>
+      ) : null}
 
       <Tabs value={filter} onValueChange={setFilter}>
         <TabsList>
@@ -96,7 +167,7 @@ export default function AdminWalletsPage() {
           <CardTitle>Merchant wallets</CardTitle>
           <CardDescription>
             Approve or reject addresses. Merchants receive email when status
-            changes.
+            changes from pending.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -120,53 +191,64 @@ export default function AdminWalletsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {wallets.map((w) => (
-                  <TableRow key={w.id}>
-                    <TableCell className="text-sm">
-                      <div>{w.merchant?.full_name ?? "—"}</div>
-                      <div className="text-muted-foreground">
-                        {w.merchant?.email ?? w.id}
-                      </div>
-                    </TableCell>
-                    <TableCell>{w.label}</TableCell>
-                    <TableCell>{walletNetworkLabel(w.wallet_network)}</TableCell>
-                    <TableCell className="max-w-[180px] truncate font-mono text-xs">
-                      {w.wallet_address}
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="secondary">
-                        {walletStatusLabel(w.status)}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {w.status === "pending" ? (
-                        <div className="flex justify-end gap-1">
-                          <Button
-                            size="sm"
-                            disabled={acting === w.id}
-                            onClick={() => review(w.id, "verified")}
-                          >
-                            <Check data-icon="inline-start" />
-                            Approve
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            disabled={acting === w.id}
-                            onClick={() => review(w.id, "rejected")}
-                          >
-                            <X data-icon="inline-start" />
-                            Reject
-                          </Button>
+                {wallets.map((w) => {
+                  const highlighted = w.id === highlightWalletId;
+                  return (
+                    <TableRow
+                      key={w.id}
+                      ref={highlighted ? highlightedRowRef : undefined}
+                      className={
+                        highlighted
+                          ? "bg-emerald-50/80 ring-2 ring-emerald-500/40 ring-inset"
+                          : undefined
+                      }
+                    >
+                      <TableCell className="text-sm">
+                        <div>{w.merchant?.full_name ?? "—"}</div>
+                        <div className="text-muted-foreground">
+                          {w.merchant?.email ?? w.id}
                         </div>
-                      ) : (
-                        <span className="text-xs text-muted-foreground">
-                          {new Date(w.verification_requested_at).toLocaleString()}
-                        </span>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                      </TableCell>
+                      <TableCell>{w.label}</TableCell>
+                      <TableCell>{walletNetworkLabel(w.wallet_network)}</TableCell>
+                      <TableCell className="max-w-[180px] truncate font-mono text-xs">
+                        {w.wallet_address}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="secondary">
+                          {walletStatusLabel(w.status)}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {w.status === "pending" ? (
+                          <div className="flex justify-end gap-1">
+                            <Button
+                              size="sm"
+                              disabled={acting === w.id}
+                              onClick={() => review(w.id, "verified")}
+                            >
+                              <Check data-icon="inline-start" />
+                              Approve
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              disabled={acting === w.id}
+                              onClick={() => review(w.id, "rejected")}
+                            >
+                              <X data-icon="inline-start" />
+                              Reject
+                            </Button>
+                          </div>
+                        ) : (
+                          <span className="text-xs text-muted-foreground">
+                            {new Date(w.verification_requested_at).toLocaleString()}
+                          </span>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           )}

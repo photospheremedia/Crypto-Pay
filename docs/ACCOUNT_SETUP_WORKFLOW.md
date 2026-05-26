@@ -251,7 +251,7 @@ Research on SaaS and payment onboarding consistently favors **event-driven, low-
 | Wallet pending (admin) | `notifyAdminWalletReview` | Admin wallets UI |
 | Wallet verified / rejected | `notifyMerchantWalletStatus` | `/account` or `/account?tab=wallets` |
 
-Requires `NEXT_PUBLIC_APP_URL`, `RESEND_API_KEY`, `ADMIN_REVIEW_EMAIL` (default `photospheremedia00@gmail.com`), and `EMAIL_REPLY_TO` (merchant replies, default `support@cryptopay.sale`). See [LOCAL_DEV.md](./LOCAL_DEV.md).
+Requires `NEXT_PUBLIC_APP_URL`, `RESEND_API_KEY`, `ADMIN_REVIEW_EMAIL` (default `photospheremedia00@gmail.com`), and `EMAIL_REPLY_TO` (merchant replies — default same as `ADMIN_REVIEW_EMAIL`). See [LOCAL_DEV.md](./LOCAL_DEV.md).
 
 **Routing**
 
@@ -261,6 +261,44 @@ Requires `NEXT_PUBLIC_APP_URL`, `RESEND_API_KEY`, `ADMIN_REVIEW_EMAIL` (default 
 | Internal ops | `ADMIN_REVIEW_EMAIL` | Merchant email | `{APP_URL}/admin/wallets?status=pending` |
 
 URLs are built in `apps/portal/lib/email/routing.ts` (`appAbsoluteUrl`, `EMAIL_ROUTES`).
+
+**Code triggers (do not call `sendEmail` directly from pages)**
+
+| Event | Trigger location | Workflow helper |
+|-------|------------------|-----------------|
+| Email/password signup + session | `app/[locale]/(login)/actions.ts` → `scheduleEmailWork` | `runWelcomeEmailWorkflow` |
+| OAuth signup (`mode=signup`) | `app/auth/callback/route.ts` → `scheduleEmailWork` | `runWelcomeEmailWorkflow` |
+| Wallet create / material update | `app/[locale]/account/wallets/actions.ts` | `runWalletPendingAdminNotifyWorkflow` (awaited → `ADMIN_REVIEW_EMAIL` + `ADMIN_ALLOWED_EMAILS`) |
+| Merchant resend reminder | `resendWalletVerification` action | `notifyAdminWalletReview` (`kind: resend`) |
+| Admin verify/reject | `app/[locale]/admin/wallets` → `PATCH /api/admin/wallets` | `runWalletStatusEmailWorkflow` (awaited; merchant notified) |
+| Runner API wallet upsert | `supabase/functions/runner-api` | Resend + idempotency header |
+
+Guards: merchant status email only when `pending → verified|rejected`; admin pending email skipped on label-only edits; Resend **idempotency keys** per event+wallet+recipient (24h). Side effects use Next.js [`after()`](https://nextjs.org/docs/app/api-reference/functions/after) via `lib/email/schedule.ts` so forms and redirects are not blocked.
+
+### Resend dashboard — what to use (Crypto Pay)
+
+Per [Resend: transactional vs marketing](https://resend.com/docs/knowledge-base/what-sending-feature-to-use), wallet/onboarding mail is **transactional** (Send Email API from code), not Broadcasts.
+
+| Resend area | Use for Crypto Pay? | Notes |
+|-------------|---------------------|--------|
+| **Domains** | **Yes — required** | `cryptopay.sale` verified (SPF/DKIM/DMARC). `EMAIL_FROM` must use this domain. |
+| **API keys** | **Yes — required** | `RESEND_API_KEY` in Netlify + Supabase (`pnpm resend:sync`). Never commit keys. |
+| **Logs** | **Yes — ops** | Find wallet/admin sends; filter by subject `[Crypto Pay]` or recipient. |
+| **Metrics** | **Yes — monitoring** | Bounce/complaint trends; investigate if wallet mail stops arriving. |
+| **Settings** | **Yes** | Default sending domain; enable **Receiving** only if you want `support@cryptopay.sale` inbound in Resend (optional; Reply-To is already Gmail). |
+| **Webhooks** | **Recommended later** | Subscribe to `email.sent`, `email.delivered`, `email.bounced`, `email.complained` for alerting or audit storage — not required for sends to work. |
+| **Templates** (dashboard) | **No (for now)** | HTML lives in repo: `lib/email/templates.ts`, `lib/email/templates/wallet.ts`. Preview: `pnpm email:preview`. Optional future: publish Resend templates and pass `template_id` from API. |
+| **Broadcasts** | **No (onboarding)** | Marketing blasts / newsletters. Use only with explicit opt-in (`user_settings` marketing flags). Not for wallet verify or welcome. |
+| **Automations** | **No (onboarding)** | Resend no-code drips. We trigger from app code (`workflows.ts`, idempotency keys) on DB events — keep logic in git. |
+| **Audience** | **Later (marketing)** | Contact lists for Broadcasts. Pair with newsletter signup + unsubscribe before use. |
+
+**Auth email:** Signup confirm/reset HTML is generated locally (`pnpm email:sync-auth`) and applied in **Supabase Auth → SMTP** (Resend SMTP), not via Resend Templates UI.
+
+**Quick checks**
+
+1. **Domains** → `cryptopay.sale` = Verified  
+2. **Logs** → send test: `cd apps/portal && pnpm email:verify --send-test you@example.com`  
+3. **API keys** → same key as production `RESEND_API_KEY`  
 
 **Template tooling**
 

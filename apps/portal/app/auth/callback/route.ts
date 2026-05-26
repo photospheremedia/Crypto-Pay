@@ -3,6 +3,8 @@ import type { NextRequest } from "next/server";
 import { getSupabaseServerClient } from "@crypto-pay/db/supabaseServer";
 import { isAdminEmail } from "@/lib/admin-email";
 import { ACCOUNT_WALLET_SETUP_PATH } from "@/lib/account/paths";
+import { scheduleEmailWork } from "@/lib/email/schedule";
+import { runWelcomeEmailWorkflow } from "@/lib/email/workflows";
 import { listUserMerchantWallets } from "@/lib/wallets/db";
 
 /**
@@ -79,6 +81,21 @@ export async function GET(request: NextRequest) {
     if (membership || isAdminEmail(data.session.user.email)) {
       const target = safeNext ?? "/admin/dashboard";
       return NextResponse.redirect(new URL(target, baseUrl));
+    }
+
+    if (mode === "signup" && data.session.user.email) {
+      const appUrl =
+        process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") || baseUrl;
+      const meta = data.session.user.user_metadata as {
+        first_name?: string;
+      };
+      scheduleEmailWork(`user.welcome.oauth.${data.session.user.id}`, () =>
+        runWelcomeEmailWorkflow({
+          email: data.session.user.email!,
+          firstName: meta.first_name,
+          dashboardUrl: `${appUrl}${ACCOUNT_WALLET_SETUP_PATH}`,
+        }),
+      );
     }
 
     let target = safeNext;
