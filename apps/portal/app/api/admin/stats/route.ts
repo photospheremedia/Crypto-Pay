@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { checkAdminAccess, isSuperAdminRole } from "@/lib/admin-auth";
-import { getAdminDashboardStats } from "@/lib/admin/admin-stats";
-import { getSupabaseServiceClient } from "@crypto-pay/db/supabaseServer";
+import { getCachedAdminDashboardStats } from "@/lib/admin/admin-stats-cache";
+
+export const runtime = "nodejs";
+export const revalidate = 30;
 
 export async function GET() {
   try {
@@ -15,16 +17,22 @@ export async function GET() {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const supabase = getSupabaseServiceClient();
-    const stats = await getAdminDashboardStats(supabase, isSuperAdmin);
+    const stats = await getCachedAdminDashboardStats(isSuperAdmin);
 
-    return NextResponse.json({
-      success: true,
-      role,
-      isSuperAdmin: isSuperAdminRole(role),
-      permissions,
-      stats,
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        role,
+        isSuperAdmin: isSuperAdminRole(role),
+        permissions,
+        stats,
+      },
+      {
+        headers: {
+          "Cache-Control": "private, max-age=0, s-maxage=30, stale-while-revalidate=60",
+        },
+      },
+    );
   } catch (error) {
     console.error("[Admin Stats] Error:", error);
     return NextResponse.json({ error: "Failed to fetch stats" }, { status: 500 });

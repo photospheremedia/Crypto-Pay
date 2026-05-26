@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import { checkAdminAccess } from "@/lib/admin-auth";
-import { getAdminNavCounts } from "@/lib/admin/admin-stats";
-import { getSupabaseServiceClient } from "@crypto-pay/db/supabaseServer";
+import { getCachedAdminNavCounts } from "@/lib/admin/admin-stats-cache";
+
+export const runtime = "nodejs";
+export const revalidate = 30;
 
 /** Lightweight badge counts for admin nav (no full dashboard payload). */
 export async function GET() {
@@ -12,10 +14,16 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const supabase = getSupabaseServiceClient();
-    const counts = await getAdminNavCounts(supabase);
+    const counts = await getCachedAdminNavCounts();
 
-    return NextResponse.json({ success: true, counts });
+    return NextResponse.json(
+      { success: true, counts },
+      {
+        headers: {
+          "Cache-Control": "private, max-age=0, s-maxage=30, stale-while-revalidate=60",
+        },
+      },
+    );
   } catch (error) {
     console.error("[Admin Nav Counts] Error:", error);
     return NextResponse.json({ error: "Failed to fetch counts" }, { status: 500 });

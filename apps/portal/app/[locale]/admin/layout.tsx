@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 import { AdminStatsProvider } from "@/components/admin/admin-stats-provider";
 import {
-  getAdminDashboardStats,
-  getAdminNavCounts,
-} from "@/lib/admin/admin-stats";
+  getCachedAdminDashboardStats,
+  getCachedAdminNavCounts,
+} from "@/lib/admin/admin-stats-cache";
 import { requireAdminSession } from "@/lib/auth/session";
-import { getSupabaseServiceClient } from "@crypto-pay/db/supabaseServer";
 import { AdminLayoutClient } from "./admin-layout-client";
 
 export const metadata: Metadata = {
@@ -26,10 +25,9 @@ export default async function AdminLayout({
   let initialStats: Record<string, unknown> | null = null;
 
   try {
-    const supabase = getSupabaseServiceClient();
     [initialNavCounts, initialStats] = await Promise.all([
-      getAdminNavCounts(supabase),
-      getAdminDashboardStats(supabase, isSuperAdmin),
+      getCachedAdminNavCounts(),
+      getCachedAdminDashboardStats(isSuperAdmin),
     ]);
   } catch (error) {
     console.error("[AdminLayout] Failed to prefetch stats:", error);
