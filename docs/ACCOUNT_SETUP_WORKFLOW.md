@@ -251,7 +251,16 @@ Research on SaaS and payment onboarding consistently favors **event-driven, low-
 | Wallet pending (admin) | `notifyAdminWalletReview` | Admin wallets UI |
 | Wallet verified / rejected | `notifyMerchantWalletStatus` | `/account` or `/account?tab=wallets` |
 
-Requires `NEXT_PUBLIC_APP_URL`, `RESEND_API_KEY`, and `ADMIN_REVIEW_EMAIL`. See [LOCAL_DEV.md](./LOCAL_DEV.md).
+Requires `NEXT_PUBLIC_APP_URL`, `RESEND_API_KEY`, `ADMIN_REVIEW_EMAIL` (default `photospheremedia00@gmail.com`), and `EMAIL_REPLY_TO` (merchant replies, default `support@cryptopay.sale`). See [LOCAL_DEV.md](./LOCAL_DEV.md).
+
+**Routing**
+
+| Audience | To | Reply-To | Primary CTA |
+|----------|-----|----------|-------------|
+| Merchant | User email | `EMAIL_REPLY_TO` | `{APP_URL}/account?tab=wallets` |
+| Internal ops | `ADMIN_REVIEW_EMAIL` | Merchant email | `{APP_URL}/admin/wallets?status=pending` |
+
+URLs are built in `apps/portal/lib/email/routing.ts` (`appAbsoluteUrl`, `EMAIL_ROUTES`).
 
 **Template tooling**
 

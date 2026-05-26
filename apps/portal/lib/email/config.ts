@@ -3,15 +3,21 @@
  */
 
 import { BRAND } from "@/lib/cryptopay/constants";
+import {
+  getAppOrigin,
+  INTERNAL_OPS_EMAIL,
+  MERCHANT_SUPPORT_REPLY,
+} from "@/lib/email/routing";
 
 export const DEFAULT_FROM = "Crypto Pay <noreply@cryptopay.sale>";
 
 export const EMAIL = {
   brandName: BRAND.name,
   tagline: BRAND.tagline,
-  replyTo: process.env.EMAIL_REPLY_TO || "support@cryptopay.sale",
+  replyTo: MERCHANT_SUPPORT_REPLY,
   support: BRAND.email,
-  siteUrl: BRAND.siteUrl,
+  operations: INTERNAL_OPS_EMAIL,
+  siteUrl: getAppOrigin(),
   /** Shown in footer — helps inbox “profile” recognition with consistent From name */
   fromDisplay: "Crypto Pay",
   social: {
@@ -33,7 +39,11 @@ export function getEmailFrom(): string {
 }
 
 export function getReplyTo(): string {
-  return process.env.EMAIL_REPLY_TO || EMAIL.replyTo;
+  return MERCHANT_SUPPORT_REPLY;
+}
+
+export function getOperationsEmail(): string {
+  return INTERNAL_OPS_EMAIL;
 }
 
 /** Logo brand colors for HTML templates */

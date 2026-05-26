@@ -1,5 +1,9 @@
 import { sendEmail } from "@/lib/email/sender";
-import { ADMIN_REVIEW_EMAIL } from "./constants";
+import {
+  EMAIL_ROUTES,
+  INTERNAL_OPS_EMAIL,
+  MERCHANT_SUPPORT_REPLY,
+} from "@/lib/email/routing";
 import type { MerchantWallet } from "@/types/crypto-pay-db";
 
 type NotifyKind = "submitted" | "resend";
@@ -30,7 +34,8 @@ export async function notifyAdminWalletReview(params: {
       : `wallet-admin-new/${wallet.id}`);
 
   return sendEmail({
-    to: { email: ADMIN_REVIEW_EMAIL, name: "Crypto Pay Admin" },
+    to: { email: INTERNAL_OPS_EMAIL, name: "Crypto Pay Operations" },
+    replyTo: merchantEmail || MERCHANT_SUPPORT_REPLY,
     subject: `[Crypto Pay] ${subjectPrefix}: ${wallet.label}`,
     template: "wallet_pending_admin",
     templateData: {
@@ -41,8 +46,9 @@ export async function notifyAdminWalletReview(params: {
       walletAddress: wallet.wallet_address,
       walletId: wallet.id,
       source,
+      adminReviewUrl: EMAIL_ROUTES.adminWalletPending(wallet.id),
     },
-    tags: ["wallet", "admin-review", kind],
+    tags: ["wallet", "admin_review", kind],
     idempotencyKey,
     workflow: {
       event:
@@ -64,10 +70,12 @@ export async function notifyMerchantWalletSubmitted(params: {
 }): Promise<{ success: boolean; error?: string }> {
   return sendEmail({
     to: { email: params.merchantEmail },
+    replyTo: MERCHANT_SUPPORT_REPLY,
     template: "wallet_submitted_merchant",
     templateData: {
       walletLabel: params.label,
       walletNetwork: params.walletNetwork,
+      actionUrl: EMAIL_ROUTES.accountWallets(),
     },
     tags: ["wallet", "merchant", "submitted"],
     workflow: { event: "wallet.submitted", entityId: params.label },
@@ -88,6 +96,7 @@ export async function notifyMerchantWalletStatus(params: {
 
   return sendEmail({
     to: { email: merchantEmail },
+    replyTo: MERCHANT_SUPPORT_REPLY,
     subject: verified
       ? `[Crypto Pay] Wallet verified: ${label}`
       : `[Crypto Pay] Wallet not approved: ${label}`,
@@ -101,8 +110,9 @@ export async function notifyMerchantWalletStatus(params: {
       subjectLine: verified
         ? `Wallet verified: ${label}`
         : `Wallet not approved: ${label}`,
+      actionUrl: verified ? EMAIL_ROUTES.account() : EMAIL_ROUTES.accountWallets(),
     },
-    tags: ["wallet", "merchant-status", status],
+    tags: ["wallet", "merchant_status", status],
     workflow: { event: `wallet.${status}`, entityId: label },
   });
 }

@@ -7,6 +7,7 @@
  */
 
 import { sendEmail, type EmailResult, type EmailRecipient } from './sender';
+import { EMAIL_ROUTES, MERCHANT_SUPPORT_REPLY } from './routing';
 
 // ============================================
 // ONBOARDING & AUTHENTICATION
@@ -22,9 +23,13 @@ export async function sendWelcomeEmail(
 ): Promise<EmailResult> {
   return sendEmail({
     to: { email, name: data.firstName },
-    subject: "Welcome to Crypto Pay - Let's Get Started! 🎉",
+    replyTo: MERCHANT_SUPPORT_REPLY,
+    subject: "Welcome to Crypto Pay",
     template: "welcome",
-    templateData: data,
+    templateData: {
+      ...data,
+      dashboardUrl: data.dashboardUrl ?? EMAIL_ROUTES.accountWallets(),
+    },
     tags: ["onboarding", "welcome"],
     workflow: { event: "user.welcome", entityId: email },
   });

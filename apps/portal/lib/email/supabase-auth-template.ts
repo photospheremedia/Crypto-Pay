@@ -3,8 +3,11 @@
  * Sync to supabase/templates/*.html via scripts/sync-supabase-auth-templates.ts
  */
 
-const SITE = "https://cryptopay.sale";
+import { getAppOrigin, MERCHANT_SUPPORT_REPLY } from "./routing";
+
+const SITE = getAppOrigin();
 const LOGO = `${SITE}/email/logo.png`;
+const SUPPORT = MERCHANT_SUPPORT_REPLY;
 const PRIMARY = "#10b981";
 const PRIMARY_DARK = "#059669";
 const ACCENT = "#0891b2";
@@ -31,8 +34,8 @@ const variants: Record<
   confirmation: {
     title: "Confirm your email",
     preheader: "Activate your Crypto Pay merchant account.",
-    body: "Thanks for signing up. Confirm your email to access your dashboard and add payout wallets.",
-    cta: "Confirm email",
+    body: "Thanks for signing up. Confirm your email to access your merchant dashboard and add payout wallets.",
+    cta: "Confirm email & continue",
     footerNote: "If you did not create an account, you can ignore this message.",
     icon: "✉️",
   },
@@ -127,7 +130,7 @@ export function generateSupabaseAuthEmailHtml(
               <p style="margin:0;font-size:12px;color:#9ca3af;">
                 <a href="${SITE}" style="color:#059669;text-decoration:none;">cryptopay.sale</a>
                 &nbsp;·&nbsp;
-                <a href="mailto:support@cryptopay.sale" style="color:#059669;text-decoration:none;">support@cryptopay.sale</a>
+                <a href="mailto:${SUPPORT}" style="color:#059669;text-decoration:none;">${SUPPORT}</a>
               </p>
             </td>
           </tr>

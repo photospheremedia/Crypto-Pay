@@ -2,7 +2,11 @@
  * Wallet verification emails — Crypto Pay branded (Resend / table layout).
  */
 
-import { ACCOUNT_WALLET_SETUP_PATH } from "@/lib/account/paths";
+import {
+  EMAIL_ROUTES,
+  merchantMailto,
+  MERCHANT_SUPPORT_REPLY,
+} from "@/lib/email/routing";
 import { generateBaseTemplate, components, brandColors } from "../base-template";
 import { EMAIL } from "../config";
 import { walletNetworkLabel } from "@/lib/wallets/constants";
@@ -10,10 +14,6 @@ import { walletNetworkLabel } from "@/lib/wallets/constants";
 function maskAddress(address: string): string {
   if (address.length <= 16) return address;
   return `${address.slice(0, 8)}…${address.slice(-8)}`;
-}
-
-function walletDashboardUrl(path = "/account"): string {
-  return `${EMAIL.siteUrl}${path}`;
 }
 
 function onboardingSteps(done: number) {
@@ -38,29 +38,46 @@ function onboardingSteps(done: number) {
   return `<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">${rows}</table>`;
 }
 
+function supportFooter() {
+  return components.paragraph(
+    `Need help? Reply to this email or contact <a href="mailto:${MERCHANT_SUPPORT_REPLY}" style="color:${brandColors.primary};font-weight:600;">${MERCHANT_SUPPORT_REPLY}</a>`,
+    { muted: true, center: true },
+  );
+}
+
 export const walletEmailTemplates = {
   wallet_pending_admin: {
-    subject: "[Crypto Pay] Wallet pending review: {{walletLabel}}",
+    subject: "[Crypto Pay] Action required — wallet review: {{walletLabel}}",
     generateHtml: (data: Record<string, unknown>) => {
       const isResend = data.kind === "resend";
-      const adminUrl = walletDashboardUrl("/admin/wallets");
+      const merchantEmail = String(data.merchantEmail || "");
+      const walletId = String(data.walletId || "");
+      const adminUrl =
+        (data.adminReviewUrl as string) || EMAIL_ROUTES.adminWalletPending(walletId);
       const network = walletNetworkLabel(String(data.walletNetwork || "btc"));
+      const mailtoMerchant = merchantEmail
+        ? merchantMailto(
+            merchantEmail,
+            `Crypto Pay — wallet review: ${data.walletLabel}`,
+            `Hi,\n\nWe're reviewing your payout wallet "${data.walletLabel}" on Crypto Pay.\n\n`,
+          )
+        : EMAIL_ROUTES.contact();
 
       return generateBaseTemplate(
         `
       ${components.iconHero(
-        "🔔",
-        isResend ? "Verification reminder" : "New wallet to review",
-        `Merchant: ${data.merchantEmail || "unknown"}`,
+        "!",
+        isResend ? "Reminder: wallet pending review" : "New wallet pending review",
+        merchantEmail ? `Merchant ${merchantEmail}` : "Portal submission",
       )}
       ${components.contentOpen()}
           ${components.paragraph(
-            `A payout wallet is waiting for <strong>manual verification</strong>. Approve or reject in the admin dashboard.`,
+            `A merchant submitted a payout wallet that requires <strong>manual approval</strong> before it can be used for settlements.`,
           )}
           ${components.card(
             `
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-              ${components.infoRow("Merchant", String(data.merchantEmail || "—"))}
+              ${components.infoRow("Merchant", merchantEmail || "—")}
               ${components.infoRow("Wallet name", String(data.walletLabel || "—"))}
               ${components.infoRow("Network", network)}
               ${components.infoRow("Status", "Pending review")}
@@ -72,12 +89,14 @@ export const walletEmailTemplates = {
             `,
             { highlight: true },
           )}
-          ${components.button("Open admin review", adminUrl)}
-          ${components.paragraph(`Wallet ID: <code style="font-size:12px;">${data.walletId}</code>`, { small: true, muted: true, center: true })}
+          ${components.button("Review in admin dashboard", adminUrl)}
+          ${merchantEmail ? components.button("Reply to merchant", mailtoMerchant, "outline") : ""}
+          ${components.paragraph(`Reference ID: <span style="font-family:ui-monospace;font-size:12px;">${walletId}</span>`, { small: true, muted: true, center: true })}
+          ${components.paragraph("Replying to this notification will email the merchant directly.", { small: true, muted: true, center: true })}
       ${components.contentClose()}
     `,
         {
-          preheader: `${isResend ? "Reminder" : "New"} wallet pending: ${data.walletLabel}`,
+          preheader: `${isResend ? "Reminder" : "New"} wallet pending review — ${data.walletLabel}`,
           minimalHeader: false,
         },
       );
@@ -88,22 +107,26 @@ export const walletEmailTemplates = {
     subject: "{{subjectLine}}",
     generateHtml: (data: Record<string, unknown>) => {
       const verified = data.status === "verified";
-      const title = verified ? "Wallet verified" : "Wallet needs changes";
-      const emoji = verified ? "✅" : "⚠️";
-      const ctaUrl = verified
-        ? walletDashboardUrl("/account")
-        : walletDashboardUrl(ACCOUNT_WALLET_SETUP_PATH);
+      const title = verified ? "Wallet verified" : "Wallet not approved";
+      const ctaUrl =
+        (data.actionUrl as string) ||
+        (verified ? EMAIL_ROUTES.account() : EMAIL_ROUTES.accountWallets());
+      const ctaLabel = verified ? "Open account dashboard" : "Update payout wallet";
 
       return generateBaseTemplate(
         `
-      ${components.iconHero(emoji, title, String(data.walletLabel || "Your wallet"))}
+      ${components.iconHero(
+        verified ? "✓" : "!",
+        title,
+        String(data.walletLabel || "Your wallet"),
+      )}
       ${components.contentOpen()}
           ${verified
             ? components.paragraph(
-                `Your wallet <strong>${data.walletLabel}</strong> is verified. You can use it for payouts when checkout goes live.`,
+                `Your payout wallet <strong>${data.walletLabel}</strong> has been verified. It will be used for crypto settlements when checkout is enabled on your account.`,
               )
             : components.paragraph(
-                `We could not approve <strong>${data.walletLabel}</strong>.${data.rejectionReason ? ` <br><br><strong>Reason:</strong> ${data.rejectionReason}` : " Please update the address and submit again."}`,
+                `We were unable to approve <strong>${data.walletLabel}</strong> at this time.${data.rejectionReason ? `<br><br><strong>Reason:</strong> ${String(data.rejectionReason)}` : ""}<br><br>Please update the wallet address in your dashboard and submit again.`,
               )}
           ${components.card(
             `
@@ -116,33 +139,40 @@ export const walletEmailTemplates = {
             { highlight: verified },
           )}
           ${onboardingSteps(verified ? 3 : 2)}
-          ${components.button(verified ? "Open dashboard" : "Update wallet", ctaUrl)}
-          ${components.paragraph(`Questions? <a href="mailto:${EMAIL.support}" style="color:${brandColors.primary};">${EMAIL.support}</a>`, { muted: true, center: true })}
+          ${components.button(ctaLabel, ctaUrl)}
+          ${supportFooter()}
       ${components.contentClose()}
     `,
         {
           preheader: verified
             ? `${data.walletLabel} is verified on Crypto Pay`
-            : `${data.walletLabel} — action needed`,
+            : `${data.walletLabel} requires an update`,
         },
       );
     },
   },
 
   wallet_submitted_merchant: {
-    subject: "Wallet received — pending verification",
-    generateHtml: (data: Record<string, unknown>) =>
-      generateBaseTemplate(
+    subject: "We received your payout wallet",
+    generateHtml: (data: Record<string, unknown>) => {
+      const walletsUrl =
+        (data.actionUrl as string) || EMAIL_ROUTES.accountWallets();
+
+      return generateBaseTemplate(
         `
-      ${components.iconHero("⏳", "Wallet submitted", String(data.walletLabel || "Payout wallet"))}
+      ${components.iconHero(
+        "◷",
+        "Payout wallet submitted",
+        String(data.walletLabel || "Your wallet"),
+      )}
       ${components.contentOpen()}
           ${components.paragraph(
-            `We received your payout wallet. Our team typically reviews new addresses within <strong>1–2 business days</strong>. You'll get one more email when it's approved or if we need changes.`,
+            `Thank you. We have received your payout wallet and queued it for review. Most addresses are verified within <strong>one to two business days</strong>.`,
           )}
           ${components.card(
             `
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-              ${components.infoRow("Name", String(data.walletLabel || "—"))}
+              ${components.infoRow("Wallet name", String(data.walletLabel || "—"))}
               ${components.infoRow("Network", walletNetworkLabel(String(data.walletNetwork || "btc")))}
               ${components.infoRow("Status", "Pending verification")}
             </table>
@@ -151,14 +181,16 @@ export const walletEmailTemplates = {
           )}
           ${onboardingSteps(2)}
           ${components.paragraph(
-            `You can add <strong>multiple payout wallets</strong> (different networks or labels) from your dashboard. Each address is reviewed separately.`,
+            `You may register <strong>multiple payout wallets</strong> (separate networks or labels). Each address is reviewed independently.`,
             { muted: true },
           )}
-          ${components.button("View wallets", walletDashboardUrl(ACCOUNT_WALLET_SETUP_PATH))}
-          ${components.paragraph("No private keys are ever requested — public addresses only.", { small: true, muted: true, center: true })}
+          ${components.button("View wallet status", walletsUrl)}
+          ${components.paragraph("We only ever ask for public addresses — never private keys or seed phrases.", { small: true, muted: true, center: true })}
+          ${supportFooter()}
       ${components.contentClose()}
     `,
-        { preheader: "Your Crypto Pay wallet is pending admin review." },
-      ),
+        { preheader: "Your payout wallet is pending verification on Crypto Pay." },
+      );
+    },
   },
 } as const;

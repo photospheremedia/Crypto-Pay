@@ -11,7 +11,7 @@ export type WalletNetwork = (typeof WALLET_NETWORKS)[number]["value"];
 export const WALLET_STATUSES = ["pending", "verified", "rejected"] as const;
 export type WalletStatus = (typeof WALLET_STATUSES)[number];
 
-export const ADMIN_REVIEW_EMAIL = "photospheremedia00@gmail.com";
+export { INTERNAL_OPS_EMAIL as ADMIN_REVIEW_EMAIL } from "@/lib/email/routing";
 
 export function walletNetworkLabel(network: string): string {
   return WALLET_NETWORKS.find((n) => n.value === network)?.label ?? network.toUpperCase();
