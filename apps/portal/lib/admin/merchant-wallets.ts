@@ -16,24 +16,34 @@ const emptyCounts = (): MerchantWalletCounts => ({
   rejected: 0,
 });
 
+type WalletStatusRow = { user_id: string; status: string };
+
 /** Aggregate `merchant_wallets` rows per user for admin tables. */
 export async function getMerchantWalletCountsByUser(
   supabase: SupabaseClient,
   userIds: string[],
+  preloadedRows?: WalletStatusRow[],
 ): Promise<Map<string, MerchantWalletCounts>> {
   const map = new Map<string, MerchantWalletCounts>();
   if (userIds.length === 0) return map;
 
-  const { data, error } = await merchantWallets(supabase)
-    .select("user_id, status")
-    .in("user_id", userIds);
+  const userIdSet = new Set(userIds);
+  let rows = preloadedRows;
 
-  if (error) {
-    console.error("[admin] merchant wallet counts:", error);
-    return map;
+  if (!rows) {
+    const { data, error } = await merchantWallets(supabase)
+      .select("user_id, status")
+      .in("user_id", userIds);
+
+    if (error) {
+      console.error("[admin] merchant wallet counts:", error);
+      return map;
+    }
+    rows = data as WalletStatusRow[] | undefined;
   }
 
-  for (const row of data ?? []) {
+  for (const row of rows ?? []) {
+    if (!userIdSet.has(row.user_id)) continue;
     const uid = row.user_id as string;
     const counts = map.get(uid) ?? emptyCounts();
     counts.total += 1;

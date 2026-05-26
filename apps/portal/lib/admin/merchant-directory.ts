@@ -15,10 +15,20 @@ export type MerchantProfileRow = {
   updated_at: string | null;
 };
 
-/** Active staff membership user ids (platform admin roles). */
+const STAFF_IDS_CACHE_MS = 60_000;
+let staffIdsCache: { ids: Set<string>; at: number } | null = null;
+
+/** Active staff membership user ids (platform admin roles). Cached briefly per runtime. */
 export async function getStaffUserIds(
   supabase: SupabaseClient,
 ): Promise<Set<string>> {
+  if (
+    staffIdsCache &&
+    Date.now() - staffIdsCache.at < STAFF_IDS_CACHE_MS
+  ) {
+    return staffIdsCache.ids;
+  }
+
   const { data, error } = await supabase
     .from("memberships")
     .select("user_id, tenants!inner(slug)")
@@ -28,10 +38,12 @@ export async function getStaffUserIds(
 
   if (error) {
     console.error("[merchant-directory] staff lookup error:", error);
-    return new Set();
+    return staffIdsCache?.ids ?? new Set();
   }
 
-  return new Set((data ?? []).map((row) => row.user_id));
+  const ids = new Set((data ?? []).map((row) => row.user_id));
+  staffIdsCache = { ids, at: Date.now() };
+  return ids;
 }
 
 export function isStaffAccount(

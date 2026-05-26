@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Menu, X } from "lucide-react";
 import { Link, usePathname } from "@/i18n/navigation";
+import { useAdminStats } from "@/components/admin/admin-stats-provider";
 import { isAdminPathActive } from "@/lib/admin/navigation";
-import { AdminSidebarPanel, type AdminNavCounts } from "@/components/admin/admin-app-sidebar";
+import { AdminSidebarPanel } from "@/components/admin/admin-app-sidebar";
 import { AdminNotifications } from "@/components/admin/admin-notifications";
 import { AdminUserMenu } from "@/components/admin/admin-user-menu";
 import { AdminHelpMenu } from "@/components/admin/admin-help-menu";
@@ -13,11 +14,6 @@ import { AdminSearch } from "@/components/admin/admin-search";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { mainBelowHeaderClass, siteHeaderStackClass } from "@/lib/layout-spacing";
 import { cn } from "@/lib/utils";
-
-const emptyCounts: AdminNavCounts = {
-  pendingWallets: 0,
-  newLeads: 0,
-};
 
 export function AdminLayoutClient({
   children,
@@ -30,28 +26,7 @@ export function AdminLayoutClient({
   const pathname = usePathname();
   const onDashboard = isAdminPathActive(pathname, "/admin/dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [counts, setCounts] = useState<AdminNavCounts>(emptyCounts);
-
-  useEffect(() => {
-    const fetchCounts = async () => {
-      try {
-        const res = await fetch("/api/admin/stats");
-        const data = await res.json();
-        if (data.success && data.stats) {
-          setCounts({
-            pendingWallets: Number(data.stats.pendingWallets ?? 0),
-            newLeads: Number(data.stats.newLeadsToday ?? 0),
-          });
-        }
-      } catch (error) {
-        console.error("Failed to fetch admin nav counts:", error);
-      }
-    };
-
-    void fetchCounts();
-    const interval = setInterval(fetchCounts, 30000);
-    return () => clearInterval(interval);
-  }, []);
+  const { navCounts: counts } = useAdminStats();
 
   const closeSidebar = () => setSidebarOpen(false);
 

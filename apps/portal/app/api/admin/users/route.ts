@@ -5,6 +5,7 @@ import {
   getStaffUserIds,
 } from "@/lib/admin/merchant-directory";
 import { getMerchantWalletCountsByUser } from "@/lib/admin/merchant-wallets";
+import { merchantWallets } from "@/lib/wallets/db";
 import { routeUnauthorized } from "@/lib/api/route-error";
 import { getSupabaseServiceClient } from "@crypto-pay/db/supabaseServer";
 
@@ -22,12 +23,18 @@ export async function GET(req: NextRequest) {
     const page = Math.max(1, Number(searchParams.get("page") || "1"));
     const limit = Math.min(100, Math.max(5, Number(searchParams.get("limit") || "20")));
 
-    const staffUserIds = await getStaffUserIds(supabase);
+    const [staffUserIds, profilesResult, walletRowsResult] = await Promise.all([
+      getStaffUserIds(supabase),
+      supabase
+        .from("user_profiles")
+        .select(
+          "id, email, full_name, phone, company_name, created_at, updated_at",
+        )
+        .order("created_at", { ascending: false }),
+      merchantWallets(supabase).select("user_id, status"),
+    ]);
 
-    const { data: profiles, error: profilesError } = await supabase
-      .from("user_profiles")
-      .select("id, email, full_name, phone, company_name, created_at, updated_at")
-      .order("created_at", { ascending: false });
+    const { data: profiles, error: profilesError } = profilesResult;
 
     if (profilesError) {
       console.error("[Admin Merchants] profiles error:", profilesError);
@@ -35,8 +42,14 @@ export async function GET(req: NextRequest) {
     }
 
     const merchantsOnly = filterMerchantProfiles(profiles ?? [], staffUserIds);
-    const userIds = merchantsOnly.map((p) => p.id);
-    const walletCounts = await getMerchantWalletCountsByUser(supabase, userIds);
+    const allUserIds = merchantsOnly.map((p) => p.id);
+    const walletCounts = await getMerchantWalletCountsByUser(
+      supabase,
+      allUserIds,
+      (walletRowsResult.data ?? undefined) as
+        | { user_id: string; status: string }[]
+        | undefined,
+    );
 
     const merged = merchantsOnly.map((profile) => {
       const counts = walletCounts.get(profile.id);

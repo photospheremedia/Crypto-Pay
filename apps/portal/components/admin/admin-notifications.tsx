@@ -20,7 +20,8 @@ interface Notification {
 export function AdminNotifications() {
   const [isOpen, setIsOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [loadedOnce, setLoadedOnce] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   const fetchNotifications = useCallback(async () => {
@@ -30,6 +31,7 @@ export function AdminNotifications() {
       const data = await res.json();
       if (data.success) {
         setNotifications(data.notifications || []);
+        setLoadedOnce(true);
       }
     } catch (error) {
       console.error("Failed to fetch notifications:", error);
@@ -37,12 +39,6 @@ export function AdminNotifications() {
       setLoading(false);
     }
   }, []);
-
-  useEffect(() => {
-    void fetchNotifications();
-    const interval = setInterval(fetchNotifications, 60000);
-    return () => clearInterval(interval);
-  }, [fetchNotifications]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -56,10 +52,15 @@ export function AdminNotifications() {
   }, []);
 
   useEffect(() => {
-    if (isOpen) {
-      void fetchNotifications();
-    }
+    if (!isOpen) return;
+    void fetchNotifications();
   }, [isOpen, fetchNotifications]);
+
+  useEffect(() => {
+    if (!loadedOnce) return;
+    const interval = setInterval(() => void fetchNotifications(), 60_000);
+    return () => clearInterval(interval);
+  }, [loadedOnce, fetchNotifications]);
 
   const markAsRead = async (id: string) => {
     try {

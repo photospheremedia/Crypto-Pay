@@ -76,13 +76,27 @@ export async function buildAdminNotifications(
 ): Promise<AdminNotificationItem[]> {
   const items: AdminNotificationItem[] = [];
 
-  const { data: pendingWallets } = await merchantWallets(supabase)
-    .select(
-      "id, user_id, label, wallet_network, wallet_address, verification_requested_at, created_at",
-    )
-    .eq("status", "pending")
-    .order("verification_requested_at", { ascending: false, nullsFirst: false })
-    .limit(15);
+  const [pendingWalletsRes, newLeadsRes] = await Promise.all([
+    merchantWallets(supabase)
+      .select(
+        "id, user_id, label, wallet_network, wallet_address, verification_requested_at, created_at",
+      )
+      .eq("status", "pending")
+      .order("verification_requested_at", {
+        ascending: false,
+        nullsFirst: false,
+      })
+      .limit(15),
+    supabase
+      .from("chat_conversations")
+      .select("id, guest_name, guest_email, guest_phone, started_at")
+      .eq("contact_captured", true)
+      .eq("lead_status", "new")
+      .order("started_at", { ascending: false })
+      .limit(15),
+  ]);
+
+  const pendingWallets = pendingWalletsRes.data;
 
   for (const wallet of pendingWallets ?? []) {
     const id = `wallet-${wallet.id}`;
@@ -100,15 +114,7 @@ export async function buildAdminNotifications(
     });
   }
 
-  const { data: newLeads } = await supabase
-    .from("chat_conversations")
-    .select("id, guest_name, guest_email, guest_phone, started_at")
-    .eq("contact_captured", true)
-    .eq("lead_status", "new")
-    .order("started_at", { ascending: false })
-    .limit(15);
-
-  for (const lead of newLeads ?? []) {
+  for (const lead of newLeadsRes.data ?? []) {
     const id = `lead-${lead.id}`;
     const name =
       lead.guest_name || lead.guest_email || lead.guest_phone || "New lead";

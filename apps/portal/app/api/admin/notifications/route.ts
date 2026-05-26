@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
 import { withAdminAuth } from "@/lib/admin-auth";
-import { createClient } from "@/lib/supabase/server";
 import {
   buildAdminNotifications,
   getReadNotificationIds,
 } from "@/lib/admin/notifications-feed";
+import { getSupabaseServiceClient } from "@crypto-pay/db/supabaseServer";
 
 export const GET = withAdminAuth(async (_req, { user }) => {
   try {
-    const supabase = await createClient();
+    const supabase = getSupabaseServiceClient();
     const readIds = await getReadNotificationIds(user.id);
     const notifications = await buildAdminNotifications(supabase, readIds);
 

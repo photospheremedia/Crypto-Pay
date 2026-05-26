@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useTranslations } from "next-intl";
+import { useAdminStats } from "@/components/admin/admin-stats-provider";
 import { Link } from "@/i18n/navigation";
 import {
   Activity,
@@ -41,40 +42,16 @@ type Stats = {
 
 export default function AdminDashboard() {
   const t = useTranslations("Admin.dashboard");
-  const [stats, setStats] = useState<Stats | null>(null);
-  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-
-  const fetchStats = async () => {
-    try {
-      const res = await fetch("/api/admin/stats");
-      const data = await res.json();
-
-      if (data.success) {
-        setStats(data.stats);
-        setIsSuperAdmin(Boolean(data.isSuperAdmin));
-      }
-    } catch (error) {
-      console.error("Failed to fetch dashboard stats:", error);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchStats();
-    const interval = setInterval(fetchStats, 60000);
-    return () => clearInterval(interval);
-  }, []);
+  const { stats: rawStats, isSuperAdmin, loading, refreshing, refresh } =
+    useAdminStats();
+  const stats = rawStats as Stats | null;
 
   const conversionRate = useMemo(() => {
     if (!stats || stats.totalLeads === 0 || !stats.convertedLeads) return "0.0";
     return ((stats.convertedLeads / stats.totalLeads) * 100).toFixed(1);
   }, [stats]);
 
-  if (loading) {
+  if (loading && !stats) {
     return (
       <div className="flex min-h-[320px] items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-emerald-500" />
@@ -97,7 +74,7 @@ export default function AdminDashboard() {
           <h1 className="text-2xl font-bold tracking-tight text-slate-900">{t("title")}</h1>
           <p className="text-sm text-slate-500">{t("subtitle")}</p>
         </div>
-        <Button onClick={() => { setRefreshing(true); fetchStats(); }} disabled={refreshing} variant="outline" size="sm">
+        <Button onClick={() => void refresh()} disabled={refreshing} variant="outline" size="sm">
           <RefreshCw className={`mr-2 h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />
           Refresh
         </Button>
