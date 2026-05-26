@@ -13,30 +13,6 @@ function todayIsoDate(): string {
   return new Date().toISOString().split("T")[0]!;
 }
 
-/** Sidebar badges — two parallel count queries only. */
-export async function getAdminNavCounts(
-  supabase: SupabaseClient,
-): Promise<AdminNavCounts> {
-  const today = todayIsoDate();
-
-  const [pendingWalletsRes, newLeadsRes] = await Promise.all([
-    merchantWallets(supabase)
-      .select("*", { count: "exact", head: true })
-      .eq("status", "pending"),
-    supabase
-      .from("chat_conversations")
-      .select("*", { count: "exact", head: true })
-      .eq("lead_status", "new")
-      .eq("contact_captured", true)
-      .gte("started_at", today),
-  ]);
-
-  return {
-    pendingWallets: pendingWalletsRes.count ?? 0,
-    newLeads: newLeadsRes.count ?? 0,
-  };
-}
-
 /** Dashboard metrics — parallelized; avoids loading all user_profiles rows. */
 export async function getAdminDashboardStats(
   supabase: SupabaseClient,

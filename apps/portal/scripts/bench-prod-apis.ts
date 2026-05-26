@@ -83,7 +83,6 @@ async function main() {
   }
 
   const endpoints = [
-    "/api/admin/nav-counts",
     "/api/admin/stats",
     "/api/admin/wallets?status=pending",
     "/api/admin/notifications",

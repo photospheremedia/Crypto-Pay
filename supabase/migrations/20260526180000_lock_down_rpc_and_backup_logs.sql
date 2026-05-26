@@ -163,10 +163,6 @@ revoke execute on function public.admin_dashboard_stats(boolean)
   from anon, authenticated, public;
 grant execute on function public.admin_dashboard_stats(boolean) to service_role;
 
-revoke execute on function public.admin_nav_counts()
-  from anon, authenticated, public;
-grant execute on function public.admin_nav_counts() to service_role;
-
 grant execute on function public.admin_search(text, integer) to service_role;
 grant execute on function public.cleanup_expired_sessions() to service_role;
 grant execute on function public.convert_guest_to_customer(uuid, uuid) to service_role;

@@ -18,12 +18,8 @@ import {
   isGrowthPathActive,
   type AdminNavBadgeKey,
 } from "@/lib/admin/navigation";
+import type { AdminNavCounts } from "@/lib/admin/admin-stats";
 import { cn } from "@/lib/utils";
-
-export type AdminNavCounts = {
-  pendingWallets: number;
-  newLeads: number;
-};
 
 function badgeCount(key: AdminNavBadgeKey, counts: AdminNavCounts): number {
   if (key === "pendingWallets") return counts.pendingWallets;

@@ -26,31 +26,30 @@ type AdminStatsContextValue = {
   loadFullStats: () => Promise<void>;
 };
 
-const defaultNavCounts: AdminNavCounts = {
-  pendingWallets: 0,
-  newLeads: 0,
-};
+function navCountsFromStats(
+  stats: Record<string, unknown> | null,
+): AdminNavCounts {
+  return {
+    pendingWallets: Number(stats?.pendingWallets ?? 0),
+    newLeads: Number(stats?.newLeadsToday ?? 0),
+  };
+}
 
 const AdminStatsContext = createContext<AdminStatsContextValue | null>(null);
 
 export function AdminStatsProvider({
   children,
-  initialNavCounts,
   initialStats,
   initialIsSuperAdmin = false,
   initialPermissions = null,
 }: {
   children: ReactNode;
-  initialNavCounts?: AdminNavCounts;
   initialStats?: Record<string, unknown> | null;
   initialIsSuperAdmin?: boolean;
   initialPermissions?: AdminPermissions;
 }) {
   const [stats, setStats] = useState<Record<string, unknown> | null>(
     initialStats ?? null,
-  );
-  const [navCounts, setNavCounts] = useState<AdminNavCounts>(
-    initialNavCounts ?? defaultNavCounts,
   );
   const [isSuperAdmin, setIsSuperAdmin] = useState(initialIsSuperAdmin);
   const [permissions, setPermissions] = useState<AdminPermissions>(
@@ -70,10 +69,6 @@ export function AdminStatsProvider({
         setStats(data.stats ?? null);
         setIsSuperAdmin(Boolean(data.isSuperAdmin));
         setPermissions(data.permissions ?? null);
-        setNavCounts({
-          pendingWallets: Number(data.stats?.pendingWallets ?? 0),
-          newLeads: Number(data.stats?.newLeadsToday ?? 0),
-        });
       }
     } catch (error) {
       console.error("Failed to fetch admin stats:", error);
@@ -95,6 +90,8 @@ export function AdminStatsProvider({
     await refresh({ silent: statsLoaded.current });
     statsLoaded.current = true;
   }, [refresh]);
+
+  const navCounts = useMemo(() => navCountsFromStats(stats), [stats]);
 
   const value = useMemo(
     () => ({
