@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { ArrowLeftRight, Loader2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +20,7 @@ type CryptoConverterProps = {
 };
 
 export function CryptoConverter({ className, compact }: CryptoConverterProps) {
+  const tCommon = useTranslations("Common");
   const [cryptoId, setCryptoId] = useState("bitcoin");
   const [fiat, setFiat] = useState("usd");
   const [amount, setAmount] = useState("1");
@@ -95,11 +97,11 @@ export function CryptoConverter({ className, compact }: CryptoConverterProps) {
           size="icon"
           onClick={fetchRates}
           disabled={loading}
-          aria-label="Refresh rates"
+          aria-label={loading ? tCommon("refreshing") : "Refresh rates"}
           className="shrink-0"
         >
           {loading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
           ) : (
             <RefreshCw className="h-4 w-4" />
           )}
@@ -157,7 +159,7 @@ export function CryptoConverter({ className, compact }: CryptoConverterProps) {
           {error ? (
             <p className="text-sm text-red-600">{error}</p>
           ) : loading && !rates ? (
-            <p className="text-sm text-slate-500">Loading live rates…</p>
+            <p className="text-sm text-slate-500">{tCommon("loadingLiveRates")}</p>
           ) : (
             <>
               <p className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-3xl">

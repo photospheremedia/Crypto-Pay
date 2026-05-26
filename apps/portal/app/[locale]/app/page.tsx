@@ -33,7 +33,7 @@ export default async function AppHomePage() {
           <p className="mt-1 text-sm text-slate-600">Orders, quotes, profile, and account activity.</p>
         </Link>
 
-        <Link href="/account/get-started" className="rounded-2xl border border-slate-200 bg-white p-5 hover:border-emerald-300">
+        <Link href="/account?tab=wallets" className="rounded-2xl border border-slate-200 bg-white p-5 hover:border-emerald-300">
           <div className="mb-3 w-fit rounded-lg bg-emerald-50 p-2">
             <Wallet className="h-5 w-5 text-emerald-600" />
           </div>

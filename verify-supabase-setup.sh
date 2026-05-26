@@ -3,7 +3,7 @@
 # Supabase Production Verification Script
 # Checks all production security features are properly configured
 
-echo "🔍 Restaurant Hub - Supabase Production Verification"
+echo "🔍 Crypto Pay - Supabase Production Verification"
 echo "=================================================="
 echo ""
 

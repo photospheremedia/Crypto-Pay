@@ -42,17 +42,19 @@ test.describe('Authentication Flow', () => {
     await page.getByLabel(/^password$/i).fill('StrongPass123!');
     await page.getByRole('button', { name: /sign up/i }).click();
 
-    // Sign-up may redirect to setup (auto-session) or login with created flag (email verify flow).
+    // Sign-up may redirect to wallet onboarding (auto-session) or login with created flag (email verify flow).
     await expect
       .poll(
         async () => {
-          const onSetupPage = /\/account\/setup/.test(page.url());
+          const onWalletSetup =
+            /\/account(\?|.*&)tab=wallets/.test(page.url()) ||
+            /\/account\/setup/.test(page.url());
           const onLoginCreated = /\/login\?created=1&email=/.test(page.url());
           const hasSuccessMessage =
             (await page.getByText(/account created|check your email|verify your account/i).count()) > 0;
           const hasRateLimitMessage =
             (await page.getByText(/email rate limit exceeded|temporarily rate-limited/i).count()) > 0;
-          return onSetupPage || onLoginCreated || hasSuccessMessage || hasRateLimitMessage;
+          return onWalletSetup || onLoginCreated || hasSuccessMessage || hasRateLimitMessage;
         },
         { timeout: 15000 }
       )

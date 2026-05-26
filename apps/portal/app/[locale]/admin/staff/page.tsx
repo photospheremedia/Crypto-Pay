@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
@@ -108,6 +109,7 @@ const statusColors: Record<string, string> = {
 };
 
 export default function StaffManagementPage() {
+  const tCommon = useTranslations("Common");
   const router = useRouter();
   const [users, setUsers] = useState<User[]>([]);
   const [stats, setStats] = useState<ApiStats | null>(null);
@@ -577,7 +579,7 @@ export default function StaffManagementPage() {
               Cancel
             </Button>
             <Button onClick={handleInvite} disabled={!inviteEmail || submitting}>
-              {submitting ? "Sending..." : "Send Invitation"}
+              {submitting ? tCommon("sending") : "Send Invitation"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -630,7 +632,7 @@ export default function StaffManagementPage() {
               Cancel
             </Button>
             <Button onClick={handleUpdate} disabled={submitting}>
-              {submitting ? "Saving..." : "Save Changes"}
+              {submitting ? tCommon("saving") : tCommon("saveChanges")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -656,7 +658,7 @@ export default function StaffManagementPage() {
               onClick={handleDelete}
               disabled={submitting}
             >
-              {submitting ? "Removing..." : "Remove Access"}
+              {submitting ? tCommon("removing") : "Remove Access"}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Copy, Check, Loader2, Shield, X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { Copy, Check, Loader2, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -26,6 +27,8 @@ interface MFASetupDialogProps {
 type SetupStep = 'enroll' | 'verify' | 'complete';
 
 export function MFASetupDialog({ open, onOpenChange, onSuccess }: MFASetupDialogProps) {
+  const t = useTranslations('Account.mfa');
+  const tCommon = useTranslations('Common');
   const [step, setStep] = useState<SetupStep>('enroll');
   const [loading, setLoading] = useState(false);
   const [factorId, setFactorId] = useState('');
@@ -47,16 +50,16 @@ export function MFASetupDialog({ open, onOpenChange, onSuccess }: MFASetupDialog
         setStep('verify');
       } else {
         toast({
-          title: 'Enrollment failed',
-          description: result.error || 'Failed to set up 2FA',
+          title: t('enrollmentFailed'),
+          description: result.error || t('enrollmentFailedHint'),
           variant: 'destructive',
         });
       }
     } catch (error) {
       console.error('Enrollment error:', error);
       toast({
-        title: 'Error',
-        description: 'An unexpected error occurred',
+        title: tCommon('error'),
+        description: t('unexpectedError'),
         variant: 'destructive',
       });
     } finally {
@@ -67,8 +70,8 @@ export function MFASetupDialog({ open, onOpenChange, onSuccess }: MFASetupDialog
   const handleVerify = async () => {
     if (!code || code.length !== 6) {
       toast({
-        title: 'Invalid code',
-        description: 'Please enter a 6-digit code',
+        title: t('invalidCode'),
+        description: t('invalidCodeHint'),
         variant: 'destructive',
       });
       return;
@@ -86,16 +89,16 @@ export function MFASetupDialog({ open, onOpenChange, onSuccess }: MFASetupDialog
         }, 2000);
       } else {
         toast({
-          title: 'Verification failed',
-          description: result.error || 'Invalid code. Please try again.',
+          title: t('verificationFailed'),
+          description: result.error || t('invalidCodeRetry'),
           variant: 'destructive',
         });
       }
     } catch (error) {
       console.error('Verification error:', error);
       toast({
-        title: 'Error',
-        description: 'An unexpected error occurred',
+        title: tCommon('error'),
+        description: t('unexpectedError'),
         variant: 'destructive',
       });
     } finally {
@@ -108,21 +111,20 @@ export function MFASetupDialog({ open, onOpenChange, onSuccess }: MFASetupDialog
       await navigator.clipboard.writeText(secret);
       setCopied(true);
       toast({
-        title: 'Copied!',
-        description: 'Secret key copied to clipboard',
+        title: tCommon('copied'),
+        description: t('secretCopied'),
       });
       setTimeout(() => setCopied(false), 2000);
-    } catch (error) {
+    } catch {
       toast({
-        title: 'Copy failed',
-        description: 'Please copy the secret manually',
+        title: tCommon('copyFailed'),
+        description: t('copyManually'),
         variant: 'destructive',
       });
     }
   };
 
   const handleClose = () => {
-    // Reset state
     setStep('enroll');
     setFactorId('');
     setQrCode('');
@@ -140,40 +142,37 @@ export function MFASetupDialog({ open, onOpenChange, onSuccess }: MFASetupDialog
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <Shield className="h-5 w-5 text-primary" />
-                Enable Two-Factor Authentication
+                {t('title')}
               </DialogTitle>
-              <DialogDescription>
-                Add an extra layer of security to your account by requiring a verification code in
-                addition to your password.
-              </DialogDescription>
+              <DialogDescription>{t('description')}</DialogDescription>
             </DialogHeader>
 
             <div className="space-y-4 py-4">
               <div className="space-y-2">
-                <h4 className="font-medium">What you'll need:</h4>
+                <h4 className="font-medium">{t('needTitle')}</h4>
                 <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-                  <li>An authenticator app (Google Authenticator, Authy, 1Password, etc.)</li>
-                  <li>Your smartphone or tablet</li>
+                  <li>{t('needApp')}</li>
+                  <li>{t('needDevice')}</li>
                 </ul>
               </div>
 
               <div className="rounded-lg bg-muted p-4 text-sm">
-                <p className="font-medium mb-2">How it works:</p>
+                <p className="font-medium mb-2">{t('howTitle')}</p>
                 <ol className="list-decimal list-inside space-y-1 text-muted-foreground">
-                  <li>Scan a QR code with your authenticator app</li>
-                  <li>Enter the 6-digit code from the app</li>
-                  <li>Use the code each time you log in</li>
+                  <li>{t('stepScan')}</li>
+                  <li>{t('stepEnter')}</li>
+                  <li>{t('stepLogin')}</li>
                 </ol>
               </div>
             </div>
 
             <DialogFooter className="gap-2 sm:gap-0">
               <Button variant="outline" onClick={handleClose}>
-                Cancel
+                {tCommon('cancel')}
               </Button>
               <Button onClick={handleEnroll} disabled={loading}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Continue
+                {tCommon('continue')}
               </Button>
             </DialogFooter>
           </>
@@ -182,21 +181,17 @@ export function MFASetupDialog({ open, onOpenChange, onSuccess }: MFASetupDialog
         {step === 'verify' && (
           <>
             <DialogHeader>
-              <DialogTitle>Scan QR Code</DialogTitle>
-              <DialogDescription>
-                Use your authenticator app to scan this QR code, then enter the 6-digit code to
-                verify.
-              </DialogDescription>
+              <DialogTitle>{t('scanTitle')}</DialogTitle>
+              <DialogDescription>{t('scanDescription')}</DialogDescription>
             </DialogHeader>
 
             <div className="space-y-4 py-4">
-              {/* QR Code */}
               <div className="flex justify-center">
                 <div className="p-4 bg-white rounded-lg border">
                   {qrCode && (
                     <Image
                       src={qrCode}
-                      alt="2FA QR Code"
+                      alt={t('qrAlt')}
                       width={200}
                       height={200}
                       className="rounded"
@@ -205,11 +200,8 @@ export function MFASetupDialog({ open, onOpenChange, onSuccess }: MFASetupDialog
                 </div>
               </div>
 
-              {/* Manual Entry Option */}
               <div className="space-y-2">
-                <Label className="text-xs text-muted-foreground">
-                  Can't scan? Enter this code manually:
-                </Label>
+                <Label className="text-xs text-muted-foreground">{t('manualEntry')}</Label>
                 <div className="flex items-center gap-2">
                   <code className="flex-1 px-3 py-2 bg-muted rounded text-sm font-mono break-all">
                     {secret}
@@ -230,16 +222,15 @@ export function MFASetupDialog({ open, onOpenChange, onSuccess }: MFASetupDialog
                 </div>
               </div>
 
-              {/* Code Input */}
               <div className="space-y-2">
-                <Label htmlFor="code">Enter 6-digit code</Label>
+                <Label htmlFor="code">{t('codeLabel')}</Label>
                 <Input
                   id="code"
                   type="text"
                   inputMode="numeric"
                   pattern="[0-9]*"
                   maxLength={6}
-                  placeholder="000000"
+                  placeholder={t('codePlaceholder')}
                   value={code}
                   onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
                   className="text-center text-2xl tracking-widest font-mono"
@@ -250,11 +241,11 @@ export function MFASetupDialog({ open, onOpenChange, onSuccess }: MFASetupDialog
 
             <DialogFooter className="gap-2 sm:gap-0">
               <Button variant="outline" onClick={handleClose}>
-                Cancel
+                {tCommon('cancel')}
               </Button>
               <Button onClick={handleVerify} disabled={loading || code.length !== 6}>
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Verify & Enable
+                {tCommon('verifyAndEnable')}
               </Button>
             </DialogFooter>
           </>
@@ -265,20 +256,16 @@ export function MFASetupDialog({ open, onOpenChange, onSuccess }: MFASetupDialog
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2 text-green-600">
                 <Check className="h-5 w-5" />
-                2FA Enabled Successfully!
+                {t('completeTitle')}
               </DialogTitle>
-              <DialogDescription>
-                Your account is now protected with two-factor authentication.
-              </DialogDescription>
+              <DialogDescription>{t('completeDescription')}</DialogDescription>
             </DialogHeader>
 
             <div className="py-6 text-center">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 mb-4">
                 <Shield className="h-8 w-8 text-green-600" />
               </div>
-              <p className="text-sm text-muted-foreground">
-                You'll need to enter a code from your authenticator app each time you log in.
-              </p>
+              <p className="text-sm text-muted-foreground">{t('completeHint')}</p>
             </div>
           </>
         )}

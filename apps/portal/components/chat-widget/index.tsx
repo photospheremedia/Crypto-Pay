@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { useChat } from "@ai-sdk/react";
+import { useTranslations } from "next-intl";
 import { DefaultChatTransport } from "ai";
 import { MessageCircle, Bot } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
@@ -24,6 +25,7 @@ function generateSessionId() {
 }
 
 export function SupportChatWidget() {
+  const tCommon = useTranslations("Common");
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [showPreChat, setShowPreChat] = useState(true); // Show pre-chat form for guests
@@ -311,7 +313,7 @@ export function SupportChatWidget() {
           )}
         </div>
         <span className="font-medium text-sm">
-          {isLoading ? "Typing..." : "Crypto Pay AI"}
+          {isLoading ? tCommon("typing") : tCommon("brandName")}
         </span>
         {messages.length > 0 && (
           <span className="bg-white/20 text-xs px-2 py-0.5 rounded-full">

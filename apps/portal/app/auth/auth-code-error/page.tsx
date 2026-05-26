@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { AlertCircle } from 'lucide-react';
+import { PageLoading } from '@/components/ui/loading-indicator';
 
 /**
  * Maps technical error messages to user-friendly messages.
@@ -128,11 +129,7 @@ function ErrorContent() {
 
 export default function AuthErrorPage() {
     return (
-        <Suspense fallback={
-            <div className="min-h-screen flex items-center justify-center bg-slate-50">
-                <div className="animate-pulse text-slate-400">Loading...</div>
-            </div>
-        }>
+        <Suspense fallback={<PageLoading />}>
             <ErrorContent />
         </Suspense>
     );

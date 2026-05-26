@@ -2,12 +2,15 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, ArrowLeft, Mail, CheckCircle2, AlertCircle } from "lucide-react";
 
 export function ForgotPasswordForm() {
+  const t = useTranslations("Auth");
+  const tCommon = useTranslations("Common");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
@@ -140,10 +143,10 @@ export function ForgotPasswordForm() {
               {loading ? (
                 <>
                   <Loader2 className="animate-spin mr-2 h-4 w-4" />
-                  Sending reset link...
+                  {tCommon("sendingResetLink")}
                 </>
               ) : (
-                "Send reset link"
+                t("sendResetLink")
               )}
             </Button>
           </form>

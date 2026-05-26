@@ -1,6 +1,5 @@
 /**
- * Crypto Pay email logo mark — inline SVG for maximum client support.
- * Resend/React Email: prefer absolute PNG URLs when available; SVG-in-HTML works in most clients.
+ * Inline SVG logo mark (legacy fallback). Prefer PNG via brand-assets.ts for production emails.
  */
 
 /** Compact mark for headers (profile-picture style in inbox clients). */

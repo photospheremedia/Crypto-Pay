@@ -1,6 +1,6 @@
 #!/bin/bash
 # Vector & Analytics Buckets Setup Script
-# This script initializes vector and analytics buckets for Restaurant Hub
+# This script initializes vector and analytics buckets for Crypto Pay
 
 set -e
 

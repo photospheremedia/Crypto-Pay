@@ -1,8 +1,9 @@
 'use client';
 
-import Link from 'next/link';
 import { useActionState, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -11,6 +12,8 @@ import { getSupabaseBrowserClientOptional } from '@crypto-pay/db/supabaseClient'
 import { signIn, signUp, type ActionState } from './actions';
 
 export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
+  const t = useTranslations('Auth');
+  const tCommon = useTranslations('Common');
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect') ?? searchParams.get('redirectTo');
   const priceId = searchParams.get('priceId');
@@ -20,9 +23,9 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
   const [existingUser, setExistingUser] = useState(false);
   const [state, formAction, pending] = useActionState<ActionState, FormData>(
     mode === 'signin' ? signIn : signUp,
-    { error: '' }
+    { error: '' },
   );
-  // Check if user is already logged in
+
   useEffect(() => {
     const checkUser = async () => {
       const supabase = getSupabaseBrowserClientOptional();
@@ -30,7 +33,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
       const { data } = await supabase.auth.getUser();
       setExistingUser(!!data.user);
     };
-    checkUser();
+    void checkUser();
   }, []);
 
   const buildAuthHref = (target: '/login' | '/signup') => {
@@ -41,57 +44,60 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
     return query ? `${target}?${query}` : target;
   };
 
+  const signInTitle =
+    mode === 'signin'
+      ? existingUser
+        ? t('welcomeBack')
+        : t('signInTitle')
+      : t('createAccountTitle');
+
   return (
     <div className="flex min-h-[calc(100dvh-5.5rem)] items-center justify-center bg-white px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
-        {/* Main Heading */}
         <div className="text-center">
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
-            {mode === 'signin'
-              ? (existingUser ? 'Welcome back' : 'Sign in to your account')
-              : 'Create your account'}
+            {signInTitle}
           </h2>
           <p className="mt-3 text-sm text-slate-600">
             {mode === 'signin' ? (
               <>
-                New to Crypto Pay?{' '}
+                {t('newToBrand')}{' '}
                 <Link
                   href={buildAuthHref('/signup')}
                   className="font-semibold text-emerald-600 hover:text-emerald-600 transition"
                 >
-                  Create an account
+                  {t('createAccountLink')}
                 </Link>
               </>
             ) : (
               <>
-                Already have an account?{' '}
+                {t('alreadyHaveAccount')}{' '}
                 <Link
                   href={buildAuthHref('/login')}
                   className="font-semibold text-emerald-600 hover:text-emerald-600 transition"
                 >
-                  Sign in
+                  {t('signInLink')}
                 </Link>
               </>
             )}
           </p>
         </div>
 
-        {/* Form Card */}
         <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 px-6 py-8 sm:px-10 sm:py-12">
           {mode === 'signin' && accountCreated && (
             <div className="mb-4 rounded-lg bg-emerald-50 border border-emerald-200 p-4">
               <p className="text-sm text-emerald-800">
-                <strong>Account created.</strong>{" "}
+                <strong>{t('accountCreated')}</strong>{' '}
                 {verificationPending ? (
                   pendingEmail ? (
-                    <>We sent a confirmation link to <strong>{pendingEmail}</strong>. Please verify your email, then sign in.</>
+                    t('verifyEmailWith', { email: pendingEmail })
                   ) : (
-                    <>We sent a confirmation email. Please verify your email, then sign in.</>
+                    t('verifyEmailGeneric')
                   )
                 ) : pendingEmail ? (
-                  `Sign in with ${pendingEmail} to continue.`
+                  t('signInWithEmail', { email: pendingEmail })
                 ) : (
-                  "Sign in to continue to your dashboard."
+                  t('signInToDashboard')
                 )}
               </p>
             </div>
@@ -99,15 +105,14 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
           {existingUser && mode === 'signin' && (
             <div className="mb-4 rounded-lg bg-emerald-50 border border-emerald-200 p-4">
               <p className="text-sm text-emerald-800">
-                <strong>You are already signed in.</strong>{' '}
-                Go to your dashboard or sign out to switch accounts.
+                <strong>{t('alreadySignedIn')}</strong> {t('signedInHint')}
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
                 <Link
                   href="/account"
                   className="inline-flex items-center rounded-full bg-emerald-600 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-700"
                 >
-                  Continue to dashboard
+                  {t('continueToDashboard')}
                 </Link>
                 <button
                   type="button"
@@ -118,7 +123,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                   }}
                   className="inline-flex items-center rounded-full border border-emerald-300 px-4 py-2 text-xs font-semibold text-emerald-700 hover:bg-emerald-100"
                 >
-                  Sign out
+                  {t('signOut')}
                 </button>
               </div>
             </div>
@@ -126,8 +131,9 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
           {existingUser && mode === 'signup' && (
             <div className="mb-4 rounded-lg bg-amber-50 border border-amber-200 p-4">
               <p className="text-sm text-amber-800">
-                <strong>Already logged in?</strong> You're currently signed in. If you want to create a new account with a different email, please{' '}
+                <strong>{t('alreadyLoggedInSignup')}</strong> {t('signedInCreateNew')}{' '}
                 <button
+                  type="button"
                   onClick={async () => {
                     const supabase = getSupabaseBrowserClientOptional();
                     if (supabase) await supabase.auth.signOut();
@@ -135,31 +141,28 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                   }}
                   className="font-semibold underline hover:text-amber-900"
                 >
-                  sign out first
-                </button>.
+                  {t('signOutFirst')}
+                </button>
+                .
               </p>
             </div>
           )}
           {mode === 'signup' && !existingUser && (
             <div className="mb-4 rounded-lg bg-cyan-50 border border-cyan-200 p-4">
               <p className="text-sm text-blue-800">
-                <strong>New here?</strong> Create your account with your email and password to get started.
+                <strong>{t('newHere')}</strong> {t('newHereHint')}
               </p>
             </div>
           )}
 
-          {/* Email/Password Form - Only show if not using OAuth signup */}
           <form className="space-y-6 mt-6" action={formAction}>
             <input type="hidden" name="redirect" value={redirect || ''} />
             <input type="hidden" name="priceId" value={priceId || ''} />
-            {mode === "signup" && (
+            {mode === 'signup' && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <Label
-                    htmlFor="first_name"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    First name
+                  <Label htmlFor="first_name" className="block text-sm font-medium text-gray-700">
+                    {t('firstName')}
                   </Label>
                   <div className="mt-1">
                     <Input
@@ -170,16 +173,13 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                       required
                       maxLength={80}
                       className="appearance-none rounded-full relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 focus:z-10 sm:text-sm"
-                      placeholder="First name"
+                      placeholder={t('firstName')}
                     />
                   </div>
                 </div>
                 <div>
-                  <Label
-                    htmlFor="last_name"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Last name
+                  <Label htmlFor="last_name" className="block text-sm font-medium text-gray-700">
+                    {t('lastName')}
                   </Label>
                   <div className="mt-1">
                     <Input
@@ -190,18 +190,15 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                       required
                       maxLength={80}
                       className="appearance-none rounded-full relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 focus:z-10 sm:text-sm"
-                      placeholder="Last name"
+                      placeholder={t('lastName')}
                     />
                   </div>
                 </div>
               </div>
             )}
             <div>
-              <Label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email
+              <Label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                {t('email')}
               </Label>
               <div className="mt-1">
                 <Input
@@ -213,17 +210,14 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                   required
                   maxLength={50}
                   className="appearance-none rounded-full relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 focus:z-10 sm:text-sm"
-                  placeholder="Enter your email"
+                  placeholder={t('emailPlaceholder')}
                 />
               </div>
             </div>
-            {mode === "signup" && (
+            {mode === 'signup' && (
               <div>
-                <Label
-                  htmlFor="phone"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Phone (optional)
+                <Label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                  {t('phoneOptional')}
                 </Label>
                 <div className="mt-1">
                   <Input
@@ -233,32 +227,27 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                     autoComplete="tel"
                     maxLength={30}
                     className="appearance-none rounded-full relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 focus:z-10 sm:text-sm"
-                    placeholder="+1 (555) 123-4567"
+                    placeholder={t('phonePlaceholder')}
                   />
                 </div>
               </div>
             )}
 
             <div>
-              <Label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Password
+              <Label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                {t('password')}
               </Label>
               <div className="mt-1">
                 <Input
                   id="password"
                   name="password"
                   type="password"
-                  autoComplete={
-                    mode === 'signin' ? 'current-password' : 'new-password'
-                  }
+                  autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
                   required
                   minLength={8}
                   maxLength={100}
                   className="appearance-none rounded-full relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 focus:z-10 sm:text-sm"
-                  placeholder="Enter your password"
+                  placeholder={t('passwordPlaceholder')}
                 />
               </div>
               {mode === 'signin' && (
@@ -266,7 +255,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                   href="/forgot-password"
                   className="mt-2 text-sm text-emerald-600 hover:text-emerald-600"
                 >
-                  Forgot your password?
+                  {t('forgotPassword')}
                 </Link>
               )}
             </div>
@@ -293,27 +282,26 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                 {pending ? (
                   <>
                     <Loader2 className="animate-spin mr-2 h-4 w-4" />
-                    Loading...
+                    {tCommon('loading')}
                   </>
                 ) : mode === 'signin' ? (
-                  'Sign in'
+                  t('signIn')
                 ) : (
-                  'Sign up'
+                  t('signUp')
                 )}
               </Button>
             </div>
           </form>
         </div>
 
-        {/* Footer Text */}
         <p className="text-center text-xs text-slate-500">
-          By continuing, you agree to our{' '}
+          {t('termsFooter')}{' '}
           <Link href="/terms-of-service" className="text-emerald-600 hover:text-emerald-600">
-            Terms of Service
+            {t('termsOfService')}
           </Link>{' '}
-          and{' '}
+          {t('and')}{' '}
           <Link href="/privacy-policy" className="text-emerald-600 hover:text-emerald-600">
-            Privacy Policy
+            {t('privacyPolicy')}
           </Link>
         </p>
       </div>

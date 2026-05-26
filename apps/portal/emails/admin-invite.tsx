@@ -21,13 +21,14 @@ import {
   Tailwind,
   Text,
 } from '@react-email/components';
+import { getEmailLogoImageUrl } from '@/lib/email/brand-assets';
 
 export interface AdminInviteEmailProps {
   recipientName: string;
   recipientEmail: string;
   inviterName: string;
   inviterEmail?: string;
-  role: 'rhs_admin' | 'admin' | 'owner' | 'staff';
+  role: 'cp_admin' | 'rhs_admin' | 'admin' | 'owner' | 'staff';
   loginUrl: string;
   temporaryPassword?: string;
   companyName?: string;
@@ -39,13 +40,24 @@ const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://cryptopay.sale";
 
 // Role display names and colors
 const roleConfig = {
+  cp_admin: {
+    name: 'Super Administrator',
+    color: '#7c3aed',
+    icon: '👑',
+    permissions: [
+      'Full platform administration',
+      'Manage all merchants and users',
+      'Access audit logs and analytics',
+      'Configure system settings',
+    ],
+  },
   rhs_admin: {
     name: 'Super Administrator',
     color: '#7c3aed',
     icon: '👑',
     permissions: [
-      'Full system administration',
-      'Manage all tenants and users',
+      'Full platform administration',
+      'Manage all merchants and users',
       'Access audit logs and analytics',
       'Configure system settings',
     ],
@@ -66,9 +78,9 @@ const roleConfig = {
     color: '#0891b2',
     icon: '🏪',
     permissions: [
-      'Manage your restaurant profile',
-      'View orders and analytics',
-      'Manage menu and inventory',
+      'Manage your merchant profile',
+      'View payments and analytics',
+      'Configure payout wallets',
       'Access financial reports',
     ],
   },
@@ -124,11 +136,11 @@ export const AdminInviteEmail = ({
             {/* Logo */}
             <Section className="mt-[32px]">
               <Img
-                src={`${baseUrl}/logo-500.png`}
-                width="50"
-                height="50"
+                src={getEmailLogoImageUrl()}
+                width="56"
+                height="56"
                 alt={companyName}
-                className="my-0 mx-auto"
+                className="my-0 mx-auto rounded-[12px]"
               />
             </Section>
 
@@ -291,16 +303,14 @@ export const AdminInviteEmail = ({
 
 // Preview props for development/testing
 AdminInviteEmail.PreviewProps = {
-  recipientName: 'Wael Ghiloufi',
-  recipientEmail: "wael@cryptopay.sale",
-  inviterName: 'Anass Hassouni',
-  inviterEmail: "anass@cryptopay.sale",
+  recipientName: 'Alex Merchant',
+  recipientEmail: 'merchant@example.com',
+  inviterName: 'Crypto Pay Admin',
+  inviterEmail: 'noreply@cryptopay.sale',
   role: 'admin',
-  loginUrl: "https://cryptopay.sale/login",
-  temporaryPassword: 'Welcome2RHS!24',
+  loginUrl: 'https://cryptopay.sale/login',
+  temporaryPassword: 'TempPass123!',
   companyName: 'Crypto Pay',
-  inviteFromIp: '192.168.1.1',
-  inviteFromLocation: 'Montreal, Canada',
 } satisfies AdminInviteEmailProps;
 
 export default AdminInviteEmail;

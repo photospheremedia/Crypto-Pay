@@ -28,7 +28,7 @@ declare -A PREV_QUERIES=()
 print_header() {
     clear
     echo -e "${BLUE}╔════════════════════════════════════════════════════════════╗${NC}"
-    echo -e "${BLUE}║     🔍 Restaurant Hub Solution - Performance Monitor      ║${NC}"
+    echo -e "${BLUE}║     🔍 Crypto Pay - Performance Monitor                   ║${NC}"
     echo -e "${BLUE}╚════════════════════════════════════════════════════════════╝${NC}"
     echo ""
 }

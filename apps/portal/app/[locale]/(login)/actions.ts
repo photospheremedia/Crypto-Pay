@@ -4,7 +4,12 @@ import { z } from "zod";
 import { redirect } from "next/navigation";
 import { getSupabaseServerClient } from "@crypto-pay/db/supabaseServer";
 import { isAdminEmail } from "@/lib/admin-email";
+import {
+  ACCOUNT_WALLET_SETUP_PATH,
+  accountWalletSetupCallbackUrl,
+} from "@/lib/account/paths";
 import { sendWelcomeEmail } from "@/lib/email/triggers";
+import { listUserMerchantWallets } from "@/lib/wallets/db";
 
 export type ActionState = {
   error?: string;
@@ -70,6 +75,11 @@ export async function signIn(
       // Staff/Admin user → admin dashboard
       redirect("/admin/dashboard");
     }
+
+    const wallets = await listUserMerchantWallets(supabase, data.user.id);
+    if (wallets.length === 0) {
+      redirect(ACCOUNT_WALLET_SETUP_PATH);
+    }
   }
 
   // Regular customer user → account dashboard
@@ -124,7 +134,7 @@ export async function signUp(
       email,
       password,
       options: {
-        emailRedirectTo: `${appUrl}/auth/callback?next=/account/setup`,
+        emailRedirectTo: accountWalletSetupCallbackUrl(appUrl),
         data: {
           first_name: firstName,
           last_name: lastName,
@@ -156,21 +166,21 @@ export async function signUp(
     return { error: userMessage, email };
   }
 
-  // Best-effort welcome email; auth flow should not fail if email sending fails.
+  if (!data.session) {
+    redirect(`/login?created=1&verify=1&email=${encodeURIComponent(email)}`);
+  }
+
+  // Welcome only when session exists (skip if Supabase sends confirm email instead).
   try {
     await sendWelcomeEmail(email, {
       firstName,
-      dashboardUrl: `${appUrl}/account`,
+      dashboardUrl: `${appUrl}${ACCOUNT_WALLET_SETUP_PATH}`,
     });
   } catch (welcomeError) {
     console.error("[Auth] Welcome email failed:", welcomeError);
   }
 
-  if (!data.session) {
-    redirect(`/login?created=1&verify=1&email=${encodeURIComponent(email)}`);
-  }
-
-  redirect("/account/setup");
+  redirect(ACCOUNT_WALLET_SETUP_PATH);
 }
 
 export async function signOut() {

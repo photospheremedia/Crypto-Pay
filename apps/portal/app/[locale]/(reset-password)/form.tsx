@@ -3,13 +3,17 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, ArrowLeft, KeyRound, CheckCircle2, AlertCircle, Eye, EyeOff, ShieldCheck } from "lucide-react";
 import { getSupabaseBrowserClient } from "@crypto-pay/db/supabaseClient";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 
 export function ResetPasswordForm() {
+  const t = useTranslations("Auth");
+  const tCommon = useTranslations("Common");
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -111,8 +115,7 @@ export function ResetPasswordForm() {
   if (checkingSession) {
     return (
       <div className="min-h-[calc(100vh-120px)] flex flex-col items-center justify-center">
-        <div className="animate-spin h-8 w-8 border-2 border-emerald-500 border-t-transparent rounded-full" />
-        <p className="mt-4 text-slate-600">Verifying reset link...</p>
+        <LoadingIndicator message="verifyingResetLink" size="lg" />
       </div>
     );
   }
@@ -169,7 +172,7 @@ export function ResetPasswordForm() {
             </p>
             <div className="flex items-center justify-center gap-2 text-sm text-slate-500">
               <Loader2 className="h-4 w-4 animate-spin" />
-              Redirecting...
+              {tCommon("redirecting")}
             </div>
           </div>
         </div>
@@ -294,10 +297,10 @@ export function ResetPasswordForm() {
               {loading ? (
                 <>
                   <Loader2 className="animate-spin mr-2 h-4 w-4" />
-                  Resetting password...
+                  {tCommon("resettingPassword")}
                 </>
               ) : (
-                "Reset password"
+                t("resetPassword")
               )}
             </Button>
           </form>

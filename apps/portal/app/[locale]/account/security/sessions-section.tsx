@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { createBrowserClient } from "@supabase/ssr";
 import type { User } from "@supabase/supabase-js";
 import { Monitor, Smartphone, Tablet, Globe, Loader2 } from "lucide-react";
@@ -17,6 +18,7 @@ interface SessionsSectionProps {
 }
 
 export function SessionsSection({ user }: SessionsSectionProps) {
+  const tCommon = useTranslations("Common");
   const supabase = getSupabaseBrowserClient();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -119,7 +121,7 @@ export function SessionsSection({ user }: SessionsSectionProps) {
           className="flex items-center gap-2 text-sm font-medium text-red-600 hover:text-red-700 disabled:opacity-50"
         >
           {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-          {loading ? "Signing out..." : "Sign out all other sessions"}
+          {loading ? tCommon("signingOut") : "Sign out all other sessions"}
         </button>
       </div>
     </div>

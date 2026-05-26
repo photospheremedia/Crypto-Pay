@@ -3,12 +3,12 @@
 -- Go to: https://supabase.com/dashboard/project/xfairwgarmpvbogiuduk/auth/url-configuration
 
 -- Add these redirect URLs:
--- https://restauranthubsolution.com/auth/callback
--- https://www.restauranthubsolution.com/auth/callback
--- https://xfairwgarmpvbogiuduk.supabase.co/auth/callback (keep existing)
+-- https://cryptopay.sale/auth/callback
+-- https://www.cryptopay.sale/auth/callback
+-- https://<project-ref>.supabase.co/auth/callback (keep existing)
 
 -- Set Site URL to:
--- https://restauranthubsolution.com
+-- https://cryptopay.sale
 
 -- Additional redirect URLs to add:
 -- http://localhost:3000/auth/callback (for local development)

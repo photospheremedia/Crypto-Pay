@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import { ForgotPasswordForm } from "../(forgot-password)/form";
+import { PageLoading } from "@/components/ui/loading-indicator";
 
 export const metadata = {
   title: "Forgot Password | Crypto Pay",
@@ -8,11 +9,7 @@ export const metadata = {
 
 export default function ForgotPasswordPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin h-8 w-8 border-2 border-emerald-500 border-t-transparent rounded-full" />
-      </div>
-    }>
+    <Suspense fallback={<PageLoading />}>
       <ForgotPasswordForm />
     </Suspense>
   );

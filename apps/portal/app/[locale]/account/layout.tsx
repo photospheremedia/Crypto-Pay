@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { redirect } from "next/navigation";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { getSupabaseServerClient } from "@crypto-pay/db/supabaseServer";
 import { isAdminEmail } from "@/lib/admin-email";
 import { signOut } from "@/app/[locale]/(login)/actions";
@@ -9,7 +10,6 @@ import { mainBelowHeaderClass, stickyBelowHeaderClass } from "@/lib/layout-spaci
 import {
   LayoutDashboard,
   Wallet,
-  HeadphonesIcon,
   Settings,
   LogOut,
   Shield,
@@ -19,19 +19,12 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const navItems = [
-  { label: "Dashboard", href: "/account", icon: LayoutDashboard },
-  { label: "Wallet", href: "/account/get-started", icon: Wallet },
-  { label: "Security", href: "/account/security", icon: Shield },
-  { label: "Support", href: "/account/support", icon: HeadphonesIcon },
-  { label: "Settings", href: "/account/settings", icon: Settings },
-];
-
 export default async function AccountLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const t = await getTranslations("Account.nav");
   const supabase = await getSupabaseServerClient();
   const {
     data: { user },
@@ -53,6 +46,13 @@ export default async function AccountLayout({
     // non-critical
   }
 
+  const navItems = [
+    { label: t("dashboard"), href: "/account", icon: LayoutDashboard },
+    { label: t("wallet"), href: "/account?tab=wallets", icon: Wallet },
+    { label: t("security"), href: "/account/security", icon: Shield },
+    { label: t("settings"), href: "/account/settings", icon: Settings },
+  ] as const;
+
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-50 via-white to-slate-50">
       <CryptoPayHeader />
@@ -64,7 +64,7 @@ export default async function AccountLayout({
             <div className="rounded-2xl border border-slate-200/60 bg-white/80 backdrop-blur-sm p-5 shadow-lg shadow-slate-200/50 mb-4">
               <div className="flex items-center gap-4">
                 <div className="relative">
-                      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-emerald-500 via-emerald-400 to-cyan-600 text-white font-bold text-2xl shadow-md">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-emerald-500 via-emerald-400 to-cyan-600 text-white font-bold text-2xl shadow-md">
                     {(
                       user.user_metadata?.given_name ||
                       user.user_metadata?.full_name ||
@@ -92,7 +92,7 @@ export default async function AccountLayout({
                 className="group flex items-center gap-3 rounded-xl border border-purple-200/60 bg-linear-to-r from-purple-50 via-indigo-50 to-purple-50 px-4 py-3.5 text-sm font-semibold text-purple-700 shadow-md shadow-purple-100/50 transition-all hover:border-purple-300 hover:shadow-lg hover:-translate-y-0.5 mb-3"
               >
                 <Shield className="h-5 w-5 text-purple-600 transition-transform group-hover:scale-110" />
-                <span>Admin Dashboard</span>
+                <span>{t("adminDashboard")}</span>
               </Link>
             )}
 
@@ -115,7 +115,7 @@ export default async function AccountLayout({
                 className="group flex w-full items-center gap-3 rounded-xl border border-slate-200/60 bg-white/70 backdrop-blur-sm px-4 py-3 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-red-300/60 hover:bg-red-50/80 hover:text-red-600 hover:shadow-md hover:-translate-x-0.5"
               >
                 <LogOut className="h-4 w-4 transition-transform group-hover:scale-110" />
-                <span>Sign Out</span>
+                <span>{t("signOut")}</span>
               </button>
             </form>
           </div>

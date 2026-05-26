@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { createBrowserClient } from "@supabase/ssr";
 import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
@@ -19,6 +20,7 @@ interface ProfileFormProps {
 }
 
 export function ProfileForm({ user, profile }: ProfileFormProps) {
+  const tCommon = useTranslations("Common");
   const router = useRouter();
   const supabase = getSupabaseBrowserClient();
   const [loading, setLoading] = useState(false);
@@ -305,7 +307,7 @@ export function ProfileForm({ user, profile }: ProfileFormProps) {
           className="flex items-center gap-2 rounded-lg bg-emerald-500 px-6 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-          {loading ? "Saving..." : "Save Changes"}
+          {loading ? tCommon("saving") : tCommon("saveChanges")}
         </button>
       </div>
     </form>

@@ -11,7 +11,7 @@ Accept crypto payments instantly, securely, and globally. Non-custodial wallet-t
 ## Stack
 
 - pnpm monorepo (`@crypto-pay/portal`, `@crypto-pay/db`)
-- Next.js 16, Tailwind v4, Supabase (auth + admin from Restaurant Hub foundation)
+- Next.js 16, Tailwind v4, Supabase (auth + admin platform)
 - Live crypto-to-fiat rates via CoinGecko (`/api/crypto-rates`)
 
 ## Local development
@@ -25,6 +25,10 @@ pnpm dev:portal
 Open http://localhost:3001 — marketing pages are public (no sign-in required).
 
 Copy `apps/portal/.env.example` to `apps/portal/.env.local` and add your Supabase keys when connecting auth.
+
+**Sign in locally:** run `pnpm dev:setup`, then open http://localhost:3001/login (see [docs/LOCAL_DEV.md](docs/LOCAL_DEV.md)).
+
+**Docs:** [docs/README.md](docs/README.md) — includes [merchant account setup workflow](docs/ACCOUNT_SETUP_WORKFLOW.md).
 
 ## Deploy (Netlify + GitHub)
 
@@ -50,7 +54,7 @@ Production branch: `master`. Supabase: `usbxwewohpsbjwiuazpf`. Domain: `cryptopa
 |------|---------|
 | `apps/portal` | Crypto Pay website + account + admin |
 | `packages/db` | Supabase clients |
-| `supabase/` | Migrations (reuse/adapt from Restaurant Hub) |
+| `supabase/` | Migrations and edge functions |
 
 ## Branding
 

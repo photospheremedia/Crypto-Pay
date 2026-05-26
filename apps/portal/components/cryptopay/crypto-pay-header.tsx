@@ -59,7 +59,7 @@ export function CryptoPayHeader() {
         </nav>
 
         <div className="hidden items-center gap-2 sm:flex">
-          <LocaleSwitcher className="h-9 w-[140px] border-slate-200 dark:border-slate-700" />
+          <LocaleSwitcher />
           {isAuthed ? (
             <Button asChild variant="outline" size="sm" className="rounded-full">
               <Link href="/account">{tCommon("dashboard")}</Link>
@@ -93,7 +93,7 @@ export function CryptoPayHeader() {
       {mobileOpen && (
         <div className="border-t border-slate-200 px-4 py-4 md:hidden dark:border-slate-800">
           <div className="mb-4">
-            <LocaleSwitcher className="w-full border-slate-200 dark:border-slate-700" />
+            <LocaleSwitcher variant="select" className="w-full" />
           </div>
           <nav className="flex flex-col gap-1">
             {NAV_LINKS.map((link) => (

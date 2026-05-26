@@ -13,15 +13,24 @@ import {
   Award,
 } from "lucide-react";
 
-export const metadata: Metadata = createPageMetadata({
-  title: "About | Crypto Pay",
-  description:
-    "Learn about Crypto Pay. A team of business operators, technologists, and supply chain experts building tools to simplify business operations.",
-  path: "/about",
-  openGraphTitle: "Our Story: Crypto Pay",
-  openGraphDescription:
-    "Built by business operators for business operators. Simplifying delivery, supply, and brand management.",
-});
+type PageProps = {
+  params: Promise<{ locale: string }>;
+};
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+
+  return createPageMetadata({
+    locale,
+    title: "About | Crypto Pay",
+    description:
+      "Learn about Crypto Pay. A team of business operators, technologists, and supply chain experts building tools to simplify business operations.",
+    path: "/about",
+    openGraphTitle: "Our Story: Crypto Pay",
+    openGraphDescription:
+      "Built by business operators for business operators. Simplifying delivery, supply, and brand management.",
+  });
+}
 
 const values = [
   {

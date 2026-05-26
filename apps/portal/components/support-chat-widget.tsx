@@ -3,6 +3,7 @@
 
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { useChat } from "@ai-sdk/react";
+import { useTranslations } from "next-intl";
 import { DefaultChatTransport } from "ai";
 import { 
   MessageCircle, 
@@ -39,6 +40,7 @@ function getWelcomeMessage(userName?: string): string {
 }
 
 export function SupportChatWidget() {
+  const tCommon = useTranslations("Common");
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -235,7 +237,7 @@ export function SupportChatWidget() {
                 {isLoading ? (
                   <>
                     <span className="inline-block w-1.5 h-1.5 bg-emerald-200 rounded-full animate-pulse" />
-                    Thinking...
+                    {tCommon("thinking")}
                   </>
                 ) : (
                   <>

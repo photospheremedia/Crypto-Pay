@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getSupabaseServerClient } from "@crypto-pay/db/supabaseServer";
 import { isAdminEmail } from "@/lib/admin-email";
+import { ACCOUNT_WALLET_SETUP_PATH } from "@/lib/account/paths";
+import { listUserMerchantWallets } from "@/lib/wallets/db";
 
 /**
  * OAuth Callback Handler
@@ -19,20 +21,16 @@ import { isAdminEmail } from "@/lib/admin-email";
  * 
  * Modes:
  * - signin: User signing in with existing account → redirect to /account or /admin
- * - signup: User signing up with new account → redirect to /account
+ * - signup: User signing up with new account → wallet onboarding on /account
  */
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");
   const next = searchParams.get("next");
   const mode = searchParams.get("mode") ?? "signin";
-  const priceId = searchParams.get("priceId");
 
-  // Validate redirect URL - must start with /
-  let redirectPath = next ?? "/account";
-  if (!redirectPath.startsWith("/")) {
-    redirectPath = "/account";
-  }
+  const safeNext =
+    next && next.startsWith("/") && next !== "/" ? next : null;
 
   // No authorization code - redirect to error page
   if (!code) {
@@ -79,14 +77,24 @@ export async function GET(request: NextRequest) {
       .maybeSingle();
 
     if (membership || isAdminEmail(data.session.user.email)) {
-      // Staff/Admin user → admin dashboard
-      const target = next && next !== "/" ? next : "/admin/dashboard";
+      const target = safeNext ?? "/admin/dashboard";
       return NextResponse.redirect(new URL(target, baseUrl));
     }
 
-    // Regular customer user → account dashboard
-    // Note: /onboarding removed as it doesn't exist
-    const target = next && next !== "/" ? next : "/account";
+    let target = safeNext;
+    if (!target) {
+      if (mode === "signup") {
+        target = ACCOUNT_WALLET_SETUP_PATH;
+      } else {
+        const wallets = await listUserMerchantWallets(
+          supabase,
+          data.session.user.id,
+        );
+        target =
+          wallets.length === 0 ? ACCOUNT_WALLET_SETUP_PATH : "/account";
+      }
+    }
+
     return NextResponse.redirect(new URL(target, baseUrl));
 
   } catch (err) {

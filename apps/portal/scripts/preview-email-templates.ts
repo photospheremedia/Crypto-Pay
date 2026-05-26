@@ -19,6 +19,26 @@ const samples: Record<string, Record<string, unknown>> = {
     resetUrl: "https://cryptopay.sale/reset-password?token=example",
     requestTime: new Date().toLocaleString(),
   },
+  wallet_pending_admin: {
+    kind: "submitted",
+    merchantEmail: "merchant@example.com",
+    walletLabel: "Main BTC",
+    walletNetwork: "btc",
+    walletAddress: "bc1qexampleaddress000000000000000000000",
+    walletId: "00000000-0000-4000-8000-000000000001",
+    source: "portal",
+  },
+  wallet_status_merchant: {
+    status: "verified",
+    walletLabel: "Main BTC",
+    walletNetwork: "btc",
+    walletAddress: "bc1qexampleaddress000000000000000000000",
+    subjectLine: "Wallet verified: Main BTC",
+  },
+  wallet_submitted_merchant: {
+    walletLabel: "Main BTC",
+    walletNetwork: "btc",
+  },
 };
 
 for (const [name, data] of Object.entries(samples)) {

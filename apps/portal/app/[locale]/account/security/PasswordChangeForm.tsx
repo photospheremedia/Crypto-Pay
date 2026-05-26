@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Loader2, Eye, EyeOff, CheckCircle2, XCircle } from "lucide-react";
 
 interface PasswordChangeFormProps {
@@ -9,21 +10,22 @@ interface PasswordChangeFormProps {
 }
 
 export default function PasswordChangeForm({ hasPassword, userEmail }: PasswordChangeFormProps) {
+  const t = useTranslations("Account.password");
+  const tCommon = useTranslations("Common");
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [error, setError] = useState("");
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
+
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  // Password strength indicator
   const getPasswordStrength = (password: string) => {
     if (!password) return { strength: 0, label: "", color: "" };
-    
+
     let strength = 0;
     if (password.length >= 8) strength++;
     if (password.length >= 12) strength++;
@@ -31,10 +33,10 @@ export default function PasswordChangeForm({ hasPassword, userEmail }: PasswordC
     if (/\d/.test(password)) strength++;
     if (/[^a-zA-Z0-9]/.test(password)) strength++;
 
-    if (strength <= 2) return { strength, label: "Weak", color: "text-red-600 dark:text-red-400" };
-    if (strength <= 3) return { strength, label: "Fair", color: "text-yellow-600 dark:text-yellow-400" };
-    if (strength <= 4) return { strength, label: "Good", color: "text-blue-600 dark:text-blue-400" };
-    return { strength, label: "Strong", color: "text-green-600 dark:text-green-400" };
+    if (strength <= 2) return { strength, label: t("strengthWeak"), color: "text-red-600 dark:text-red-400" };
+    if (strength <= 3) return { strength, label: t("strengthFair"), color: "text-yellow-600 dark:text-yellow-400" };
+    if (strength <= 4) return { strength, label: t("strengthGood"), color: "text-blue-600 dark:text-blue-400" };
+    return { strength, label: t("strengthStrong"), color: "text-green-600 dark:text-green-400" };
   };
 
   const passwordStrength = getPasswordStrength(newPassword);
@@ -45,21 +47,20 @@ export default function PasswordChangeForm({ hasPassword, userEmail }: PasswordC
     setError("");
     setSuccessMessage("");
 
-    // Validation
     if (hasPassword && !currentPassword) {
-      setError("Current password is required");
+      setError(t("currentRequired"));
       setLoading(false);
       return;
     }
 
     if (newPassword.length < 8) {
-      setError("Password must be at least 8 characters");
+      setError(t("minLength"));
       setLoading(false);
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setError("Passwords do not match");
+      setError(t("mismatch"));
       setLoading(false);
       return;
     }
@@ -77,17 +78,17 @@ export default function PasswordChangeForm({ hasPassword, userEmail }: PasswordC
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to update password");
+        throw new Error(data.error || t("updateFailed"));
       }
 
-      setSuccessMessage(hasPassword ? "Password updated successfully" : "Password set successfully");
+      setSuccessMessage(hasPassword ? t("updatedSuccess") : t("setSuccess"));
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
-      
+
       setTimeout(() => setSuccessMessage(""), 5000);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : t("updateFailed"));
     } finally {
       setLoading(false);
     }
@@ -108,14 +109,12 @@ export default function PasswordChangeForm({ hasPassword, userEmail }: PasswordC
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to send reset email");
+        throw new Error(data.error || t("resetEmailFailed"));
       }
 
-      setSuccessMessage(
-        data.message || "If an account exists for this email, a reset link has been sent."
-      );
-    } catch (err: any) {
-      setError(err.message);
+      setSuccessMessage(data.message || t("resetEmailSent"));
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : t("resetEmailFailed"));
     } finally {
       setLoading(false);
     }
@@ -123,7 +122,6 @@ export default function PasswordChangeForm({ hasPassword, userEmail }: PasswordC
 
   return (
     <div className="space-y-6">
-      {/* Success/Error Messages */}
       {successMessage && (
         <div className="flex items-center gap-2 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-900/30 rounded-lg">
           <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400" />
@@ -139,11 +137,10 @@ export default function PasswordChangeForm({ hasPassword, userEmail }: PasswordC
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Current Password (only if user has password) */}
         {hasPassword && (
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Current Password
+              {t("currentPassword")}
             </label>
             <div className="relative">
               <input
@@ -151,8 +148,8 @@ export default function PasswordChangeForm({ hasPassword, userEmail }: PasswordC
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white pr-10"
-                aria-label="Current password"
-                placeholder="Enter current password"
+                aria-label={t("currentPassword")}
+                placeholder={t("currentPasswordPlaceholder")}
                 required
               />
               <button
@@ -166,10 +163,9 @@ export default function PasswordChangeForm({ hasPassword, userEmail }: PasswordC
           </div>
         )}
 
-        {/* New Password */}
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            New Password
+            {t("newPassword")}
           </label>
           <div className="relative">
             <input
@@ -177,8 +173,8 @@ export default function PasswordChangeForm({ hasPassword, userEmail }: PasswordC
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white pr-10"
-              aria-label="New password"
-              placeholder="Enter new password"
+              aria-label={t("newPassword")}
+              placeholder={t("newPasswordPlaceholder")}
               required
               minLength={8}
             />
@@ -190,41 +186,37 @@ export default function PasswordChangeForm({ hasPassword, userEmail }: PasswordC
               {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
-          
-          {/* Password Strength Indicator */}
+
           {newPassword && (
             <div className="mt-2">
               <div className="flex items-center gap-2 mb-1">
                 <div className="flex-1 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                  <div 
+                  <div
                     className={`h-full transition-all ${
-                      passwordStrength.strength <= 2 ? 'bg-red-500' :
-                      passwordStrength.strength <= 3 ? 'bg-yellow-500' :
-                      passwordStrength.strength <= 4 ? 'bg-blue-500' : 'bg-green-500'
+                      passwordStrength.strength <= 2 ? "bg-red-500" :
+                      passwordStrength.strength <= 3 ? "bg-yellow-500" :
+                      passwordStrength.strength <= 4 ? "bg-blue-500" : "bg-green-500"
                     }`}
                     style={{ width: `${(passwordStrength.strength / 5) * 100}%` }}
                     role="progressbar"
                     aria-valuenow={passwordStrength.strength}
                     aria-valuemin={0}
                     aria-valuemax={5}
-                    aria-label="Password strength indicator"
+                    aria-label={t("strengthLabel")}
                   />
                 </div>
                 <span className={`text-xs font-medium ${passwordStrength.color}`}>
                   {passwordStrength.label}
                 </span>
               </div>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                Use at least 8 characters with a mix of letters, numbers, and symbols
-              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">{t("strengthHint")}</p>
             </div>
           )}
         </div>
 
-        {/* Confirm Password */}
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Confirm New Password
+            {t("confirmPassword")}
           </label>
           <div className="relative">
             <input
@@ -232,8 +224,8 @@ export default function PasswordChangeForm({ hasPassword, userEmail }: PasswordC
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white pr-10"
-              aria-label="Confirm new password"
-              placeholder="Confirm new password"
+              aria-label={t("confirmPassword")}
+              placeholder={t("confirmPasswordPlaceholder")}
               required
             />
             <button
@@ -246,7 +238,6 @@ export default function PasswordChangeForm({ hasPassword, userEmail }: PasswordC
           </div>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex items-center gap-3 pt-4">
           <button
             type="submit"
@@ -254,7 +245,7 @@ export default function PasswordChangeForm({ hasPassword, userEmail }: PasswordC
             className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
             {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-            {hasPassword ? "Update Password" : "Set Password"}
+            {hasPassword ? t("updateButton") : t("setButton")}
           </button>
 
           {hasPassword && (
@@ -264,7 +255,7 @@ export default function PasswordChangeForm({ hasPassword, userEmail }: PasswordC
               disabled={loading}
               className="px-6 py-2 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-lg transition-colors"
             >
-              Send Reset Email
+              {tCommon("sendResetEmail")}
             </button>
           )}
         </div>

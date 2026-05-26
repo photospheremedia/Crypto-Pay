@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,6 +45,7 @@ type UserDetail = {
 };
 
 export default function AdminUserDetailPage() {
+  const tCommon = useTranslations("Common");
   const router = useRouter();
   const params = useParams<{ id: string }>();
   const userId = String(params.id || "");
@@ -160,7 +162,7 @@ export default function AdminUserDetailPage() {
     return (
       <div className="flex min-h-[320px] items-center justify-center text-slate-500">
         <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-        Loading user details...
+        {tCommon("loading")}
       </div>
     );
   }
@@ -220,7 +222,8 @@ export default function AdminUserDetailPage() {
               <option value="manager">manager</option>
               <option value="owner">owner</option>
               <option value="admin">admin</option>
-              <option value="rhs_admin">rhs_admin</option>
+              <option value="cp_admin">cp_admin (Super Admin)</option>
+              <option value="rhs_admin">rhs_admin (legacy)</option>
             </select>
           </div>
           <div>
@@ -240,10 +243,10 @@ export default function AdminUserDetailPage() {
             {saving ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Saving...
+                {tCommon("saving")}
               </>
             ) : (
-              "Save changes"
+              tCommon("saveChanges")
             )}
           </Button>
         </form>
@@ -275,7 +278,7 @@ export default function AdminUserDetailPage() {
               {working === "revoke" ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Revoking...
+                  {tCommon("processing")}
                 </>
               ) : (
                 "Revoke sessions"
@@ -285,7 +288,7 @@ export default function AdminUserDetailPage() {
               {working === "delete" ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Deleting...
+                  {tCommon("deleting")}
                 </>
               ) : (
                 "Delete user"

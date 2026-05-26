@@ -9,6 +9,7 @@
   "scripts": {
     "build": "pnpm --filter @crypto-pay/portal build",
     "dev:portal": "pnpm --filter @crypto-pay/portal dev --port 3001",
+    "dev:setup": "pnpm --filter @crypto-pay/portal dev:setup",
     "build:portal": "pnpm --filter @crypto-pay/portal build",
     "typecheck:portal": "pnpm --filter @crypto-pay/portal typecheck",
     "test": "pnpm --filter @crypto-pay/portal test",
@@ -35,6 +36,7 @@
     "netlify:audit": "./scripts/netlify-audit-sites.sh",
     "netlify:secrets": "./scripts/setup-netlify-github-secrets.sh",
     "netlify:env-sync": "./scripts/sync-netlify-env.sh",
+    "netlify:notifications": "./scripts/setup-netlify-notifications.sh",
     "netlify:status": "cd apps/portal && pnpm exec netlify status",
     "netlify:deploy": "cd apps/portal && pnpm exec netlify deploy --build --prod",
     "netlify:preview": "cd apps/portal && pnpm exec netlify deploy --build",

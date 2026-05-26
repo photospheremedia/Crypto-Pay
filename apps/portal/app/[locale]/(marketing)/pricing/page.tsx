@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { Check, Receipt, Building2 } from "lucide-react";
 import { Section, SectionHeading } from "@/components/cryptopay/marketing-section";
 import { Button } from "@/components/ui/button";
@@ -13,62 +14,77 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { PRICING } from "@/lib/cryptopay/constants";
-import { createPageMetadata } from "@/lib/site-metadata";
+import { createLocalizedMetadata } from "@/lib/site-metadata";
 
-export const metadata: Metadata = createPageMetadata({
-  title: "Pricing | Crypto Pay",
-  description: "Straightforward pricing for businesses accepting crypto payments.",
-  path: "/pricing",
-  openGraphTitle: "Simple, Transparent Pricing",
-  openGraphDescription:
-    "Straightforward pricing for businesses accepting crypto payments. Direct wallet settlement included.",
-});
+type PageProps = {
+  params: Promise<{ locale: string }>;
+};
 
-const planCards = [
-  {
-    name: PRICING.standard.planName,
-    icon: Receipt,
-    price: `${PRICING.standard.baseFeePercent}%`,
-    subtitle: "base fee per successful transaction",
-    note: "No hidden platform charges",
-    cta: "Get started",
-    href: "/signup",
-    highlight: true,
-    features: [
-      "Direct wallet settlement",
-      "Crypto checkout links and invoices",
-      "Real-time status tracking",
-      "Core reporting and exports",
-      "Email onboarding support",
-    ],
-  },
-  {
-    name: "Business Scale",
-    icon: Building2,
-    price: "Custom",
-    subtitle: "volume-based pricing",
-    note: "For multi-location operations",
-    cta: "Talk to sales",
-    href: "/contact",
-    highlight: false,
-    features: [
-      "Everything in Standard",
-      "Custom settlement and reporting",
-      "Priority support and SLA options",
-      "Dedicated integration support",
-      "Enterprise security review",
-    ],
-  },
-];
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Pricing" });
 
-export default function PricingPage() {
+  return createLocalizedMetadata({
+    locale,
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+    path: "/pricing",
+    openGraphTitle: t("ogTitle"),
+    openGraphDescription: t("ogDescription"),
+  });
+}
+
+export default async function PricingPage({ params }: PageProps) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  const t = await getTranslations("Pricing");
+  const tCommon = await getTranslations("Common");
+
+  const planCards = [
+    {
+      name: PRICING.standard.planName,
+      icon: Receipt,
+      price: `${PRICING.standard.baseFeePercent}%`,
+      subtitle: t("standard.subtitle"),
+      note: t("standard.note"),
+      cta: tCommon("getStarted"),
+      href: "/signup",
+      highlight: true,
+      features: [
+        t("standard.features.directSettlement"),
+        t("standard.features.checkoutLinks"),
+        t("standard.features.statusTracking"),
+        t("standard.features.reporting"),
+        t("standard.features.support"),
+      ],
+    },
+    {
+      name: t("business.name"),
+      icon: Building2,
+      price: t("business.price"),
+      subtitle: t("business.subtitle"),
+      note: t("business.note"),
+      cta: tCommon("talkToSales"),
+      href: "/contact",
+      highlight: false,
+      features: [
+        t("business.features.everythingStandard"),
+        t("business.features.customReporting"),
+        t("business.features.prioritySupport"),
+        t("business.features.integrationSupport"),
+        t("business.features.securityReview"),
+      ],
+    },
+  ] as const;
+
   return (
     <>
       <Section belowHeader>
         <SectionHeading
-          eyebrow="Pricing"
-          title="Simple pricing for serious teams"
-          description="Start quickly with transparent transaction pricing, then move to custom commercial terms as your volume scales."
+          eyebrow={t("eyebrow")}
+          title={t("title")}
+          description={t("description")}
         />
         <div className="grid gap-6 md:grid-cols-2">
           {planCards.map((plan) => {
@@ -83,12 +99,12 @@ export default function PricingPage() {
                 }
               >
                 <CardHeader>
-              <div className="flex items-center gap-3">
-                <div className="flex size-10 items-center justify-center rounded-xl bg-white shadow-sm dark:bg-slate-800">
-                  <Icon className="size-5 text-emerald-600" />
-                </div>
-                <CardTitle>{plan.name}</CardTitle>
-              </div>
+                  <div className="flex items-center gap-3">
+                    <div className="flex size-10 items-center justify-center rounded-xl bg-white shadow-sm dark:bg-slate-800">
+                      <Icon className="size-5 text-emerald-600" />
+                    </div>
+                    <CardTitle>{plan.name}</CardTitle>
+                  </div>
                   <CardDescription className="pt-2">
                     <span className="block text-4xl font-bold text-slate-900 dark:text-white">
                       {plan.price}
@@ -130,17 +146,15 @@ export default function PricingPage() {
       <Section>
         <Card className="mx-auto max-w-xl border-slate-200/80 text-center dark:border-slate-800">
           <CardHeader>
-            <CardTitle>Multi-location setup?</CardTitle>
-            <CardDescription>
-              Contact us for volume pricing and rollout planning.
-            </CardDescription>
+            <CardTitle>{t("multiLocationTitle")}</CardTitle>
+            <CardDescription>{t("multiLocationDescription")}</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-wrap justify-center gap-3 pb-8">
             <Button asChild className="rounded-full">
-              <Link href="/contact">Contact sales</Link>
+              <Link href="/contact">{t("contactSales")}</Link>
             </Button>
             <Button asChild variant="outline" className="rounded-full">
-              <Link href="/signup">Create account</Link>
+              <Link href="/signup">{t("createAccount")}</Link>
             </Button>
           </CardContent>
         </Card>

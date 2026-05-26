@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useActionState, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -44,6 +45,7 @@ const HOW_HEARD_OPTIONS = [
 ];
 
 export function SignupForm() {
+  const tCommon = useTranslations('Common');
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect');
   const priceId = searchParams.get('priceId');
@@ -490,7 +492,7 @@ export function SignupForm() {
                     {pending ? (
                       <>
                         <Loader2 className="animate-spin mr-2 h-4 w-4" />
-                        Creating account...
+                        {tCommon('creatingAccount')}
                       </>
                     ) : (
                       'Create account'

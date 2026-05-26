@@ -23,9 +23,9 @@ const blocks = [
   },
   {
     icon: Webhook,
-    title: "Callbacks & webhooks",
+    title: "Runner handshake",
     description:
-      "HTTP callbacks when status changes — unpaid, in process, paid. Mark orders fulfilled when confirmed.",
+      "HMAC-signed Supabase Edge API to attach named payout wallets per merchant (pending until admin verifies).",
   },
   {
     icon: Code2,
@@ -35,12 +35,18 @@ const blocks = [
   },
 ];
 
-const example = `POST /api/charges
+const example = `POST /functions/v1/runner-api/v1/wallets
+Headers:
+  X-CryptoPay-Key: cpk_...
+  X-CryptoPay-Timestamp: 1710000000
+  X-CryptoPay-Signature: hmac_sha256(secret, "{ts}.POST./v1/wallets.{body}")
+
 {
-  "amount": 84.50,
-  "currency": "USD",
-  "asset": "USDC",
-  "reference": "order_10429"
+  "email": "merchant@example.com",
+  "external_id": "store-btc-1",
+  "label": "Main BTC",
+  "wallet_network": "btc",
+  "wallet_address": "bc1q..."
 }`;
 
 export default function DevelopersPage() {

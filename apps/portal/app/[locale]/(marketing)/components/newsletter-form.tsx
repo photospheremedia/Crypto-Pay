@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { Mail, CheckCircle2, Loader2, Sparkles } from "lucide-react";
 import { subscribeToNewsletter, type NewsletterState } from "../actions/newsletter";
 
@@ -25,6 +26,7 @@ export function NewsletterForm({
   description,
   className = "",
 }: NewsletterFormProps) {
+  const tCommon = useTranslations("Common");
   const [state, formAction, pending] = useActionState<NewsletterState, FormData>(
     subscribeToNewsletter,
     {}
@@ -77,7 +79,10 @@ export function NewsletterForm({
               className="rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-800 disabled:opacity-60 transition"
             >
               {pending ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <span className="inline-flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  {tCommon("subscribing")}
+                </span>
               ) : (
                 "Subscribe"
               )}
@@ -139,7 +144,7 @@ export function NewsletterForm({
             {pending ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Subscribing...
+                {tCommon("subscribing")}
               </>
             ) : (
               "Subscribe for free"
@@ -199,7 +204,7 @@ export function NewsletterForm({
             {pending ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Joining...
+                {tCommon("joining")}
               </>
             ) : (
               "Join for free →"

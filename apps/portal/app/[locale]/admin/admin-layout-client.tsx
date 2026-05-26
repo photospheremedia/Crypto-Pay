@@ -17,6 +17,7 @@ import {
   Mail,
   MessageSquare,
   Crown,
+  Wallet,
 } from "lucide-react";
 import { AdminNotifications } from "@/components/admin/admin-notifications";
 import { AdminUserMenu } from "@/components/admin/admin-user-menu";
@@ -38,6 +39,7 @@ const navigation = [
   },
   { name: "Customers", href: "/admin/customers", icon: Users },
   { name: "Users", href: "/admin/users", icon: Users },
+  { name: "Wallet review", href: "/admin/wallets", icon: Wallet },
   {
     name: "Growth",
     icon: Mail,

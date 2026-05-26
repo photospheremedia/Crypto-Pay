@@ -3,8 +3,12 @@
  * Resend/React Email patterns: absolute image URLs, table layout, preheader, branded masthead.
  */
 
-import { emailLogoBlock } from "./brand-mark";
-import { getEmailLogoImageUrl, emailImgTag } from "./brand-assets";
+import {
+  getEmailLogoImageUrl,
+  emailImgTag,
+  emailLogoHeaderBlock,
+  emailLogoMarkImg,
+} from "./brand-assets";
 import { emailBrandColors, EMAIL } from "./config";
 
 export interface BaseTemplateOptions {
@@ -59,9 +63,13 @@ export const baseStyles = `
 
 export function generateBrandedHeader(minimal = false): string {
   const logoUrl = getEmailLogoImageUrl();
-  const markCell = logoUrl
-    ? emailImgTag(logoUrl, `${EMAIL.brandName} logo`, 56, 56, "border-radius: 14px; margin: 0 auto;")
-    : emailLogoBlock({ markSize: 48, showWordmark: false, centered: true });
+  const markCell = emailImgTag(
+    logoUrl,
+    `${EMAIL.brandName} logo`,
+    56,
+    56,
+    "border-radius: 14px; margin: 0 auto;",
+  );
 
   if (minimal) {
     return `
@@ -83,7 +91,7 @@ export function generateBrandedHeader(minimal = false): string {
   return `
   <tr>
     <td class="email-masthead" style="background: linear-gradient(135deg, ${brandColors.primary} 0%, ${brandColors.primaryDark} 55%, #0891b2 100%); padding: 36px 32px 40px; text-align: center; border-radius: 12px 12px 0 0;">
-      ${emailLogoBlock({
+      ${emailLogoHeaderBlock({
         markSize: 52,
         showWordmark: true,
         brandName: EMAIL.brandName,
@@ -132,7 +140,7 @@ export function generateBrandedFooter(showSocial: boolean): string {
                   <table role="presentation" cellspacing="0" cellpadding="0" border="0">
                     <tr>
                       <td style="padding-right: 10px; vertical-align: middle;">
-                        ${emailLogoBlock({ markSize: 36, showWordmark: false, centered: false })}
+                        ${emailLogoMarkImg(36, false)}
                       </td>
                       <td style="vertical-align: middle;">
                         <p style="margin: 0; font-size: 15px; font-weight: 700; color: ${brandColors.secondary};">${EMAIL.brandName}</p>

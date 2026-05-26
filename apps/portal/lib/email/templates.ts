@@ -4,11 +4,15 @@
  */
 
 import { generateBaseTemplate, components, brandColors } from './base-template';
+import { walletEmailTemplates } from './templates/wallet';
 
 export type EmailTemplate = 
   | "welcome"
   | "email_verification"
   | "password_reset"
+  | "wallet_pending_admin"
+  | "wallet_status_merchant"
+  | "wallet_submitted_merchant"
   | "order_confirmation"
   | "order_shipped"
   | "order_delivered"
@@ -37,29 +41,31 @@ export const emailTemplates: Record<EmailTemplate, TemplateConfig> = {
   // ============================================
   
   welcome: {
-    subject: "Welcome to Crypto Pay — your account is ready",
+    subject: "Welcome to Crypto Pay — add your payout wallet",
     generateHtml: (data) =>
       generateBaseTemplate(
         `
-      ${components.iconHero("👋", `Welcome, ${data.firstName || "there"}!`, "Your merchant account is ready — accept crypto and settle to your wallet.")}
+      ${components.iconHero("👋", `Welcome, ${data.firstName || "there"}!`, "One login — add as many payout wallets as you need.")}
       ${components.contentOpen()}
-          ${components.paragraph(`Thanks for joining <strong>Crypto Pay</strong>${data.businessName ? ` for <strong>${data.businessName}</strong>` : ""}.`)}
+          ${components.paragraph(`Thanks for joining <strong>Crypto Pay</strong>${data.businessName ? ` for <strong>${data.businessName}</strong>` : ""}. Your next step is to add a public payout address (we never ask for private keys).`)}
           ${components.card(
             `
-            <p style="margin: 0 0 12px; font-size: 14px; font-weight: 600; color: ${brandColors.secondary};">Quick start</p>
+            <p style="margin: 0 0 12px; font-size: 14px; font-weight: 600; color: ${brandColors.secondary};">Setup checklist</p>
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-              <tr><td style="padding: 6px 0;"><span style="color: ${brandColors.primary};">✓</span> <span style="margin-left: 8px;">Account created</span></td></tr>
-              <tr><td style="padding: 6px 0;"><span style="color: ${brandColors.textMuted};">○</span> <span style="margin-left: 8px;">Connect your payout wallet</span></td></tr>
-              <tr><td style="padding: 6px 0;"><span style="color: ${brandColors.textMuted};">○</span> <span style="margin-left: 8px;">Create your first payment link</span></td></tr>
+              <tr><td style="padding: 6px 0;"><span style="color: ${brandColors.primary}; font-weight: 700;">✓</span> <span style="margin-left: 8px;">Account created</span></td></tr>
+              <tr><td style="padding: 6px 0;"><span style="color: #0891b2; font-weight: 700;">→</span> <span style="margin-left: 8px;"><strong>Add payout wallet</strong> (BTC, ETH, USDT, …)</span></td></tr>
+              <tr><td style="padding: 6px 0;"><span style="color: ${brandColors.textMuted};">○</span> <span style="margin-left: 8px;">Admin verifies each address</span></td></tr>
+              <tr><td style="padding: 6px 0;"><span style="color: ${brandColors.textMuted};">○</span> <span style="margin-left: 8px;">Accept payments (coming soon)</span></td></tr>
             </table>
           `,
             { highlight: true },
           )}
-          ${components.button("Open dashboard", (data.dashboardUrl as string) || "https://cryptopay.sale/account")}
-          ${components.paragraph(`Questions? Email <a href="mailto:support@cryptopay.sale" style="color: ${brandColors.primary};">support@cryptopay.sale</a>`, { muted: true, center: true })}
+          ${components.button("Add payout wallet", (data.dashboardUrl as string) || "https://cryptopay.sale/account?tab=wallets")}
+          ${components.paragraph(`You'll receive at most a few transactional emails during setup (wallet received, verified, or changes needed).`, { small: true, muted: true, center: true })}
+          ${components.paragraph(`Questions? <a href="mailto:support@cryptopay.sale" style="color: ${brandColors.primary};">support@cryptopay.sale</a>`, { muted: true, center: true })}
       ${components.contentClose()}
     `,
-        { preheader: `Welcome ${data.firstName || ""} — get started with Crypto Pay.` },
+        { preheader: `Welcome ${data.firstName || ""} — add your first payout wallet.` },
       ),
   },
 
@@ -346,7 +352,7 @@ export const emailTemplates: Record<EmailTemplate, TemplateConfig> = {
             ${components.card(`
               <p style="margin: 0 0 8px; font-size: 13px; font-weight: 600; color: ${brandColors.secondary};">Payment Terms</p>
               <p style="margin: 0; font-size: 13px; color: ${brandColors.textLight};">
-                ${data.paymentTerms || 'Net 30'} • Make checks payable to Crypto Pay Solution<br>
+                ${data.paymentTerms || 'Net 30'} • Make checks payable to Crypto Pay<br>
                 Bank: First National • Account: XXXX-XXXX-1234
               </p>
             `)}
@@ -766,6 +772,8 @@ export const emailTemplates: Record<EmailTemplate, TemplateConfig> = {
       </tr>
     `, { preheader: `Your $${data.creditLimit} credit limit has been approved!` }),
   },
+
+  ...walletEmailTemplates,
 
   low_stock_alert: {
     subject: "⚠️ Low Stock Alert - Reorder Now",

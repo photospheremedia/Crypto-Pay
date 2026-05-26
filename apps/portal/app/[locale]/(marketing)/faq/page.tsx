@@ -14,15 +14,24 @@ import { createPageMetadata } from "@/lib/site-metadata";
 import { getFAQJsonLd } from "@/lib/json-ld";
 import { CRYPTO_FAQS, FAQ_CATEGORIES } from "@/lib/cryptopay/faqs";
 
-export const metadata: Metadata = createPageMetadata({
-  title: "FAQ | Crypto Pay",
-  description:
-    "Frequently asked questions about Crypto Pay — wallet settlement, supported assets, pricing, and API integration.",
-  path: "/faq",
-  openGraphTitle: "Crypto Pay — Frequently Asked Questions",
-  openGraphDescription:
-    "Answers to common questions about accepting crypto payments with Crypto Pay.",
-});
+type PageProps = {
+  params: Promise<{ locale: string }>;
+};
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+
+  return createPageMetadata({
+    locale,
+    title: "FAQ | Crypto Pay",
+    description:
+      "Frequently asked questions about Crypto Pay — wallet settlement, supported assets, pricing, and API integration.",
+    path: "/faq",
+    openGraphTitle: "Crypto Pay — Frequently Asked Questions",
+    openGraphDescription:
+      "Answers to common questions about accepting crypto payments with Crypto Pay.",
+  });
+}
 
 export default function FaqPage() {
   const faqJsonLd = getFAQJsonLd(

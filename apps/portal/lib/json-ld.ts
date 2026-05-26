@@ -112,7 +112,7 @@ export function getOrganizationJsonLd(): OrganizationJsonLd {
     "@type": "Organization",
     name: "Crypto Pay",
     url: process.env.NEXT_PUBLIC_APP_URL || "https://cryptopay.sale",
-    logo: `${process.env.NEXT_PUBLIC_APP_URL || "https://cryptopay.sale"}/logo.png`,
+    logo: `${process.env.NEXT_PUBLIC_APP_URL || "https://cryptopay.sale"}/email/logo.png`,
     description: "All-in-one platform for restaurant delivery management, supplies, and technology solutions",
     sameAs: sameAs.length > 0 ? sameAs : undefined,
     contactPoint: {

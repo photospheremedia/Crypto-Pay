@@ -5,6 +5,7 @@ import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { LoadingIndicator } from "@/components/ui/loading-indicator";
 
 interface PageHeaderProps {
   title: string;
@@ -204,7 +205,7 @@ export function EmptyState({
 export function LoadingSpinner({ className }: { className?: string }) {
   return (
     <div className={cn("flex items-center justify-center py-12", className)}>
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500" />
+      <LoadingIndicator size="lg" />
     </div>
   );
 }

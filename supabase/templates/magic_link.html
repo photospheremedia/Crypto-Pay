@@ -1,44 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <title>Sign in to Crypto Pay — Crypto Pay</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #f9fafb; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #f9fafb;">
+<body style="margin:0;padding:0;background:#f3f4f6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;">
+  <div style="display:none;max-height:0;overflow:hidden;">Your secure one-time sign-in link.</div>
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f3f4f6;">
     <tr>
-      <td align="center" style="padding: 40px 16px;">
-        <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width: 600px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-          <!-- Header -->
+      <td align="center" style="padding:32px 16px;">
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(15,23,42,0.08);">
           <tr>
-            <td style="padding: 32px; text-align: center;">
-              <div style="width: 64px; height: 64px; background: #f0fdf4; border-radius: 50%; margin: 0 auto 16px; line-height: 64px;">
-                <span style="font-size: 32px;">✨</span>
-              </div>
-              <h1 style="margin: 0; color: #111827; font-size: 24px;">Your Login Link</h1>
+            <td style="background:linear-gradient(135deg, #10b981 0%, #059669 55%, #0891b2 100%);padding:32px 28px;text-align:center;">
+              <img src="https://cryptopay.sale/email/logo.png" width="52" height="52" alt="Crypto Pay" style="display:block;margin:0 auto 16px;border-radius:12px;border:0;" />
+              <p style="margin:0 0 8px;font-size:13px;font-weight:600;color:rgba(255,255,255,0.9);letter-spacing:0.04em;text-transform:uppercase;">Crypto Pay</p>
+              <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:700;line-height:1.3;">✨ Sign in to Crypto Pay</h1>
             </td>
           </tr>
-          <!-- Content -->
           <tr>
-            <td style="padding: 0 32px 40px;">
-              <p style="margin: 0 0 16px; color: #374151; font-size: 16px; line-height: 1.6; text-align: center;">
-                Click the button below to securely sign in to your Crypto Pay account.
-              </p>
-              <table role="presentation" cellspacing="0" cellpadding="0" style="margin: 24px auto;">
+            <td style="padding:36px 32px 28px;">
+              <p style="margin:0 0 20px;color:#374151;font-size:16px;line-height:1.65;">Use the button below to sign in. This link expires in 24 hours and works once.</p>
+              <table role="presentation" cellspacing="0" cellpadding="0" style="margin:8px 0 24px;">
                 <tr>
-                  <td>
-                    <a href="{{ .ConfirmationURL }}" style="display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
-                      Sign In to Crypto Pay
-                    </a>
+                  <td align="center" style="border-radius:10px;background:linear-gradient(135deg,#10b981 0%,#059669 100%);">
+                    <a href="{{ .ConfirmationURL }}" target="_blank" style="display:inline-block;padding:14px 36px;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none;border-radius:10px;">Sign in</a>
                   </td>
                 </tr>
               </table>
-              <p style="margin: 24px 0 0; color: #6b7280; font-size: 14px; line-height: 1.6; text-align: center;">
-                This link expires in 24 hours and can only be used once.
-              </p>
-              <hr style="margin: 32px 0; border: none; border-top: 1px solid #e5e7eb;">
-              <p style="margin: 0; color: #9ca3af; font-size: 12px; text-align: center;">
-                Crypto Pay • Accept crypto payments securely
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:0 0 20px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;">
+                <tr>
+                  <td style="padding:14px 16px;">
+                    <p style="margin:0 0 6px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.03em;">Button not working?</p>
+                    <p style="margin:0;font-size:12px;color:#059669;word-break:break-all;line-height:1.5;"><a href="{{ .ConfirmationURL }}" style="color:#059669;">{{ .ConfirmationURL }}</a></p>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin:0;color:#6b7280;font-size:14px;line-height:1.6;">If you did not request this link, you can safely ignore this email.</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:20px 32px 28px;background:#f9fafb;border-top:1px solid #e5e7eb;text-align:center;">
+              <p style="margin:0 0 8px;font-size:13px;color:#6b7280;">Track and accept crypto payments · Wallet to wallet</p>
+              <p style="margin:0;font-size:12px;color:#9ca3af;">
+                <a href="https://cryptopay.sale" style="color:#059669;text-decoration:none;">cryptopay.sale</a>
+                &nbsp;·&nbsp;
+                <a href="mailto:support@cryptopay.sale" style="color:#059669;text-decoration:none;">support@cryptopay.sale</a>
               </p>
             </td>
           </tr>

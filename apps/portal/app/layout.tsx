@@ -1,10 +1,12 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
-import { getLocale } from "next-intl/server";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 import { CookieConsent } from "@/components/cookie-consent";
 import { ToastProvider } from "@/hooks/use-toast";
 import { isRtlLocale } from "@/i18n/routing";
+import { getHtmlLang } from "@/lib/i18n/locale-config";
 import { BRAND } from "@/lib/cryptopay/constants";
 import {
   SITE_METADATA,
@@ -103,16 +105,19 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const locale = await getLocale();
+  const messages = await getMessages();
   const dir = isRtlLocale(locale) ? "rtl" : "ltr";
 
   return (
     <html
-      lang={locale}
+      lang={getHtmlLang(locale)}
       dir={dir}
       className={`bg-white dark:bg-gray-950 text-black dark:text-white ${manrope.className}`}
     >
       <body className="min-h-dvh bg-gray-50">
-        <ToastProvider>{children}</ToastProvider>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <ToastProvider>{children}</ToastProvider>
+        </NextIntlClientProvider>
         <CookieConsent />
       </body>
     </html>

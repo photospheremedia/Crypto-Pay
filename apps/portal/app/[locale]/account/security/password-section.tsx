@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { createBrowserClient } from "@supabase/ssr";
 import type { User } from "@supabase/supabase-js";
 import { Eye, EyeOff, Loader2, Check, X, AlertCircle } from "lucide-react";
@@ -19,6 +20,8 @@ interface PasswordSectionProps {
 }
 
 export function PasswordSection({ user, hasPassword, providers }: PasswordSectionProps) {
+  const t = useTranslations("Account.password");
+  const tCommon = useTranslations("Common");
   const supabase = getSupabaseBrowserClient();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -263,7 +266,7 @@ export function PasswordSection({ user, hasPassword, providers }: PasswordSectio
             className="flex items-center gap-2 rounded-lg bg-emerald-500 px-6 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-            {loading ? "Updating..." : hasPassword ? "Change Password" : "Set Password"}
+            {loading ? tCommon("updating") : hasPassword ? t("updateButton") : t("setButton")}
           </button>
         </div>
       </form>

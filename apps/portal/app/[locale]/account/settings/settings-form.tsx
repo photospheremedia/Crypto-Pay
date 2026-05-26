@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { createBrowserClient } from "@supabase/ssr";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import type { User } from "@supabase/supabase-js";
+import { LocaleSwitcher } from "@/components/locale-switcher";
 
 function getSupabaseBrowserClient() {
   return createBrowserClient(
@@ -19,6 +21,8 @@ interface SettingsFormProps {
 }
 
 export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
+  const t = useTranslations("Account.settings");
+  const tCommon = useTranslations("Common");
   const router = useRouter();
   const supabase = getSupabaseBrowserClient();
   const [loading, setLoading] = useState(false);
@@ -27,20 +31,16 @@ export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
   const [profileData, setProfileData] = useState({
     company_name: profile?.company_name || "",
     phone: profile?.phone || "",
-    business_type: profile?.business_type || "restaurant",
-    number_of_locations: profile?.number_of_locations || 1,
+    business_type: profile?.business_type || "online_store",
   });
 
   const [settingsData, setSettingsData] = useState({
     theme: settings?.theme || "light",
-    language: settings?.language || "en",
     currency: settings?.currency || "USD",
     email_notifications: settings?.email_notifications ?? true,
     sms_notifications: settings?.sms_notifications ?? false,
     order_updates: settings?.order_updates ?? true,
-    marketing_emails: settings?.marketing_emails ?? true,
-    delivery_auto_accept: settings?.delivery_auto_accept ?? false,
-    auto_reorder_enabled: settings?.auto_reorder_enabled ?? false,
+    marketing_emails: settings?.marketing_emails ?? false,
   });
 
   async function handleSubmit(e: React.FormEvent) {
@@ -65,10 +65,10 @@ export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
 
       if (settingsError) throw settingsError;
 
-      setMessage({ type: "success", text: "Settings saved successfully!" });
+      setMessage({ type: "success", text: t("savedSuccess") });
       router.refresh();
     } catch (error: any) {
-      setMessage({ type: "error", text: error.message || "Failed to save settings" });
+      setMessage({ type: "error", text: error.message || t("saveFailed") });
     } finally {
       setLoading(false);
     }
@@ -90,11 +90,11 @@ export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
 
       {/* Profile Information */}
       <section className="rounded-lg border border-slate-200 bg-white p-6">
-        <h2 className="mb-6 text-xl font-semibold text-slate-900">Profile Information</h2>
+        <h2 className="mb-6 text-xl font-semibold text-slate-900">{t("profileSection")}</h2>
         <div className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-slate-700">
-              Email Address
+              {t("emailAddress")}
             </label>
             <input
               type="email"
@@ -107,7 +107,7 @@ export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
 
           <div>
             <label htmlFor="company_name" className="block text-sm font-medium text-slate-700">
-              Company Name
+              {t("companyName")}
             </label>
             <input
               type="text"
@@ -120,7 +120,7 @@ export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
 
           <div>
             <label htmlFor="phone" className="block text-sm font-medium text-slate-700">
-              Phone Number
+              {t("phoneNumber")}
             </label>
             <input
               type="tel"
@@ -133,7 +133,7 @@ export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
 
           <div>
             <label htmlFor="business_type" className="block text-sm font-medium text-slate-700">
-              Business Type
+              {t("businessType")}
             </label>
             <select
               id="business_type"
@@ -141,42 +141,32 @@ export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
               onChange={(e) => setProfileData({ ...profileData, business_type: e.target.value })}
               className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 focus:border-emerald-500 focus:ring-emerald-500"
             >
-              <option value="restaurant">Restaurant</option>
-              <option value="cafe">Café</option>
-              <option value="bakery">Bakery</option>
-              <option value="catering">Catering</option>
-              <option value="food_truck">Food Truck</option>
-              <option value="hotel">Hotel</option>
-              <option value="bar">Bar</option>
-              <option value="other">Other</option>
+              {(
+                [
+                  "online_store",
+                  "saas",
+                  "retail",
+                  "services",
+                  "marketplace",
+                  "other",
+                ] as const
+              ).map((type) => (
+                <option key={type} value={type}>
+                  {t(`businessTypes.${type}`)}
+                </option>
+              ))}
             </select>
-          </div>
-
-          <div>
-            <label htmlFor="number_of_locations" className="block text-sm font-medium text-slate-700">
-              Number of Locations
-            </label>
-            <input
-              type="number"
-              id="number_of_locations"
-              min="1"
-              value={profileData.number_of_locations}
-              onChange={(e) =>
-                setProfileData({ ...profileData, number_of_locations: parseInt(e.target.value) })
-              }
-              className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 focus:border-emerald-500 focus:ring-emerald-500"
-            />
           </div>
         </div>
       </section>
 
       {/* Preferences */}
       <section className="rounded-lg border border-slate-200 bg-white p-6">
-        <h2 className="mb-6 text-xl font-semibold text-slate-900">Preferences</h2>
+        <h2 className="mb-6 text-xl font-semibold text-slate-900">{t("preferencesSection")}</h2>
         <div className="space-y-4">
           <div>
             <label htmlFor="theme" className="block text-sm font-medium text-slate-700">
-              Theme
+              {t("theme")}
             </label>
             <select
               id="theme"
@@ -184,31 +174,25 @@ export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
               onChange={(e) => setSettingsData({ ...settingsData, theme: e.target.value })}
               className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 focus:border-emerald-500 focus:ring-emerald-500"
             >
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-              <option value="auto">Auto</option>
+              <option value="light">{t("themeLight")}</option>
+              <option value="dark">{t("themeDark")}</option>
+              <option value="auto">{t("themeAuto")}</option>
             </select>
           </div>
 
           <div>
-            <label htmlFor="language" className="block text-sm font-medium text-slate-700">
-              Language
+            <label className="block text-sm font-medium text-slate-700">
+              {t("language")}
             </label>
-            <select
-              id="language"
-              value={settingsData.language}
-              onChange={(e) => setSettingsData({ ...settingsData, language: e.target.value })}
-              className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 focus:border-emerald-500 focus:ring-emerald-500"
-            >
-              <option value="en">English</option>
-              <option value="es">Español</option>
-              <option value="fr">Français</option>
-            </select>
+            <p className="mt-1 text-sm text-slate-500">{t("languageHint")}</p>
+            <div className="mt-2">
+              <LocaleSwitcher variant="select" className="w-full max-w-sm" />
+            </div>
           </div>
 
           <div>
             <label htmlFor="currency" className="block text-sm font-medium text-slate-700">
-              Currency
+              {t("currency")}
             </label>
             <select
               id="currency"
@@ -226,14 +210,14 @@ export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
 
       {/* Notifications */}
       <section className="rounded-lg border border-slate-200 bg-white p-6">
-        <h2 className="mb-6 text-xl font-semibold text-slate-900">Notifications</h2>
+        <h2 className="mb-6 text-xl font-semibold text-slate-900">{t("notificationsSection")}</h2>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <label htmlFor="email_notifications" className="font-medium text-slate-900">
-                Email Notifications
+                {t("emailNotifications")}
               </label>
-              <p className="text-sm text-slate-600">Receive notifications via email</p>
+              <p className="text-sm text-slate-600">{t("emailNotificationsHint")}</p>
             </div>
             <input
               type="checkbox"
@@ -249,9 +233,9 @@ export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
           <div className="flex items-center justify-between">
             <div>
               <label htmlFor="sms_notifications" className="font-medium text-slate-900">
-                SMS Notifications
+                {t("smsNotifications")}
               </label>
-              <p className="text-sm text-slate-600">Receive notifications via SMS</p>
+              <p className="text-sm text-slate-600">{t("smsNotificationsHint")}</p>
             </div>
             <input
               type="checkbox"
@@ -267,9 +251,9 @@ export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
           <div className="flex items-center justify-between">
             <div>
               <label htmlFor="order_updates" className="font-medium text-slate-900">
-                Order Updates
+                {t("walletUpdates")}
               </label>
-              <p className="text-sm text-slate-600">Get notified about order status changes</p>
+              <p className="text-sm text-slate-600">{t("walletUpdatesHint")}</p>
             </div>
             <input
               type="checkbox"
@@ -285,9 +269,9 @@ export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
           <div className="flex items-center justify-between">
             <div>
               <label htmlFor="marketing_emails" className="font-medium text-slate-900">
-                Marketing Emails
+                {t("marketingEmails")}
               </label>
-              <p className="text-sm text-slate-600">Receive promotional content and offers</p>
+              <p className="text-sm text-slate-600">{t("marketingEmailsHint")}</p>
             </div>
             <input
               type="checkbox"
@@ -302,55 +286,13 @@ export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
         </div>
       </section>
 
-      {/* Automation */}
-      <section className="rounded-lg border border-slate-200 bg-white p-6">
-        <h2 className="mb-6 text-xl font-semibold text-slate-900">Automation</h2>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <label htmlFor="delivery_auto_accept" className="font-medium text-slate-900">
-                Auto-Accept Delivery Orders
-              </label>
-              <p className="text-sm text-slate-600">Automatically accept orders from delivery platforms</p>
-            </div>
-            <input
-              type="checkbox"
-              id="delivery_auto_accept"
-              checked={settingsData.delivery_auto_accept}
-              onChange={(e) =>
-                setSettingsData({ ...settingsData, delivery_auto_accept: e.target.checked })
-              }
-              className="h-5 w-5 rounded border-slate-300 text-emerald-500 focus:ring-emerald-500"
-            />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <label htmlFor="auto_reorder_enabled" className="font-medium text-slate-900">
-                Enable Auto-Reordering
-              </label>
-              <p className="text-sm text-slate-600">Automatically reorder supplies when stock is low</p>
-            </div>
-            <input
-              type="checkbox"
-              id="auto_reorder_enabled"
-              checked={settingsData.auto_reorder_enabled}
-              onChange={(e) =>
-                setSettingsData({ ...settingsData, auto_reorder_enabled: e.target.checked })
-              }
-              className="h-5 w-5 rounded border-slate-300 text-emerald-500 focus:ring-emerald-500"
-            />
-          </div>
-        </div>
-      </section>
-
       <div className="flex justify-end">
         <button
           type="submit"
           disabled={loading}
           className="rounded-lg bg-emerald-500 px-6 py-3 font-semibold text-white hover:bg-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {loading ? "Saving..." : "Save Settings"}
+          {loading ? tCommon("saving") : t("saveSettings")}
         </button>
       </div>
     </form>

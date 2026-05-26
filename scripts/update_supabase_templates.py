@@ -26,11 +26,11 @@ def main():
     
     # Prepare payload
     payload = {
-        "mailer_subjects_confirmation": "Confirm Your Crypto Pay Account",
-        "mailer_subjects_recovery": "Reset Your Password - Crypto Pay",
-        "mailer_subjects_invite": "You've Been Invited to Crypto Pay",
-        "mailer_subjects_magic_link": "Your Login Link - Crypto Pay",
-        "mailer_subjects_email_change": "Confirm Your New Email - Crypto Pay",
+        "mailer_subjects_confirmation": "Confirm your Crypto Pay account",
+        "mailer_subjects_recovery": "Reset your Crypto Pay password",
+        "mailer_subjects_invite": "You're invited to Crypto Pay",
+        "mailer_subjects_magic_link": "Your Crypto Pay sign-in link",
+        "mailer_subjects_email_change": "Confirm your new email — Crypto Pay",
         "mailer_templates_confirmation_content": templates['confirm'],
         "mailer_templates_recovery_content": templates['recovery'],
         "mailer_templates_invite_content": templates['invite'],

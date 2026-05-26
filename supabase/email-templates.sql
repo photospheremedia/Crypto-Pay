@@ -1,12 +1,12 @@
 -- Supabase Auth Email Templates
 -- Copy these templates to Supabase Dashboard > Authentication > Email Templates
--- These match the professional Restaurant Hub branding
+-- These match the professional Crypto Pay branding
 
 /*
 ============================================
 CONFIRM SIGNUP EMAIL
 ============================================
-Subject: Confirm Your Restaurant Hub Account
+Subject: Confirm Your Crypto Pay Account
 
 Body (HTML):
 */
@@ -27,7 +27,7 @@ Body (HTML):
           <!-- Header -->
           <tr>
             <td style="background: linear-gradient(135deg, #059669 0%, #047857 100%); padding: 32px; text-align: center;">
-              <h1 style="margin: 0; color: white; font-size: 24px;">Welcome to Restaurant Hub!</h1>
+              <h1 style="margin: 0; color: white; font-size: 24px;">Welcome to Crypto Pay!</h1>
             </td>
           </tr>
           <!-- Content -->
@@ -50,7 +50,7 @@ Body (HTML):
               </p>
               <hr style="margin: 32px 0; border: none; border-top: 1px solid #e5e7eb;">
               <p style="margin: 0; color: #9ca3af; font-size: 12px;">
-                Restaurant Hub Solution • B2B Restaurant Supply Platform
+                Crypto Pay • Accept crypto payments globally
               </p>
             </td>
           </tr>
@@ -66,7 +66,7 @@ Body (HTML):
 ============================================
 RESET PASSWORD EMAIL
 ============================================
-Subject: Reset Your Password - Restaurant Hub
+Subject: Reset Your Password - Crypto Pay
 
 Body (HTML):
 */
@@ -97,7 +97,7 @@ Body (HTML):
           <tr>
             <td style="padding: 0 32px 40px;">
               <p style="margin: 0 0 16px; color: #374151; font-size: 16px; line-height: 1.6; text-align: center;">
-                We received a request to reset the password for your Restaurant Hub account.
+                We received a request to reset the password for your Crypto Pay account.
               </p>
               <table role="presentation" cellspacing="0" cellpadding="0" style="margin: 24px auto;">
                 <tr>
@@ -115,7 +115,7 @@ Body (HTML):
               </div>
               <hr style="margin: 32px 0; border: none; border-top: 1px solid #e5e7eb;">
               <p style="margin: 0; color: #9ca3af; font-size: 12px; text-align: center;">
-                Restaurant Hub Solution • B2B Restaurant Supply Platform
+                Crypto Pay • Accept crypto payments globally
               </p>
             </td>
           </tr>
@@ -131,7 +131,7 @@ Body (HTML):
 ============================================
 MAGIC LINK EMAIL
 ============================================
-Subject: Your Login Link - Restaurant Hub
+Subject: Your Login Link - Crypto Pay
 
 Body (HTML):
 */
@@ -162,13 +162,13 @@ Body (HTML):
           <tr>
             <td style="padding: 0 32px 40px;">
               <p style="margin: 0 0 16px; color: #374151; font-size: 16px; line-height: 1.6; text-align: center;">
-                Click the button below to securely sign in to your Restaurant Hub account.
+                Click the button below to securely sign in to your Crypto Pay account.
               </p>
               <table role="presentation" cellspacing="0" cellpadding="0" style="margin: 24px auto;">
                 <tr>
                   <td>
                     <a href="{{ .ConfirmationURL }}" style="display: inline-block; background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
-                      Sign In to Restaurant Hub
+                      Sign In to Crypto Pay
                     </a>
                   </td>
                 </tr>
@@ -178,7 +178,7 @@ Body (HTML):
               </p>
               <hr style="margin: 32px 0; border: none; border-top: 1px solid #e5e7eb;">
               <p style="margin: 0; color: #9ca3af; font-size: 12px; text-align: center;">
-                Restaurant Hub Solution • B2B Restaurant Supply Platform
+                Crypto Pay • Accept crypto payments globally
               </p>
             </td>
           </tr>
@@ -194,7 +194,7 @@ Body (HTML):
 ============================================
 INVITE USER EMAIL
 ============================================
-Subject: You've Been Invited to Restaurant Hub
+Subject: You've Been Invited to Crypto Pay
 
 Body (HTML):
 */
@@ -222,7 +222,7 @@ Body (HTML):
           <tr>
             <td style="padding: 40px 32px;">
               <p style="margin: 0 0 16px; color: #374151; font-size: 16px; line-height: 1.6;">
-                You've been invited to join Restaurant Hub, the B2B platform for restaurant supplies.
+                You've been invited to join Crypto Pay, the B2B platform for restaurant supplies.
               </p>
               <div style="background: #f0fdf4; border-radius: 8px; padding: 20px; margin: 24px 0;">
                 <p style="margin: 0 0 8px; font-size: 14px; font-weight: 600; color: #047857;">What you'll get:</p>
@@ -244,7 +244,7 @@ Body (HTML):
               </table>
               <hr style="margin: 32px 0; border: none; border-top: 1px solid #e5e7eb;">
               <p style="margin: 0; color: #9ca3af; font-size: 12px;">
-                Restaurant Hub Solution • B2B Restaurant Supply Platform
+                Crypto Pay • Accept crypto payments globally
               </p>
             </td>
           </tr>
@@ -260,7 +260,7 @@ Body (HTML):
 ============================================
 CHANGE EMAIL ADDRESS
 ============================================
-Subject: Confirm Your New Email Address - Restaurant Hub
+Subject: Confirm Your New Email Address - Crypto Pay
 
 Body (HTML):
 */
@@ -307,7 +307,7 @@ Body (HTML):
               </p>
               <hr style="margin: 32px 0; border: none; border-top: 1px solid #e5e7eb;">
               <p style="margin: 0; color: #9ca3af; font-size: 12px; text-align: center;">
-                Restaurant Hub Solution • B2B Restaurant Supply Platform
+                Crypto Pay • Accept crypto payments globally
               </p>
             </td>
           </tr>

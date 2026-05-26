@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,6 +29,7 @@ export function ChatHeader({
   onMinimize,
   onClose,
 }: ChatHeaderProps) {
+  const tCommon = useTranslations("Common");
   const [showCloseConfirm, setShowCloseConfirm] = useState(false);
 
   const handleCloseClick = () => {
@@ -89,7 +91,7 @@ export function ChatHeader({
               {isLoading ? (
                 <>
                   <span className="inline-block w-1.5 h-1.5 bg-emerald-200 rounded-full animate-pulse flex-shrink-0" />
-                  Thinking...
+                  {tCommon("thinking")}
                 </>
               ) : (
                 <>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import {
   MessageSquare,
@@ -97,6 +98,7 @@ const statusIcons: Record<string, any> = {
 };
 
 export default function LeadsPage() {
+  const tCommon = useTranslations("Common");
   const [leads, setLeads] = useState<Lead[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -610,6 +612,7 @@ function LeadDetailsDialog({
   onOpenChange: (open: boolean) => void;
   onUpdate: () => void;
 }) {
+  const tCommon = useTranslations("Common");
   const [notes, setNotes] = useState("");
   const [followUpDate, setFollowUpDate] = useState("");
   const [saving, setSaving] = useState(false);
@@ -800,7 +803,7 @@ function LeadDetailsDialog({
             Cancel
           </Button>
           <Button onClick={saveChanges} disabled={saving}>
-            {saving ? "Saving..." : "Save Changes"}
+            {saving ? tCommon("saving") : tCommon("saveChanges")}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -192,7 +192,7 @@ export default function TermsOfServicePage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-slate-900 mb-4">10. Limitation of Liability</h2>
               <p className="text-slate-700 leading-relaxed mb-4">
-                TO THE MAXIMUM EXTENT PERMITTED BY LAW, RESTAURANT HUB SOLUTION SHALL NOT BE LIABLE FOR:
+                TO THE MAXIMUM EXTENT PERMITTED BY LAW, CRYPTO PAY SHALL NOT BE LIABLE FOR:
               </p>
               <ul className="list-disc pl-6 mb-4 text-slate-700 space-y-2">
                 <li>Indirect, incidental, special, consequential, or punitive damages</li>

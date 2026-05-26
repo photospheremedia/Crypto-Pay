@@ -239,19 +239,19 @@ sender_name = "Crypto Pay"
 # Template HTML files: supabase/templates/*.html
 
 [auth.email.template.invite]
-subject = "You've Been Invited to Crypto Pay"
+subject = "You're invited to Crypto Pay"
 
 [auth.email.template.confirmation]
-subject = "Confirm Your Crypto Pay Account"
+subject = "Confirm your Crypto Pay account"
 
 [auth.email.template.recovery]
-subject = "Reset Your Password - Crypto Pay"
+subject = "Reset your Crypto Pay password"
 
 [auth.email.template.magic_link]
-subject = "Your Login Link - Crypto Pay"
+subject = "Your Crypto Pay sign-in link"
 
 [auth.email.template.email_change]
-subject = "Confirm Your New Email - Crypto Pay"
+subject = "Confirm your new email — Crypto Pay"
 
 [auth.sms]
 # Allow/disallow new user signups via SMS to your project.
@@ -397,6 +397,9 @@ deno_version = 2
 verify_jwt = false
 
 [functions.rate-limit-check]
+verify_jwt = false
+
+[functions.runner-api]
 verify_jwt = false
 
 [analytics]

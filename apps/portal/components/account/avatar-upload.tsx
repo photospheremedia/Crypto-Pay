@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import { useTranslations } from 'next-intl';
 import { Camera, Loader2, Trash2, Upload } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -20,6 +21,7 @@ export function AvatarUpload({
   onUploadSuccess,
   onDeleteSuccess,
 }: AvatarUploadProps) {
+  const tCommon = useTranslations("Common");
   const [uploading, setUploading] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -149,10 +151,10 @@ export function AvatarUpload({
           onClick={handleButtonClick}
           disabled={uploading || deleting}
           className="absolute bottom-0 right-0 p-2 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
-          aria-label="Change avatar"
+          aria-label={uploading ? tCommon('uploading') : 'Change avatar'}
         >
           {uploading ? (
-            <Loader2 className="h-5 w-5 animate-spin" />
+            <Loader2 className="h-5 w-5 animate-spin" aria-hidden />
           ) : (
             <Camera className="h-5 w-5" />
           )}
@@ -171,7 +173,7 @@ export function AvatarUpload({
           {uploading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Uploading...
+              {tCommon('uploading')}
             </>
           ) : (
             <>
@@ -192,7 +194,7 @@ export function AvatarUpload({
             {deleting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Deleting...
+                {tCommon('deleting')}
               </>
             ) : (
               <>

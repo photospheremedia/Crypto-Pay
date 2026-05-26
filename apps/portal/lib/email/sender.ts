@@ -10,7 +10,8 @@ export interface EmailRecipient {
 
 export interface EmailOptions {
   to: EmailRecipient | EmailRecipient[];
-  subject: string;
+  /** Optional when using a template that defines subject */
+  subject?: string;
   template?: string;
   templateData?: Record<string, unknown>;
   html?: string;
@@ -79,11 +80,17 @@ export async function sendEmail(options: EmailOptions): Promise<EmailResult> {
       subject = options.subject || template.subject;
       
       // Replace template variables in subject
+      let resolvedSubject = subject ?? template.subject;
       if (options.templateData) {
         Object.entries(options.templateData).forEach(([key, value]) => {
-          subject = subject.replace(`{{${key}}}`, String(value));
+          resolvedSubject = resolvedSubject.replace(`{{${key}}}`, String(value));
         });
       }
+      subject = resolvedSubject;
+    }
+
+    if (!subject?.trim()) {
+      subject = "Crypto Pay";
     }
 
     const recipients = Array.isArray(options.to) ? options.to : [options.to];
@@ -93,10 +100,17 @@ export async function sendEmail(options: EmailOptions): Promise<EmailResult> {
     const fromEmail = options.from || getEmailFrom();
     const replyTo = options.replyTo || getReplyTo();
     const htmlBody = html || options.text || "";
+    const sanitizeTag = (name: string) =>
+      name.replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 50);
+
     const mergedTags = [
       ...(options.tags || []),
-      ...(options.workflow?.event ? [`workflow:${options.workflow.event}`] : []),
-    ].slice(0, 10);
+      ...(options.workflow?.event
+        ? [`workflow_${sanitizeTag(options.workflow.event)}`]
+        : []),
+    ]
+      .map(sanitizeTag)
+      .slice(0, 10);
     const resolvedIdempotencyKey =
       options.idempotencyKey || buildWorkflowIdempotencyKey(options.workflow, recipients);
 

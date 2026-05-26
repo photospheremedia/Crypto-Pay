@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { MarketingPageShell } from "@/components/cryptopay/marketing-section";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   Mail,
   Phone,
@@ -52,6 +53,7 @@ const interests = [
 ];
 
 export default function ContactPage() {
+  const tCommon = useTranslations("Common");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -376,7 +378,7 @@ export default function ContactPage() {
               {isSubmitting ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Sending...
+                  {tCommon("sending")}
                 </>
               ) : (
                 <>

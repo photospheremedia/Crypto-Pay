@@ -6,6 +6,7 @@ import {
   getSupabaseUrl,
 } from "@crypto-pay/db/supabaseEnv";
 import createIntlMiddleware from "next-intl/middleware";
+import { hasLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
 import { isAdminEmail } from "@/lib/admin-email";
 import { stripLocale } from "@/lib/i18n/strip-locale";
@@ -88,8 +89,11 @@ export async function proxy(request: NextRequest) {
   } = await supabase.auth.getUser();
   const hasAdminEmail = isAdminEmail(user?.email);
 
-  const localizedPath = (path: string) => {
-    const locale = request.headers.get("x-next-intl-locale") ?? routing.defaultLocale;
+  const localizedPath = (path: string, localeOverride?: string) => {
+    const locale =
+      localeOverride ??
+      request.headers.get("x-next-intl-locale") ??
+      routing.defaultLocale;
     if (locale === routing.defaultLocale) return path;
     return `/${locale}${path}`;
   };
@@ -131,10 +135,21 @@ export async function proxy(request: NextRequest) {
       .in("role", ADMIN_ROLES)
       .maybeSingle();
 
+    let preferredLocale: string | null = null;
+    const { data: settings } = await supabase
+      .from("user_settings")
+      .select("language")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (settings?.language && hasLocale(routing.locales, settings.language)) {
+      preferredLocale = settings.language;
+    }
+
     const destination =
       membership || hasAdminEmail
-        ? localizedPath("/admin/dashboard")
-        : localizedPath("/account");
+        ? localizedPath("/admin/dashboard", preferredLocale ?? undefined)
+        : localizedPath("/account", preferredLocale ?? undefined);
     return NextResponse.redirect(new URL(destination, request.url));
   }
 
