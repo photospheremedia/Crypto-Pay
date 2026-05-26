@@ -4,7 +4,6 @@ import { useActionState, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader2 } from 'lucide-react';
@@ -284,14 +283,14 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
             />
 
             <div className="pt-1">
-              <Button
+              <button
                 type="submit"
-                className="w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-full shadow-sm text-sm font-medium text-white bg-linear-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-60"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-transparent bg-linear-to-r from-emerald-500 to-cyan-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:from-emerald-600 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-60"
                 disabled={pending || !securityCheckPassed}
               >
                 {pending ? (
                   <>
-                    <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     {tCommon('loading')}
                   </>
                 ) : mode === 'signin' ? (
@@ -299,7 +298,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                 ) : (
                   t('signUp')
                 )}
-              </Button>
+              </button>
             </div>
           </form>
         </div>
