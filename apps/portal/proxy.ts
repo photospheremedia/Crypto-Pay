@@ -6,13 +6,13 @@ import {
   getSupabaseUrl,
 } from "@crypto-pay/db/supabaseEnv";
 import createIntlMiddleware from "next-intl/middleware";
-import { hasLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
+import { resolveRealmForUserEdge } from "@/lib/auth/resolve-realm-edge";
 import {
   getHomePathForRealm,
   isAdminPath,
   isStaffOnlyPath,
-  resolveRealmForUser,
+  type UserRealm,
 } from "@/lib/auth/user-realm";
 import { mergeIntlMiddlewareResponse } from "@/lib/i18n/merge-intl-middleware-response";
 import { stripLocale } from "@/lib/i18n/strip-locale";
@@ -20,19 +20,23 @@ import { isMetadataRoute } from "@/lib/routing/metadata-routes";
 
 const handleIntl = createIntlMiddleware(routing);
 
-// ============================================
-// ROUTE PROTECTION CONFIGURATION
-// ============================================
-
 const protectedPrefixes = ["/app", "/account"];
 const authPrefixes = ["/login", "/signup", "/sign-in", "/sign-up"];
 const adminPrefixes = ["/admin"];
 
 export async function proxy(request: NextRequest) {
+  try {
+    return await handleProxy(request);
+  } catch (error) {
+    console.error("[proxy] middleware error:", error);
+    return handleIntl(request);
+  }
+}
+
+async function handleProxy(request: NextRequest) {
   const { pathname: rawPathname } = request.nextUrl;
   const pathname = stripLocale(rawPathname);
 
-  // Favicon / OG / manifest — never locale-prefix or run auth redirects
   if (isMetadataRoute(pathname) || isMetadataRoute(rawPathname)) {
     return NextResponse.next();
   }
@@ -100,11 +104,9 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const localizedPath = (path: string, localeOverride?: string) => {
+  const localizedPath = (path: string) => {
     const locale =
-      localeOverride ??
-      request.headers.get("x-next-intl-locale") ??
-      routing.defaultLocale;
+      request.headers.get("x-next-intl-locale") ?? routing.defaultLocale;
     if (locale === routing.defaultLocale) return path;
     return `/${locale}${path}`;
   };
@@ -115,38 +117,39 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  if (isAdminRoute && user) {
-    const realm = await resolveRealmForUser(supabase, user);
-    if (realm !== "admin") {
-      const redirectUrl = new URL(localizedPath("/account"), request.url);
-      redirectUrl.searchParams.set("error", "admin_required");
-      return NextResponse.redirect(redirectUrl);
-    }
+  const needsRealm =
+    !!user &&
+    (isAdminRoute ||
+      isAdminPath(pathname) ||
+      isStaffOnlyPath(pathname) ||
+      (isAuthRoute && pathname !== "/app"));
+
+  let realm: UserRealm | null = null;
+  if (needsRealm) {
+    realm = await resolveRealmForUserEdge(supabase, user);
   }
 
-  // Staff must use /admin/* — block merchant account and /app surfaces
-  if (user && isStaffOnlyPath(pathname)) {
-    const realm = await resolveRealmForUser(supabase, user);
-    if (realm === "admin") {
-      const redirectUrl = new URL(
-        localizedPath(getHomePathForRealm("admin")),
-        request.url,
-      );
-      return NextResponse.redirect(redirectUrl);
-    }
+  if (isAdminRoute && user && realm !== "admin") {
+    const redirectUrl = new URL(localizedPath("/account"), request.url);
+    redirectUrl.searchParams.set("error", "admin_required");
+    return NextResponse.redirect(redirectUrl);
   }
 
-  // Merchants must not access admin routes (handled above for unauthenticated)
-  if (user && isAdminPath(pathname)) {
-    const realm = await resolveRealmForUser(supabase, user);
-    if (realm === "merchant") {
-      const redirectUrl = new URL(
-        localizedPath(getHomePathForRealm("merchant")),
-        request.url,
-      );
-      redirectUrl.searchParams.set("error", "admin_required");
-      return NextResponse.redirect(redirectUrl);
-    }
+  if (user && isStaffOnlyPath(pathname) && realm === "admin") {
+    const redirectUrl = new URL(
+      localizedPath(getHomePathForRealm("admin")),
+      request.url,
+    );
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  if (user && isAdminPath(pathname) && realm === "merchant") {
+    const redirectUrl = new URL(
+      localizedPath(getHomePathForRealm("merchant")),
+      request.url,
+    );
+    redirectUrl.searchParams.set("error", "admin_required");
+    return NextResponse.redirect(redirectUrl);
   }
 
   if (isProtectedRoute && !user) {
@@ -155,24 +158,8 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  if (isAuthRoute && user && pathname !== "/app") {
-    const realm = await resolveRealmForUser(supabase, user);
-
-    let preferredLocale: string | null = null;
-    const { data: settings } = await supabase
-      .from("user_settings")
-      .select("language")
-      .eq("user_id", user.id)
-      .maybeSingle();
-
-    if (settings?.language && hasLocale(routing.locales, settings.language)) {
-      preferredLocale = settings.language;
-    }
-
-    const destination = localizedPath(
-      getHomePathForRealm(realm),
-      preferredLocale ?? undefined,
-    );
+  if (isAuthRoute && user && pathname !== "/app" && realm) {
+    const destination = localizedPath(getHomePathForRealm(realm));
     return NextResponse.redirect(new URL(destination, request.url));
   }
 
@@ -210,7 +197,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Skip API, static assets, metadata routes, and files with extensions
     "/((?!api|_next/static|_next/image|favicon.ico|favicon.svg|icon|apple-icon|opengraph-image|twitter-image|manifest|sitemap|robots|icons|.*\\..*).*)",
   ],
 };

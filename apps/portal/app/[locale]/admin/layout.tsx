@@ -21,11 +21,19 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const { isSuperAdmin } = await requireAdminSession();
-  const supabase = getSupabaseServiceClient();
-  const [initialNavCounts, initialStats] = await Promise.all([
-    getAdminNavCounts(supabase),
-    getAdminDashboardStats(supabase, isSuperAdmin),
-  ]);
+
+  let initialNavCounts = { pendingWallets: 0, newLeads: 0 };
+  let initialStats: Record<string, unknown> | null = null;
+
+  try {
+    const supabase = getSupabaseServiceClient();
+    [initialNavCounts, initialStats] = await Promise.all([
+      getAdminNavCounts(supabase),
+      getAdminDashboardStats(supabase, isSuperAdmin),
+    ]);
+  } catch (error) {
+    console.error("[AdminLayout] Failed to prefetch stats:", error);
+  }
 
   return (
     <AdminStatsProvider

@@ -1,7 +1,7 @@
 import type { User } from "@supabase/supabase-js";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { ACCOUNT_WALLET_SETUP_PATH } from "@/lib/account/paths";
-import { checkAdminAccess, isStaffRole, type AdminRole } from "@/lib/admin-auth";
+import { isPlatformStaffRole } from "@/lib/admin/platform-tenant";
 import { isAdminEmail } from "@/lib/admin-email";
 import {
   PLATFORM_ADMIN_TENANT_SLUG,
@@ -113,7 +113,7 @@ function realmFromJwtClaims(claims: Record<string, unknown> | undefined): UserRe
   }
 
   const jwtRole = claims.user_role;
-  if (typeof jwtRole === "string" && jwtRole !== "null" && isStaffRole(jwtRole)) {
+  if (typeof jwtRole === "string" && jwtRole !== "null" && isPlatformStaffRole(jwtRole)) {
     return "admin";
   }
 
@@ -144,7 +144,7 @@ export async function resolveRealmForUser(
     .limit(1)
     .maybeSingle();
 
-  if (membership && isStaffRole(membership.role)) {
+  if (membership && isPlatformStaffRole(membership.role)) {
     return "admin";
   }
 
@@ -161,33 +161,6 @@ export async function resolveRealmForUser(
   }
 
   return "merchant";
-}
-
-export async function resolveUserRealm(): Promise<{
-  realm: UserRealm | null;
-  user: User | null;
-  role: AdminRole | null;
-  isAdmin: boolean;
-  isSuperAdmin: boolean;
-}> {
-  const access = await checkAdminAccess();
-  if (!access.user) {
-    return {
-      realm: null,
-      user: null,
-      role: null,
-      isAdmin: false,
-      isSuperAdmin: false,
-    };
-  }
-
-  return {
-    realm: access.isAdmin ? "admin" : "merchant",
-    user: access.user,
-    role: access.role,
-    isAdmin: access.isAdmin,
-    isSuperAdmin: access.isSuperAdmin,
-  };
 }
 
 /** True when staff must not use merchant /account or /app routes */
