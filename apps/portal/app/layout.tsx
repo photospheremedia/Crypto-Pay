@@ -15,6 +15,12 @@ import {
   sharedOpenGraph,
 } from "@/lib/site-metadata";
 
+const ASSET_VERSION =
+  process.env.VERCEL_GIT_COMMIT_SHA ??
+  process.env.VERCEL_DEPLOYMENT_ID ??
+  process.env.NEXT_PUBLIC_ASSET_VERSION ??
+  "1";
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   applicationName: SITE_METADATA.applicationName,
@@ -37,10 +43,10 @@ export const metadata: Metadata = {
   publisher: BRAND.name,
   icons: {
     icon: [
-      { url: "/icon", type: "image/png", sizes: "32x32" },
-      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: `/icon?v=${ASSET_VERSION}`, type: "image/png", sizes: "32x32" },
+      { url: `/favicon.svg?v=${ASSET_VERSION}`, type: "image/svg+xml" },
     ],
-    apple: [{ url: "/apple-icon", sizes: "180x180", type: "image/png" }],
+    apple: [{ url: `/apple-icon?v=${ASSET_VERSION}`, sizes: "180x180", type: "image/png" }],
   },
   formatDetection: {
     email: false,

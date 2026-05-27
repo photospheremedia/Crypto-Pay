@@ -7,7 +7,7 @@
  *
  * Requires portal on http://localhost:3001 and `pnpm dev:setup` user.
  */
-import { chromium } from "playwright";
+import { chromium } from "@playwright/test";
 import {
   AUTH_STORAGE_PATH,
   DEV_USER_EMAIL,

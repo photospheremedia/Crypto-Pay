@@ -395,27 +395,6 @@ export default function ContactPage() {
         </div>
       </div>
 
-      {/* Image gallery */}
-      <div className="mt-16 grid gap-4 md:grid-cols-3">
-        {[
-          "/images/hero-dashboard.svg",
-          "/images/branding-refresh.svg",
-          "/images/supply-grid.svg",
-        ].map((src, index) => (
-          <div
-            key={src}
-            className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
-          >
-            <img
-              src={src}
-              alt={`Preview ${index + 1}`}
-              className="aspect-4/3 w-full object-cover md:aspect-16/10"
-              loading="lazy"
-            />
-          </div>
-        ))}
-      </div>
-
       {/* Demo CTA */}
       <div className="mt-12 flex flex-wrap items-center justify-between gap-6 rounded-[28px] border border-slate-200 bg-linear-to-r from-emerald-50 to-white px-8 py-6 shadow-sm">
         <div>

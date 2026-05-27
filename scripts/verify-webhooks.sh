@@ -41,7 +41,7 @@ echo ""
 echo "Checking Edge Functions..."
 echo ""
 
-FUNCTIONS=("verify-turnstile" "send-email" "rate-limit-check" "stripe-webhook" "urban-piper-webhook" "chat")
+FUNCTIONS=("verify-turnstile" "send-email" "rate-limit-check" "chat")
 
 for func in "${FUNCTIONS[@]}"; do
     if supabase functions list --project-ref "$PROJECT_REF" | grep -q "$func"; then
@@ -55,7 +55,7 @@ echo ""
 echo "Checking Secrets..."
 echo ""
 
-SECRETS=("TURNSTILE_SECRET_KEY" "RESEND_API_KEY" "UPSTASH_REDIS_REST_URL" "UPSTASH_REDIS_REST_TOKEN" "STRIPE_WEBHOOK_SECRET" "URBAN_PIPER_WEBHOOK_SECRET")
+SECRETS=("TURNSTILE_SECRET_KEY" "RESEND_API_KEY" "UPSTASH_REDIS_REST_URL" "UPSTASH_REDIS_REST_TOKEN")
 
 for secret in "${SECRETS[@]}"; do
     if supabase secrets list --project-ref "$PROJECT_REF" | grep -q "$secret"; then
@@ -69,24 +69,13 @@ echo ""
 echo "======================================"
 echo "Webhook URLs (for dashboard configuration):"
 echo ""
-echo "🔗 Stripe Webhook:"
-echo "   ${FUNCTIONS_URL}/stripe-webhook"
-echo ""
-echo "🔗 Urban Piper Webhook:"
-echo "   ${FUNCTIONS_URL}/urban-piper-webhook"
+echo "🔗 Chat:"
+echo "   ${FUNCTIONS_URL}/chat"
 echo ""
 echo "======================================"
 echo ""
 echo "Next Steps:"
-echo "1. Go to Stripe Dashboard → Developers → Webhooks"
-echo "2. Click 'Add endpoint'"
-echo "3. Enter URL: ${FUNCTIONS_URL}/stripe-webhook"
-echo "4. Select events: payment_intent.succeeded, charge.refunded, invoice.payment_failed"
-echo "5. Copy Signing Secret and run:"
-echo "   supabase secrets set STRIPE_WEBHOOK_SECRET=\"whsec_...\" --project-ref $PROJECT_REF"
-echo ""
-echo "6. Go to Urban Piper Dashboard → Settings → Webhooks"
-echo "7. Add webhook URL: ${FUNCTIONS_URL}/urban-piper-webhook"
-echo "8. If signing secret provided, run:"
-echo "   supabase secrets set URBAN_PIPER_WEBHOOK_SECRET=\"...\" --project-ref $PROJECT_REF"
+echo "1. Ensure TURNSTILE_SECRET_KEY is set for verify-turnstile"
+echo "2. Ensure RESEND_API_KEY is set for send-email"
+echo "3. Ensure UPSTASH_* secrets are set for rate-limit-check"
 echo ""

@@ -3,7 +3,7 @@ import { checkAdminAccess, isSuperAdminRole } from "@/lib/admin-auth";
 import { getCachedAdminDashboardStats } from "@/lib/admin/admin-stats-cache";
 
 export const runtime = "nodejs";
-export const revalidate = 30;
+export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {

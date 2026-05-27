@@ -50,11 +50,7 @@ interface PaymentMethod {
   connected_at?: string;
 }
 
-const providerLogos: Record<string, string> = {
-  stripe: "https://img.logo.dev/stripe.com?token=pk_X-1ZO13GSgeOoUrIuJ6GMQ",
-  square: "https://img.logo.dev/squareup.com?token=pk_X-1ZO13GSgeOoUrIuJ6GMQ",
-  paypal: "https://img.logo.dev/paypal.com?token=pk_X-1ZO13GSgeOoUrIuJ6GMQ",
-};
+const providerLogos: Record<string, string> = {};
 
 export default function PaymentsSettingsPage() {
   const { toast } = useToast();
@@ -69,35 +65,6 @@ export default function PaymentsSettingsPage() {
   const fetchPaymentMethods = async () => {
     try {
       setPaymentMethods([
-        {
-          id: "pm-001",
-          name: "Stripe",
-          provider: "stripe",
-          type: "card",
-          enabled: true,
-          is_default: true,
-          test_mode: false,
-          connected_at: "2024-01-15",
-        },
-        {
-          id: "pm-002",
-          name: "Square",
-          provider: "square",
-          type: "card",
-          enabled: true,
-          is_default: false,
-          test_mode: true,
-          connected_at: "2024-02-01",
-        },
-        {
-          id: "pm-003",
-          name: "PayPal",
-          provider: "paypal",
-          type: "wallet",
-          enabled: false,
-          is_default: false,
-          test_mode: false,
-        },
         {
           id: "pm-004",
           name: "Net 30 Invoice",
@@ -221,9 +188,7 @@ export default function PaymentsSettingsPage() {
                 </p>
                 <div className="grid gap-3">
                   {[
-                    { name: "Stripe", desc: "Accept cards worldwide", provider: "stripe" },
-                    { name: "Square", desc: "In-person & online payments", provider: "square" },
-                    { name: "PayPal", desc: "Digital wallet payments", provider: "paypal" },
+                    { name: "Invoice", desc: "Net terms for B2B customers", provider: "internal" },
                   ].map((option) => (
                     <button
                       key={option.provider}
@@ -233,11 +198,9 @@ export default function PaymentsSettingsPage() {
                         setDialogOpen(false);
                       }}
                     >
-                      <img
-                        src={providerLogos[option.provider]}
-                        alt={option.name}
-                        className="h-10 w-10 rounded-lg object-contain"
-                      />
+                      <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center">
+                        <CreditCard className="h-5 w-5 text-slate-500" />
+                      </div>
                       <div>
                         <p className="font-medium text-slate-900">{option.name}</p>
                         <p className="text-sm text-slate-500">{option.desc}</p>

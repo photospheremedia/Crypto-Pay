@@ -158,27 +158,6 @@ export default function AboutPage() {
         })}
       </div>
 
-      {/* Images */}
-      <div className="mt-16 grid gap-4 md:grid-cols-3">
-        {[
-          "/images/hero-dashboard.svg",
-          "/images/supply-grid.svg",
-          "/images/branding-refresh.svg",
-        ].map((src, index) => (
-          <div
-            key={src}
-            className="group overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:shadow-lg"
-          >
-            <img
-              src={src}
-              alt={`Operations preview ${index + 1}`}
-              className="aspect-4/3 w-full object-cover transition duration-500 group-hover:scale-105 md:aspect-16/10"
-              loading="lazy"
-            />
-          </div>
-        ))}
-      </div>
-
       {/* Values */}
       <div className="mt-16">
         <div className="text-center">

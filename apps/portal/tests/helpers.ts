@@ -98,6 +98,9 @@ function createSupabasePlaywrightCookieStore() {
           httpOnly: options?.httpOnly ?? false,
           secure: options?.secure ?? false,
           sameSite: playwrightSameSite,
+          // Playwright's Cookie type requires `expires` (seconds since epoch).
+          // Use -1 for a session cookie, unless maxAge is provided.
+          expires: -1,
         };
 
         if (options?.maxAge != null) {

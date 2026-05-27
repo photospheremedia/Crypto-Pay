@@ -1,6 +1,6 @@
 -- ============================================
--- Migration: Shop Extensions & Urban Piper Integration
--- Extends existing schema for e-commerce and tech services
+-- Migration: Shop Extensions
+-- Extends existing schema for e-commerce and related services
 -- ============================================
 
 -- ============================================

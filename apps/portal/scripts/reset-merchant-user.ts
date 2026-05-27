@@ -7,7 +7,7 @@
  */
 import { config } from "dotenv";
 import { resolve } from "path";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { execSync } from "child_process";
 
 const portalRoot = resolve(__dirname, "..");
@@ -19,7 +19,7 @@ const email = (process.env.LOCAL_DEV_EMAIL || "merchant@example.com").toLowerCas
 const password = process.env.LOCAL_DEV_PASSWORD || "CryptoPayDev!2026";
 
 async function deleteUserData(
-  supabase: ReturnType<typeof createClient>,
+  supabase: SupabaseClient,
   userId: string,
 ) {
   await supabase.from("merchant_wallets").delete().eq("user_id", userId);

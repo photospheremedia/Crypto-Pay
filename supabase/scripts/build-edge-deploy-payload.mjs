@@ -16,11 +16,10 @@ const functions = [
   { name: "rate-limit-check", verify_jwt: false },
   { name: "send-email", verify_jwt: true },
   { name: "chat", verify_jwt: false },
-  { name: "stripe-webhook", verify_jwt: false },
-  { name: "urban-piper-webhook", verify_jwt: false },
+  { name: "runner-api", verify_jwt: false },
 ];
 
-const sharedFiles = ["db.ts", "errors.ts", "types.ts"];
+const sharedFiles = ["db.ts", "errors.ts", "types.ts", "runner-auth.ts", "wallet-admin-email.ts"];
 
 function readShared() {
   return sharedFiles.map((f) => ({
