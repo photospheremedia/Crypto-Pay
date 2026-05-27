@@ -14,6 +14,7 @@ on:
       - 'netlify.toml'
       - 'package.json'
       - 'pnpm-lock.yaml'
+      - '.github/workflows/netlify.yml'
   pull_request:
     branches:
       - main
@@ -24,6 +25,7 @@ on:
       - 'netlify.toml'
       - 'package.json'
       - 'pnpm-lock.yaml'
+      - '.github/workflows/netlify.yml'
   workflow_dispatch:
 
 concurrency:
@@ -106,7 +108,7 @@ jobs:
         if: steps.validate_secrets.outputs.can_deploy == 'true'
         uses: netlify/actions/cli@master
         with:
-          args: deploy --build --message "PR #${{ github.event.pull_request.number }} ${{ github.sha }}"
+          args: deploy --build --filter @crypto-pay/portal --message "PR #${{ github.event.pull_request.number }} ${{ github.sha }}"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
@@ -164,7 +166,7 @@ jobs:
         if: steps.validate_secrets.outputs.can_deploy == 'true'
         uses: netlify/actions/cli@master
         with:
-          args: deploy --build --prod --message "Production ${{ github.sha }}"
+          args: deploy --build --prod --filter @crypto-pay/portal --message "Production ${{ github.sha }}"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
