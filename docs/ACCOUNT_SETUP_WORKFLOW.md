@@ -34,7 +34,7 @@ Account setup is **not** a separate app section anymore. Onboarding lives on the
 | Step | User action | System behavior |
 |------|-------------|-----------------|
 | 1 | Create account | Supabase Auth user + profile metadata |
-| 2 | (If required) Verify email | Magic link → `/auth/callback` → wallet tab |
+| 2 | (If required) Verify email | Confirm link → `/auth/confirm` → wallet tab |
 | 3 | Add payout wallet | Row in `merchant_wallets` (`status: pending`) |
 | 4 | Wait for admin review | Email to ops; merchant sees pending in UI |
 | 5 | Accept payments | **Coming soon** — checklist step 3 |
@@ -55,10 +55,10 @@ Defined in `apps/portal/lib/account/paths.ts`:
 Email confirmation callback (encoded `next`):
 
 ```
-{APP_URL}/auth/callback?next=%2Faccount%3Ftab%3Dwallets
+{APP_URL}/auth/confirm?token_hash=...&type=email&next=%2Faccount%3Ftab%3Dwallets
 ```
 
-Built by `accountWalletSetupCallbackUrl(appUrl)`.
+The post-confirm destination is built by `accountWalletSetupConfirmUrl(appUrl)` (always `/account?tab=wallets`).
 
 ## End-to-end flows
 
@@ -98,16 +98,18 @@ sequenceDiagram
   participant S as Supabase Auth
 
   U->>P: signUp
-  P->>S: signUp (emailRedirectTo = callback?next=/account?tab=wallets)
+  P->>S: signUp (emailRedirectTo = /account?tab=wallets)
   S-->>P: user, no session
-  P->>U: redirect /login?created=1&verify=1
+  P->>U: redirect /login?created=1&verify=1&email=...
   U->>S: Click confirm link in email
-  S->>P: GET /auth/callback?code=...&next=/account?tab=wallets
-  P->>S: exchangeCodeForSession
+  S->>P: GET /auth/confirm?token_hash=...&type=email&next=/account?tab=wallets
+  P->>S: verifyOtp(type, token_hash)
   P->>U: redirect /account?tab=wallets
 ```
 
-**Code:** `apps/portal/app/auth/callback/route.ts`
+**Code:** `apps/portal/app/auth/confirm/route.ts`, `apps/portal/app/[locale]/(login)/actions.ts` (`signUp`)
+
+After redirecting to `/login?created=1&verify=1`, the login UI offers a **Resend confirmation email** action (no account enumeration).
 
 ### C. Sign in (existing merchant)
 
@@ -135,7 +137,7 @@ Same callback route as email confirmation.
 | Sign-in, no wallets, no `next` | `/account?tab=wallets` |
 | Otherwise | `next` or `/account` |
 
-**Code:** `apps/portal/app/auth/callback/route.ts`
+**Code:** `apps/portal/app/auth/callback/route.ts` (OAuth), `apps/portal/app/auth/confirm/route.ts` (email OTP)
 
 ### E. Protected routes (middleware)
 

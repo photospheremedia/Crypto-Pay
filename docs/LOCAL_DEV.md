@@ -51,7 +51,9 @@ Email logos use `NEXT_PUBLIC_APP_URL/email/logo.png`. In dev, mail clients canno
 **Authentication → URL configuration**
 
 - **Site URL:** `http://localhost:3001` (or keep production; both can work for password login)
-- **Redirect URLs:** add `http://localhost:3001/auth/callback`
+- **Redirect URLs:** add:
+  - `http://localhost:3001/auth/callback` (OAuth PKCE exchange)
+  - `http://localhost:3001/auth/confirm` (email confirmation / recovery / magic link via `verifyOtp`)
 
 ## Playwright: open the app as the dev user
 
