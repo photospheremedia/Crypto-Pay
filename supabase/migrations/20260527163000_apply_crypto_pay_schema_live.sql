@@ -443,7 +443,7 @@ begin
 end;
 $$;
 -- Platform staff = memberships on crypto-pay-admin only (not merchant tenant "owner").
--- Remove mistaken platform admin membership; fix JWT hook + merchant detection.
+-- Fix JWT hook + merchant detection.
 
 create or replace function public.platform_admin_tenant_id()
 returns uuid
@@ -459,14 +459,6 @@ comment on function public.platform_admin_tenant_id() is
   'UUID of the Crypto Pay platform admin tenant (slug crypto-pay-admin).';
 
 grant execute on function public.platform_admin_tenant_id() to authenticated, anon;
-
--- demo merchant is a merchant only — not platform staff.
-delete from public.memberships m
-using public.tenants t, auth.users u
-where m.tenant_id = t.id
-  and m.user_id = u.id
-  and t.slug = 'crypto-pay-admin'
-  and lower(u.email) = 'merchant@example.com';
 
 create or replace function public.custom_access_token_hook(event jsonb)
 returns jsonb

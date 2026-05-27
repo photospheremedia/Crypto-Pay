@@ -36,7 +36,8 @@ test.describe("Production connectivity @prod", () => {
     await monitor.attachReport(testInfo);
   });
 
-  test("merchant (demo merchant) reaches account area", async ({ page }, testInfo) => {
+  test("merchant reaches account area", async ({ page }, testInfo) => {
+    test.skip(!PROD_MERCHANT_EMAIL, "Set PLAYWRIGHT_MERCHANT_EMAIL for merchant prod smoke");
     test.setTimeout(120_000);
     const monitor = new SupabaseMonitor();
     monitor.attach(page);

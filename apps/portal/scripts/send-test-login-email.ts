@@ -9,7 +9,7 @@ import { generateBaseTemplate, components, brandColors } from "../lib/email/base
 
 config({ path: resolve(process.cwd(), ".env.local") });
 
-const email = process.argv[2] || "merchant@example.com";
+const email = process.argv[2] || "photospheremedia00@gmail.com";
 const password = process.argv[3];
 const loginUrl = process.env.NEXT_PUBLIC_APP_URL
   ? `${process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, "")}/login`

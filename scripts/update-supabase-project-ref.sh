@@ -6,9 +6,9 @@ set -euo pipefail
 OLD_REF="${1:-}"
 NEW_REF="${2:-}"
 
-if [[ -z "$NEW_REF" ]]; then
-  echo "Usage: $0 [old-ref] <new-ref>"
-  echo "Example: $0  abcdefghijklmnop"
+if [[ -z "$OLD_REF" || -z "$NEW_REF" ]]; then
+  echo "Usage: $0 <old-ref> <new-ref>"
+  echo "Example: $0 abcdefghijklmnop usbxwewohpsbjwiuazpf"
   exit 1
 fi
 

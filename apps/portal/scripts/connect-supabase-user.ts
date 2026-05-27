@@ -2,8 +2,8 @@
  * Link a Supabase Auth user to Crypto Pay (tenant + membership + profile).
  *
  * Usage:
- *   npx tsx scripts/connect-supabase-user.ts merchant@example.com
- *   npx tsx scripts/connect-supabase-user.ts merchant@example.com --wallet=bc1qexample...
+ *   npx tsx scripts/connect-supabase-user.ts photospheremedia00@gmail.com
+ *   npx tsx scripts/connect-supabase-user.ts photospheremedia00@gmail.com --wallet=bc1qexample...
  */
 import { config } from "dotenv";
 import { resolve } from "path";

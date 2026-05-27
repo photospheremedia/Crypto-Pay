@@ -1,5 +1,8 @@
 # Local development login
 
+**Platform setup (Supabase, Resend, Netlify):** [PLATFORM_CONFIGURATION.md](./PLATFORM_CONFIGURATION.md)  
+**Merchant vs admin UI:** [MERCHANT_VS_ADMIN_UI.md](./MERCHANT_VS_ADMIN_UI.md)
+
 ## Quick start
 
 ```bash
@@ -74,11 +77,11 @@ Other commands (from repo root or `apps/portal`):
 
 Override credentials: `PLAYWRIGHT_USER_EMAIL` / `PLAYWRIGHT_USER_PASSWORD` (or `LOCAL_DEV_*`).
 
-demo merchant example:
+Merchant dev user (non-admin):
 
 ```bash
-LOCAL_DEV_EMAIL=merchant@example.com LOCAL_DEV_ADMIN=0 pnpm dev:setup
-pnpm playwright:connect:merchant   # merchant → /account (not admin)
+LOCAL_DEV_EMAIL=you@example.com LOCAL_DEV_ADMIN=0 pnpm dev:setup
+pnpm playwright:connect:merchant   # → /account (not admin)
 ```
 
 Playwright signs in via Supabase session cookies by default (avoids `/login` server-action stalls). To test the HTML form instead: `PLAYWRIGHT_LOGIN_UI=1 pnpm playwright:connect`.

@@ -2,7 +2,7 @@
  * Send all onboarding / wallet transactional templates to a test inbox.
  *
  * Usage:
- *   npx tsx scripts/send-onboarding-email-suite.ts merchant@example.com
+ *   npx tsx scripts/send-onboarding-email-suite.ts you@example.com
  */
 import { config } from "dotenv";
 import { resolve } from "path";
@@ -10,7 +10,7 @@ import { resolve } from "path";
 config({ path: resolve(process.cwd(), ".env.local") });
 config({ path: resolve(process.cwd(), ".env.development.local") });
 
-const TEST_EMAIL = process.argv[2]?.trim() || "merchant@example.com";
+const TEST_EMAIL = process.argv[2]?.trim() || "photospheremedia00@gmail.com";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://cryptopay.sale";
 
 async function delay(ms: number) {

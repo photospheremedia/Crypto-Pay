@@ -1,7 +1,7 @@
 /**
  * Smoke test Runner API (attach wallet)
  *
- * RUNNER_API_KEY=... RUNNER_API_SECRET=... pnpm --filter @crypto-pay/portal exec tsx scripts/test-runner-api.ts merchant@example.com
+ * RUNNER_API_KEY=... RUNNER_API_SECRET=... pnpm --filter @crypto-pay/portal exec tsx scripts/test-runner-api.ts photospheremedia00@gmail.com
  */
 import { config } from "dotenv";
 import { resolve } from "path";

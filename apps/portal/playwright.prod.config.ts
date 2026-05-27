@@ -10,6 +10,7 @@ const prodBaseURL =
  *
  *   PLAYWRIGHT_PROD_PASSWORD='…' pnpm test:prod
  *   PLAYWRIGHT_ADMIN_PASSWORD / PLAYWRIGHT_MERCHANT_PASSWORD for per-account passwords
+ *   PLAYWRIGHT_MERCHANT_EMAIL for the merchant smoke test
  */
 export default defineConfig({
   testDir: "./tests",

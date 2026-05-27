@@ -15,7 +15,7 @@ config({ path: resolve(portalRoot, ".env.local") });
 
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const email = (process.env.LOCAL_DEV_EMAIL || "merchant@example.com").toLowerCase();
+const email = (process.env.LOCAL_DEV_EMAIL || "photospheremedia00@gmail.com").toLowerCase();
 const password = process.env.LOCAL_DEV_PASSWORD || "CryptoPayDev!2026";
 
 async function deleteUserData(

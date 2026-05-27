@@ -36,7 +36,7 @@ Env:
 Phone signup error "The user could not be found":
   - Do NOT create account with phone first. Use "Continue with GitHub" at vercel.com/signup
     (log in as photospheremedia GitHub org owner).
-  - If the number was used on another Vercel account (legacy-account/skullcandyxxx), use a different
+  - If the number was used on another Vercel account, use a different
     number or https://vercel.com/accountrecovery (Vercel may block reused numbers 12h+).
   - If you already have a Vercel account: Sign IN at vercel.com/login, not sign up.
 

@@ -30,14 +30,13 @@ export const PROD_ADMIN_EMAIL = (
 ).toLowerCase();
 
 export const PROD_MERCHANT_EMAIL = (
-  process.env.PLAYWRIGHT_MERCHANT_EMAIL ??
-  process.env.PLAYWRIGHT_MERCHANT_EMAIL ??
-  "merchant@example.com"
-).toLowerCase();
+  process.env.PLAYWRIGHT_MERCHANT_EMAIL ?? ""
+).trim().toLowerCase();
 
 export function prodPasswordFor(email: string): string {
   const normalized = email.toLowerCase();
   if (
+    PROD_MERCHANT_EMAIL &&
     normalized === PROD_MERCHANT_EMAIL &&
     process.env.PLAYWRIGHT_MERCHANT_PASSWORD?.trim()
   ) {

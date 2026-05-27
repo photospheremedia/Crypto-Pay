@@ -25,7 +25,7 @@ No — one email → one auth user. They can sign in with password or OAuth, but
 **Can one login belong to multiple businesses (tenants)?**  
 The data model supports `memberships` across tenants for **internal/staff** use. The self-serve **merchant dashboard** (`/account`) is centered on the authenticated user and their wallets, not a multi-store picker. Multi-tenant merchant switching is not part of this onboarding flow today.
 
-**Runner API:** Integrations can register wallets with `source: runner_api` (see `supabase/migrations/20260525150000_runner_api_wallets.sql`). Same verification rules; emails still flow through the portal notification helpers when applicable.
+**Runner API:** The settlement Runner app registers wallets with `source: runner_api` (pending until admin verifies). See **[RUNNER_INTEGRATION.md](./RUNNER_INTEGRATION.md)** for HMAC API, `external_id` linking, and outbound webhooks when status changes.
 
 ## Overview
 
@@ -307,7 +307,7 @@ cd apps/portal
 pnpm email:preview              # HTML files in .email-previews/
 pnpm email:sync-auth              # writes supabase/templates/*.html
 pnpm email:sync-auth:push         # + remote (needs SUPABASE_ACCESS_TOKEN)
-pnpm email:test-suite merchant@example.com   # send all onboarding templates
+pnpm email:test-suite you@example.com   # send all onboarding templates
 ```
 
 ## Supabase configuration

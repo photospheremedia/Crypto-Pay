@@ -106,7 +106,6 @@ print_access_denied() {
   echo ""
   echo "  C) Team access: owner invites your email to the org in the dashboard"
   echo ""
-  echo "  D) Move legacy-account → PhotoSphere: pnpm supabase:migrate-account"
   echo ""
 }
 
