@@ -12,7 +12,8 @@ import { resolveRealmForUserEdge } from "@/lib/auth/resolve-realm-edge";
 import { listUserMerchantWallets } from "@/lib/wallets/db";
 import { getSupabaseServiceClient } from "@crypto-pay/db/supabaseServer";
 import type { Database } from "@/lib/database.types";
-import type { MerchantWallet } from "@/types/crypto-pay-db";
+import type { MerchantWalletPublic } from "@/lib/wallets/merchant-wallet-public";
+import { toPublicMerchantWallets } from "@/lib/wallets/merchant-wallet-public";
 
 type UserProfile = Database["public"]["Tables"]["user_profiles"]["Row"];
 type UserSettings = Database["public"]["Tables"]["user_settings"]["Row"];
@@ -47,9 +48,10 @@ export function revalidateMerchantAccountData(userId: string) {
 
 async function fetchMerchantWalletsUncached(
   userId: string,
-): Promise<MerchantWallet[]> {
+): Promise<MerchantWalletPublic[]> {
   const supabase = getSupabaseServiceClient();
-  return listUserMerchantWallets(supabase, userId);
+  const rows = await listUserMerchantWallets(supabase, userId);
+  return toPublicMerchantWallets(rows);
 }
 
 async function fetchMerchantProfileUncached(userId: string): Promise<{

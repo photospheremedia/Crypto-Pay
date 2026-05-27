@@ -1,7 +1,6 @@
 "use client";
 
 import { Link } from "@/i18n/navigation";
-import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import {
@@ -12,12 +11,12 @@ import {
   Code2,
 } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
-import type { MerchantWallet } from "@/types/crypto-pay-db";
+import type { MerchantWalletPublic } from "@/lib/wallets/merchant-wallet-public";
 import { MerchantWalletDashboard } from "@/components/account/merchant-wallet-dashboard";
 
 type AccountDashboardProps = {
   user: User;
-  wallets: MerchantWallet[];
+  wallets: MerchantWalletPublic[];
   initialTab: string;
 };
 
@@ -29,7 +28,6 @@ export function AccountDashboard({
   const t = useTranslations("Account.dashboard");
   const tWallets = useTranslations("Account.wallets");
   const tNav = useTranslations("Account.nav");
-  const router = useRouter();
   const [copied, setCopied] = useState(false);
 
   const displayName =
@@ -104,7 +102,6 @@ export function AccountDashboard({
         </div>
         <MerchantWalletDashboard
           wallets={wallets}
-          onRefresh={() => router.refresh()}
           initialTab={initialTab}
           showHeader={false}
           autoOpenAddWallet={wallets.length === 0 && initialTab === "wallets"}

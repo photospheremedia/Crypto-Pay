@@ -44,3 +44,30 @@ export function routeBadRequest(message: string): NextResponse<RouteErrorBody> {
 export function routeForbidden(message: string): NextResponse<RouteErrorBody> {
   return NextResponse.json({ error: message, code: "forbidden" }, { status: 403 });
 }
+
+/** 500 with a generic message in production (no Supabase/Postgres details to clients). */
+export function routeInternalError(
+  error: unknown,
+  options?: {
+    fallback?: string;
+    logContext?: string;
+  },
+): NextResponse<RouteErrorBody> {
+  reportError(error, {
+    source: "api",
+    context: options?.logContext ?? "route",
+    status: 500,
+  });
+
+  const fallback =
+    options?.fallback ?? "Something went wrong. Please try again.";
+  const message =
+    process.env.NODE_ENV === "development"
+      ? getErrorMessage(error, fallback)
+      : fallback;
+
+  return NextResponse.json(
+    { error: message, code: "internal_error" },
+    { status: 500 },
+  );
+}

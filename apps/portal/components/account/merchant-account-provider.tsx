@@ -6,13 +6,15 @@ import {
   useMemo,
   type ReactNode,
 } from "react";
-import type { MerchantWallet } from "@/types/crypto-pay-db";
+import type { MerchantWalletPublic } from "@/lib/wallets/merchant-wallet-public";
+import { useMerchantWallets } from "@/lib/hooks/use-merchant-wallets";
 
 type MerchantAccountContextValue = {
-  wallets: MerchantWallet[];
+  wallets: MerchantWalletPublic[];
   userId: string;
   pendingWalletCount: number;
   hasVerifiedWallet: boolean;
+  refreshWallets: () => Promise<MerchantWalletPublic[] | undefined>;
 };
 
 const MerchantAccountContext = createContext<MerchantAccountContextValue | null>(
@@ -26,22 +28,21 @@ export function MerchantAccountProvider({
 }: {
   children: ReactNode;
   userId: string;
-  initialWallets: MerchantWallet[];
+  initialWallets: MerchantWalletPublic[];
 }) {
-  const value = useMemo(() => {
-    const pendingWalletCount = initialWallets.filter(
-      (w) => w.status === "pending",
-    ).length;
-    const hasVerifiedWallet = initialWallets.some(
-      (w) => w.status === "verified",
-    );
-    return {
-      wallets: initialWallets,
+  const { wallets, pendingWalletCount, hasVerifiedWallet, refresh } =
+    useMerchantWallets(initialWallets);
+
+  const value = useMemo(
+    () => ({
+      wallets,
       userId,
       pendingWalletCount,
       hasVerifiedWallet,
-    };
-  }, [initialWallets, userId]);
+      refreshWallets: refresh,
+    }),
+    [wallets, userId, pendingWalletCount, hasVerifiedWallet, refresh],
+  );
 
   return (
     <MerchantAccountContext.Provider value={value}>
