@@ -613,6 +613,7 @@
     "signOutFirst": "sign out first",
     "newHere": "New here?",
     "newHereHint": "Create your account with your email and password to get started.",
+    "signupConfirmEmailHint": "You may need to confirm your email before you can sign in.",
     "firstName": "First name",
     "lastName": "Last name",
     "email": "Email",

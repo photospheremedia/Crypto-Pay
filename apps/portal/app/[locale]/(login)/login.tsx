@@ -252,7 +252,14 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                 <Alert variant="destructive">
                   <AlertCircle />
                   <AlertTitle>{tCommon('error')}</AlertTitle>
-                  <AlertDescription>{state.error}</AlertDescription>
+                  <AlertDescription>
+                    <p>{state.error}</p>
+                    {mode === 'signin' && state.needsEmailConfirmation && state.email ? (
+                      <div className="pt-2">
+                        <ResendConfirmationButton email={state.email} />
+                      </div>
+                    ) : null}
+                  </AlertDescription>
                 </Alert>
               ) : null}
 

@@ -24,6 +24,7 @@ export type ActionState = {
   error?: string;
   success?: string;
   email?: string;
+  needsEmailConfirmation?: boolean;
 };
 
 const signInSchema = z.object({
@@ -71,6 +72,7 @@ export async function signIn(
     } else if (error.message.includes('Email not confirmed')) {
       userMessage =
         'Please verify your email first. Check your inbox or request a new confirmation link below.';
+      return { error: userMessage, email, needsEmailConfirmation: true };
     }
     return { error: userMessage, email };
   }

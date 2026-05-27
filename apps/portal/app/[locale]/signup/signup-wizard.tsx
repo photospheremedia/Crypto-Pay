@@ -219,6 +219,7 @@ export function SignupWizard() {
                     minLength={8}
                     maxLength={100}
                   />
+                  <p className="text-xs text-muted-foreground">{t("signupConfirmEmailHint")}</p>
                   <p className="text-xs text-muted-foreground">{t("termsFooter")}</p>
                 </div>
               ) : null}
