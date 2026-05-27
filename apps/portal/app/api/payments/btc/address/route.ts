@@ -5,9 +5,10 @@ export const runtime = "edge";
 
 const requestSchema = z.object({
   reset: z.boolean().optional(),
-  matchAccount: z.string().min(1).optional(),
+  matchCallback: z.string().min(1).optional(),
 });
 
+/** Low-level address minting. Prefer POST /api/payments/btc/checkout for merchant checkout. */
 export async function POST(req: Request) {
   const apiKey = process.env.BTC_PROVIDER_API_KEY;
   if (!apiKey) {
@@ -37,11 +38,16 @@ export async function POST(req: Request) {
       apiKey,
       network: "btc",
       reset: parsed.data.reset,
-      matchAccount: parsed.data.matchAccount,
+      matchCallback: parsed.data.matchCallback,
     });
 
     return new Response(
-      JSON.stringify({ address: data.address, reset: data.reset, account: data.account }),
+      JSON.stringify({
+        address: data.address,
+        crypto: data.crypto ?? "BTC",
+        reset: data.reset,
+        account: data.account,
+      }),
       { status: 200, headers: { "Content-Type": "application/json" } },
     );
   } catch (err) {
@@ -51,4 +57,3 @@ export async function POST(req: Request) {
     );
   }
 }
-
