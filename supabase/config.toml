@@ -240,23 +240,23 @@ sender_name = "Crypto Pay"
 
 [auth.email.template.invite]
 subject = "You're invited to Crypto Pay"
-content_path = "./templates/invite.html"
+content_path = "./supabase/templates/invite.html"
 
 [auth.email.template.confirmation]
 subject = "Confirm your Crypto Pay account"
-content_path = "./templates/confirm.html"
+content_path = "./supabase/templates/confirm.html"
 
 [auth.email.template.recovery]
 subject = "Reset your Crypto Pay password"
-content_path = "./templates/recovery.html"
+content_path = "./supabase/templates/recovery.html"
 
 [auth.email.template.magic_link]
 subject = "Your Crypto Pay sign-in link"
-content_path = "./templates/magic_link.html"
+content_path = "./supabase/templates/magic_link.html"
 
 [auth.email.template.email_change]
 subject = "Confirm your new email — Crypto Pay"
-content_path = "./templates/email_change.html"
+content_path = "./supabase/templates/email_change.html"
 
 [auth.sms]
 # Allow/disallow new user signups via SMS to your project.

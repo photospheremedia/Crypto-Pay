@@ -21,6 +21,9 @@ drop trigger if exists trigger_update_product_review_stats on public.product_rev
 drop trigger if exists trigger_update_cart_totals on public.cart_items;
 
 -- Drop tables (indexes + RLS policies are dropped with their tables)
+-- orders.promotion_id FK must go before promotions (orders dropped in core migration)
+alter table if exists public.orders drop constraint if exists orders_promotion_id_fkey;
+
 drop table if exists public.promotion_usage;
 drop table if exists public.promotions;
 
@@ -33,6 +36,8 @@ drop table if exists public.cart_items;
 drop table if exists public.carts;
 
 drop table if exists public.product_reviews;
+
+alter table if exists public.products drop constraint if exists products_category_id_fkey;
 drop table if exists public.product_categories;
 
 -- Keep function names referenced by later migrations, but as no-ops.

@@ -9,53 +9,10 @@ begin;
 -- ---------------------------------------------------------------------------
 drop view if exists public.customer_analytics;
 
--- ---------------------------------------------------------------------------
--- Triggers on legacy tables (explicit; safe if table already gone)
--- ---------------------------------------------------------------------------
-drop trigger if exists trigger_update_product_review_stats on public.product_reviews;
-drop trigger if exists trigger_update_cart_totals on public.cart_items;
-drop trigger if exists product_categories_set_updated_at on public.product_categories;
-drop trigger if exists product_reviews_set_updated_at on public.product_reviews;
-drop trigger if exists product_categories_updated_at on public.product_categories;
-drop trigger if exists carts_set_updated_at on public.carts;
-drop trigger if exists cart_items_set_updated_at on public.cart_items;
-drop trigger if exists up_subscriptions_set_updated_at on public.urban_piper_subscriptions;
-drop trigger if exists up_delivery_set_updated_at on public.up_delivery_integrations;
-drop trigger if exists up_onboarding_set_updated_at on public.up_onboarding_tickets;
-drop trigger if exists promotions_set_updated_at on public.promotions;
-
-drop trigger if exists customers_set_updated_at on public.customers;
-drop trigger if exists locations_set_updated_at on public.locations;
-drop trigger if exists integrations_set_updated_at on public.integrations;
-drop trigger if exists products_set_updated_at on public.products;
-drop trigger if exists quotes_set_updated_at on public.quotes;
-drop trigger if exists orders_update_updated_at on public.orders;
-drop trigger if exists quotes_update_updated_at on public.quotes;
-
-drop trigger if exists set_order_number on public.orders;
-drop trigger if exists trigger_log_order_status on public.orders;
-drop trigger if exists trigger_single_default_address on public.user_addresses;
-drop trigger if exists trigger_update_customer_stats on public.orders;
-drop trigger if exists trigger_update_product_sales on public.orders;
-drop trigger if exists orders_set_updated_at on public.orders;
-drop trigger if exists comparison_lists_set_updated_at on public.comparison_lists;
-drop trigger if exists user_addresses_set_updated_at on public.user_addresses;
-drop trigger if exists user_payment_methods_set_updated_at on public.user_payment_methods;
-drop trigger if exists user_notification_preferences_set_updated_at on public.user_notification_preferences;
-
-drop trigger if exists customer_profiles_set_updated_at on public.customer_profiles;
-drop trigger if exists billing_subscriptions_set_updated_at on public.billing_subscriptions;
-
-drop trigger if exists inventory_items_updated_at on public.inventory_items;
-drop trigger if exists subscription_plans_updated_at on public.subscription_plans;
-drop trigger if exists customer_subscriptions_updated_at on public.customer_subscriptions;
-drop trigger if exists pricing_rules_updated_at on public.pricing_rules;
-drop trigger if exists email_contacts_updated_at on public.email_contacts;
-
-drop trigger if exists set_shop_customers_updated_at on public.shop_customers;
+-- Triggers are dropped with their tables in 20260527120500 / 20260527121000.
 
 -- ---------------------------------------------------------------------------
--- Tables (children before parents)
+-- Tables (children before parents) — idempotent IF NOT EXISTS drops
 -- ---------------------------------------------------------------------------
 
 -- Shop / orders / promotions
@@ -130,14 +87,23 @@ drop table if exists public.customers;
 drop table if exists public.visitor_sessions;
 drop table if exists public.system_metrics;
 
-drop policy if exists room_members_can_read on public.messages;
-drop policy if exists room_members_can_write on public.messages;
-drop policy if exists room_members_can_update on public.messages;
-drop policy if exists room_members_can_delete on public.messages;
-drop policy if exists realtime_room_members_can_read on realtime.messages;
-drop policy if exists realtime_room_members_can_write on realtime.messages;
-drop policy if exists room_members_self_insert on public.room_members;
-drop policy if exists room_members_self_read on public.room_members;
+do $$
+begin
+  if to_regclass('public.messages') is not null then
+    execute 'drop policy if exists room_members_can_read on public.messages';
+    execute 'drop policy if exists room_members_can_write on public.messages';
+    execute 'drop policy if exists room_members_can_update on public.messages';
+    execute 'drop policy if exists room_members_can_delete on public.messages';
+  end if;
+  if to_regclass('realtime.messages') is not null then
+    execute 'drop policy if exists realtime_room_members_can_read on realtime.messages';
+    execute 'drop policy if exists realtime_room_members_can_write on realtime.messages';
+  end if;
+  if to_regclass('public.room_members') is not null then
+    execute 'drop policy if exists room_members_self_insert on public.room_members';
+    execute 'drop policy if exists room_members_self_read on public.room_members';
+  end if;
+end $$;
 
 drop table if exists public.messages;
 drop table if exists public.room_members;
