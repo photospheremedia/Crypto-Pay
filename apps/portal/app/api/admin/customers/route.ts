@@ -133,13 +133,9 @@ export async function GET(req: NextRequest) {
       .select("*", { count: "exact", head: true })
       .eq("contact_captured", true);
 
-    // Get customers with orders
-    const { data: ordersData } = await supabase
-      .from("orders")
-      .select("user_id")
-      .not("user_id", "is", null);
-    
-    const uniqueOrderUsers = new Set(ordersData?.map(o => o.user_id)).size;
+    // Legacy Restaurant Hub "orders" table has been removed from Crypto Pay.
+    // Keep the field for API compatibility (0) unless/until we add a Crypto Pay-native equivalent.
+    const uniqueOrderUsers = 0;
 
     // Get new this month
     const firstOfMonth = new Date();

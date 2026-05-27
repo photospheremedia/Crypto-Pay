@@ -92,13 +92,10 @@ async function runTests() {
   // ============================================
   console.log('\n📖 Public Data Tests\n');
 
-  await test('Anon user can read products (if public)', async () => {
-    const { data, error } = await anonClient.from('products').select('id, name');
-    // This should either work (products are public) or return empty
-    // It should NOT throw an RLS error
-    if (error && !error.message.includes('does not exist')) {
-      // Table exists but RLS blocks - that's fine for private products
-      console.log(`  Note: Products table has RLS - ${error.message}`);
+  await test('Anon user cannot read wallet profiles', async () => {
+    const { data } = await anonClient.from('user_wallet_profiles').select('*');
+    if (data && data.length > 0) {
+      throw new Error('Anon user should not see wallet profiles');
     }
   });
 
@@ -135,24 +132,7 @@ async function runTests() {
   // ============================================
   // ORDER TESTS
   // ============================================
-  console.log('\n🛒 Order Tests\n');
-
-  await test('Anon user cannot read orders', async () => {
-    const { data, error } = await anonClient.from('orders').select('*');
-    if (data && data.length > 0) {
-      throw new Error('Anon user should not see orders');
-    }
-  });
-
-  await test('Anon user cannot create orders', async () => {
-    const { error } = await anonClient.from('orders').insert({
-      status: 'pending',
-      total_cents: 1000,
-    });
-    if (!error) {
-      throw new Error('Anon user should not be able to create orders');
-    }
-  });
+  console.log('\n🛒 Order Tests (removed)\n');
 
   // ============================================
   // LEAD TESTS  

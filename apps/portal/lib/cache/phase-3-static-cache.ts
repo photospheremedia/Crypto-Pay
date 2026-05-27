@@ -44,39 +44,11 @@ export async function getCachedProductCatalog(
   tenantId: string,
   context: TenantContext
 ): Promise<any[]> {
-  const cacheKey = `products:${tenantId}`;
-  const cached = productCatalogCache.get(cacheKey);
-
-  // Check if cache is valid
-  if (cached && Date.now() - cached.timestamp < cached.ttl) {
-    return cached.data;
-  }
-
-  // Cache miss: fetch from database
-  const supabase = await getSupabaseServerClient();
-  const { data: products, error } = await supabase
-    .from("products")
-    .select("*")
-    .eq("tenant_id", tenantId)
-    .eq("status", "active")
-    .order("created_at", { ascending: false });
-
-  if (error) {
-    console.error("[Cache] Product catalog fetch failed:", error);
-    return [];
-  }
-
-  // Store in cache
-  productCatalogCache.set(cacheKey, {
-    data: products || [],
-    timestamp: Date.now(),
-    ttl: CACHE_TTL.PRODUCT_CATALOG,
-  });
-
-  // Setup invalidation listener (one time per tenant)
-  setupProductCatalogSubscription(tenantId);
-
-  return products || [];
+  // Restaurant Hub "products" table has been removed from Crypto Pay.
+  // This cache helper is kept only to avoid breaking any stale imports.
+  void tenantId;
+  void context;
+  return [];
 }
 
 /**
@@ -164,32 +136,8 @@ export async function getCachedRoleDefinitions(): Promise<Record<string, any>> {
  */
 async function setupProductCatalogSubscription(tenantId: string) {
   try {
-    const supabase = await getSupabaseServerClient();
-    const cacheKey = `products:${tenantId}`;
-
-    // Check if subscription already exists
-    if (productCatalogCache.has(`${cacheKey}:subscribed`)) {
-      return;
-    }
-
-    supabase
-      .channel(`products:${tenantId}`)
-      .on(
-        "postgres_changes" as any,
-        { event: "*", schema: "public", table: "products", filter: `tenant_id=eq.${tenantId}` } as any,
-        (payload: any) => {
-          console.debug(`[Cache] Invalidated product catalog for tenant ${tenantId}`);
-          productCatalogCache.delete(cacheKey);
-        }
-      )
-      .subscribe();
-
-    // Mark subscription as set
-    productCatalogCache.set(`${cacheKey}:subscribed`, {
-      data: true,
-      timestamp: Date.now(),
-      ttl: Infinity,
-    });
+    // no-op (legacy shop table removed)
+    void tenantId;
   } catch (error) {
     console.error("[Cache] Product catalog subscription failed:", error);
   }
