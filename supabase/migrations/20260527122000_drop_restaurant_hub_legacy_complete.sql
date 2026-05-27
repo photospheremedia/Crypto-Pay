@@ -126,11 +126,21 @@ drop table if exists public.shop_customers;
 
 drop table if exists public.customers;
 
--- Other RH-only tables
+-- Other RH-only tables (old realtime room chat; not Crypto Pay chat_messages)
 drop table if exists public.visitor_sessions;
 drop table if exists public.system_metrics;
-drop table if exists public.room_members;
+
+drop policy if exists room_members_can_read on public.messages;
+drop policy if exists room_members_can_write on public.messages;
+drop policy if exists room_members_can_update on public.messages;
+drop policy if exists room_members_can_delete on public.messages;
+drop policy if exists realtime_room_members_can_read on realtime.messages;
+drop policy if exists realtime_room_members_can_write on realtime.messages;
+drop policy if exists room_members_self_insert on public.room_members;
+drop policy if exists room_members_self_read on public.room_members;
+
 drop table if exists public.messages;
+drop table if exists public.room_members;
 
 -- ---------------------------------------------------------------------------
 -- Sequences
