@@ -4,7 +4,7 @@
 
 # Monorepo: install and build from repo root; publish Next.js output under apps/portal.
 [build]
-  command = "corepack enable && pnpm install --frozen-lockfile && pnpm --filter @crypto-pay/portal build"
+  command = "pnpm run netlify:build"
   publish = "apps/portal/.next"
 
 [build.environment]

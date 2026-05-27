@@ -104,11 +104,11 @@ jobs:
             } >> "$GITHUB_STEP_SUMMARY"
           fi
 
-      - name: Deploy preview to Netlify
+      - name: Build and deploy preview to Netlify
         if: steps.validate_secrets.outputs.can_deploy == 'true'
-        uses: netlify/actions/cli@master
-        with:
-          args: deploy --build --filter @crypto-pay/portal --message "PR #${{ github.event.pull_request.number }} ${{ github.sha }}"
+        run: |
+          pnpm exec netlify build --filter @crypto-pay/portal
+          pnpm exec netlify deploy --no-build --filter @crypto-pay/portal --message "PR #${{ github.event.pull_request.number }} ${{ github.sha }}"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
@@ -162,11 +162,11 @@ jobs:
             } >> "$GITHUB_STEP_SUMMARY"
           fi
 
-      - name: Deploy production to Netlify
+      - name: Build and deploy production to Netlify
         if: steps.validate_secrets.outputs.can_deploy == 'true'
-        uses: netlify/actions/cli@master
-        with:
-          args: deploy --build --prod --filter @crypto-pay/portal --message "Production ${{ github.sha }}"
+        run: |
+          pnpm exec netlify build --filter @crypto-pay/portal
+          pnpm exec netlify deploy --prod --no-build --filter @crypto-pay/portal --message "Production ${{ github.sha }}"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
