@@ -4,6 +4,7 @@
  * Usage:
  *   npx tsx scripts/sync-supabase-auth-templates.ts
  *   SUPABASE_ACCESS_TOKEN=... npx tsx scripts/sync-supabase-auth-templates.ts --push
+ *   SUPABASE_ACCESS_TOKEN=... RESEND_API_KEY=... npx tsx scripts/sync-supabase-auth-templates.ts --push --push-auth
  */
 import { writeFileSync, mkdirSync } from "fs";
 import { resolve, dirname } from "path";
@@ -36,22 +37,10 @@ for (const [variant, filename] of Object.entries(SUPABASE_AUTH_TEMPLATE_FILES)) 
   console.log("Wrote", path);
 }
 
-async function pushRemote() {
-  const token = process.env.SUPABASE_ACCESS_TOKEN?.trim();
-  const projectRef =
-    process.env.SUPABASE_PROJECT_REF?.trim() ||
-    process.env.NEXT_PUBLIC_SUPABASE_URL?.match(
-      /https:\/\/([a-z0-9]+)\.supabase\.co/i,
-    )?.[1];
-
-  if (!token || !projectRef) {
-    console.error(
-      "Set SUPABASE_ACCESS_TOKEN and SUPABASE_PROJECT_REF (or NEXT_PUBLIC_SUPABASE_URL) for --push",
-    );
-    process.exit(1);
-  }
-
-  const payload: Record<string, string> = {
+function buildAuthConfigPayload(
+  templatesOnly: boolean,
+): Record<string, string | boolean | number> {
+  const payload: Record<string, string | boolean | number> = {
     mailer_subjects_confirmation: subjects.confirmation,
     mailer_subjects_recovery: subjects.recovery,
     mailer_subjects_invite: subjects.invite,
@@ -68,6 +57,60 @@ async function pushRemote() {
     mailer_templates_email_change_content:
       generateSupabaseAuthEmailHtml("email_change"),
   };
+
+  if (!templatesOnly) {
+    const resendKey = process.env.RESEND_API_KEY?.trim();
+    if (!resendKey) {
+      console.error("Set RESEND_API_KEY for --push-auth");
+      process.exit(1);
+    }
+
+    const appUrl =
+      process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ||
+      "https://cryptopay.sale";
+
+    Object.assign(payload, {
+      site_url: appUrl,
+      uri_allow_list: [
+        `${appUrl}/**`,
+        "https://www.cryptopay.sale/**",
+        "http://localhost:3000/**",
+        "http://localhost:3001/**",
+      ].join(","),
+      external_email_enabled: true,
+      mailer_autoconfirm: false,
+      mailer_secure_email_change_enabled: true,
+      mailer_otp_exp: 3600,
+      smtp_admin_email:
+        process.env.SMTP_ADMIN_EMAIL?.trim() || "noreply@cryptopay.sale",
+      smtp_sender_name: process.env.SMTP_SENDER_NAME?.trim() || "Crypto Pay",
+      smtp_host: "smtp.resend.com",
+      smtp_port: "587",
+      smtp_user: "resend",
+      smtp_pass: resendKey,
+    });
+  }
+
+  return payload;
+}
+
+async function pushRemote() {
+  const token = process.env.SUPABASE_ACCESS_TOKEN?.trim();
+  const projectRef =
+    process.env.SUPABASE_PROJECT_REF?.trim() ||
+    process.env.NEXT_PUBLIC_SUPABASE_URL?.match(
+      /https:\/\/([a-z0-9]+)\.supabase\.co/i,
+    )?.[1];
+
+  if (!token || !projectRef) {
+    console.error(
+      "Set SUPABASE_ACCESS_TOKEN and SUPABASE_PROJECT_REF (or NEXT_PUBLIC_SUPABASE_URL) for --push",
+    );
+    process.exit(1);
+  }
+
+  const templatesOnly = !process.argv.includes("--push-auth");
+  const payload = buildAuthConfigPayload(templatesOnly);
 
   const res = await fetch(
     `https://api.supabase.com/v1/projects/${projectRef}/config/auth`,
@@ -86,11 +129,15 @@ async function pushRemote() {
     process.exit(1);
   }
 
-  console.log(`✓ Pushed auth email templates to project ${projectRef}`);
+  const scope = templatesOnly ? "email templates" : "auth config (SMTP + confirmations + templates)";
+  console.log(`✓ Pushed ${scope} to project ${projectRef}`);
 }
 
 if (process.argv.includes("--push")) {
   void pushRemote();
 } else {
-  console.log("\nRun with --push and SUPABASE_ACCESS_TOKEN to update remote Auth templates.");
+  console.log(
+    "\nRun with --push and SUPABASE_ACCESS_TOKEN to update remote Auth templates.",
+  );
+  console.log("Add --push-auth and RESEND_API_KEY to enable confirmations + Resend SMTP.");
 }

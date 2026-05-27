@@ -45,7 +45,8 @@ test.describe("Authentication Flow", () => {
             /\/account(\?|.*&)tab=wallets/.test(url) ||
             /\/account\/setup/.test(url) ||
             /\/account\/get-started/.test(url);
-          const onLoginCreated = /\/login\?created=1/.test(url);
+          const onLoginCreated =
+            /\/login\?created=1/.test(url) && /[?&]verify=1/.test(url);
           const hasSuccessMessage =
             (await page.getByText(
               /account created|check your email|verify your account|welcome/i,

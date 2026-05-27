@@ -58,6 +58,14 @@ function getUserFriendlyMessage(technicalError: string | null): {
         };
     }
 
+    if (errorLower.includes('link_expired') || errorLower.includes('expired') || errorLower.includes('otp')) {
+        return {
+            title: 'Link expired',
+            message: 'This confirmation or reset link is no longer valid.',
+            suggestion: 'Request a new confirmation email from the sign-in page, or sign up again.',
+        };
+    }
+
     // Email/account errors
     if (errorLower.includes('email') || errorLower.includes('account')) {
         return {

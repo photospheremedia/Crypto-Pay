@@ -34,6 +34,8 @@
     "playwright:connect:login": "npx tsx scripts/playwright-connect-browser.ts",
     "playwright:connect:admin": "npx tsx scripts/playwright-connect-browser.ts -- --admin",
     "playwright:connect:merchant": "PLAYWRIGHT_USER_EMAIL=merchant@example.com LOCAL_DEV_EMAIL=merchant@example.com LOCAL_DEV_ADMIN=0 PLAYWRIGHT_AFTER_LOGIN=/account npx tsx scripts/playwright-connect-browser.ts",
+    "playwright:configure-supabase-auth": "npx tsx scripts/configure-supabase-auth-dashboard.ts",
+    "supabase:push-auth": "npx tsx scripts/sync-supabase-auth-templates.ts --push --push-auth",
     "db:setup": "npx tsx lib/db/setup.ts",
     "db:seed": "npx tsx lib/db/seed.ts",
     "db:generate": "drizzle-kit generate",

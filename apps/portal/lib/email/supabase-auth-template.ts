@@ -69,11 +69,28 @@ const variants: Record<
   },
 };
 
+/** PKCE-safe action URL for SSR (@supabase/ssr verifyOtp). */
+function authActionHref(variant: AuthTemplateVariant): string {
+  switch (variant) {
+    case "confirmation":
+      return "{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&next={{ .RedirectTo }}";
+    case "recovery":
+      return "{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next={{ .RedirectTo }}";
+    case "magic_link":
+      return "{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=magiclink&next={{ .RedirectTo }}";
+    case "email_change":
+      return "{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email_change&next={{ .RedirectTo }}";
+    case "invite":
+      return "{{ .ConfirmationURL }}";
+  }
+}
+
 export function generateSupabaseAuthEmailHtml(
   variant: AuthTemplateVariant,
 ): string {
   const v = variants[variant];
   const siteHost = new URL(SITE).hostname;
+  const actionHref = authActionHref(variant);
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -96,7 +113,7 @@ export function generateSupabaseAuthEmailHtml(
               <table role="presentation" cellspacing="0" cellpadding="0" style="margin:8px 0 24px;">
                 <tr>
                   <td align="center" style="border-radius:10px;background:linear-gradient(135deg,${PRIMARY} 0%,${PRIMARY_DARK} 100%);">
-                    <a href="{{ .ConfirmationURL }}" target="_blank" style="display:inline-block;padding:14px 36px;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none;border-radius:10px;">${v.cta}</a>
+                    <a href="${actionHref}" target="_blank" style="display:inline-block;padding:14px 36px;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none;border-radius:10px;">${v.cta}</a>
                   </td>
                 </tr>
               </table>
@@ -104,7 +121,7 @@ export function generateSupabaseAuthEmailHtml(
                 <tr>
                   <td style="padding:14px 16px;">
                     <p style="margin:0 0 6px;font-size:12px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.03em;">Button not working?</p>
-                    <p style="margin:0;font-size:12px;color:#059669;word-break:break-all;line-height:1.5;"><a href="{{ .ConfirmationURL }}" style="color:#059669;">{{ .ConfirmationURL }}</a></p>
+                    <p style="margin:0;font-size:12px;color:#059669;word-break:break-all;line-height:1.5;"><a href="${actionHref}" style="color:#059669;">${actionHref}</a></p>
                   </td>
                 </tr>
               </table>

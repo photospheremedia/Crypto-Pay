@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { getSupabaseServerClient } from "@crypto-pay/db/supabaseServer";
 import {
   ACCOUNT_WALLET_SETUP_PATH,
-  accountWalletSetupCallbackUrl,
+  accountWalletSetupConfirmUrl,
 } from "@/lib/account/paths";
 import { resolveRealmForUserEdge } from "@/lib/auth/resolve-realm-edge";
 import {
@@ -69,7 +69,8 @@ export async function signIn(
     if (error.message.includes('Invalid login credentials')) {
       userMessage = 'Email or password is incorrect.';
     } else if (error.message.includes('Email not confirmed')) {
-      userMessage = 'Please verify your email first.';
+      userMessage =
+        'Please verify your email first. Check your inbox or request a new confirmation link below.';
     }
     return { error: userMessage, email };
   }
@@ -155,7 +156,7 @@ export async function signUp(
       email,
       password,
       options: {
-        emailRedirectTo: accountWalletSetupCallbackUrl(appUrl),
+        emailRedirectTo: accountWalletSetupConfirmUrl(appUrl),
         data: {
           first_name: firstName,
           last_name: lastName,
@@ -206,6 +207,45 @@ export async function signUp(
   );
 
   redirect(realm === "admin" ? getHomePathForRealm("admin") : merchantOnboardingPath());
+}
+
+const resendConfirmationSchema = z.object({
+  email: z.string().email().min(3).max(255),
+});
+
+/** Resend signup confirmation email (no account enumeration). */
+export async function resendSignupConfirmation(
+  email: string,
+): Promise<ActionState> {
+  const parsed = resendConfirmationSchema.safeParse({ email: email.trim() });
+  if (!parsed.success) {
+    return { error: "Please enter a valid email address." };
+  }
+
+  const supabase = await getSupabaseServerClient();
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3001";
+
+  const { error } = await supabase.auth.resend({
+    type: "signup",
+    email: parsed.data.email,
+    options: {
+      emailRedirectTo: accountWalletSetupConfirmUrl(appUrl),
+    },
+  });
+
+  if (error) {
+    console.error("[resendSignupConfirmation]", error.message);
+    if (error.message.includes("rate limit")) {
+      return {
+        error: "Too many emails sent. Please wait a few minutes and try again.",
+      };
+    }
+  }
+
+  return {
+    success:
+      "If an account exists for this email, we sent a new confirmation link.",
+  };
 }
 
 /** Merchant account / app — requires merchant realm. */

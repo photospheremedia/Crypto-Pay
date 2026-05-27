@@ -10,6 +10,7 @@ import { Loader2 } from 'lucide-react';
 import { getSupabaseBrowserClientOptional } from '@crypto-pay/db/supabaseClient';
 import { signIn, signUp, type ActionState } from './actions';
 import { SecurityCheckField } from '@/components/auth/security-check-field';
+import { ResendConfirmationButton } from '@/components/auth/resend-confirmation-button';
 import { isTurnstileEnabled } from '@/lib/security/turnstile-config';
 
 export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
@@ -104,6 +105,9 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                   t('signInToDashboard')
                 )}
               </p>
+              {verificationPending && pendingEmail && (
+                <ResendConfirmationButton email={pendingEmail} />
+              )}
             </div>
           )}
           {existingUser && mode === 'signin' && (
