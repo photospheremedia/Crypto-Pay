@@ -8,6 +8,33 @@ metadata:
 
 # Supabase
 
+## Crypto Pay (this monorepo)
+
+Use this skill for **any** Supabase work here. Project-specific setup:
+
+| Resource | Path |
+|----------|------|
+| Documentation index | `docs/INDEX.md` |
+| Env, migrations, edge deploy | `docs/PLATFORM_CONFIGURATION.md` (Supabase section) |
+| RLS / tenant checklist | `docs/MULTITENANT_SECURITY_CHECKLIST.md` |
+| Local auth URLs | `docs/LOCAL_DEV.md` |
+| Runner edge API | `docs/RUNNER_INTEGRATION.md` |
+
+| Item | Value |
+|------|--------|
+| Production project ref | `usbxwewohpsbjwiuazpf` (PhotoSphere) — **only** ref used in this repo; set `SUPABASE_PROJECT_REF` in `.env.supabase` and `scripts/mcp-supabase.sh` |
+| Portal SSR client | `apps/portal/lib/supabase/server.ts` |
+| Service role (server only) | `@crypto-pay/db/supabaseServer` → `getSupabaseServiceClient()` |
+| Migrations | `supabase/migrations/` — `pnpm db:push`, `pnpm db:types` |
+| Edge functions | `supabase/functions/` — deploy `runner-api`, etc. |
+| Auth hook / realm JWT | `supabase/migrations/20260526120000_auth_hook_platform_realm.sql` |
+
+**Agents:** use **Supabase MCP** (`list_tables`, `get_advisors`, logs) before guessing schema or RLS. Never expose `SUPABASE_SERVICE_ROLE_KEY` to the browser.
+
+Postgres performance: `.agents/skills/supabase-postgres-best-practices/SKILL.md`.
+
+---
+
 ## Core Principles
 
 **1. Supabase changes frequently — verify against changelog and current docs before implementing.**

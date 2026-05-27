@@ -12,7 +12,9 @@ if [[ -f "$ENV_FILE" ]]; then
   set +a
 fi
 
-REF="${SUPABASE_PROJECT_REF:-usbxwewohpsbjwiuazpf}"
+# shellcheck source=scripts/crypto-pay-supabase-env.sh
+source "$ROOT/scripts/crypto-pay-supabase-env.sh"
+REF="$CRYPTO_PAY_SUPABASE_PROJECT_REF"
 
 if [[ -z "${SUPABASE_ACCESS_TOKEN:-}" ]]; then
   echo "MCP: missing SUPABASE_ACCESS_TOKEN in $ENV_FILE" >&2

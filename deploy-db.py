@@ -12,8 +12,9 @@ except ImportError:
     os.system("pip3 install supabase --quiet")
     from supabase import create_client, Client
 
-# Supabase credentials
-SUPABASE_URL = "https://xfairwgarmpvbogiuduk.supabase.co"
+# Supabase credentials (PhotoSphere / Crypto Pay production)
+PROJECT_REF = os.environ.get("SUPABASE_PROJECT_REF", "usbxwewohpsbjwiuazpf")
+SUPABASE_URL = f"https://{PROJECT_REF}.supabase.co"
 SUPABASE_KEY = "SUPABASE_SERVICE_ROLE_KEY_REDACTED"
 
 def main():
@@ -30,7 +31,7 @@ def main():
     print("="*60)
     print("\nThe Supabase Python client doesn't support direct SQL execution.")
     print("Please follow these steps:\n")
-    print("1. Go to: https://supabase.com/dashboard/project/xfairwgarmpvbogiuduk/sql")
+    print(f"1. Go to: https://supabase.com/dashboard/project/{PROJECT_REF}/sql")
     print("2. Click 'New query'")
     print("3. Copy the contents of: database-schema-supabase.sql")
     print("4. Paste into the SQL Editor")

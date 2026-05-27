@@ -118,7 +118,7 @@ file_size_limit = "50MiB"
 [storage.s3_protocol]
 enabled = true
 # S3 Endpoint for Supabase Storage
-# Endpoint: https://hwntncyiqaltzvlidscg.storage.supabase.co/storage/v1/s3
+# Endpoint: https://usbxwewohpsbjwiuazpf.storage.supabase.co/storage/v1/s3
 # Region: us-east-1
 # Use AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY from Supabase dashboard
 

@@ -5,8 +5,20 @@
 
 set -e
 
-PROJECT_REF="xfairwgarmpvbogiuduk"
-FUNCTIONS_URL="https://${PROJECT_REF}.supabase.co/functions/v1"
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# shellcheck source=scripts/crypto-pay-supabase-env.sh
+source "$ROOT/scripts/crypto-pay-supabase-env.sh"
+if [[ -f "$ROOT/.env.supabase" ]]; then
+  set -a
+  # shellcheck disable=SC1090
+  source "$ROOT/.env.supabase"
+  set +a
+  # shellcheck source=scripts/crypto-pay-supabase-env.sh
+  source "$ROOT/scripts/crypto-pay-supabase-env.sh"
+fi
+
+PROJECT_REF="$CRYPTO_PAY_SUPABASE_PROJECT_REF"
+FUNCTIONS_URL="$CRYPTO_PAY_SUPABASE_FUNCTIONS_URL"
 
 echo "🔍 Webhook Configuration Verification"
 echo "======================================"

@@ -48,7 +48,7 @@ if (!secretKey || secretKey.includes('PLACEHOLDER')) {
 
 // Check Supabase vault status
 console.log('\n3. Supabase Secrets Vault:');
-console.log('   Run: supabase secrets list --project-ref xfairwgarmpvbogiuduk');
+console.log('   Run: supabase secrets list --project-ref usbxwewohpsbjwiuazpf');
 console.log('   Expected: TURNSTILE_SECRET_KEY should be listed\n');
 
 // Check Cloudflare API credentials

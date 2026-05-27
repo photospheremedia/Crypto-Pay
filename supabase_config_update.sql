@@ -1,6 +1,6 @@
 -- Update auth configuration for custom domain
 -- Note: This needs to be done via Supabase Dashboard
--- Go to: https://supabase.com/dashboard/project/xfairwgarmpvbogiuduk/auth/url-configuration
+-- Go to: https://supabase.com/dashboard/project/usbxwewohpsbjwiuazpf/auth/url-configuration
 
 -- Add these redirect URLs:
 -- https://cryptopay.sale/auth/callback
