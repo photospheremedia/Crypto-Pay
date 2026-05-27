@@ -1,5 +1,7 @@
 ## Production readiness checklist (Crypto Pay)
 
+**Env, APIs, and sync order:** [ENV_AND_API_GUIDE.md](./ENV_AND_API_GUIDE.md) · [PLATFORM_CONFIGURATION.md](./PLATFORM_CONFIGURATION.md)
+
 This is a practical “ship list” with current status based on local build + Supabase MCP checks.
 
 ### Current hard blockers
@@ -100,6 +102,17 @@ We have `checkAdminAccess()` and `withAdminAuth()` as the standard.
 - **Action**: continue normalizing admin routes to consistently use:
   - `routeUnauthorized` / `routeForbidden` / `routeError`
   - `parseRequestJson()` for JSON bodies
+
+### Backups & production data safety
+
+| Item | Status | Action |
+|------|--------|--------|
+| Platform backups doc + agent skill | ✅ added | [SUPABASE_MAINTENANCE_AND_BACKUPS.md](./SUPABASE_MAINTENANCE_AND_BACKUPS.md), [supabase-production-maintenance skill](../.agents/skills/supabase-production-maintenance/SKILL.md) |
+| `pnpm supabase:backup:status` | Run locally | Confirms `pitr_enabled`, WAL-G, dashboard links |
+| PITR enabled on PhotoSphere | ⚠️ verify | Enable in [Dashboard → Backups](https://supabase.com/dashboard/project/usbxwewohpsbjwiuazpf/database/backups) (Pro + Small compute) |
+| Off-site logical dump before risky migrations | Recommended | `pnpm supabase:db:dump` |
+
+**Note:** `git push` does not modify Supabase users or rows. Only migrations, dashboard actions, or API calls change live data.
 
 ### Required environment variables
 

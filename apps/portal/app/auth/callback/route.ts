@@ -10,7 +10,35 @@ import {
 } from "@/lib/auth/user-realm";
 import { scheduleEmailWork } from "@/lib/email/schedule";
 import { runWelcomeEmailWorkflow } from "@/lib/email/workflows";
+import { getUserPreferredLocale } from "@/lib/i18n/locale-actions";
+import {
+  localizeAppPath,
+  localeCookieOptions,
+} from "@/lib/i18n/locale-preference";
+import { LOCALE_COOKIE_NAME } from "@/lib/i18n/locale-cookie-client";
 import { listUserMerchantWallets } from "@/lib/wallets/db";
+
+function redirectWithAccountLocale(
+  baseUrl: string,
+  targetPath: string,
+): NextResponse {
+  return NextResponse.redirect(new URL(targetPath, baseUrl));
+}
+
+async function resolveRedirectTarget(
+  userId: string,
+  targetPath: string,
+): Promise<{ path: string; localeCookie?: string }> {
+  const preferred = await getUserPreferredLocale(userId);
+  if (!preferred) {
+    return { path: targetPath };
+  }
+
+  return {
+    path: localizeAppPath(preferred, targetPath),
+    localeCookie: preferred,
+  };
+}
 
 /**
  * OAuth Callback Handler
@@ -80,7 +108,15 @@ export async function GET(request: NextRequest) {
 
     if (realm === "admin") {
       const target = sanitizePostAuthRedirect(rawNext, "admin");
-      return NextResponse.redirect(new URL(target, baseUrl));
+      const { path, localeCookie } = await resolveRedirectTarget(
+        data.session.user.id,
+        target,
+      );
+      const response = redirectWithAccountLocale(baseUrl, path);
+      if (localeCookie) {
+        response.cookies.set(LOCALE_COOKIE_NAME, localeCookie, localeCookieOptions());
+      }
+      return response;
     }
 
     if (mode === "signup" && data.session.user.email) {
@@ -115,7 +151,15 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    return NextResponse.redirect(new URL(target, baseUrl));
+    const { path, localeCookie } = await resolveRedirectTarget(
+      data.session.user.id,
+      target,
+    );
+    const response = redirectWithAccountLocale(baseUrl, path);
+    if (localeCookie) {
+      response.cookies.set(LOCALE_COOKIE_NAME, localeCookie, localeCookieOptions());
+    }
+    return response;
 
   } catch (err) {
     console.error("[OAuth Callback] Unexpected error:", err);

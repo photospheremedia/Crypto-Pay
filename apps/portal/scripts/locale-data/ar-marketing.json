@@ -1,0 +1,283 @@
+{
+  "Navigation": {
+    "contact": "التواصل",
+    "mainNavAria": "التنقل الرئيسي"
+  },
+  "Auth": {
+    "layout": {
+      "backToHome": "العودة إلى الصفحة الرئيسية",
+      "backToSite": "العودة إلى الموقع"
+    }
+  },
+  "HowItWorksPage": {
+    "meta": {
+      "title": "كيف يعمل Crypto Pay",
+      "description": "دفع cripto غير حاضن: من محفظة إلى محفظة، تتبّع on-chain وwebhooks."
+    },
+    "hero": {
+      "eyebrow": "كيف يعمل",
+      "title": "تتبّع واقبل مدفوعات العملات المشفّرة",
+      "description": "مُراعٍ للخصوصية. من محفظة إلى محفظة. من أول رابط إلى الدفع المؤكّد."
+    },
+    "stepLabel": "الخطوة {step}",
+    "steps": {
+      "connectWallet": {
+        "title": "اربط محفظتك",
+        "description": "أضف العنوان العام حيث تريد استلام المدفوعات. بدون مفاتيح خاصة — من محفظة إلى محفظة."
+      },
+      "createPayment": {
+        "title": "أنشئ طلب دفع",
+        "description": "حدّد المبلغ والعملة. شارك رابط دفع أو أنشئ charge عبر API مع مرجع الطلب."
+      },
+      "customerPays": {
+        "title": "يدفع العميل on-chain",
+        "description": "يمكن أن يبقى الدفع على موقعك. نكتشف المعاملة ونحدّث الحالة إلى قيد المعالجة."
+      },
+      "confirmationCallback": {
+        "title": "التأكيد والاستدعاء",
+        "description": "عند التأكيد on-chain تصبح الحالة مدفوعة ويتحدّث webhook أو لوحة التحكم."
+      },
+      "reconcileExport": {
+        "title": "المطابقة والتصدير",
+        "description": "راجع سجل المدفوعات في حسابك وصدّر السجلات للمحاسبة."
+      }
+    },
+    "cta": {
+      "title": "هل أنت مستعد للبدء؟",
+      "description": "انضم الآن لcheckout cripto سلس — إعداد خلال دقائق.",
+      "apiDocs": "وثائق API"
+    }
+  },
+  "DevelopersPage": {
+    "meta": {
+      "title": "للمطورين | Crypto Pay API",
+      "description": "API موحّدة لمدفوعات cripto. Webhooks وروابط دفع وتحكم كامل في checkout."
+    },
+    "hero": {
+      "eyebrow": "للمطورين",
+      "title": "API موحّدة لـ BTC وETH وUSDT والمزيد",
+      "description": "تحكم كامل مع Crypto Pay API. وثائق وwebhooks ودعم لتدفقات checkout مخصّصة."
+    },
+    "blocks": {
+      "apiKeys": { "title": "مفاتيح API", "description": "مفاتيح ب نطاق للاختبار والإنتاج. افصل البيئات." },
+      "createCharges": { "title": "إنشاء charges", "description": "أنشئ طلبات دفع من backend مع المبلغ والأصل والبيانات الوصفية." },
+      "runnerHandshake": { "title": "Handshake Runner", "description": "Edge API في Supabase موقّع HMAC لربط محافظ الدفع (معلّق حتى موافقة المسؤول)." },
+      "unifiedApi": { "title": "API موحّدة", "description": "تحكم كامل مع endpoints موثّقة. سريعة وموثوقة — للمواقع والتطبيقات المخصّصة." }
+    },
+    "quickStart": { "eyebrow": "بدء سريع" },
+    "cta": {
+      "title": "هل أنت مستعد للتكامل؟",
+      "description": "أنشئ حسابًا، اربط محفظة وابدأ اختبار charges. تحتاج مساعدة في callbacks؟ تواصل معنا.",
+      "apiDocs": "وثائق API"
+    }
+  },
+  "GetStartedPage": {
+    "meta": { "title": "ابدأ الآن", "description": "ابدأ قبول مدفوعات cripto بخطة نشر بسيطة." },
+    "hero": {
+      "eyebrow": "ابدأ الآن",
+      "title": "أطلق checkout cripto في sprint قصير",
+      "description": "اتبع هذا المسار من الإعداد إلى أول دفع مباشر بسرعة."
+    },
+    "stepLabel": "الخطوة {step}",
+    "checklist": {
+      "1": "أنشئ حسابك وتحقّق من بيانات عملك",
+      "2": "اربط محفظة الدفع",
+      "3": "أنشئ أول رابط دفع",
+      "4": "اختبر التدفق بمعاملة صغيرة",
+      "5": "انطلق مباشرة وراقب التأكيدات في لوحة التحكم"
+    },
+    "cta": { "createAccount": "أنشئ حسابك", "talkToOnboarding": "تحدّث إلى فريق الإعداد" }
+  },
+  "AboutPage": {
+    "meta": {
+      "title": "من نحن | Crypto Pay",
+      "description": "تعرّف على Crypto Pay — مدفوعات cripto غير حاضنة، تسوية من محفظة إلى محفظة وأدوات للتجار.",
+      "ogTitle": "قصتنا: Crypto Pay",
+      "ogDescription": "للتجار الذين يريدون تسوية مباشرة في المحفظة دون custody مجمّعة."
+    },
+    "hero": {
+      "eyebrow": "من نحن",
+      "title": "مدفوعات cripto دون أخذ custody",
+      "description": "Crypto Pay يساعد التجار على قبول وتتبّع المدفوعات on-chain بينما تُسوّى الأموال مباشرةً إلى محافظهم.",
+      "bookDemo": "احجز demo",
+      "contactSales": "تواصل مع المبيعات"
+    },
+    "mission": {
+      "title": "مهمتنا",
+      "body": "جعل checkout cripto بسيطًا مثل بوابات البطاقات — دون حجز أموال التاجر أو إضافة تعقيد امتثال غير ضروري.",
+      "tagline": "نخدم التجار الإلكترونيين وفرق SaaS والأسواق حول العالم."
+    },
+    "stats": {
+      "merchants": { "value": "+500", "label": "تاجر تم إعداده" },
+      "uptime": { "value": "99.9%", "label": "توفر المنصة" },
+      "setup": { "value": "دقائق", "label": "وقت الإعداد المعتاد" },
+      "assets": { "value": "+5", "label": "أصول مدعومة" }
+    },
+    "values": {
+      "title": "قيمنا",
+      "subtitle": "ما يدفعنا كل يوم",
+      "merchantFirst": { "title": "التاجر أولًا", "description": "تسوية مباشرة في المحفظة وحالة شفافة — بدون أرصدة مجمّعة." },
+      "privacy": { "title": "مُراعٍ للخصوصية", "description": "يبقى الدفع على موقعك. نتتبّع حالة الدفع لا بيانات شخصية غير ضرورية." },
+      "developerReady": { "title": "جاهز للمطورين", "description": "روابط دفع وcharges وwebhooks وتكامل Runner لل stacks المخصّصة." }
+    },
+    "milestones": {
+      "title": "مسيرتنا",
+      "2024Launch": { "year": "2024", "title": "إطلاق المنصة", "description": "حسابات التجار والتحقق من محافظ الدفع وhandshake API Runner." },
+      "2025Runner": { "year": "2025", "title": "تكامل Runner", "description": "توسيع Edge API HMAC وwebhooks صادرة لتغييرات حالة المحفظة." },
+      "2026Checkout": { "year": "2026", "title": "خارطة checkout", "description": "روابط دفع وAPI charges وwebhooks تأكيد on-chain للتجار." }
+    },
+    "cta": {
+      "title": "هل أنت مستعد لقبول cripto؟",
+      "description": "أنشئ حسابًا، اربط محفظة وابدأ خطة النشر.",
+      "getStarted": "ابدأ الآن",
+      "contact": "تواصل معنا"
+    }
+  },
+  "ContactPage": {
+    "channels": {
+      "sales": { "title": "المبيعات + الإعداد", "copy": "تجار جدد وdemos وأسئلة التسعير." },
+      "integration": { "title": "دعم التكامل", "copy": "API وwebhooks وcheckout مخصّص." },
+      "support": { "title": "الدعم", "copy": "الحساب والمحافظ والمساعدة التشغيلية." }
+    },
+    "locationCounts": {
+      "1": "موقع واحد", "2-5": "2-5 مواقع", "6-10": "6-10 مواقع", "11-25": "11-25 موقعًا", "25+": "+25 موقعًا"
+    },
+    "interests": {
+      "paymentLinks": "روابط الدفع",
+      "apiIntegration": "تكامل API",
+      "walletVerification": "التحقق من المحفظة",
+      "customCheckout": "Checkout مخصّص",
+      "volumePricing": "تسعير بالحجم"
+    },
+    "errors": {
+      "nameRequired": "الاسم مطلوب",
+      "emailRequired": "البريد مطلوب",
+      "emailInvalid": "يرجى إدخال بريد صالح",
+      "companyRequired": "اسم الشركة مطلوب",
+      "messageRequired": "أخبرنا باحتياجاتك"
+    },
+    "success": {
+      "title": "شكرًا لتواصلك!",
+      "emailClient": "يُفترض أن يكون عميل بريدك قد فُتح مع رسالتك. وإلا راسلنا مباشرة على",
+      "responseTime": "نرد عادةً خلال 24 ساعة.",
+      "sendAnother": "إرسال رسالة أخرى"
+    },
+    "hero": {
+      "eyebrow": "التواصل",
+      "title": "لنخطّط لنشر checkout cripto الخاص بك.",
+      "description": "أخبرنا عن عملك واحتياجات التكامل والجدول الزمني. سنرد بخطة إعداد مخصّصة.",
+      "startOnboarding": "بدء الإعداد",
+      "viewPricing": "عرض الأسعار"
+    },
+    "info": {
+      "office": "المكتب",
+      "officeLocation": "Los Angeles, CA (فريق عن بُعد)",
+      "responseTime": "وقت الرد",
+      "responseTimeDetail": "خلال 24 ساعة في أيام العمل"
+    },
+    "form": {
+      "eyebrow": "إرسال طلب",
+      "namePlaceholder": "اسمك *",
+      "emailPlaceholder": "البريد الإلكتروني *",
+      "phonePlaceholder": "الهاتف (اختياري)",
+      "companyPlaceholder": "اسم الشركة *",
+      "locationsLabel": "عدد المواقع",
+      "interestsLabel": "ما الذي يهمك؟",
+      "messagePlaceholder": "أخبرنا عن عملك واحتياجاتك *",
+      "submit": "إرسال الطلب",
+      "submitHint": "سنرد خلال 24 ساعة بخطة مخصّصة.",
+      "notProvided": "غير مذكور",
+      "notSpecified": "غير محدّد",
+      "emailSubject": "طلب تواصل من {company}"
+    },
+    "demo": {
+      "eyebrow": "تفضّل جولة توضيحية؟",
+      "title": "حدّد demo للبوابة 20 دقيقة مع فريقنا.",
+      "bookDemo": "احجز demo"
+    }
+  },
+  "Faq": {
+    "meta": {
+      "title": "الأسئلة الشائعة | Crypto Pay",
+      "description": "أسئلة شائعة عن Crypto Pay — تسوية المحفظة والأصول والأسعار وتكامل API.",
+      "ogTitle": "Crypto Pay — الأسئلة الشائعة",
+      "ogDescription": "إجابات عن قبول مدفوعات cripto مع Crypto Pay."
+    },
+    "hero": {
+      "eyebrow": "الأسئلة الشائعة",
+      "title": "إجابات للمشغّلين والمالكين",
+      "description": "إن كان لديك سير عمل فريد، تواصل معنا ونصمّم خطة لك."
+    },
+    "cta": { "title": "لا تزال لديك أسئلة؟", "description": "تواصل معنا وسنساعدك في الإعداد.", "button": "التواصل" },
+    "categories": {
+      "gettingStarted": "البدء",
+      "payments": "المدفوعات",
+      "security": "الأمان",
+      "developers": "للمطورين",
+      "pricing": "الأسعار",
+      "support": "الدعم"
+    },
+    "items": {
+      "whatIsCryptoPay": { "question": "ما هو Crypto Pay؟", "answer": "Crypto Pay يساعدك على تتبّع وقبول مدفوعات cripto. المدفوعات تذهب مباشرةً إلى محفظتك — غير حاضن ومُراعٍ للخصوصية." },
+      "howFastSetup": { "question": "ما سرعة الإعداد؟", "answer": "معظم التجار يربطون محفظة وينشئون أول رابط خلال دقائق. تكامل API يستغرق ساعات حسب stack." },
+      "whatDoINeed": { "question": "ماذا أحتاج للبدء؟", "answer": "عنوان محفظة تتحكم به وحساب Crypto Pay. للمواقع المخصّصة URL callback أو webhook endpoint لتحديثات الحالة." },
+      "supportedCoins": { "question": "ما العملات المدعومة؟", "answer": "ندعم BTC وETH وLTC وUSDT وUSDC. قد تُضاف أصول لاحقًا." },
+      "wherePaymentsGo": { "question": "إلى أين تذهب المدفوعات؟", "answer": "مباشرةً إلى محفظتك. لا نحتفظ برصيد تجاري مجمّع — التسوية من محفظة إلى محفظة." },
+      "paymentStatus": { "question": "كيف تتتبّعون حالة الدفع؟", "answer": "نراقب blockchain للمعاملات المطابقة. الحالة: غير مدفوع → قيد المعالجة → مدفوع." },
+      "kycRequirements": { "question": "ما متطلبات KYC؟", "answer": "لأننا لا نعالج ولا نخزّن المدفوعات، KYC محدود ومبني على تقييم المخاطر — لا على custody." },
+      "privateKeys": { "question": "هل تحتاجون مفاتيحي الخاصة؟", "answer": "لا. تقدّم عنوان محفظة عامًا فقط. Crypto Pay لا يطلب مفاتيح خاصة." },
+      "hasApi": { "question": "هل توجد API؟", "answer": "نعم. API موحّدة لإنشاء charges وفحص الحالة واستقبال webhooks عند التأكيد." },
+      "websiteIntegration": { "question": "كيف أدمج على موقعي؟", "answer": "روابط دفع بدون كود أو REST API وwebhooks لcheckout مخصّص. راجع صفحة المطورين." },
+      "fees": { "question": "كيف تعمل الرسوم؟", "answer": "التسعير القياسي: رسوم أساس {percent}% لكل معاملة ناجحة، تُفوتر شهريًا — لا تُخصم عند الدفع. Business Scale بالتواصل." },
+      "platformFees": { "question": "هل هناك رسوم إعداد أو شهرية؟", "answer": "لا رسوم منصة مخفية في الخطة القياسية. تدفع عند استلام دفع ناجح حسب أسعارنا." },
+      "supportIncluded": { "question": "ما الدعم المُضمّن؟", "answer": "دعم إعداد بالبريد في Standard. Business Scale يشمل دعمًا أولويًا وSLA اختياريًا." }
+    }
+  },
+  "CookieConsent": {
+    "bannerTitle": "تفضيلات ملفات تعريف الارتباط",
+    "bannerDescription": "نستخدم cookies للوظائف الأساسية والتحليلات الاختيارية.",
+    "cookiePolicy": "سياسة Cookies",
+    "acceptAll": "قبول الكل",
+    "essentialOnly": "الأساسية فقط",
+    "customize": "تخصيص",
+    "required": "مطلوب",
+    "toggleEnable": "تفعيل cookies {name}",
+    "toggleDisable": "تعطيل cookies {name}",
+    "viewDetails": "عرض التفاصيل",
+    "hideDetails": "إخفاء التفاصيل",
+    "dialogDescription": "اختر cookies الاختيارية. الأساسية مفعّلة دائمًا.",
+    "selectAll": "تحديد الكل",
+    "savePreferences": "حفظ التفضيلات",
+    "settingsButton": "إعدادات Cookies",
+    "categories": {
+      "essential": {
+        "name": "ضرورية للغاية",
+        "description": "أساسية لعمل الموقع. مطلوبة لتسجيل الدخول الآمن والمصادقة.",
+        "examples": { "session": "Cookies الجلسة", "auth": "رموز المصادقة", "csrf": "حماية CSRF", "loadBalancing": "موازنة الحمل" }
+      },
+      "functional": {
+        "name": "وظيفية",
+        "description": "تمكّن ميزات مخصّصة وتتذكّر تفضيلات اللغة والعرض.",
+        "examples": { "language": "تفضيلات اللغة", "recent": "عناصر شوهدت مؤخرًا", "theme": "إعدادات المظهر", "location": "بيانات الموقع" }
+      },
+      "analytics": {
+        "name": "التحليلات والأداء",
+        "description": "تساعدنا على فهم تفاعل الزوار بشكل مجهول.",
+        "examples": { "ga": "Google Analytics", "pageViews": "مشاهدات الصفحة", "sessionDuration": "مدة الجلسة", "errorTracking": "تتبّع الأخطاء", "hotjar": "Hotjar" }
+      },
+      "advertising": {
+        "name": "الإعلان والتسويق",
+        "description": "للمحتوى ذي الصلة وقياس الحملات. قد تُضبط من شركاء التسويق.",
+        "examples": { "googleAds": "Google Ads", "facebook": "Facebook Pixel", "retargeting": "إعادة الاستهداف", "crossSite": "تتبّع عبر المواقع", "linkedin": "LinkedIn Insight" }
+      }
+    }
+  },
+  "CryptoConverter": {
+    "eyebrow": "محوّل مباشر",
+    "subtitle": "cripto إلى fiat في الوقت الفعلي حسب أسعار السوق",
+    "refreshRates": "تحديث الأسعار",
+    "errorLoadRates": "تعذّر تحميل الأسعار",
+    "labels": { "amount": "المبلغ", "cryptocurrency": "العملة المشفّرة", "localCurrency": "العملة المحلية" },
+    "rateLine": "{amount} {symbol} · 1 {symbol} = {unitPrice}"
+  }
+}

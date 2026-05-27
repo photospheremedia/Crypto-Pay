@@ -1,35 +1,33 @@
 "use client";
 
-import { useCallback, useTransition } from "react";
+import { useCallback, useState } from "react";
 import { useLocale } from "next-intl";
-import { usePathname, useRouter } from "@/i18n/navigation";
+import { getPathname, usePathname } from "@/i18n/navigation";
 import type { Locale } from "@/lib/i18n/locale-config";
 import { setLocaleCookieClient } from "@/lib/i18n/locale-cookie-client";
 import { persistUserLocale } from "@/lib/i18n/locale-actions";
 
 /**
- * Switches locale: cookie + navigation first (instant), DB preference in background.
+ * Explicit user locale change: cookie (if allowed) + DB + full navigation.
+ * Browser Accept-Language is not used after this — cookie/DB take over on return visits.
  */
 export function useSwitchLocale() {
   const locale = useLocale() as Locale;
-  const router = useRouter();
   const pathname = usePathname();
-  const [isPending, startTransition] = useTransition();
+  const [isPending, setIsPending] = useState(false);
 
   const switchLocale = useCallback(
     (next: Locale) => {
-      if (next === locale) return;
+      if (next === locale || isPending) return;
 
       setLocaleCookieClient(next);
-
-      startTransition(() => {
-        router.replace(pathname, { locale: next });
-        router.refresh();
-      });
-
+      setIsPending(true);
       void persistUserLocale(next);
+
+      const href = getPathname({ href: pathname, locale: next });
+      window.location.assign(href);
     },
-    [locale, pathname, router],
+    [isPending, locale, pathname],
   );
 
   return { switchLocale, isPending, locale };

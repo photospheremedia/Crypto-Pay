@@ -64,8 +64,12 @@
     "supabase:logout": "./scripts/supabase-auth.sh logout",
     "supabase:open": "./scripts/supabase-auth.sh open",
     "supabase:connect": "./scripts/connect-photospheremedia.sh",
+    "supabase:backup:status": "./scripts/supabase-backup-status.sh",
+    "supabase:backup:enable": "./scripts/supabase-enable-platform-backups.sh",
+    "supabase:db:dump": "./scripts/supabase-db-dump.sh",
     "supabase:secrets": "./scripts/setup-supabase-github-secrets.sh",
-    "resend:sync": "./scripts/setup-resend-secrets.sh"
+    "resend:sync": "./scripts/setup-resend-secrets.sh",
+    "resend:verify": "./scripts/verify-supabase-resend-config.sh && cd apps/portal && pnpm email:verify"
   },
   "devDependencies": {
     "netlify-cli": "^26.0.2",

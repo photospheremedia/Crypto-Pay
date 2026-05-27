@@ -2,7 +2,6 @@ import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
 import { getLocale } from "next-intl/server";
-import { CookieConsent } from "@/components/cookie-consent";
 import { ToastProvider } from "@/hooks/use-toast";
 import { isRtlLocale } from "@/i18n/routing";
 import { getHtmlLang } from "@/lib/i18n/locale-config";
@@ -120,7 +119,6 @@ export default async function RootLayout({
     >
       <body className="min-h-dvh bg-gray-50">
         <ToastProvider>{children}</ToastProvider>
-        <CookieConsent />
       </body>
     </html>
   );

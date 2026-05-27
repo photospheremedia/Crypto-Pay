@@ -29,10 +29,11 @@ Run checks **incrementally** — after meaningful edits, before declaring done.
 
 | When | Action |
 |------|--------|
-| Migrations, RLS, SQL, schema | Read `.agents/skills/supabase/SKILL.md`; use **Supabase MCP** (`list_tables`, `get_advisors`) before changing production patterns |
+| Migrations, RLS, SQL, schema | Read `.agents/skills/supabase/SKILL.md`; production: `.agents/skills/supabase-production-maintenance/SKILL.md`; use **Supabase MCP** (`list_tables`, `get_advisors`) before changing production patterns |
 | Auth/session/API routes under `apps/portal/app/api` | Verify types + `lib/` helpers; check Supabase logs via MCP if behavior is wrong |
 | Postgres performance | `.agents/skills/supabase-postgres-best-practices/SKILL.md` |
-| Email (Resend) | Cursor Resend plugin skill or Context7 `/resend/resend` |
+| Signup, email confirm, welcome mail | `.agents/skills/auth-signup-flow/SKILL.md` |
+| Email (Resend) | `.agents/skills/resend/SKILL.md` or Context7 `/websites/resend` |
 
 ### Monorepo scripts (CLI verification)
 

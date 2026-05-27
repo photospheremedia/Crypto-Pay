@@ -1,0 +1,41 @@
+---
+description: Read docs/INDEX.md first; Crypto Pay vs Runner — users/wallets/verification/comms here; payments on Runner
+alwaysApply: true
+---
+
+# Crypto Pay platform boundaries
+
+**Read `docs/INDEX.md` first** — then skills as needed: `supabase`, `resend`, `netlify`, **`shadcn`** (UI), and `crypto-pay-platform` under `.agents/skills/`.
+
+## This repo owns (implement here)
+
+- **User management** — Supabase Auth, profiles, memberships, admin merchant directory, account security
+- **Merchant payout wallets** — `merchant_wallets` CRUD in portal, admin verification (`pending` → `verified` / `rejected`)
+- **Communication** — transactional email (Resend), admin review notifications, merchant status emails, onboarding flows
+- **Runner handshake only** — HMAC edge API (`runner-api`) + outbound webhooks when wallet status changes; audit in `runner_api_events`
+
+Do **not** build full payment checkout, chain monitoring, or settlement in the portal—that lives on the **Runner** app (separate server).
+
+## Runner app owns (do not duplicate here)
+
+- Payment processing, charge creation, on-chain monitoring, settlement callbacks
+- Linking stores/merchants via `external_id` on `POST /v1/wallets`
+- Consuming `wallet.status.updated` webhooks (or polling `GET /v1/wallets`)
+
+## Integration rules for agents
+
+1. **Never** name or integrate third-party payment SaaS in product code, docs, or UI—use **Crypto Pay** / **Runner** / **BTC provider** env abstractions only where legacy internal automation exists.
+2. Wallet rows from Runner use `source: runner_api` + `runner_client_id` + `external_id`; portal rows use `source: portal`.
+3. New machine-to-machine wallet APIs → extend `supabase/functions/runner-api` and update `docs/RUNNER_INTEGRATION.md`.
+4. Admin verify/reject must trigger Runner webhooks when applicable (`dispatchRunnerWalletStatusWebhook`).
+5. Do not add merchant payment checkout UI without an explicit product request; Activity tab may stay roadmap until Runner exposes charge APIs.
+
+## UI split (mandatory)
+
+- **Merchant UI** — `/account/*`, `/api/account/*` — wallets, settings, own data only (RLS).
+- **Admin UI** — `/admin/*`, `/api/admin/*` — verification, merchants, staff (`checkAdminAccess()`).
+- Do not add admin-only flows to account pages or merchant APIs to admin routes without clear product need.
+
+## Documentation
+
+Full catalog and task routing: **`docs/INDEX.md`** (do not maintain a duplicate list here).

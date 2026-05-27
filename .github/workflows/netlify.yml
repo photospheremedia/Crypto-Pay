@@ -54,6 +54,12 @@ jobs:
       - name: Typecheck portal
         run: pnpm --filter @crypto-pay/portal typecheck
 
+      - name: Install Playwright browsers
+        run: pnpm --filter @crypto-pay/portal exec playwright install --with-deps chromium
+
+      - name: Run portal tests (Playwright)
+        run: pnpm --filter @crypto-pay/portal test
+
   preview:
     if: github.event_name == 'pull_request'
     needs: validate
@@ -75,6 +81,9 @@ jobs:
 
       - name: Install dependencies
         run: corepack enable && pnpm install --frozen-lockfile
+
+      - name: Typecheck portal
+        run: pnpm --filter @crypto-pay/portal typecheck
 
       - name: Validate Netlify CI secrets
         id: validate_secrets
@@ -133,6 +142,15 @@ jobs:
 
       - name: Install dependencies
         run: corepack enable && pnpm install --frozen-lockfile
+
+      - name: Typecheck portal
+        run: pnpm --filter @crypto-pay/portal typecheck
+
+      - name: Install Playwright browsers
+        run: pnpm --filter @crypto-pay/portal exec playwright install --with-deps chromium
+
+      - name: Run portal tests (Playwright)
+        run: pnpm --filter @crypto-pay/portal test
 
       - name: Validate Netlify CI secrets
         id: validate_secrets

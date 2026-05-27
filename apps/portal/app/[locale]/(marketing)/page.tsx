@@ -39,8 +39,8 @@ export default async function MarketingHome({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const t = await getTranslations("HomePage");
-  const tCommon = await getTranslations("Common");
+  const t = await getTranslations({ locale, namespace: "HomePage" });
+  const tCommon = await getTranslations({ locale, namespace: "Common" });
 
   const benefits = [
     {

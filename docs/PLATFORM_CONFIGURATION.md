@@ -2,6 +2,7 @@
 
 Guide for developers and agents configuring Crypto Pay infrastructure. Secrets live in `apps/portal/.env.local` (gitignored); sync to hosted environments with the scripts below—**never commit API keys**.
 
+**End-to-end (env + APIs + flows):** [ENV_AND_API_GUIDE.md](./ENV_AND_API_GUIDE.md)  
 **Index:** [INDEX.md](./INDEX.md)
 
 **Agent skills:** [Supabase](../.agents/skills/supabase/SKILL.md) · [Resend](../.agents/skills/resend/SKILL.md) · [Netlify](../.agents/skills/netlify/SKILL.md)
@@ -16,6 +17,7 @@ Guide for developers and agents configuring Crypto Pay infrastructure. Secrets l
 1. Supabase project + keys → apps/portal/.env.local
 2. pnpm dev:setup              (local auth user + membership)
 3. pnpm resend:sync            (Resend → Supabase Auth SMTP + edge secrets)
+   pnpm resend:verify          (Supabase SMTP + secrets + portal Resend domain)
 4. pnpm netlify:connect        (link site)
 5. pnpm netlify:env-sync       (portal env → Netlify build)
 6. supabase db push            (migrations, when schema changes)
@@ -83,6 +85,18 @@ pnpm db:types                # regenerate apps/portal/lib/database.types.ts
 
 Before changing RLS or schema: read `.agents/skills/supabase/SKILL.md` and run Supabase MCP advisors.
 
+**Production data:** read [SUPABASE_MAINTENANCE_AND_BACKUPS.md](./SUPABASE_MAINTENANCE_AND_BACKUPS.md). Never `db reset` on PhotoSphere. `git push` does not change database rows.
+
+### Backups (platform)
+
+| Step | Action |
+|------|--------|
+| Check status | `pnpm supabase:backup:status` |
+| Enable PITR (recommended) | [Database → Backups](https://supabase.com/dashboard/project/usbxwewohpsbjwiuazpf/database/backups) — Pro + Small compute |
+| Off-site logical dump | `pnpm supabase:db:dump` → `backups/` (gitignored) |
+
+See [SUPABASE_MAINTENANCE_AND_BACKUPS.md](./SUPABASE_MAINTENANCE_AND_BACKUPS.md) for restore, PITR pricing, and agent safety rules.
+
 ### Edge function secrets
 
 Set via dashboard or CLI (also updated by `pnpm resend:sync` for email-related keys):
@@ -104,8 +118,11 @@ supabase functions deploy runner-api
 |---------|---------|
 | `pnpm supabase:connect` | Link CLI to PhotoSphere project |
 | `pnpm supabase:status` | Linked project + health |
+| `pnpm supabase:backup:status` | PITR on/off, backup API, dashboard links |
+| `pnpm supabase:db:dump` | Logical SQL dump to `backups/` |
 | `pnpm dev:setup` | Local dev user + `cp_admin` when `LOCAL_DEV_ADMIN=1` |
-| `pnpm db:push` / `pnpm db:reset` | Migrate / reset local stack |
+| `pnpm db:push` | Apply migrations to **linked** project only |
+| `pnpm db:reset` | **Local Supabase only** — never on production PhotoSphere |
 
 ---
 
@@ -162,8 +179,8 @@ pnpm netlify:env-sync
 ### Verify
 
 ```bash
-cd apps/portal && pnpm email:verify
-pnpm email:preview          # template previews
+pnpm resend:verify          # Supabase SMTP + secrets + portal domain
+cd apps/portal && pnpm email:preview   # template previews
 ```
 
 ### Agent rules

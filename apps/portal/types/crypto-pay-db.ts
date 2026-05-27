@@ -2,13 +2,6 @@
 export type WalletNetwork = "btc" | "eth" | "ltc" | "usdt" | "usdc";
 export type WalletStatus = "pending" | "verified" | "rejected";
 
-export type PaymentChargeStatus =
-  | "pending"
-  | "detected"
-  | "confirming"
-  | "confirmed"
-  | "failed";
-
 export type UserWalletProfile = {
   id: string;
   user_id: string;
@@ -37,26 +30,6 @@ export type MerchantWallet = {
   verified_at: string | null;
   verified_by: string | null;
   rejection_reason: string | null;
-  created_at: string;
-  updated_at: string;
-};
-
-export type CryptoPaymentCharge = {
-  id: string;
-  user_id: string;
-  reference: string | null;
-  fiat_amount: number;
-  fiat_currency: string;
-  crypto: string;
-  crypto_amount: number;
-  btc_address: string;
-  provider_account: string | null;
-  status: PaymentChargeStatus;
-  provider_status: number | null;
-  value_satoshi: number | null;
-  txid: string | null;
-  rbf: number | null;
-  price_locked_until: string;
   created_at: string;
   updated_at: string;
 };

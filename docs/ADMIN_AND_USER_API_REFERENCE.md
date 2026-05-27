@@ -1,6 +1,20 @@
 ## Admin & User API reference (portal)
 
+**Context:** [ENV_AND_API_GUIDE.md](./ENV_AND_API_GUIDE.md) · [API_STYLE_GUIDE.md](./API_STYLE_GUIDE.md)
+
 This is the living index of backend endpoints used by the portal UI and admin tooling.
+
+### Route map (all `route.ts` files)
+
+| Area | Paths |
+|------|--------|
+| **Account** | `/api/account/wallets`, `/api/account/wallets/[id]`, `…/resend`, `…/delete`, `/api/account/password`, `/api/account/password-reset` |
+| **Admin** | `/api/admin/wallets`, `/api/admin/stats`, `/api/admin/users`, `/api/admin/users/[id]/*`, `/api/admin/staff`, `/api/admin/customers`, `/api/admin/leads`, `/api/admin/notifications`, `/api/admin/audit`, `/api/admin/analytics`, `/api/admin/search`, `/api/admin/marketing/*` |
+| **Internal** | - |
+| **Payments** | Payments and on-chain monitoring are handled by **Runner**. |
+| **Public** | `/api/user`, `/api/health`, `/api/crypto-rates`, `/api/chat`, `/api/chat/messages`, `/api/chat/conversation`, `/api/analytics/track`, `/api/metrics/dashboard`, `/api/log-security-event`, `/api/cache-monitoring` |
+
+Add new rows here when you add a handler.
 
 ### User-scoped endpoints
 

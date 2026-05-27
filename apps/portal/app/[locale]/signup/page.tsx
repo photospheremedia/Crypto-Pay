@@ -1,10 +1,10 @@
 import { Suspense } from "react";
-import { Login } from "../(login)/login";
+import { SignupWizard } from "./signup-wizard";
 
 export default function SignupPage() {
   return (
     <Suspense>
-      <Login mode="signup" />
+      <SignupWizard />
     </Suspense>
   );
 }

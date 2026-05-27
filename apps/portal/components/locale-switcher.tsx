@@ -1,18 +1,17 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Check, ChevronDown, Languages } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
 import { localeCodes, type Locale } from "@/lib/i18n/locale-config";
 import { useSwitchLocale } from "@/lib/i18n/use-switch-locale";
-import { useIsClient } from "@/lib/hooks/use-is-client";
+import { LocaleFlag } from "@/components/locale-flag";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
+  DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -28,90 +27,54 @@ import { cn } from "@/lib/utils";
 
 type LocaleSwitcherProps = {
   className?: string;
-  /**
-   * `menu` — dropdown trigger for headers.
-   * `select` — full-width native select (settings).
-   * `grid` — two-column language cards (marketing mobile menu).
-   */
   variant?: "menu" | "select" | "grid";
-  /**
-   * `default` — globe + full language name on the trigger.
-   * `toolbar` — icon-only on narrow headers; short code from `sm`; full name from `lg`.
-   */
   size?: "default" | "toolbar";
-  /** Polished styles for the public marketing site header and mobile drawer. */
   appearance?: "default" | "marketing";
 };
 
 const popoverLayerClassName = "z-[200]";
 
-const menuContentClassName = cn(popoverLayerClassName, "min-w-44 bg-white dark:bg-slate-950");
-
-const marketingMenuContentClassName = cn(
-  popoverLayerClassName,
-  "w-60 rounded-2xl border-slate-200 bg-white p-2 shadow-xl dark:border-slate-700 dark:bg-slate-950",
-);
-
-const marketingRadioItemClassName =
-  "rounded-lg py-2.5 pl-8 text-slate-700 focus:bg-emerald-50 focus:text-emerald-900 data-[state=checked]:bg-emerald-50 data-[state=checked]:text-emerald-900 dark:text-slate-200 dark:focus:bg-emerald-950/50 dark:focus:text-emerald-300 dark:data-[state=checked]:bg-emerald-950/40 dark:data-[state=checked]:text-emerald-300";
-
 function localeShortCode(locale: Locale): string {
   if (locale === "de-AT") return "AT";
-  const base = locale.split("-")[0];
-  return base.toUpperCase();
+  return locale.split("-")[0].toUpperCase();
 }
 
-function LocaleMenuPlaceholder({
+function LocaleMenuItem({
+  code,
+  selected,
+  disabled,
+  onSelect,
   className,
-  label,
-  localeLabel,
-  size = "default",
-  appearance = "default",
 }: {
+  code: Locale;
+  selected: boolean;
+  disabled?: boolean;
+  onSelect: () => void;
   className?: string;
-  label: string;
-  localeLabel: string;
-  size?: "default" | "toolbar";
-  appearance?: "default" | "marketing";
 }) {
-  const isMarketing = appearance === "marketing";
+  const t = useTranslations("LocaleSwitcher");
 
   return (
-    <Button
-      type="button"
-      variant={isMarketing ? "ghost" : "outline"}
-      size={size === "toolbar" ? "icon-sm" : "sm"}
+    <DropdownMenuItem
+      disabled={disabled}
+      onSelect={(event) => {
+        event.preventDefault();
+        onSelect();
+      }}
       className={cn(
-        isMarketing
-          ? "rounded-full px-3 text-slate-600"
-          : size === "toolbar"
-            ? "size-8 shrink-0 rounded-full sm:size-auto sm:gap-1.5 sm:px-3"
-            : "rounded-full gap-1.5",
+        "flex cursor-pointer items-center gap-3 rounded-lg py-2.5 pl-2 pr-2.5",
+        selected && "bg-accent text-accent-foreground",
         className,
       )}
-      aria-label={label}
-      aria-haspopup="menu"
-      disabled
     >
-      <Languages
-        data-icon={size === "default" && !isMarketing ? "inline-start" : undefined}
-        className={cn(
-          "size-4 shrink-0",
-          isMarketing && "text-slate-500 dark:text-slate-400",
-        )}
-        aria-hidden
-      />
-      {size === "default" ? (
-        <span className="max-w-[7rem] truncate">{localeLabel}</span>
-      ) : isMarketing ? (
-        <span className="font-medium tabular-nums">{localeLabel}</span>
+      <LocaleFlag locale={code} size="md" />
+      <span className="min-w-0 flex-1 truncate text-sm font-medium">{t(code)}</span>
+      {selected ? (
+        <Check className="size-4 shrink-0 text-emerald-600" aria-hidden />
       ) : (
-        <span className="hidden max-w-[4rem] truncate sm:inline lg:hidden">
-          {localeLabel}
-        </span>
+        <span className="size-4 shrink-0" aria-hidden />
       )}
-      {isMarketing ? <ChevronDown className="size-3.5 opacity-50" aria-hidden /> : null}
-    </Button>
+    </DropdownMenuItem>
   );
 }
 
@@ -140,7 +103,7 @@ function LocaleGrid({
       aria-label={t("label")}
     >
       {isMarketing ? (
-        <p className="col-span-2 mb-1 px-0.5 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+        <p className="col-span-2 mb-1 px-0.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           {t("label")}
         </p>
       ) : null}
@@ -155,24 +118,19 @@ function LocaleGrid({
             disabled={isPending}
             onClick={() => switchLocale(code)}
             className={cn(
-              "relative rounded-xl border px-3 py-2.5 text-left transition-all disabled:opacity-60",
+              "relative flex flex-col items-start gap-2 rounded-xl border px-3 py-3 text-left transition-all disabled:opacity-60",
               selected
                 ? "border-emerald-300/80 bg-emerald-50 text-emerald-900 shadow-sm ring-1 ring-emerald-200/80 dark:border-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-200 dark:ring-emerald-800/60"
                 : "border-slate-200/80 bg-white text-slate-700 hover:border-emerald-200 hover:bg-emerald-50/50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:border-emerald-800 dark:hover:bg-emerald-950/30",
             )}
           >
-            {selected ? (
-              <Check
-                className="absolute right-2 top-2 size-3.5 text-emerald-600 dark:text-emerald-400"
-                aria-hidden
-              />
-            ) : null}
-            <span className="block text-sm font-semibold tabular-nums">
-              {localeShortCode(code)}
+            <span className="flex w-full items-center justify-between gap-2">
+              <LocaleFlag locale={code} size="lg" ring={false} />
+              {selected ? (
+                <Check className="size-4 text-emerald-600 dark:text-emerald-400" aria-hidden />
+              ) : null}
             </span>
-            <span className="mt-0.5 block truncate text-xs text-slate-500 dark:text-slate-400">
-              {t(code)}
-            </span>
+            <span className="truncate text-sm font-semibold">{t(code)}</span>
           </button>
         );
       })}
@@ -189,23 +147,14 @@ export function LocaleSwitcher({
 }: LocaleSwitcherProps) {
   const { switchLocale, isPending, locale } = useSwitchLocale();
   const t = useTranslations("LocaleSwitcher");
-  const isClient = useIsClient();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   const shortCode = localeShortCode(locale);
   const isMarketing = appearance === "marketing";
   const pendingClass = isPending ? "pointer-events-none opacity-60" : undefined;
 
   if (variant === "grid") {
-    if (!isClient) {
-      return (
-        <div
-          className={cn(
-            "grid h-32 grid-cols-2 gap-2 rounded-2xl border border-slate-200/80 bg-slate-50/80",
-            className,
-          )}
-          aria-hidden
-        />
-      );
-    }
     return (
       <LocaleGrid
         className={cn(pendingClass, className)}
@@ -216,20 +165,6 @@ export function LocaleSwitcher({
   }
 
   if (variant === "select") {
-    if (!isClient) {
-      return (
-        <Button
-          type="button"
-          variant="outline"
-          className={cn("w-full justify-between font-normal", className)}
-          aria-label={t("label")}
-          disabled
-        >
-          <span>{t(locale)}</span>
-        </Button>
-      );
-    }
-
     return (
       <Select
         value={locale}
@@ -239,19 +174,23 @@ export function LocaleSwitcher({
         <SelectTrigger
           className={cn(
             pendingClass,
+            "h-11 gap-2 rounded-xl",
             isMarketing &&
-              "h-11 rounded-xl border-slate-200/80 bg-white/90 shadow-sm dark:border-slate-700 dark:bg-slate-900/80",
+              "border-slate-200/80 bg-white/90 shadow-sm dark:border-slate-700 dark:bg-slate-900/80",
             className,
           )}
           aria-label={t("label")}
         >
-          <SelectValue />
+          <SelectValue placeholder={t(locale)} />
         </SelectTrigger>
         <SelectContent align="start" className={cn(popoverLayerClassName, "rounded-xl")}>
           <SelectGroup>
             {localeCodes.map((code) => (
-              <SelectItem key={code} value={code}>
-                {t(code)}
+              <SelectItem key={code} value={code} className="py-2.5">
+                <span className="flex items-center gap-3">
+                  <LocaleFlag locale={code} size="sm" />
+                  <span>{t(code)}</span>
+                </span>
               </SelectItem>
             ))}
           </SelectGroup>
@@ -260,64 +199,69 @@ export function LocaleSwitcher({
     );
   }
 
-  if (!isClient) {
-    return (
-      <LocaleMenuPlaceholder
-        className={className}
-        label={t("label")}
-        localeLabel={
-          isMarketing || size === "toolbar" ? shortCode : t(locale)
-        }
-        size={isMarketing ? "toolbar" : size}
-        appearance={appearance}
-      />
-    );
-  }
-
   const triggerClassName = cn(
     pendingClass,
     isMarketing
-      ? "h-9 shrink-0 gap-1.5 rounded-full px-3 text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
+      ? "h-9 shrink-0 gap-2 rounded-full px-2.5 text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
       : size === "toolbar"
-        ? "size-8 shrink-0 rounded-full p-0 sm:size-auto sm:gap-1.5 sm:px-3"
-        : "rounded-full gap-1.5",
+        ? "h-8 shrink-0 gap-2 rounded-full px-2 sm:px-2.5"
+        : "gap-2 rounded-full px-2.5",
     className,
   );
+
+  const menuContentClassName = cn(
+    popoverLayerClassName,
+    "w-60 rounded-xl border bg-popover p-1.5 shadow-lg",
+  );
+
+  // Avoid Radix hydration mismatches by rendering the dropdown only after mount.
+  if (!mounted) {
+    return (
+      <Button
+        variant={isMarketing ? "ghost" : "outline"}
+        size="sm"
+        className={triggerClassName}
+        aria-label={t("label")}
+        disabled={isPending}
+      >
+        <LocaleFlag locale={locale} size="sm" />
+        {size === "toolbar" ? (
+          <span className="max-w-[4rem] truncate sm:hidden">{shortCode}</span>
+        ) : (
+          <span className="max-w-[7rem] truncate">{t(locale)}</span>
+        )}
+      </Button>
+    );
+  }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant={isMarketing ? "ghost" : "outline"}
-          size={size === "toolbar" || isMarketing ? "sm" : "sm"}
+          size="sm"
           className={triggerClassName}
           aria-label={t("label")}
         >
-          <Languages
-            data-icon={size === "default" && !isMarketing ? "inline-start" : undefined}
-            className={cn(
-              "size-4 shrink-0",
-              isMarketing && "text-slate-500 dark:text-slate-400",
-            )}
-          />
+          <LocaleFlag locale={locale} size="sm" />
           {isMarketing ? (
             <>
-              <span className="font-medium tabular-nums xl:hidden">{shortCode}</span>
-              <span className="hidden max-w-[8rem] truncate font-medium xl:inline">
+              <span className="hidden max-w-[7rem] truncate font-medium sm:inline">
                 {t(locale)}
               </span>
+              <span className="font-medium tabular-nums sm:hidden">{shortCode}</span>
               <ChevronDown className="size-3.5 opacity-50" aria-hidden />
             </>
           ) : size === "default" ? (
-            <span className="max-w-[7rem] truncate">{t(locale)}</span>
+            <>
+              <span className="max-w-[7rem] truncate">{t(locale)}</span>
+              <ChevronDown className="size-3.5 opacity-50" aria-hidden />
+            </>
           ) : (
             <>
-              <span className="hidden max-w-[4rem] truncate sm:inline lg:hidden">
-                {shortCode}
-              </span>
-              <span className="hidden max-w-[7rem] truncate lg:inline">
-                {t(locale)}
-              </span>
+              <span className="max-w-[4rem] truncate sm:hidden">{shortCode}</span>
+              <span className="hidden max-w-[7rem] truncate sm:inline">{t(locale)}</span>
+              <ChevronDown className="hidden size-3.5 opacity-50 sm:inline" aria-hidden />
             </>
           )}
         </Button>
@@ -325,42 +269,24 @@ export function LocaleSwitcher({
       <DropdownMenuContent
         align="end"
         side="bottom"
-        sideOffset={isMarketing ? 10 : 8}
+        sideOffset={8}
         collisionPadding={12}
-        className={isMarketing ? marketingMenuContentClassName : menuContentClassName}
+        className={menuContentClassName}
       >
-        <DropdownMenuLabel
-          className={cn(
-            isMarketing &&
-              "px-2 py-1.5 text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400",
-          )}
-        >
+        <DropdownMenuLabel className="px-2 py-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
           {t("label")}
         </DropdownMenuLabel>
-        <DropdownMenuSeparator className={isMarketing ? "my-1" : undefined} />
-        <DropdownMenuGroup className={isMarketing ? "p-0.5" : undefined}>
-          <DropdownMenuRadioGroup
-            value={locale}
-            onValueChange={(next) => switchLocale(next as Locale)}
-          >
-            {localeCodes.map((code) => (
-              <DropdownMenuRadioItem
-                key={code}
-                value={code}
-                className={isMarketing ? marketingRadioItemClassName : undefined}
-              >
-                <span className="flex w-full items-center justify-between gap-2">
-                  <span>{t(code)}</span>
-                  {isMarketing ? (
-                    <span className="text-xs font-medium tabular-nums text-slate-400 dark:text-slate-500">
-                      {localeShortCode(code)}
-                    </span>
-                  ) : null}
-                </span>
-              </DropdownMenuRadioItem>
-            ))}
-          </DropdownMenuRadioGroup>
-        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        {localeCodes.map((code) => (
+          <LocaleMenuItem
+            key={code}
+            code={code}
+            selected={locale === code}
+            disabled={isPending}
+            onSelect={() => switchLocale(code)}
+            className={isMarketing ? "focus:bg-emerald-50 dark:focus:bg-emerald-950/40" : undefined}
+          />
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -1,40 +1,54 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { Section, SectionHeading } from "@/components/cryptopay/marketing-section";
+import { createLocalizedMetadata } from "@/lib/site-metadata";
 
-export const metadata: Metadata = {
-  title: "Get Started",
-  description: "Start accepting crypto payments with a simple rollout plan.",
+type PageProps = {
+  params: Promise<{ locale: string }>;
 };
 
-const checklist = [
-  "Create your account and verify your business details",
-  "Connect your payout wallet",
-  "Generate your first payment link",
-  "Test the flow with a small transaction",
-  "Go live and monitor confirmations in dashboard",
-];
+const CHECKLIST_KEYS = ["1", "2", "3", "4", "5"] as const;
 
-export default function GetStartedPage() {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "GetStartedPage.meta" });
+
+  return createLocalizedMetadata({
+    locale,
+    title: t("title"),
+    description: t("description"),
+    path: "/get-started",
+  });
+}
+
+export default async function GetStartedPage({ params }: PageProps) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  const t = await getTranslations({ locale, namespace: "GetStartedPage" });
+
   return (
     <>
       <Section belowHeader>
         <SectionHeading
-          eyebrow="Get Started"
-          title="Launch your crypto checkout in one short sprint"
-          description="Follow this rollout path to move from setup to first live payment quickly."
+          eyebrow={t("hero.eyebrow")}
+          title={t("hero.title")}
+          description={t("hero.description")}
         />
         <div className="mx-auto max-w-3xl rounded-3xl border border-slate-200 bg-white p-8">
           <ol className="space-y-4">
-            {checklist.map((item, idx) => (
-              <li key={item} className="flex items-start gap-3">
+            {CHECKLIST_KEYS.map((key, idx) => (
+              <li key={key} className="flex items-start gap-3">
                 <span className="mt-0.5 rounded-full bg-emerald-50 p-1.5">
                   <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                 </span>
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Step {idx + 1}</p>
-                  <p className="text-sm text-slate-700">{item}</p>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    {t("stepLabel", { step: idx + 1 })}
+                  </p>
+                  <p className="text-sm text-slate-700">{t(`checklist.${key}`)}</p>
                 </div>
               </li>
             ))}
@@ -44,14 +58,14 @@ export default function GetStartedPage() {
               href="/signup"
               className="inline-flex items-center gap-2 rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
             >
-              Create your account
+              {t("cta.createAccount")}
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               href="/contact"
               className="inline-flex items-center gap-2 rounded-md border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
             >
-              Talk to onboarding
+              {t("cta.talkToOnboarding")}
             </Link>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { JsonLd } from "@/components/json-ld";
 import { FaqAccordion } from "@/components/marketing/faq-accordion";
 import { CtaButton, Section, SectionHeading } from "@/components/cryptopay/marketing-section";
@@ -12,7 +13,7 @@ import {
 } from "@/components/ui/card";
 import { createPageMetadata } from "@/lib/site-metadata";
 import { getFAQJsonLd } from "@/lib/json-ld";
-import { CRYPTO_FAQS, FAQ_CATEGORIES } from "@/lib/cryptopay/faqs";
+import { buildLocalizedFaqs } from "@/lib/cryptopay/localized-faqs";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -20,22 +21,26 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Faq.meta" });
 
   return createPageMetadata({
     locale,
-    title: "FAQ | Crypto Pay",
-    description:
-      "Frequently asked questions about Crypto Pay — wallet settlement, supported assets, pricing, and API integration.",
+    title: t("title"),
+    description: t("description"),
     path: "/faq",
-    openGraphTitle: "Crypto Pay — Frequently Asked Questions",
-    openGraphDescription:
-      "Answers to common questions about accepting crypto payments with Crypto Pay.",
+    openGraphTitle: t("ogTitle"),
+    openGraphDescription: t("ogDescription"),
   });
 }
 
-export default function FaqPage() {
+export default async function FaqPage({ params }: PageProps) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  const t = await getTranslations({ locale, namespace: "Faq" });
+  const { items, categories } = buildLocalizedFaqs(t);
   const faqJsonLd = getFAQJsonLd(
-    CRYPTO_FAQS.map((faq) => ({
+    items.map((faq) => ({
       question: faq.question,
       answer: faq.answer,
     })),
@@ -47,32 +52,32 @@ export default function FaqPage() {
 
       <Section belowHeader>
         <SectionHeading
-          eyebrow="FAQ"
-          title="Answers for operators and owners"
-          description="If you have a unique workflow, reach out and we'll design a plan for you."
+          eyebrow={t("hero.eyebrow")}
+          title={t("hero.title")}
+          description={t("hero.description")}
         />
         <div className="mb-8 flex flex-wrap justify-center gap-2">
-          {FAQ_CATEGORIES.map((cat) => (
+          {categories.map((cat) => (
             <Link
-              key={cat}
-              href={`#${cat.toLowerCase().replace(/\s+/g, "-")}`}
+              key={cat.id}
+              href={`#${cat.id}`}
               className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700"
             >
-              {cat}
+              {cat.label}
             </Link>
           ))}
         </div>
-        <FaqAccordion items={CRYPTO_FAQS} categories={[...FAQ_CATEGORIES]} />
+        <FaqAccordion items={items} categories={categories} />
       </Section>
 
       <Section>
         <Card className="mx-auto max-w-xl border-slate-200/80 text-center dark:border-slate-800">
           <CardHeader>
-            <CardTitle>Still have questions?</CardTitle>
-            <CardDescription>Contact us and we will help with your setup.</CardDescription>
+            <CardTitle>{t("cta.title")}</CardTitle>
+            <CardDescription>{t("cta.description")}</CardDescription>
           </CardHeader>
           <CardContent className="flex justify-center pb-8">
-            <CtaButton href="/contact">Contact</CtaButton>
+            <CtaButton href="/contact">{t("cta.button")}</CtaButton>
           </CardContent>
         </Card>
       </Section>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { CheckCircle2, Link2, Radio, ShieldCheck, Wallet } from "lucide-react";
 import { CtaButton, Section, SectionHeading } from "@/components/cryptopay/marketing-section";
 import {
@@ -8,59 +9,51 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { createLocalizedMetadata } from "@/lib/site-metadata";
 
-export const metadata: Metadata = {
-  title: "How Crypto Pay Works",
-  description:
-    "Non-custodial crypto checkout: wallet to wallet, on-chain confirmation tracking, and webhooks.",
+type PageProps = {
+  params: Promise<{ locale: string }>;
 };
 
-const steps = [
-  {
-    icon: Wallet,
-    title: "Connect your wallet",
-    description:
-      "Add the public address where you want to receive payments. No private keys — wallet to wallet.",
-  },
-  {
-    icon: Link2,
-    title: "Create a payment request",
-    description:
-      "Set amount and coin. Share a payment link or create a charge via API with your order reference.",
-  },
-  {
-    icon: Radio,
-    title: "Customer pays on-chain",
-    description:
-      "Checkout can stay on your site. We detect the transaction and move status to in process.",
-  },
-  {
-    icon: CheckCircle2,
-    title: "Confirmation & callback",
-    description:
-      "When the payment is confirmed on-chain, status becomes paid and your webhook or dashboard updates.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Reconcile & export",
-    description:
-      "Review payment history in your account and export records for accounting.",
-  },
-];
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "HowItWorksPage.meta" });
 
-export default function HowItWorksPage() {
+  return createLocalizedMetadata({
+    locale,
+    title: t("title"),
+    description: t("description"),
+    path: "/how-it-works",
+  });
+}
+
+export default async function HowItWorksPage({ params }: PageProps) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  const t = await getTranslations({ locale, namespace: "HowItWorksPage" });
+  const tCommon = await getTranslations({ locale, namespace: "Common" });
+
+  const steps = [
+    { icon: Wallet, key: "connectWallet" as const },
+    { icon: Link2, key: "createPayment" as const },
+    { icon: Radio, key: "customerPays" as const },
+    { icon: CheckCircle2, key: "confirmationCallback" as const },
+    { icon: ShieldCheck, key: "reconcileExport" as const },
+  ];
+
   return (
     <>
       <Section belowHeader>
         <SectionHeading
-          eyebrow="How it works"
-          title="Track and accept crypto payments"
-          description="Privacy oriented. Wallet to wallet. From first link to confirmed payment."
+          eyebrow={t("hero.eyebrow")}
+          title={t("hero.title")}
+          description={t("hero.description")}
         />
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {steps.map((step, index) => (
             <article
-              key={step.title}
+              key={step.key}
               className="rounded-2xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900"
             >
               <div className="mb-4 flex items-center gap-3">
@@ -68,14 +61,14 @@ export default function HowItWorksPage() {
                   <step.icon className="h-5 w-5 text-emerald-600" />
                 </div>
                 <p className="text-xs font-semibold tracking-wide text-emerald-600">
-                  STEP {index + 1}
+                  {t("stepLabel", { step: index + 1 })}
                 </p>
               </div>
               <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
-                {step.title}
+                {t(`steps.${step.key}.title`)}
               </h3>
               <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-                {step.description}
+                {t(`steps.${step.key}.description`)}
               </p>
             </article>
           ))}
@@ -85,15 +78,13 @@ export default function HowItWorksPage() {
       <Section>
         <Card className="mx-auto max-w-xl border-slate-200/80 text-center dark:border-slate-800">
           <CardHeader>
-            <CardTitle>Ready to get started?</CardTitle>
-            <CardDescription>
-              Join now for smooth, quick crypto checkout — set up in minutes.
-            </CardDescription>
+            <CardTitle>{t("cta.title")}</CardTitle>
+            <CardDescription>{t("cta.description")}</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-wrap justify-center gap-3 pb-8">
-            <CtaButton href="/signup">Get started for free</CtaButton>
+            <CtaButton href="/signup">{tCommon("getStartedFree")}</CtaButton>
             <CtaButton href="/developers" variant="outline">
-              API docs
+              {t("cta.apiDocs")}
             </CtaButton>
           </CardContent>
         </Card>

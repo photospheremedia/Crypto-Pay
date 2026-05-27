@@ -7,17 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, ArrowLeft, Mail, CheckCircle2, AlertCircle } from "lucide-react";
-import { SecurityCheckField } from "@/components/auth/security-check-field";
-import { isTurnstileEnabled } from "@/lib/security/turnstile-config";
 
 export function ForgotPasswordForm() {
   const t = useTranslations("Auth");
   const tCommon = useTranslations("Common");
   const [email, setEmail] = useState("");
-  const [turnstileToken, setTurnstileToken] = useState("");
-  const [securityCheckPassed, setSecurityCheckPassed] = useState(
-    () => !isTurnstileEnabled(),
-  );
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
@@ -32,7 +26,7 @@ export function ForgotPasswordForm() {
       const response = await fetch("/api/account/password-reset", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, turnstile_token: turnstileToken || undefined }),
+        body: JSON.stringify({ email }),
       });
       const payload = await response.json();
 
@@ -141,15 +135,9 @@ export function ForgotPasswordForm() {
               </div>
             )}
 
-            <SecurityCheckField
-              resetTrigger={status === "error" ? errorMessage : undefined}
-              onCanSubmitChange={setSecurityCheckPassed}
-              onTokenChange={setTurnstileToken}
-            />
-
             <Button
               type="submit"
-              disabled={loading || !email || !securityCheckPassed}
+              disabled={loading || !email}
               className="w-full rounded-xl bg-linear-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 h-11 disabled:opacity-60"
             >
               {loading ? (

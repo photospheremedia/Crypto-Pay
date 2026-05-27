@@ -1,17 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { MarketingPageShell } from "@/components/cryptopay/marketing-section";
 import { createPageMetadata } from "@/lib/site-metadata";
-import {
-  Users,
-  Target,
-  Rocket,
-  Heart,
-  TrendingUp,
-  Clock,
-  Shield,
-  Award,
-} from "lucide-react";
+import { Heart, Rocket, Shield, Target, TrendingUp, Users } from "lucide-react";
 
 type PageProps = {
   params: Promise<{ locale: string }>;
@@ -19,95 +11,61 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "AboutPage.meta" });
 
   return createPageMetadata({
     locale,
-    title: "About | Crypto Pay",
-    description:
-      "Learn about Crypto Pay. A team of business operators, technologists, and supply chain experts building tools to simplify business operations.",
+    title: t("title"),
+    description: t("description"),
     path: "/about",
-    openGraphTitle: "Our Story: Crypto Pay",
-    openGraphDescription:
-      "Built by business operators for business operators. Simplifying delivery, supply, and brand management.",
+    openGraphTitle: t("ogTitle"),
+    openGraphDescription: t("ogDescription"),
   });
 }
 
-const values = [
-  {
-    title: "Operator-first",
-    copy: "We build tools and playbooks that reduce chaos for GMs and kitchen teams.",
-    icon: Users,
-  },
-  {
-    title: "Revenue-minded",
-    copy: "Every rollout is tied to conversion, reorder rate, and delivery margin.",
-    icon: TrendingUp,
-  },
-  {
-    title: "Supplier aware",
-    copy: "We package supplies and packaging with realistic lead times and pricing.",
-    icon: Shield,
-  },
-];
+export default async function AboutPage({ params }: PageProps) {
+  const { locale } = await params;
+  setRequestLocale(locale);
 
-const stats = [
-  { value: "150+", label: "Locations served", icon: Target },
-  { value: "98%", label: "Client retention", icon: Heart },
-  { value: "14 days", label: "Avg onboarding", icon: Clock },
-  { value: "$2M+", label: "Supplies shipped", icon: Award },
-];
+  const t = await getTranslations({ locale, namespace: "AboutPage" });
+  const tCommon = await getTranslations({ locale, namespace: "Common" });
 
-const milestones = [
-  {
-    year: "2024",
-    title: "Founded",
-    description:
-      "Started with a focus on delivery platform consolidation for multi-location groups.",
-  },
-  {
-    year: "2024",
-    title: "Supply marketplace",
-    description:
-      "Launched curated supply catalog with reseller pricing and fulfillment tracking.",
-  },
-  {
-    year: "2025",
-    title: "100+ locations",
-    description:
-      "Reached milestone of 100 business locations actively using our platform.",
-  },
-  {
-    year: "2026",
-    title: "Enterprise expansion",
-    description:
-      "Expanding to serve larger business groups with custom integrations and SLAs.",
-  },
-];
+  const stats = [
+    { icon: Target, key: "merchants" as const },
+    { icon: Heart, key: "uptime" as const },
+    { icon: TrendingUp, key: "setup" as const },
+    { icon: Shield, key: "assets" as const },
+  ];
 
-export default function AboutPage() {
+  const values = [
+    { icon: Users, key: "merchantFirst" as const },
+    { icon: Shield, key: "privacy" as const },
+    { icon: Rocket, key: "developerReady" as const },
+  ];
+
+  const milestones = [
+    { key: "2024Launch" as const },
+    { key: "2025Runner" as const },
+    { key: "2026Checkout" as const },
+  ];
+
   return (
     <MarketingPageShell>
-      {/* Hero */}
       <div className="grid gap-10 md:grid-cols-[1.1fr_0.9fr]">
         <div>
           <p className="text-xs uppercase tracking-[0.2em] text-emerald-600">
-            About us
+            {t("hero.eyebrow")}
           </p>
           <h1 className="font-display mt-3 text-4xl font-semibold text-slate-900 md:text-5xl">
-            We help businesses scale without vendor overload.
+            {t("hero.title")}
           </h1>
-          <p className="mt-4 text-lg text-slate-600">
-            Crypto Pay is built for business groups juggling
-            delivery platforms, menu changes, and supply costs. We combine
-            delivery platform integration, marketing upgrades, and curated
-            product resale to keep everything in one operational hub.
-          </p>
+          <p className="mt-4 text-lg text-slate-600">{t("hero.description")}</p>
           <div className="mt-6 flex flex-wrap gap-4">
             <Link
               href="/signup"
               className="group rounded-full bg-emerald-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-200/60 transition hover:bg-emerald-600"
             >
-              Book a demo
+              {t("hero.bookDemo")}
               <span className="ml-2 inline-block transition-transform group-hover:translate-x-1">
                 →
               </span>
@@ -116,56 +74,47 @@ export default function AboutPage() {
               href="/contact"
               className="rounded-full border border-slate-300 px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50"
             >
-              Contact sales
+              {t("hero.contactSales")}
             </Link>
           </div>
         </div>
         <div className="rounded-[28px] border border-white/80 bg-linear-to-br from-emerald-50 to-white p-6 shadow-lg">
           <p className="text-xs uppercase tracking-[0.2em] text-slate-500">
-            Our mission
+            {t("mission.title")}
           </p>
-          <p className="mt-4 text-lg text-slate-700">
-            Build a single control plane for business ops: delivery
-            integrations, marketing performance, and supply workflows — all in
-            one place.
-          </p>
+          <p className="mt-4 text-lg text-slate-700">{t("mission.body")}</p>
           <div className="mt-6 flex items-center gap-4 rounded-2xl bg-emerald-100/50 p-4">
             <Rocket className="h-8 w-8 text-emerald-500" />
-            <p className="text-sm font-medium text-emerald-800">
-              Serving multi-location business groups and fast-growing
-              independents.
-            </p>
+            <p className="text-sm font-medium text-emerald-800">{t("mission.tagline")}</p>
           </div>
         </div>
       </div>
 
-      {/* Stats */}
       <div className="mt-16 grid gap-4 sm:grid-cols-2 md:grid-cols-4">
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
             <div
-              key={stat.label}
+              key={stat.key}
               className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-emerald-200 hover:shadow-lg"
             >
               <Icon className="h-6 w-6 text-emerald-500 transition group-hover:scale-110" />
               <p className="mt-4 text-3xl font-bold text-slate-900">
-                {stat.value}
+                {t(`stats.${stat.key}.value`)}
               </p>
-              <p className="mt-1 text-sm text-slate-600">{stat.label}</p>
+              <p className="mt-1 text-sm text-slate-600">{t(`stats.${stat.key}.label`)}</p>
             </div>
           );
         })}
       </div>
 
-      {/* Values */}
       <div className="mt-16">
         <div className="text-center">
           <p className="text-xs uppercase tracking-[0.2em] text-emerald-500">
-            Our values
+            {t("values.title")}
           </p>
           <h2 className="font-display mt-3 text-3xl font-semibold text-slate-900">
-            What drives us every day.
+            {t("values.subtitle")}
           </h2>
         </div>
         <div className="mt-10 grid gap-6 md:grid-cols-3">
@@ -173,38 +122,36 @@ export default function AboutPage() {
             const Icon = value.icon;
             return (
               <div
-                key={value.title}
+                key={value.key}
                 className="group rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-emerald-200 hover:shadow-lg"
               >
                 <div className="inline-flex rounded-2xl bg-emerald-100 p-3 transition group-hover:bg-emerald-200">
                   <Icon className="h-6 w-6 text-emerald-500" />
                 </div>
                 <h3 className="mt-4 text-lg font-semibold text-slate-900">
-                  {value.title}
+                  {t(`values.${value.key}.title`)}
                 </h3>
-                <p className="mt-2 text-sm text-slate-600">{value.copy}</p>
+                <p className="mt-2 text-sm text-slate-600">
+                  {t(`values.${value.key}.description`)}
+                </p>
               </div>
             );
           })}
         </div>
       </div>
 
-      {/* Timeline */}
       <div className="mt-16">
         <div className="text-center">
           <p className="text-xs uppercase tracking-[0.2em] text-emerald-500">
-            Our journey
+            {t("milestones.title")}
           </p>
-          <h2 className="font-display mt-3 text-3xl font-semibold text-slate-900">
-            Building the future of business ops.
-          </h2>
         </div>
         <div className="relative mt-10">
           <div className="absolute left-4 top-0 h-full w-0.5 bg-emerald-100 md:left-1/2 md:-translate-x-1/2" />
           <div className="space-y-8">
             {milestones.map((milestone, index) => (
               <div
-                key={milestone.title}
+                key={milestone.key}
                 className={`relative flex items-start gap-6 md:gap-10 ${
                   index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
                 }`}
@@ -213,13 +160,13 @@ export default function AboutPage() {
                 <div className="absolute left-4 top-1 h-3 w-3 rounded-full bg-emerald-500 md:left-1/2 md:-translate-x-1/2" />
                 <div className="ml-10 w-full rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:ml-0 md:w-1/2">
                   <p className="text-xs font-semibold text-emerald-500">
-                    {milestone.year}
+                    {t(`milestones.${milestone.key}.year`)}
                   </p>
                   <h3 className="mt-1 text-lg font-semibold text-slate-900">
-                    {milestone.title}
+                    {t(`milestones.${milestone.key}.title`)}
                   </h3>
                   <p className="mt-2 text-sm text-slate-600">
-                    {milestone.description}
+                    {t(`milestones.${milestone.key}.description`)}
                   </p>
                 </div>
               </div>
@@ -228,33 +175,26 @@ export default function AboutPage() {
         </div>
       </div>
 
-      {/* CTA */}
       <div className="mt-16 overflow-hidden rounded-[28px] bg-linear-to-r from-emerald-500 to-cyan-600 p-10 text-white">
         <div className="flex flex-wrap items-center justify-between gap-6">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-emerald-200">
-              Ready to streamline?
+              {t("cta.title")}
             </p>
-            <h3 className="font-display mt-2 text-2xl font-semibold">
-              Talk to the team about your rollout timeline.
-            </h3>
-            <p className="mt-2 text-emerald-100">
-              Get a personalized demo and see how we can help your business
-              group.
-            </p>
+            <h3 className="font-display mt-2 text-2xl font-semibold">{t("cta.description")}</h3>
           </div>
           <div className="flex flex-wrap gap-3">
             <Link
               href="/signup"
               className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-emerald-600 transition hover:bg-emerald-50"
             >
-              Book a demo
+              {tCommon("getStarted")}
             </Link>
             <Link
               href="/contact"
               className="rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
             >
-              Book a call
+              {t("cta.contact")}
             </Link>
           </div>
         </div>

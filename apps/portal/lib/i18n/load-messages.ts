@@ -2,6 +2,7 @@ import { readFile } from "fs/promises";
 import path from "path";
 import { reportError } from "@/lib/errors";
 import { routing, type Locale } from "@/i18n/routing";
+import { deepMergeMessages } from "@/lib/i18n/deep-merge-messages";
 
 const MESSAGES_DIR = path.join(process.cwd(), "messages");
 
@@ -39,7 +40,13 @@ async function readMessagesFile(locale: string): Promise<Record<string, unknown>
  */
 export async function loadMessages(locale: Locale): Promise<Record<string, unknown>> {
   try {
-    return await readMessagesFile(locale);
+    const localeMessages = await readMessagesFile(locale);
+    if (locale === routing.defaultLocale) {
+      return localeMessages;
+    }
+
+    const english = await readMessagesFile(routing.defaultLocale);
+    return deepMergeMessages(english, localeMessages);
   } catch (error) {
     reportError(error, { source: "loadMessages", locale });
 

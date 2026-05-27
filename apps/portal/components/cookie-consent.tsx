@@ -1,13 +1,15 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import Link from 'next/link';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import {
   Settings2, Shield, BarChart3, ChevronDown,
   Megaphone, Cog, Check,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { safeJsonParse, safeJsonParseObject } from '@/lib/errors';
+import { clearLocaleCookieClient } from '@/lib/i18n/locale-preference';
 import {
   Dialog,
   DialogContent,
@@ -83,45 +85,83 @@ const defaultPreferences: CookiePreferences = {
   advertising: false,
 };
 
-// Cookie category details for user information
-const cookieCategories = [
-  {
-    id: 'essential',
-    name: 'Strictly Necessary',
-    description: 'Essential for the website to function properly. These cookies are required for basic functionality like secure login and authentication.',
-    examples: ['Session cookies', 'Authentication tokens', 'CSRF protection', 'Load balancing'],
-    locked: true,
-    icon: Shield,
-    color: 'orange',
-  },
-  {
-    id: 'functional',
-    name: 'Functional',
-    description: 'Enable personalized features and remember your preferences like language, region, and display settings.',
-    examples: ['Language preferences', 'Recently viewed items', 'Theme settings', 'Location data'],
-    locked: false,
-    icon: Cog,
-    color: 'blue',
-  },
-  {
-    id: 'analytics',
-    name: 'Analytics & Performance',
-    description: 'Help us understand how visitors interact with our website by collecting and reporting anonymous usage information.',
-    examples: ['Google Analytics', 'Page views', 'Session duration', 'Error tracking', 'Hotjar'],
-    locked: false,
-    icon: BarChart3,
-    color: 'violet',
-  },
-  {
-    id: 'advertising',
-    name: 'Advertising & Marketing',
-    description: 'Used to deliver relevant content and track campaign performance. These cookies may be set by our marketing partners.',
-    examples: ['Google Ads', 'Facebook Pixel', 'Retargeting', 'Cross-site tracking', 'LinkedIn Insight'],
-    locked: false,
-    icon: Megaphone,
-    color: 'amber',
-  },
-];
+type CookieCategoryDefinition = {
+  id: keyof CookiePreferences;
+  name: string;
+  description: string;
+  examples: string[];
+  locked: boolean;
+  icon: typeof Shield;
+  color: string;
+};
+
+function useCookieCategories(): CookieCategoryDefinition[] {
+  const t = useTranslations('CookieConsent');
+
+  return useMemo(
+    () => [
+      {
+        id: 'essential',
+        name: t('categories.essential.name'),
+        description: t('categories.essential.description'),
+        examples: [
+          t('categories.essential.examples.session'),
+          t('categories.essential.examples.auth'),
+          t('categories.essential.examples.csrf'),
+          t('categories.essential.examples.loadBalancing'),
+        ],
+        locked: true,
+        icon: Shield,
+        color: 'orange',
+      },
+      {
+        id: 'functional',
+        name: t('categories.functional.name'),
+        description: t('categories.functional.description'),
+        examples: [
+          t('categories.functional.examples.language'),
+          t('categories.functional.examples.recent'),
+          t('categories.functional.examples.theme'),
+          t('categories.functional.examples.location'),
+        ],
+        locked: false,
+        icon: Cog,
+        color: 'blue',
+      },
+      {
+        id: 'analytics',
+        name: t('categories.analytics.name'),
+        description: t('categories.analytics.description'),
+        examples: [
+          t('categories.analytics.examples.ga'),
+          t('categories.analytics.examples.pageViews'),
+          t('categories.analytics.examples.sessionDuration'),
+          t('categories.analytics.examples.errorTracking'),
+          t('categories.analytics.examples.hotjar'),
+        ],
+        locked: false,
+        icon: BarChart3,
+        color: 'violet',
+      },
+      {
+        id: 'advertising',
+        name: t('categories.advertising.name'),
+        description: t('categories.advertising.description'),
+        examples: [
+          t('categories.advertising.examples.googleAds'),
+          t('categories.advertising.examples.facebook'),
+          t('categories.advertising.examples.retargeting'),
+          t('categories.advertising.examples.crossSite'),
+          t('categories.advertising.examples.linkedin'),
+        ],
+        locked: false,
+        icon: Megaphone,
+        color: 'amber',
+      },
+    ],
+    [t],
+  );
+}
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TRACKING SCRIPT LOADERS (only load when consent is given)
@@ -324,6 +364,7 @@ function isConsentExpired(): boolean {
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export function CookieConsent() {
+  const t = useTranslations('CookieConsent');
   const [isVisible, setIsVisible] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [preferences, setPreferences] = useState<CookiePreferences>(defaultPreferences);
@@ -367,6 +408,10 @@ export function CookieConsent() {
 
     // Initialize tracking based on new preferences
     initializeTracking(prefs);
+
+    if (!prefs.functional) {
+      clearLocaleCookieClient();
+    }
 
     // Dispatch event for other components to react
     window.dispatchEvent(new CustomEvent('cookieConsentChanged', { detail: prefs }));
@@ -418,24 +463,24 @@ export function CookieConsent() {
         <div className="mx-auto flex max-w-6xl flex-col gap-4 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:py-4">
           <div className="min-w-0 flex-1">
             <h3 id="cookie-consent-title" className="text-sm font-semibold text-slate-900">
-              Cookie preferences
+              {t('bannerTitle')}
             </h3>
             <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
-              We use cookies for essential features and optional analytics.{' '}
+              {t('bannerDescription')}{' '}
               <Link
                 href="/privacy-policy#cookies"
                 className="text-emerald-600 hover:underline"
               >
-                Cookie Policy
+                {t('cookiePolicy')}
               </Link>
             </p>
           </div>
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center">
             <Button size="sm" onClick={handleAcceptAll}>
-              Accept all
+              {t('acceptAll')}
             </Button>
             <Button size="sm" variant="outline" onClick={handleRejectNonEssential}>
-              Essential only
+              {t('essentialOnly')}
             </Button>
             <Button
               size="sm"
@@ -444,7 +489,7 @@ export function CookieConsent() {
               className="gap-1.5"
             >
               <Settings2 className="size-4" />
-              Customize
+              {t('customize')}
             </Button>
           </div>
         </div>
@@ -487,11 +532,14 @@ function CookieCategoryList({
   onExpandedCategoryChange: (id: string | null) => void;
   onTogglePreference: (key: keyof CookiePreferences) => void;
 }) {
+  const t = useTranslations('CookieConsent');
+  const cookieCategories = useCookieCategories();
+
   return (
     <div className="flex flex-col gap-3">
       {cookieCategories.map((category) => {
         const Icon = category.icon;
-        const isEnabled = preferences[category.id as keyof CookiePreferences];
+        const isEnabled = preferences[category.id];
         const isExpanded = expandedCategory === category.id;
 
         return (
@@ -516,7 +564,7 @@ function CookieCategoryList({
                       <h5 className="text-sm font-semibold text-slate-900">{category.name}</h5>
                       {category.locked && (
                         <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold uppercase text-emerald-600">
-                          Required
+                          {t('required')}
                         </span>
                       )}
                     </div>
@@ -524,9 +572,13 @@ function CookieCategoryList({
                       type="button"
                       role="switch"
                       aria-checked={isEnabled}
-                      aria-label={`${isEnabled ? 'Disable' : 'Enable'} ${category.name} cookies`}
+                      aria-label={
+                        isEnabled
+                          ? t('toggleDisable', { name: category.name })
+                          : t('toggleEnable', { name: category.name })
+                      }
                       disabled={category.locked}
-                      onClick={() => onTogglePreference(category.id as keyof CookiePreferences)}
+                      onClick={() => onTogglePreference(category.id)}
                       className={`relative inline-flex h-6 w-11 shrink-0 rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 ${
                         isEnabled ? 'bg-emerald-500' : 'bg-slate-300'
                       } ${category.locked ? 'cursor-not-allowed opacity-70' : 'cursor-pointer'}`}
@@ -544,7 +596,7 @@ function CookieCategoryList({
                     onClick={() => onExpandedCategoryChange(isExpanded ? null : category.id)}
                     className="mt-2 flex items-center gap-1 text-xs font-medium text-slate-500 hover:text-emerald-600"
                   >
-                    {isExpanded ? 'Hide details' : 'View details'}
+                    {isExpanded ? t('hideDetails') : t('viewDetails')}
                     <ChevronDown className={`h-3 w-3 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                   </button>
                 </div>
@@ -554,8 +606,11 @@ function CookieCategoryList({
               <div className="px-4 pb-4">
                 <div className="ml-11 border-l-2 border-slate-200 pl-3">
                   <div className="flex flex-wrap gap-1.5">
-                    {category.examples.map((example, i) => (
-                      <span key={i} className="rounded-md bg-slate-100 px-2 py-1 text-[11px] text-slate-600">
+                    {category.examples.map((example) => (
+                      <span
+                        key={example}
+                        className="rounded-md bg-slate-100 px-2 py-1 text-[11px] text-slate-600"
+                      >
                         {example}
                       </span>
                     ))}
@@ -591,22 +646,22 @@ function CookiePreferencesDialog({
   onDeselectAll: () => void;
   onSave: () => void;
 }) {
+  const t = useTranslations('CookieConsent');
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Cookie preferences</DialogTitle>
-          <DialogDescription>
-            Choose which optional cookies we may use. Essential cookies are always on.
-          </DialogDescription>
+          <DialogTitle>{t('bannerTitle')}</DialogTitle>
+          <DialogDescription>{t('dialogDescription')}</DialogDescription>
         </DialogHeader>
         <div className="flex items-center justify-end gap-2 text-xs">
           <button type="button" onClick={onSelectAll} className="font-medium text-emerald-600 hover:underline">
-            Select all
+            {t('selectAll')}
           </button>
           <span className="text-slate-300">|</span>
           <button type="button" onClick={onDeselectAll} className="font-medium text-slate-500 hover:underline">
-            Essential only
+            {t('essentialOnly')}
           </button>
         </div>
         <CookieCategoryList
@@ -620,11 +675,11 @@ function CookiePreferencesDialog({
             href="/privacy-policy#cookies"
             className="text-xs text-emerald-600 hover:underline sm:mr-auto"
           >
-            Cookie Policy
+            {t('cookiePolicy')}
           </Link>
           <Button onClick={onSave} className="gap-2">
             <Check className="size-4" />
-            Save preferences
+            {t('savePreferences')}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -637,6 +692,7 @@ function CookiePreferencesDialog({
 // ═══════════════════════════════════════════════════════════════════════════════
 
 export function CookieSettingsButton({ className }: { className?: string }) {
+  const t = useTranslations('CookieConsent');
   const [showModal, setShowModal] = useState(false);
   
   return (
@@ -645,7 +701,7 @@ export function CookieSettingsButton({ className }: { className?: string }) {
         onClick={() => setShowModal(true)}
         className={className || "text-sm text-slate-500 hover:text-emerald-500 transition"}
       >
-        Cookie Settings
+        {t('settingsButton')}
       </button>
       
       {showModal && (

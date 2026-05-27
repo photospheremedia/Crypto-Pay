@@ -20,6 +20,7 @@ type CryptoConverterProps = {
 };
 
 export function CryptoConverter({ className, compact }: CryptoConverterProps) {
+  const t = useTranslations("CryptoConverter");
   const tCommon = useTranslations("Common");
   const [cryptoId, setCryptoId] = useState("bitcoin");
   const [fiat, setFiat] = useState("usd");
@@ -36,14 +37,14 @@ export function CryptoConverter({ className, compact }: CryptoConverterProps) {
       const vs = FIAT_CURRENCIES.map((f) => f.code).join(",");
       const res = await fetch(`/api/crypto-rates?ids=${ids}&vs=${vs}`);
       const json = await res.json();
-      if (!res.ok) throw new Error(json.error || "Unable to load rates");
+      if (!res.ok) throw new Error(json.error || t("errorLoadRates"));
       setRates(json.rates);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Unable to load rates");
+      setError(e instanceof Error ? e.message : t("errorLoadRates"));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     fetchRates();
@@ -83,11 +84,11 @@ export function CryptoConverter({ className, compact }: CryptoConverterProps) {
       <div className="mb-4 flex items-center justify-between gap-2">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600">
-            Live converter
+            {t("eyebrow")}
           </p>
           {!compact && (
             <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-              Real-time crypto-to-fiat from market rates
+              {t("subtitle")}
             </p>
           )}
         </div>
@@ -97,7 +98,7 @@ export function CryptoConverter({ className, compact }: CryptoConverterProps) {
           size="icon"
           onClick={fetchRates}
           disabled={loading}
-          aria-label={loading ? tCommon("refreshing") : "Refresh rates"}
+          aria-label={loading ? tCommon("refreshing") : t("refreshRates")}
           className="shrink-0"
         >
           {loading ? (
@@ -110,7 +111,7 @@ export function CryptoConverter({ className, compact }: CryptoConverterProps) {
 
       <div className={cn("grid gap-4", compact ? "grid-cols-1" : "sm:grid-cols-2")}>
         <div className="space-y-2">
-          <Label htmlFor="crypto-amount">Amount</Label>
+          <Label htmlFor="crypto-amount">{t("labels.amount")}</Label>
           <Input
             id="crypto-amount"
             type="number"
@@ -122,7 +123,7 @@ export function CryptoConverter({ className, compact }: CryptoConverterProps) {
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="crypto-select">Cryptocurrency</Label>
+          <Label htmlFor="crypto-select">{t("labels.cryptocurrency")}</Label>
           <select
             id="crypto-select"
             value={cryptoId}
@@ -137,7 +138,7 @@ export function CryptoConverter({ className, compact }: CryptoConverterProps) {
           </select>
         </div>
         <div className="space-y-2 sm:col-span-2">
-          <Label htmlFor="fiat-select">Local currency</Label>
+          <Label htmlFor="fiat-select">{t("labels.localCurrency")}</Label>
           <select
             id="fiat-select"
             value={fiat}
@@ -166,8 +167,11 @@ export function CryptoConverter({ className, compact }: CryptoConverterProps) {
                 {formatted}
               </p>
               <p className="mt-1 truncate text-sm text-slate-500">
-                {numericAmount || 0} {selectedCrypto.symbol} · 1 {selectedCrypto.symbol} ={" "}
-                {formattedUnit}
+                {t("rateLine", {
+                  amount: numericAmount || 0,
+                  symbol: selectedCrypto.symbol,
+                  unitPrice: formattedUnit,
+                })}
               </p>
             </>
           )}

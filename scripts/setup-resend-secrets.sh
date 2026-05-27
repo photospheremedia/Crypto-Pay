@@ -98,7 +98,10 @@ print(json.dumps({
   'smtp_pass': os.environ['RESEND_API_KEY'],
   'smtp_admin_email': os.environ['SMTP_ADMIN_EMAIL'],
   'smtp_sender_name': 'Crypto Pay',
-  'mailer_autoconfirm': True,
+  # Keep confirmations required (matches sync-supabase-auth-templates --push-auth)
+  'mailer_autoconfirm': False,
+  'mailer_secure_email_change_enabled': True,
+  'mailer_allow_unverified_email_sign_ins': False,
   'rate_limit_email_sent': 30,
 }))
 ")"

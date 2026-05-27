@@ -40,7 +40,9 @@
     "db:seed": "npx tsx lib/db/seed.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "i18n:sync": "tsx scripts/sync-locale-messages.ts",
+    "i18n:marketing": "tsx scripts/apply-marketing-translations.ts"
   },
   "dependencies": {
     "@ai-sdk/groq": "^3.0.19",
@@ -58,6 +60,7 @@
     "@radix-ui/react-switch": "^1.0.7",
     "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-tooltip": "^1.0.7",
+    "@sankyu/react-circle-flags": "^1.6.7",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.93.2",
     "@tailwindcss/postcss": "4.1.18",

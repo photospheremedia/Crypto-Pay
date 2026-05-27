@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Menu, X } from "lucide-react";
+import { Menu } from "lucide-react";
 import type { AuthChangeEvent, Session, User } from "@supabase/supabase-js";
 import { getSupabaseBrowserClientOptional } from "@crypto-pay/db/supabaseClient";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Link, usePathname } from "@/i18n/navigation";
 import { NAV_LINKS } from "@/lib/cryptopay/constants";
@@ -47,7 +49,7 @@ export function CryptoPayHeader() {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
         <CryptoPayLogo />
 
-        <nav className="hidden items-center gap-1 md:flex" aria-label="Main">
+        <nav className="hidden items-center gap-1 md:flex" aria-label={t("mainNavAria")}>
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
@@ -93,57 +95,67 @@ export function CryptoPayHeader() {
         <div className="flex items-center md:hidden">
           <button
             type="button"
-            className={cn(
-              "rounded-lg border p-2 transition-colors",
-              mobileOpen
-                ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-300"
-                : "border-slate-200 text-slate-700 dark:border-slate-700 dark:text-slate-200",
-            )}
-            onClick={() => setMobileOpen(!mobileOpen)}
+            className="rounded-lg border border-slate-200 p-2 text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-900"
+            aria-label={tCommon("openMenu")}
             aria-expanded={mobileOpen}
-            aria-label={mobileOpen ? tCommon("closeMenu") : tCommon("openMenu")}
+            onClick={() => setMobileOpen(true)}
           >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            <Menu className="h-5 w-5" />
           </button>
+
+          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+            <SheetContent side="right" className="p-0">
+              <SheetHeader className="gap-2 border-b border-slate-200/80 px-4 py-4 dark:border-slate-800">
+                <SheetTitle className="sr-only">{tCommon("openMenu")}</SheetTitle>
+                <div className="flex items-center justify-between gap-3">
+                  <CryptoPayLogo />
+                </div>
+              </SheetHeader>
+
+              <div className="flex flex-col gap-4 px-4 py-5">
+                <LocaleSwitcher appearance="marketing" variant="select" className="w-full" />
+
+                <Separator />
+
+                <nav className="flex flex-col gap-1" aria-label={t("mainNavAria")}>
+                  {NAV_LINKS.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className={cn(
+                        "rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+                        pathname === link.href
+                          ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+                          : "text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800",
+                      )}
+                    >
+                      {t(link.key)}
+                    </Link>
+                  ))}
+                </nav>
+
+                <Separator />
+
+                <div className="flex flex-col gap-2">
+                  <Button asChild variant="outline" className="h-11 w-full rounded-full">
+                    <Link href={isAuthed ? "/account" : "/login"}>
+                      {isAuthed ? tCommon("dashboard") : tCommon("logIn")}
+                    </Link>
+                  </Button>
+                  {!isAuthed ? (
+                    <Button
+                      asChild
+                      className="h-11 w-full rounded-full bg-linear-to-r from-emerald-500 to-cyan-600 text-white hover:from-emerald-400 hover:to-cyan-500"
+                    >
+                      <Link href="/signup">{tCommon("getStartedFree")}</Link>
+                    </Button>
+                  ) : null}
+                </div>
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
-
-      {mobileOpen ? (
-        <div className="relative z-[110] border-t border-slate-200/80 bg-white px-4 py-5 shadow-lg md:hidden dark:border-slate-800 dark:bg-slate-950">
-          <LocaleSwitcher appearance="marketing" variant="grid" className="mb-5" />
-          <nav className="flex flex-col gap-0.5" aria-label="Main">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={cn(
-                  "rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
-                  pathname === link.href
-                    ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
-                    : "text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-800",
-                )}
-              >
-                {t(link.key)}
-              </Link>
-            ))}
-          </nav>
-          <div className="mt-5 flex flex-col gap-2 border-t border-slate-200/80 pt-5 dark:border-slate-800">
-            <Button asChild variant="outline" className="h-11 w-full rounded-full">
-              <Link href={isAuthed ? "/account" : "/login"}>
-                {isAuthed ? tCommon("dashboard") : tCommon("logIn")}
-              </Link>
-            </Button>
-            {!isAuthed ? (
-              <Button
-                asChild
-                className="h-11 w-full rounded-full bg-linear-to-r from-emerald-500 to-cyan-600 text-white hover:from-emerald-400 hover:to-cyan-500"
-              >
-                <Link href="/signup">{tCommon("getStartedFree")}</Link>
-              </Button>
-            ) : null}
-          </div>
-        </div>
-      ) : null}
     </header>
   );
 }

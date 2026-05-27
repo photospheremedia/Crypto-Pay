@@ -18,7 +18,9 @@ Use this skill for **any** Supabase work here. Project-specific setup:
 | Env, migrations, edge deploy | `docs/PLATFORM_CONFIGURATION.md` (Supabase section) |
 | RLS / tenant checklist | `docs/MULTITENANT_SECURITY_CHECKLIST.md` |
 | Local auth URLs | `docs/LOCAL_DEV.md` |
+| Signup + confirm + welcome email flow | `.agents/skills/auth-signup-flow/SKILL.md` |
 | Runner edge API | `docs/RUNNER_INTEGRATION.md` |
+| Production data safety & backups | `.agents/skills/supabase-production-maintenance/SKILL.md` → `docs/SUPABASE_MAINTENANCE_AND_BACKUPS.md` |
 
 | Item | Value |
 |------|--------|

@@ -1,0 +1,391 @@
+{
+  "Navigation": {
+    "contact": "Contact",
+    "mainNavAria": "Navigation principale"
+  },
+  "Auth": {
+    "layout": {
+      "backToHome": "Retour à l'accueil",
+      "backToSite": "Retour au site"
+    }
+  },
+  "HowItWorksPage": {
+    "meta": {
+      "title": "Comment fonctionne Crypto Pay",
+      "description": "Checkout crypto non custodial : wallet à wallet, suivi on-chain et webhooks."
+    },
+    "hero": {
+      "eyebrow": "Comment ça marche",
+      "title": "Suivez et acceptez les paiements crypto",
+      "description": "Orienté confidentialité. Wallet à wallet. Du premier lien au paiement confirmé."
+    },
+    "stepLabel": "ÉTAPE {step}",
+    "steps": {
+      "connectWallet": {
+        "title": "Connectez votre wallet",
+        "description": "Ajoutez l'adresse publique où vous souhaitez recevoir les paiements. Pas de clés privées — wallet à wallet."
+      },
+      "createPayment": {
+        "title": "Créez une demande de paiement",
+        "description": "Définissez le montant et la crypto. Partagez un lien ou créez un charge via l'API avec votre référence commande."
+      },
+      "customerPays": {
+        "title": "Le client paie on-chain",
+        "description": "Le checkout peut rester sur votre site. Nous détectons la transaction et le statut passe à en cours."
+      },
+      "confirmationCallback": {
+        "title": "Confirmation et callback",
+        "description": "Une fois le paiement confirmé on-chain, le statut devient payé et votre webhook ou tableau de bord se met à jour."
+      },
+      "reconcileExport": {
+        "title": "Rapprochement et export",
+        "description": "Consultez l'historique des paiements dans votre compte et exportez les enregistrements pour la comptabilité."
+      }
+    },
+    "cta": {
+      "title": "Prêt à commencer ?",
+      "description": "Rejoignez-nous pour un checkout crypto fluide — configuré en quelques minutes.",
+      "apiDocs": "Documentation API"
+    }
+  },
+  "DevelopersPage": {
+    "meta": {
+      "title": "Développeurs | API Crypto Pay",
+      "description": "API unifiée pour les paiements crypto. Webhooks, liens de paiement et contrôle total de votre checkout."
+    },
+    "hero": {
+      "eyebrow": "Développeurs",
+      "title": "API unifiée pour BTC, ETH, USDT et plus",
+      "description": "Contrôle total avec l'API Crypto Pay. Documentation, webhooks et support pour des flux checkout personnalisés."
+    },
+    "blocks": {
+      "apiKeys": {
+        "title": "Clés API",
+        "description": "Clés à portée limitée pour test et production. Gardez les environnements séparés."
+      },
+      "createCharges": {
+        "title": "Créer des charges",
+        "description": "Générez des demandes de paiement depuis votre backend avec montant, actif et métadonnées."
+      },
+      "runnerHandshake": {
+        "title": "Handshake Runner",
+        "description": "API Edge Supabase signée HMAC pour attacher des wallets de paiement par marchand (en attente de vérification admin)."
+      },
+      "unifiedApi": {
+        "title": "API unifiée",
+        "description": "Contrôle total avec des endpoints documentés. Rapide et fiable — pour sites et apps sur mesure."
+      }
+    },
+    "quickStart": { "eyebrow": "Démarrage rapide" },
+    "cta": {
+      "title": "Prêt à intégrer ?",
+      "description": "Créez un compte, connectez un wallet et testez des charges. Besoin d'aide pour les callbacks ? Contactez-nous.",
+      "apiDocs": "Documentation API"
+    }
+  },
+  "GetStartedPage": {
+    "meta": {
+      "title": "Commencer",
+      "description": "Acceptez les paiements crypto avec un plan de déploiement simple."
+    },
+    "hero": {
+      "eyebrow": "Commencer",
+      "title": "Lancez votre checkout crypto en un sprint court",
+      "description": "Suivez ce parcours pour passer de la configuration au premier paiement en direct rapidement."
+    },
+    "stepLabel": "Étape {step}",
+    "checklist": {
+      "1": "Créez votre compte et vérifiez les informations de votre entreprise",
+      "2": "Connectez votre wallet de paiement",
+      "3": "Générez votre premier lien de paiement",
+      "4": "Testez le flux avec une petite transaction",
+      "5": "Passez en production et suivez les confirmations dans le tableau de bord"
+    },
+    "cta": {
+      "createAccount": "Créer votre compte",
+      "talkToOnboarding": "Parler à l'onboarding"
+    }
+  },
+  "AboutPage": {
+    "meta": {
+      "title": "À propos | Crypto Pay",
+      "description": "Découvrez Crypto Pay — paiements crypto non custodial, règlement wallet à wallet et outils marchands orientés confidentialité.",
+      "ogTitle": "Notre histoire : Crypto Pay",
+      "ogDescription": "Pour les marchands qui veulent un règlement direct en wallet sans custodie groupée."
+    },
+    "hero": {
+      "eyebrow": "À propos",
+      "title": "Paiements crypto sans prendre en custody",
+      "description": "Crypto Pay aide les marchands à accepter et suivre les paiements on-chain tandis que les fonds sont réglés directement sur leurs wallets.",
+      "bookDemo": "Réserver une démo",
+      "contactSales": "Contacter les ventes"
+    },
+    "mission": {
+      "title": "Notre mission",
+      "body": "Rendre le checkout crypto aussi simple que les passerelles carte — sans détenir les fonds marchands ni ajouter de complexité inutile.",
+      "tagline": "Au service des marchands en ligne, équipes SaaS et marketplaces dans le monde entier."
+    },
+    "stats": {
+      "merchants": { "value": "500+", "label": "Marchands intégrés" },
+      "uptime": { "value": "99,9 %", "label": "Disponibilité plateforme" },
+      "setup": { "value": "Minutes", "label": "Temps de configuration typique" },
+      "assets": { "value": "5+", "label": "Actifs pris en charge" }
+    },
+    "values": {
+      "title": "Nos valeurs",
+      "subtitle": "Ce qui nous anime au quotidien",
+      "merchantFirst": {
+        "title": "Marchand d'abord",
+        "description": "Règlement direct en wallet et statut transparent — pas de soldes groupés."
+      },
+      "privacy": {
+        "title": "Orienté confidentialité",
+        "description": "Le checkout reste sur votre site. Nous suivons l'état du paiement, pas les PII inutiles."
+      },
+      "developerReady": {
+        "title": "Prêt pour les développeurs",
+        "description": "Liens de paiement, charges, webhooks et intégration Runner pour stacks personnalisées."
+      }
+    },
+    "milestones": {
+      "title": "Notre parcours",
+      "2024Launch": {
+        "year": "2024",
+        "title": "Lancement plateforme",
+        "description": "Comptes marchands, vérification des wallets de paiement et handshake API Runner."
+      },
+      "2025Runner": {
+        "year": "2025",
+        "title": "Intégration Runner",
+        "description": "Extension de l'API Edge HMAC et webhooks sortants pour les changements de statut wallet."
+      },
+      "2026Checkout": {
+        "year": "2026",
+        "title": "Feuille de route checkout",
+        "description": "Liens de paiement, API charges et webhooks de confirmation on-chain pour les marchands."
+      }
+    },
+    "cta": {
+      "title": "Prêt à accepter la crypto ?",
+      "description": "Créez un compte, connectez un wallet et démarrez votre plan de déploiement.",
+      "getStarted": "Commencer",
+      "contact": "Nous contacter"
+    }
+  },
+  "ContactPage": {
+    "channels": {
+      "sales": { "title": "Ventes + onboarding", "copy": "Nouveaux marchands, démos et questions tarifaires." },
+      "integration": { "title": "Support intégration", "copy": "API, webhooks et aide checkout personnalisé." },
+      "support": { "title": "Support", "copy": "Compte, wallets et assistance opérationnelle." }
+    },
+    "locationCounts": {
+      "1": "1 site", "2-5": "2-5 sites", "6-10": "6-10 sites", "11-25": "11-25 sites", "25+": "25+ sites"
+    },
+    "interests": {
+      "paymentLinks": "Liens de paiement",
+      "apiIntegration": "Intégration API",
+      "walletVerification": "Vérification wallet",
+      "customCheckout": "Checkout personnalisé",
+      "volumePricing": "Tarification volume"
+    },
+    "errors": {
+      "nameRequired": "Le nom est requis",
+      "emailRequired": "L'e-mail est requis",
+      "emailInvalid": "Veuillez entrer un e-mail valide",
+      "companyRequired": "Le nom de l'entreprise est requis",
+      "messageRequired": "Parlez-nous de vos besoins"
+    },
+    "success": {
+      "title": "Merci de nous avoir contactés !",
+      "emailClient": "Votre client mail devrait s'être ouvert avec votre message. Sinon, écrivez-nous directement à",
+      "responseTime": "Nous répondons généralement sous 24 heures.",
+      "sendAnother": "Envoyer un autre message"
+    },
+    "hero": {
+      "eyebrow": "Contact",
+      "title": "Planifions votre déploiement checkout crypto.",
+      "description": "Parlez-nous de votre activité, besoins d'intégration et calendrier. Nous répondrons avec un plan d'onboarding sur mesure.",
+      "startOnboarding": "Démarrer l'onboarding",
+      "viewPricing": "Voir les tarifs"
+    },
+    "info": {
+      "office": "Bureau",
+      "officeLocation": "Los Angeles, CA (équipe remote-first)",
+      "responseTime": "Délai de réponse",
+      "responseTimeDetail": "Sous 24 h les jours ouvrables"
+    },
+    "form": {
+      "eyebrow": "Envoyer une demande",
+      "namePlaceholder": "Votre nom *",
+      "emailPlaceholder": "Adresse e-mail *",
+      "phonePlaceholder": "Téléphone (facultatif)",
+      "companyPlaceholder": "Nom de l'entreprise *",
+      "locationsLabel": "Nombre de sites",
+      "interestsLabel": "Qu'est-ce qui vous intéresse ?",
+      "messagePlaceholder": "Parlez-nous de votre activité et de vos besoins *",
+      "submit": "Envoyer la demande",
+      "submitHint": "Nous répondrons sous 24 h avec un plan personnalisé.",
+      "notProvided": "Non fourni",
+      "notSpecified": "Non précisé",
+      "emailSubject": "Demande de contact de {company}"
+    },
+    "demo": {
+      "eyebrow": "Vous préférez une démo ?",
+      "title": "Planifiez une démo de 20 minutes du portail avec notre équipe.",
+      "bookDemo": "Réserver une démo"
+    }
+  },
+  "Faq": {
+    "meta": {
+      "title": "FAQ | Crypto Pay",
+      "description": "Questions fréquentes sur Crypto Pay — règlement wallet, actifs pris en charge, tarifs et intégration API.",
+      "ogTitle": "Crypto Pay — Questions fréquentes",
+      "ogDescription": "Réponses sur l'acceptation des paiements crypto avec Crypto Pay."
+    },
+    "hero": {
+      "eyebrow": "FAQ",
+      "title": "Réponses pour opérateurs et propriétaires",
+      "description": "Pour un flux unique, contactez-nous et nous concevrons un plan pour vous."
+    },
+    "cta": {
+      "title": "Encore des questions ?",
+      "description": "Contactez-nous, nous vous aiderons pour votre configuration.",
+      "button": "Contact"
+    },
+    "categories": {
+      "gettingStarted": "Premiers pas",
+      "payments": "Paiements",
+      "security": "Sécurité",
+      "developers": "Développeurs",
+      "pricing": "Tarifs",
+      "support": "Support"
+    },
+    "items": {
+      "whatIsCryptoPay": {
+        "question": "Qu'est-ce que Crypto Pay ?",
+        "answer": "Crypto Pay vous aide à suivre et accepter les paiements crypto. Les paiements vont directement sur votre wallet — nous sommes non custodial et orientés confidentialité."
+      },
+      "howFastSetup": {
+        "question": "En combien de temps puis-je configurer ?",
+        "answer": "La plupart des marchands connectent un wallet et créent un premier lien en quelques minutes. Les intégrations API prennent généralement quelques heures selon votre stack."
+      },
+      "whatDoINeed": {
+        "question": "De quoi ai-je besoin pour commencer ?",
+        "answer": "Une adresse wallet que vous contrôlez et un compte Crypto Pay. Pour un site personnalisé, une URL de callback ou un endpoint webhook pour les mises à jour de statut."
+      },
+      "supportedCoins": {
+        "question": "Quelles cryptos supportez-vous ?",
+        "answer": "Nous supportons BTC, ETH, LTC, USDT et USDC. D'autres actifs peuvent être ajoutés."
+      },
+      "wherePaymentsGo": {
+        "question": "Où vont les paiements ?",
+        "answer": "Directement sur votre wallet. Avec Crypto Pay, les fonds ne sont pas détenus sur un solde marchand groupé — le règlement est wallet à wallet."
+      },
+      "paymentStatus": {
+        "question": "Comment suivez-vous le statut du paiement ?",
+        "answer": "Nous surveillons la blockchain pour les transactions correspondant à votre demande. Le statut passe de non payé → en cours → payé."
+      },
+      "kycRequirements": {
+        "question": "Quelles sont vos exigences KYC ?",
+        "answer": "Comme nous ne traitons ni ne stockons les paiements, le KYC est limité et basé sur l'évaluation des risques — pas sur la custody de vos fonds."
+      },
+      "privateKeys": {
+        "question": "Avez-vous besoin de mes clés privées ?",
+        "answer": "Non. Vous ne fournissez qu'une adresse wallet publique. Crypto Pay ne demande jamais de clés privées."
+      },
+      "hasApi": {
+        "question": "Y a-t-il une API ?",
+        "answer": "Oui. Une API unifiée pour créer des charges, vérifier le statut et recevoir des callbacks webhook à la confirmation."
+      },
+      "websiteIntegration": {
+        "question": "Comment intégrer sur mon site ?",
+        "answer": "Utilisez des liens de paiement sans code, ou l'API REST et les webhooks pour un checkout personnalisé. Voir la page Développeurs."
+      },
+      "fees": {
+        "question": "Comment fonctionnent les frais ?",
+        "answer": "Le tarif standard est un frais de base de {percent} % par transaction réussie, facturé mensuellement — non déduit au checkout. Contactez-nous pour Business Scale."
+      },
+      "platformFees": {
+        "question": "Y a-t-il des frais de setup ou mensuels ?",
+        "answer": "Pas de frais plateforme cachés sur le plan standard. Vous payez lorsque vous recevez un paiement avec succès, selon nos tarifs publiés."
+      },
+      "supportIncluded": {
+        "question": "Quel support est inclus ?",
+        "answer": "Support onboarding par e-mail sur Standard. Business Scale inclut support prioritaire et SLA optionnel."
+      }
+    }
+  },
+  "CookieConsent": {
+    "bannerTitle": "Préférences cookies",
+    "bannerDescription": "Nous utilisons des cookies pour les fonctions essentielles et l'analytique optionnelle.",
+    "cookiePolicy": "Politique cookies",
+    "acceptAll": "Tout accepter",
+    "essentialOnly": "Essentiels uniquement",
+    "customize": "Personnaliser",
+    "required": "Requis",
+    "toggleEnable": "Activer les cookies {name}",
+    "toggleDisable": "Désactiver les cookies {name}",
+    "viewDetails": "Voir les détails",
+    "hideDetails": "Masquer les détails",
+    "dialogDescription": "Choisissez les cookies optionnels autorisés. Les essentiels restent toujours actifs.",
+    "selectAll": "Tout sélectionner",
+    "savePreferences": "Enregistrer les préférences",
+    "settingsButton": "Paramètres cookies",
+    "categories": {
+      "essential": {
+        "name": "Strictement nécessaires",
+        "description": "Essentiels au fonctionnement du site. Requis pour la connexion sécurisée et l'authentification.",
+        "examples": {
+          "session": "Cookies de session",
+          "auth": "Jetons d'authentification",
+          "csrf": "Protection CSRF",
+          "loadBalancing": "Équilibrage de charge"
+        }
+      },
+      "functional": {
+        "name": "Fonctionnels",
+        "description": "Permettent des fonctions personnalisées et mémorisent vos préférences (langue, région, affichage).",
+        "examples": {
+          "language": "Préférences de langue",
+          "recent": "Éléments récemment consultés",
+          "theme": "Paramètres de thème",
+          "location": "Données de localisation"
+        }
+      },
+      "analytics": {
+        "name": "Analytique et performance",
+        "description": "Nous aident à comprendre comment les visiteurs utilisent le site de façon anonyme.",
+        "examples": {
+          "ga": "Google Analytics",
+          "pageViews": "Pages vues",
+          "sessionDuration": "Durée de session",
+          "errorTracking": "Suivi des erreurs",
+          "hotjar": "Hotjar"
+        }
+      },
+      "advertising": {
+        "name": "Publicité et marketing",
+        "description": "Servent à diffuser du contenu pertinent et mesurer les campagnes. Peuvent être définis par nos partenaires.",
+        "examples": {
+          "googleAds": "Google Ads",
+          "facebook": "Facebook Pixel",
+          "retargeting": "Reciblage",
+          "crossSite": "Suivi inter-sites",
+          "linkedin": "LinkedIn Insight"
+        }
+      }
+    }
+  },
+  "CryptoConverter": {
+    "eyebrow": "Convertisseur en direct",
+    "subtitle": "Crypto vers fiat en temps réel selon les cours du marché",
+    "refreshRates": "Actualiser les cours",
+    "errorLoadRates": "Impossible de charger les cours",
+    "labels": {
+      "amount": "Montant",
+      "cryptocurrency": "Cryptomonnaie",
+      "localCurrency": "Devise locale"
+    },
+    "rateLine": "{amount} {symbol} · 1 {symbol} = {unitPrice}"
+  }
+}

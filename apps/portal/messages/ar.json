@@ -1,28 +1,29 @@
 {
   "Common": {
     "brandName": "Crypto Pay",
-    "tagline": "روابط دفع ورسوم API. تُسوّى الأموال إلى محفظتك.",
-    "createAccount": "إنشاء حساب",
+    "tagline": "تتبّع واقبل مدفوعات العملات المشفّرة. مُراعٍ للخصوصية. من محفظة إلى محفظة.",
+    "createAccount": "ابدأ الآن",
     "logIn": "تسجيل الدخول",
     "dashboard": "لوحة التحكم",
     "openMenu": "فتح القائمة",
     "closeMenu": "إغلاق القائمة",
-    "supportedAssets": "الأصول المدعومة",
+    "supportedAssets": "العملات المدعومة",
     "viewPricing": "عرض الأسعار",
     "getStarted": "ابدأ الآن",
+    "getStartedFree": "ابدأ مجانًا",
+    "talkToSales": "تحدّث إلى المبيعات",
     "allRightsReserved": "جميع الحقوق محفوظة.",
-    "getStartedFree": "Get started for free",
-    "talkToSales": "Talk to sales",
     "loading": "جاري التحميل…",
     "saving": "جاري الحفظ…",
     "cancel": "إلغاء",
+    "back": "رجوع",
     "continue": "متابعة",
     "error": "خطأ",
     "success": "نجاح",
     "copied": "تم النسخ!",
     "copyFailed": "فشل النسخ",
     "sendResetEmail": "إرسال بريد إعادة التعيين",
-    "verifyAndEnable": "تحقق وتفعيل",
+    "verifyAndEnable": "تحقّق وفعِّل",
     "remove": "إزالة",
     "enable": "تفعيل",
     "added": "أُضيف {date}",
@@ -33,7 +34,7 @@
     "submitting": "جاري الإرسال…",
     "sending": "جاري الإرسال…",
     "refreshing": "جاري التحديث…",
-    "typing": "يكتب…",
+    "typing": "جارٍ الكتابة…",
     "processing": "جاري المعالجة…",
     "verifying": "جاري التحقق…",
     "sendingResetLink": "جاري إرسال رابط إعادة التعيين…",
@@ -51,96 +52,98 @@
   "Navigation": {
     "pricing": "الأسعار",
     "howItWorks": "كيف يعمل",
-    "developers": "المطورون"
+    "developers": "للمطورين",
+    "contact": "التواصل",
+    "mainNavAria": "التنقل الرئيسي"
   },
   "Footer": {
     "product": "المنتج",
     "company": "الشركة",
     "legal": "قانوني",
-    "contact": "اتصل بنا",
+    "contact": "التواصل",
     "faq": "الأسئلة الشائعة",
     "privacyPolicy": "سياسة الخصوصية",
     "termsOfService": "شروط الخدمة"
   },
   "LocaleSwitcher": {
     "label": "اللغة والمنطقة",
-    "en": "English (United States)",
+    "en": "الإنجليزية (الولايات المتحدة)",
     "ar": "العربية (السعودية)",
-    "es": "Español (España)",
-    "fr": "Français (France)",
-    "de": "Deutsch (Deutschland)",
-    "de-AT": "Deutsch (Österreich)"
+    "es": "الإسبانية (إسبانيا)",
+    "fr": "الفرنسية (فرنسا)",
+    "de": "الألمانية (ألمانيا)",
+    "de-AT": "الألمانية (النمسا)"
   },
   "HomePage": {
-    "metaTitle": "اقبل مدفوعات العملات المشفرة فوراً",
-    "heroTitle": "اقبل مدفوعات العملات المشفرة في محفظتك",
-    "heroSubtitle": "أنشئ روابط دفع أو رسوم API. يدفع العملاء بالعملات المشفرة. تذهب الأموال إلى محفظتك — وليس إلى حساب مجمّع.",
-    "howItWorksCta": "كيف يعمل",
+    "metaTitle": "اقبل مدفوعات البيتكوين والعملات المشفّرة عبر الإنترنت",
+    "metaDescription": "مدفوعات عملات مشفّرة غير حاضنة تُحوَّل مباشرةً إلى محفظتك. صفحة دفع مُراعية للخصوصية. إعداد خلال دقائق.",
+    "heroTitle": "اقبل بيتكوين وUSDT والعملات المشفّرة في أي مكان",
+    "heroSubtitle": "مُراعٍ للخصوصية. من محفظة إلى محفظة. إعداد خلال دقائق.",
+    "heroBody": "استلم مدفوعات العملات المشفّرة من متجرك أو تطبيقك مباشرةً إلى محفظتك. نحن لا نحتفظ بأموالك — أنت تملك التحكم الكامل.",
+    "howItWorksCta": "اطّلع على طريقة العمل",
+    "highlightsEyebrow": "لماذا Crypto Pay",
+    "highlightsTitle": "مصمّم كما يثق به التجار في بوابات الدفع",
+    "highlights": {
+      "nonCustodial": {
+        "title": "غير حاضن",
+        "description": "تذهب المدفوعات مباشرةً إلى محفظتك."
+      },
+      "privacyFriendly": {
+        "title": "مُراعٍ للخصوصية",
+        "description": "تبقى صفحة الدفع على موقعك. نحن نتتبّع الحالة — ولا نحتفظ بأرصدة."
+      },
+      "quickSetup": {
+        "title": "إعداد سريع",
+        "description": "اربط محفظة وأنشئ أول رابط دفع خلال دقائق."
+      }
+    },
     "howItWorksEyebrow": "كيف يعمل",
-    "howItWorksTitle": "ثلاث خطوات",
-    "fullWalkthrough": "الدليل الكامل ←",
+    "howItWorksTitle": "من صفحة الدفع إلى تأكيد المعاملة",
+    "fullWalkthrough": "شرح كامل →",
     "whatYouGetEyebrow": "ما الذي تحصل عليه",
-    "whatYouGetTitle": "الميزات الأساسية",
-    "whatYouGetDescription": "أدوات مباشرة لقبول العملات المشفرة — دون طبقات منصة إضافية.",
-    "getStartedTitle": "ابدأ الآن",
-    "getStartedDescription": "أنشئ حساباً، واربط محفظة، وأنشئ أول رابط دفع.",
+    "whatYouGetTitle": "كل ما تحتاجه لقبول العملات المشفّرة عبر الإنترنت",
+    "whatYouGetDescription": "روابط دفع وفواتير وواجهة API موحّدة — سريعة وموثوقة وتحت سيطرتك.",
+    "integrationsEyebrow": "التكاملات",
+    "integrationsTitle": "روابط دفع وأزرار وواجهة API",
+    "integrationsDescription": "استخدم روابط الدفع للفواتير السريعة، أو ضمّن صفحة الدفع في موقعك، أو ادمج مع واجهة المطورين والـ Webhooks.",
+    "apiEyebrow": "للمطورين",
+    "apiTitle": "واجهة API موحّدة لـ BTC وETH وUSDT وأكثر",
+    "apiDescription": "تحكم كامل عبر واجهة Crypto Pay. توثيق واضح وWebhooks ودعم لتجارب دفع مخصّصة.",
+    "apiCta": "اذهب إلى وثائق API",
+    "getStartedTitle": "هل أنت جاهز للبدء؟",
+    "getStartedDescription": "انضم الآن للوصول إلى تقنية دفع توفّر تجربة سريعة وسلسة لعملائك.",
     "steps": {
       "1": {
         "title": "اربط محفظتك",
-        "description": "أضف عنوان المحفظة التي تريد استلام المدفوعات عليها."
+        "description": "أضف العنوان العام الذي تريد استلام المدفوعات عليه. لا نطلب مفاتيح خاصة."
       },
       "2": {
         "title": "أنشئ طلب دفع",
-        "description": "حدد المبلغ والأصل ومرجعاً اختيارياً لسجلاتك."
+        "description": "حدّد المبلغ والعملة والمرجع. شارك رابطًا أو استدعِ واجهة API من خادمك."
       },
       "3": {
-        "title": "يدفع العميل على السلسلة",
-        "description": "نطابق المعاملة الواردة ونحدّث حالة الدفع."
+        "title": "تتبّع تأكيد المعاملة على السلسلة",
+        "description": "نكتشف المعاملة ونحدّث الحالة من غير مدفوع → قيد المعالجة → مدفوع."
       }
     },
     "benefits": {
       "directSettlement": {
-        "title": "تسوية مباشرة",
-        "description": "تذهب المدفوعات إلى عنوان محفظتك. لا نحتفظ بأموال التجار."
+        "title": "من محفظة إلى محفظة",
+        "description": "لا تبقى الأموال في حساب تاجر مجمّع. التسوية مباشرة إلى محفظتك."
       },
       "noChargebacks": {
-        "title": "انسَ مشكلة الاسترجاع",
-        "description": "معاملات العملات المشفرة لا رجعة فيها."
+        "title": "بدون استرجاعات قسرية",
+        "description": "مدفوعات السلسلة نهائية بعد التأكيد — دون إلغاء على طريقة البطاقات."
       },
       "limitedKyc": {
-        "title": "Limited KYC",
-        "description": "We do not process or store payments. Requirements depend on risk assessment, not custody."
+        "title": "متطلبات KYC محدودة",
+        "description": "نحن لا نعالج المدفوعات ولا نخزّنها. المتطلبات تعتمد على تقييم المخاطر لا على الحضانة."
       },
       "unifiedApi": {
-        "title": "Unified API",
-        "description": "One integration for payment links, charges, status, and webhook callbacks."
+        "title": "تجربة موحّدة",
+        "description": "مكان واحد لإنشاء طلبات الدفع ومتابعة الحالة من الرابط حتى التأكيد."
       }
-    },
-    "metaDescription": "Non-custodial crypto payments directly to your wallet. Privacy friendly checkout. Set up in minutes.",
-    "heroBody": "Receive crypto payments from your store or app directly to your wallet. We do not custody your funds — you keep full control.",
-    "highlightsEyebrow": "Why Crypto Pay",
-    "highlightsTitle": "Built like the gateways merchants already trust",
-    "highlights": {
-      "nonCustodial": {
-        "title": "Non custodial",
-        "description": "Payments go directly to your wallet."
-      },
-      "privacyFriendly": {
-        "title": "Privacy friendly",
-        "description": "Checkout stays on your site. We track status — we do not hold balances."
-      },
-      "quickSetup": {
-        "title": "Quick setup",
-        "description": "Connect a wallet and create your first payment link in minutes."
-      }
-    },
-    "integrationsEyebrow": "Integrations",
-    "integrationsTitle": "Payment links, buttons, and API",
-    "integrationsDescription": "Use payment links for quick invoices, embed checkout on your site, or integrate with our developer API and webhooks.",
-    "apiEyebrow": "Developers",
-    "apiTitle": "One-stop API for BTC, ETH, USDT & more",
-    "apiDescription": "Full control with the Crypto Pay API. Clear documentation, webhooks, and support for custom checkout flows.",
-    "apiCta": "Go to API docs"
+    }
   },
   "Account": {
     "nav": {
@@ -149,7 +152,7 @@
       "security": "الأمان",
       "settings": "الإعدادات",
       "signOut": "تسجيل الخروج",
-      "adminDashboard": "لوحة المسؤول"
+      "adminDashboard": "لوحة الإدارة"
     },
     "header": {
       "openMenu": "فتح قائمة التنقل",
@@ -170,18 +173,53 @@
       "emailAddress": "support@cryptopay.sale"
     },
     "dashboard": {
-      "welcome": "مرحباً بعودتك، {name}",
-      "subtitle": "اقبل مدفوعات العملات المشفرة — أدر محافظ الدفع والنشاط",
+      "welcome": "مرحبًا بعودتك، {name}",
+      "subtitle": "اضبط محافظ التسوية لعملك. روابط الدفع وصفحة الدفع قادمة لاحقًا.",
       "quickAccess": "وصول سريع",
       "securityDescription": "إدارة المصادقة الثنائية والجلسات وكلمة المرور",
-      "settingsDescription": "تفضيلات الحساب والإشعارات",
-      "walletGuideTitle": "دليل إعداد المحفظة",
-      "walletGuideDescription": "مدير المحافظ بملء الشاشة"
+      "settingsDescription": "الملف الشخصي والعملة وتفضيلات البريد الإلكتروني",
+      "developersTitle": "واجهة API والتكامل",
+      "developersDescription": "وثائق الرسوم وWebhooks وصفحة دفع مخصّصة"
+    },
+    "setup": {
+      "title": "البدء",
+      "description": "أكمل هذه الخطوات قبل قبول مدفوعات العملات المشفّرة على موقعك.",
+      "step1Title": "أضف محفظة تسوية",
+      "step1Description": "الصق عنوانًا عامًا تتحكم به. نحن لا نطلب مفاتيح خاصة أبدًا.",
+      "step1Action": "إضافة محفظة",
+      "step2Title": "تحقق الإدارة",
+      "step2Description": "يتم مراجعة كل عنوان جديد قبل أن يتمكن من استقبال التسويات.",
+      "step2DescriptionPending": "محفظتك قيد المراجعة — أرسلنا بريدًا لفريقنا. استخدم «إعادة الإرسال» في تبويب المحافظ عند الحاجة.",
+      "step3Title": "اقبل المدفوعات (قريبًا)",
+      "step3Description": "روابط الدفع وواجهة رسوم API وWebhooks لتأكيدات السلسلة قيد التطوير.",
+      "step3Action": "عرض وثائق المطورين"
+    },
+    "activity": {
+      "title": "نشاط المدفوعات",
+      "badge": "قريبًا",
+      "description": "ستظهر مدفوعات السلسلة وحالة التسوية هنا بعد إطلاق صفحة الدفع.",
+      "emptyDetail": "لا يوجد ما يُعرض بعد — هذا ليس سجل معاملات. عندما تصبح الرسوم متاحة، سترى أحداثًا مثل غير مدفوع وقيد المعالجة ومدفوع كما في أدوات التجار الأخرى.",
+      "developersCta": "وثائق المطورين",
+      "howItWorksCta": "كيف يعمل",
+      "roadmap": {
+        "charges": {
+          "title": "روابط الدفع والرسوم",
+          "description": "أنشئ طلبًا بالمبلغ والعملة ومرجع الطلب."
+        },
+        "webhooks": {
+          "title": "Webhooks",
+          "description": "استدعاءات HTTPS عند تأكيد الدفع على السلسلة."
+        },
+        "history": {
+          "title": "السجل والتصدير",
+          "description": "مطابقة المدفوعات لأغراض المحاسبة."
+        }
+      }
     },
     "wallets": {
-      "eyebrow": "اقبل العملات المشفرة",
-      "title": "محافظ الدفع",
-      "description": "أضف عناوين محفظة مسماة لعملك. نتحقق من كل عنوان قبل استخدامه للتسوية.",
+      "eyebrow": "اقبل العملات المشفّرة",
+      "title": "محافظ التسوية",
+      "description": "عناوين تسوية مُسمّاة لعملك. يتم التحقق من كل عنوان بواسطة فريقنا قبل استخدامه للتسوية.",
       "tabs": {
         "overview": "نظرة عامة",
         "wallets": "المحافظ",
@@ -189,17 +227,15 @@
       },
       "stats": {
         "verified": "موثّقة",
-        "verifiedHint": "جاهزة لتوجيه الدفع عند تفعيل الدفع",
+        "verifiedHint": "جاهزة لتوجيه التسوية عند تفعيل المدفوعات",
         "pendingReview": "قيد المراجعة",
-        "pendingHint": "في انتظار التحقق من مسؤول Crypto Pay",
+        "pendingHint": "بانتظار تحقق إدارة Crypto Pay",
         "totalWallets": "إجمالي المحافظ",
-        "totalHint": "عناوين مسماة في حسابك"
+        "totalHint": "عناوين مُسمّاة على حسابك"
       },
-      "transactionsTitle": "المعاملات",
-      "transactionsDescription": "سيظهر سجل الدفع والتأكيدات وحالة التسوية هنا عند ربط الدفع.",
-      "listHint": "الصق عنواناً واحفظ — نرسل بريداً للمسؤول للمراجعة.",
+      "listHint": "يحفظ «حفظ» العنوان لإرساله لمراجعة الإدارة. ستصلك رسالة بريد عند القبول أو الرفض.",
       "addWallet": "إضافة محفظة",
-      "emptyState": "لا توجد محافظ بعد. أضف عنوان الدفع الأول.",
+      "emptyState": "لا توجد محافظ بعد. أضف أول عنوان تسوية للبدء.",
       "table": {
         "name": "الاسم",
         "network": "الشبكة",
@@ -211,25 +247,22 @@
       "status": {
         "verified": "موثّقة",
         "rejected": "مرفوضة",
-        "pending": "في انتظار التحقق"
+        "pending": "قيد التحقق"
       },
       "edit": "تعديل",
       "resend": "إعادة الإرسال",
       "copyAddress": "نسخ العنوان",
-      "confirmDelete": "إزالة هذه المحفظة المعلقة؟",
-      "activityTitle": "نشاط الدفع",
-      "activityDescription": "ستُدرج المدفوعات الواردة والتأكيدات والتسويات هنا.",
-      "activityEmpty": "لا توجد معاملات بعد — اربط محفظة موثّقة وفعّل الدفع.",
+      "confirmDelete": "إزالة هذه المحفظة المعلّقة؟",
       "dialog": {
         "addTitle": "إضافة محفظة",
         "editTitle": "تعديل المحفظة",
-        "description": "سمّ محفظتك (مثلاً المتجر الرئيسي، المبيعات عبر الإنترنت). يُرسل كل حفظ للتحقق قبل استخدامه في الدفع.",
+        "description": "سمِّ محفظتك (مثل: BTC الرئيسية، المبيعات عبر الإنترنت). يُرسل كل حفظ للتحقق من الإدارة.",
         "walletName": "اسم المحفظة",
-        "walletNamePlaceholder": "مثلاً BTC الرئيسية",
+        "walletNamePlaceholder": "مثل: BTC الرئيسية",
         "network": "الشبكة",
         "walletAddress": "عنوان المحفظة",
         "addressPlaceholder": "الصق العنوان",
-        "primaryCheckbox": "تعيين كمحفظة دفع أساسية"
+        "primaryCheckbox": "تعيين كمحفظة تسوية أساسية"
       },
       "cancel": "إلغاء",
       "saveForVerification": "حفظ للتحقق",
@@ -240,28 +273,29 @@
       "success": "نجاح",
       "messages": {
         "invalidDetails": "تفاصيل المحفظة غير صالحة.",
-        "duplicateName": "لديك محفظة بهذا الاسم.",
-        "updateFailed": "تعذّر تحديث المحفظة.",
-        "saveFailed": "تعذّر حفظ المحفظة.",
-        "savedPending": "تم حفظ المحفظة بانتظار التحقق.",
+        "duplicateName": "لديك محفظة بهذا الاسم بالفعل.",
+        "updateFailed": "تعذّر تحديث المحفظة. حاول مرة أخرى.",
+        "saveFailed": "تعذّر حفظ المحفظة. حاول مرة أخرى.",
+        "savedPending": "تم حفظ المحفظة كقيد التحقق. سيقوم فريقنا بمراجعتها قريبًا.",
         "notFound": "المحفظة غير موجودة.",
-        "resendOnlyPending": "المحافظ المعلقة فقط يمكنها طلب بريد جديد.",
-        "requestUpdateFailed": "تعذّر تحديث الطلب.",
-        "reminderFailed": "تعذّر إرسال التذكير.",
-        "reminderSent": "تم إرسال التذكير للمسؤول.",
-        "deleteOnlyPending": "يمكن حذف المحافظ المعلقة فقط.",
-        "deleted": "تم حذف المحفظة المعلقة."
+        "resendOnlyPending": "يمكن طلب بريد مراجعة جديد للمحافظ قيد التحقق فقط.",
+        "resendCooldown": "تم إرسال تذكير بالفعل خلال آخر 24 ساعة. يرجى الانتظار أو التواصل مع الدعم إذا كان الأمر عاجلًا.",
+        "requestUpdateFailed": "تعذّر تحديث الطلب. حاول مرة أخرى.",
+        "reminderFailed": "تعذّر إرسال التذكير الآن. ما تزال محفظتك قيد المراجعة.",
+        "reminderSent": "تم إرسال تذكير التحقق إلى إدارة Crypto Pay. ستبقى الحالة قيد التحقق حتى يتم القبول.",
+        "deleteOnlyPending": "يمكن إزالة المحافظ قيد التحقق فقط.",
+        "deleted": "تمت إزالة المحفظة قيد التحقق."
       }
     },
     "settings": {
       "title": "الإعدادات",
-      "description": "إدارة تفضيلات الحساب وإعدادات الإشعارات",
+      "description": "أدر تفضيلات حسابك وإعدادات الإشعارات",
       "saveSettings": "حفظ الإعدادات",
-      "saving": "جاري الحفظ...",
+      "saving": "جاري الحفظ…",
       "savedSuccess": "تم حفظ الإعدادات بنجاح!",
       "saveFailed": "فشل حفظ الإعدادات",
       "language": "اللغة",
-      "languageHint": "ينطبق على الموقع بالكامل. يتم حفظ اختيارك في حسابك واستعادته في زيارتك القادمة.",
+      "languageHint": "ينطبق على الموقع بالكامل. يتم حفظ اختيارك في حسابك وتذكره في زيارتك القادمة.",
       "profileSection": "معلومات الملف الشخصي",
       "emailAddress": "البريد الإلكتروني",
       "companyName": "اسم الشركة",
@@ -275,49 +309,42 @@
       "themeAuto": "تلقائي",
       "currency": "العملة",
       "notificationsSection": "الإشعارات",
-      "emailNotifications": "إشعارات البريد",
-      "emailNotificationsHint": "تلقي الإشعارات عبر البريد",
+      "emailNotifications": "إشعارات البريد الإلكتروني",
+      "emailNotificationsHint": "تلقي الإشعارات عبر البريد الإلكتروني",
       "smsNotifications": "إشعارات SMS",
-      "smsNotificationsHint": "تلقي الإشعارات عبر SMS",
-      "orderUpdates": "تحديثات الطلبات",
-      "orderUpdatesHint": "إشعار بتغييرات حالة الطلب",
-      "marketingEmails": "رسائل تسويقية",
-      "marketingEmailsHint": "تلقي العروض والمحتوى الترويجي",
-      "automationSection": "الأتمتة",
-      "deliveryAutoAccept": "قبول طلبات التوصيل تلقائياً",
-      "deliveryAutoAcceptHint": "قبول الطلبات من منصات التوصيل تلقائياً",
-      "autoReorder": "إعادة الطلب التلقائي",
-      "autoReorderHint": "إعادة طلب الم supplies عند انخفاض المخزون",
+      "smsNotificationsHint": "تلقي الإشعارات عبر الرسائل النصية",
+      "walletUpdates": "رسائل المحافظ والمدفوعات",
+      "walletUpdatesHint": "نتائج التحقق وحالة الدفع (عند إطلاق صفحة الدفع)",
+      "marketingEmails": "تحديثات المنتج",
+      "marketingEmailsHint": "أخبار عن ميزات Crypto Pay والتسعير",
       "businessTypes": {
-        "restaurant": "مطعم",
-        "cafe": "مقهى",
-        "bakery": "مخبز",
-        "catering": "تموين",
-        "food_truck": "شاحنة طعام",
-        "hotel": "فندق",
-        "bar": "بار",
+        "online_store": "متجر إلكتروني / تجارة إلكترونية",
+        "saas": "SaaS / برمجيات",
+        "retail": "تجزئة",
+        "services": "خدمات مهنية",
+        "marketplace": "منصّة سوق",
         "other": "أخرى"
       }
     },
     "security": {
       "title": "إعدادات الأمان",
-      "description": "إدارة أمان الحساب وطرق المصادقة والخصوصية",
+      "description": "أدر أمان حسابك وطرق المصادقة وإعدادات الخصوصية",
       "accountSecure": "حسابك آمن",
       "lastSignIn": "آخر تسجيل دخول: {date}",
-      "never": "أبداً",
+      "never": "أبدًا",
       "password": "كلمة المرور",
       "passwordUpdateHint": "حدّث كلمة المرور للحفاظ على أمان حسابك",
-      "passwordSetHint": "عيّن كلمة مرور لأمان إضافي",
+      "passwordSetHint": "عيّن كلمة مرور لحسابك لمزيد من الأمان",
       "twoFactor": "المصادقة الثنائية",
-      "twoFactorHint": "أضف طبقة أمان إضافية بالمصادقة الثنائية",
+      "twoFactorHint": "أضف طبقة أمان إضافية عبر 2FA",
       "connectedAccounts": "الحسابات المرتبطة",
-      "connectedAccountsHint": "إدارة حساباتك الاجتماعية وOAuth",
+      "connectedAccountsHint": "أدر حساباتك الاجتماعية وحسابات OAuth المرتبطة",
       "connected": "مرتبط",
       "active": "نشط",
       "noConnectedAccounts": "لا توجد حسابات مرتبطة بعد",
-      "connectSocialHint": "اربط حسابات اجتماعية لتسجيل دخول أسهل",
+      "connectSocialHint": "اربط الحسابات الاجتماعية لتسجيل دخول أسهل",
       "activeSessions": "الجلسات النشطة",
-      "activeSessionsHint": "عرض وإدارة جلسات تسجيل الدخول النشطة",
+      "activeSessionsHint": "اعرض وأدر جلسات تسجيل الدخول النشطة",
       "currentSession": "الجلسة الحالية",
       "lastActive": "آخر نشاط: {time}",
       "justNow": "الآن",
@@ -343,8 +370,8 @@
       "updateButton": "تحديث كلمة المرور",
       "setButton": "تعيين كلمة المرور",
       "resetEmailFailed": "فشل إرسال بريد إعادة التعيين",
-      "resetEmailSent": "إذا وُجد حساب، تم إرسال رابط.",
-      "strengthHint": "استخدم 8 أحرف على الأقل مع أحرف وأرقام ورموز",
+      "resetEmailSent": "إذا كان هناك حساب لهذا البريد الإلكتروني، فسيتم إرسال رابط إعادة تعيين.",
+      "strengthHint": "استخدم 8 أحرف على الأقل مع مزيج من الأحرف والأرقام والرموز",
       "strengthWeak": "ضعيفة",
       "strengthFair": "متوسطة",
       "strengthGood": "جيدة",
@@ -354,101 +381,101 @@
     "twoFactor": {
       "loadFailed": "فشل تحميل إعدادات 2FA",
       "removeFailed": "فشل إزالة 2FA",
-      "enabled": "2FA مفعّلة",
-      "disabled": "2FA معطّلة",
+      "enabled": "تم تفعيل 2FA",
+      "disabled": "تم تعطيل 2FA",
       "enabledHint": "حسابك محمي بالمصادقة الثنائية",
-      "disabledHint": "أضف طبقة أمان إضافية",
+      "disabledHint": "أضف طبقة أمان إضافية إلى حسابك",
       "enableButton": "تفعيل 2FA",
-      "activeAuthenticators": "المصادقات النشطة",
-      "removeAuthenticator": "إزالة المصادق",
-      "info": "تتطلب المصادقة الثنائية رمز تحقق بالإضافة إلى كلمة المرور."
+      "activeAuthenticators": "تطبيقات المصادقة النشطة",
+      "removeAuthenticator": "إزالة تطبيق المصادقة",
+      "info": "تضيف المصادقة الثنائية طبقة أمان إضافية عبر طلب رمز تحقق من تطبيق المصادقة بالإضافة إلى كلمة المرور."
     },
     "mfa": {
       "title": "تفعيل المصادقة الثنائية",
-      "description": "أمان إضافي برمز تحقق.",
-      "needTitle": "ما ستحتاجه:",
-      "needApp": "تطبيق مصادقة (Google Authenticator، Authy، إلخ)",
-      "needDevice": "هاتفك أو جهازك اللوحي",
+      "description": "أضف طبقة أمان إضافية إلى حسابك عبر طلب رمز تحقق بالإضافة إلى كلمة المرور.",
+      "needTitle": "ستحتاج إلى:",
+      "needApp": "تطبيق مصادقة (Google Authenticator أو Authy أو 1Password وغيرها)",
+      "needDevice": "هاتفك الذكي أو جهازك اللوحي",
       "howTitle": "كيف يعمل:",
-      "stepScan": "امسح رمز QR",
-      "stepEnter": "أدخل الرمز المكوّن من 6 أرقام",
-      "stepLogin": "استخدم الرمز عند كل تسجيل دخول",
-      "scanTitle": "مسح رمز QR",
-      "scanDescription": "امسح رمز QR ثم أدخل الرمز المكوّن من 6 أرقام.",
+      "stepScan": "امسح رمز QR باستخدام تطبيق المصادقة",
+      "stepEnter": "أدخل الرمز المكوّن من 6 أرقام من التطبيق",
+      "stepLogin": "استخدم الرمز في كل مرة تسجّل فيها الدخول",
+      "scanTitle": "امسح رمز QR",
+      "scanDescription": "استخدم تطبيق المصادقة لمسح هذا الرمز، ثم أدخل الرمز المكوّن من 6 أرقام للتحقق.",
       "qrAlt": "رمز QR للمصادقة الثنائية",
-      "manualEntry": "لا يمكن المسح؟ أدخل هذا الرمز:",
+      "manualEntry": "لا يمكنك المسح؟ أدخل هذا الرمز يدويًا:",
       "codeLabel": "أدخل الرمز المكوّن من 6 أرقام",
       "codePlaceholder": "000000",
-      "completeTitle": "تم تفعيل 2FA!",
+      "completeTitle": "تم تفعيل 2FA بنجاح!",
       "completeDescription": "حسابك محمي الآن بالمصادقة الثنائية.",
-      "completeHint": "ستحتاج رمزاً من تطبيق المصادقة عند كل تسجيل دخول.",
+      "completeHint": "ستحتاج إلى إدخال رمز من تطبيق المصادقة في كل مرة تسجّل فيها الدخول.",
       "enrollmentFailed": "فشل التسجيل",
       "enrollmentFailedHint": "تعذّر إعداد 2FA",
       "unexpectedError": "حدث خطأ غير متوقع",
       "invalidCode": "رمز غير صالح",
-      "invalidCodeHint": "أدخل رمزاً مكوّناً من 6 أرقام",
+      "invalidCodeHint": "يرجى إدخال رمز مكوّن من 6 أرقام",
       "verificationFailed": "فشل التحقق",
-      "invalidCodeRetry": "رمز غير صالح. حاول مجدداً.",
-      "secretCopied": "تم نسخ المفتاح السري",
-      "copyManually": "انسخ المفتاح يدوياً"
+      "invalidCodeRetry": "رمز غير صالح. يرجى المحاولة مرة أخرى.",
+      "secretCopied": "تم نسخ المفتاح السري إلى الحافظة",
+      "copyManually": "يرجى نسخ المفتاح يدويًا"
     }
   },
   "Pricing": {
     "metaTitle": "الأسعار | Crypto Pay",
-    "metaDescription": "أسعار واضحة للشركات التي تقبل مدفوعات العملات المشفرة.",
-    "ogTitle": "أسعار بسيطة وشفافة",
-    "ogDescription": "أسعار واضحة لمدفوعات العملات المشفرة. تسوية مباشرة للمحفظة مشمولة.",
+    "metaDescription": "تسعير واضح للشركات التي تقبل مدفوعات العملات المشفّرة.",
+    "ogTitle": "تسعير بسيط وشفاف",
+    "ogDescription": "تسعير واضح للشركات التي تقبل مدفوعات العملات المشفّرة. يتضمن تسوية مباشرة إلى المحفظة.",
     "eyebrow": "الأسعار",
-    "title": "أسعار بسيطة للفرق الجادة",
-    "description": "ابدأ بسرعة بأسعار شفافة لكل معاملة، ثم انتقل إلى شروط تجارية مخصصة مع نمو حجمك.",
+    "title": "تسعير بسيط لفرق جادة",
+    "description": "ابدأ بسرعة بتسعير معاملات واضح وشفاف، ثم انتقل إلى شروط تجارية مخصّصة مع نمو حجمك.",
     "standard": {
       "subtitle": "رسوم أساسية لكل معاملة ناجحة",
       "note": "بدون رسوم منصة مخفية",
       "features": {
-        "directSettlement": "تسوية مباشرة للمحفظة",
-        "checkoutLinks": "روابط دفع وفواتير العملات المشفرة",
-        "statusTracking": "تتبع الحالة في الوقت الفعلي",
+        "directSettlement": "تسوية مباشرة إلى المحفظة",
+        "checkoutLinks": "روابط دفع وفواتير للعملات المشفّرة",
+        "statusTracking": "تتبّع الحالة في الوقت الفعلي",
         "reporting": "تقارير أساسية وتصدير",
-        "support": "دعم البدء عبر البريد الإلكتروني"
+        "support": "دعم بدء الاستخدام عبر البريد الإلكتروني"
       }
     },
     "business": {
-      "name": "Business Scale",
-      "price": "مخصص",
+      "name": "نمو الأعمال",
+      "price": "مخصّص",
       "subtitle": "تسعير حسب الحجم",
       "note": "للعمليات متعددة المواقع",
       "features": {
         "everythingStandard": "كل ما في Standard",
-        "customReporting": "تسوية وتقارير مخصصة",
+        "customReporting": "تسوية وتقارير مخصّصة",
         "prioritySupport": "دعم أولوية وخيارات SLA",
-        "integrationSupport": "دعم تكامل مخصص",
+        "integrationSupport": "دعم تكامل مخصّص",
         "securityReview": "مراجعة أمنية للمؤسسات"
       }
     },
     "multiLocationTitle": "إعداد متعدد المواقع؟",
-    "multiLocationDescription": "تواصل معنا لتسعير الحجم وتخطيط الإطلاق.",
+    "multiLocationDescription": "تواصل معنا لتسعير حسب الحجم وتخطيط الإطلاق.",
     "contactSales": "تواصل مع المبيعات",
     "createAccount": "إنشاء حساب"
   },
   "Admin": {
     "nav": {
       "brand": "Crypto Pay",
-      "brandTagline": "لوحة الإدارة",
+      "brandTagline": "وحدة الإدارة",
       "overview": "نظرة عامة",
       "merchantOps": "عمليات التجار",
       "insights": "رؤى",
       "platform": "المنصة",
       "growth": "النمو",
       "superAdmin": "المسؤول الأعلى",
-      "dashboard": "لوحة التحكم",
-      "walletReview": "مراجعة محافظ الدفع",
+      "dashboard": "نظرة تشغيلية",
+      "walletReview": "مراجعة محافظ التسوية",
       "merchants": "التجار",
       "leads": "العملاء المحتملون والدردشة",
       "analytics": "التحليلات",
       "settings": "الإعدادات",
       "notifications": "الإشعارات",
       "security": "الأمان",
-      "campaigns": "حملات البريد",
+      "campaigns": "حملات البريد الإلكتروني",
       "automations": "الأتمتة",
       "templates": "القوالب",
       "contacts": "جهات الاتصال",
@@ -458,51 +485,142 @@
     },
     "dashboard": {
       "title": "نظرة تشغيلية",
-      "subtitle": "مراجعة محافظ الدفع والتجار والعملاء المحتملين.",
+      "subtitle": "راجع محافظ التسوية والتجار والعملاء المحتملين الواردين.",
       "pendingWallets": "محافظ قيد المراجعة",
-      "verifiedWallets": "محافظ موثقة",
+      "verifiedWallets": "محافظ تسوية موثّقة",
       "merchantAccounts": "حسابات التجار",
-      "newLeadsToday": "عملاء جدد اليوم",
+      "newLeadsToday": "عملاء محتملون جدد اليوم",
       "reviewWallets": "مراجعة المحافظ",
       "viewMerchants": "عرض التجار",
-      "openInbox": "صندوق العملاء المحتملين",
+      "openInbox": "فتح صندوق العملاء المحتملين",
       "quickActions": "إجراءات سريعة"
+    },
+    "merchants": {
+      "title": "التجار",
+      "description": "حسابات من Supabase — أدر طلبات محافظ التسوية وراسل التجار عبر Resend.",
+      "totalAccounts": "حسابات التجار",
+      "withWallets": "لديهم محافظ تسوية",
+      "pendingRequests": "طلبات محافظ معلّقة",
+      "reviewNow": "طابور المراجعة",
+      "searchPlaceholder": "ابحث بالاسم أو البريد أو الشركة…",
+      "loading": "جاري تحميل التجار…",
+      "empty": "لم يتم العثور على تجار.",
+      "merchant": "التاجر",
+      "wallets": "المحافظ",
+      "pending": "معلّق",
+      "joined": "تاريخ الانضمام",
+      "actions": "إجراءات",
+      "verified": "موثّق",
+      "rejected": "مرفوض",
+      "none": "لا يوجد",
+      "manage": "إدارة",
+      "unnamed": "بدون اسم",
+      "paginationTotal": "{count} تاجر",
+      "previous": "السابق",
+      "next": "التالي",
+      "pageOf": "الصفحة {page} / {total}",
+      "backToList": "العودة إلى قائمة التجار",
+      "notFound": "التاجر غير موجود.",
+      "profileUpdated": "تم تحديث الملف الشخصي.",
+      "profileSection": "الملف الشخصي",
+      "accountSection": "الحساب",
+      "fullName": "الاسم الكامل",
+      "phone": "الهاتف",
+      "company": "الشركة",
+      "emailConfirmed": "تم تأكيد البريد الإلكتروني",
+      "lastSignIn": "آخر تسجيل دخول",
+      "walletSummary": "محافظ التسوية",
+      "total": "الإجمالي",
+      "leads": "العملاء المحتملون",
+      "no": "لا",
+      "unknown": "غير معروف",
+      "pendingBadge": "{count} معلّقة",
+      "accountToolsHint": "تُرسل رسائل المصادقة وإجراءات الأمان عبر Resend مع روابط من Supabase.",
+      "accountTools": "أدوات الحساب",
+      "emailMerchant": "مراسلة التاجر",
+      "resendEmailVerification": "إعادة إرسال تأكيد البريد الإلكتروني",
+      "sendEmailVerification": "إرسال تأكيد البريد الإلكتروني",
+      "sendPasswordReset": "إرسال إعادة تعيين كلمة المرور",
+      "revokeSessions": "إلغاء جميع الجلسات",
+      "deleteAccount": "حذف حساب التاجر",
+      "resendWalletVerification": "إعادة إرسال تحقق المحفظة",
+      "accountBanned": "محظور في Supabase Auth",
+      "supabaseToolsTitle": "أدوات Supabase والبريد الإلكتروني",
+      "supabaseToolsDescription": "واجهة Auth Admin API (صلاحية خدمة) بالإضافة إلى Resend للتواصل مع التجار.",
+      "supabaseSnapshot": "لقطة Supabase Auth",
+      "confirmEmailSupabase": "تأكيد البريد في Supabase",
+      "syncAuthMetadata": "مزامنة الملف الشخصي → بيانات المصادقة",
+      "banInSupabase": "حظر في Supabase",
+      "unbanInSupabase": "إلغاء الحظر في Supabase",
+      "filterAll": "كل التجار",
+      "filterPending": "قيد المراجعة",
+      "filterWithWallets": "لديهم محافظ",
+      "filterNoWallets": "لا توجد محافظ بعد",
+      "reviewWallets": "مراجعة المحافظ",
+      "tabOverview": "نظرة عامة",
+      "tabWallets": "محافظ التسوية",
+      "tabAccount": "الحساب والمصادقة",
+      "profileSectionHint": "تُعرض بيانات التواصل في رسائل الإدارة ورسائل التاجر.",
+      "accountSectionHint": "تسجيل الدخول ونشاط العملاء المحتملين من Supabase.",
+      "walletsSectionTitle": "محافظ التسوية",
+      "walletsSectionDescription": "يمكن لكل تاجر تسجيل عدة عناوين تسوية. وسّع المحفظة لمراجعتها أو قبولها أو مراسلة التاجر.",
+      "walletsAccordionHint": "{count, plural, one {# محفظة} other {# محافظ}} · {pending, plural, =0 {لا يوجد قيد المراجعة} one {# قيد المراجعة} other {# قيد المراجعة}}",
+      "primaryWallet": "أساسية",
+      "walletAddress": "العنوان",
+      "copyAddress": "نسخ العنوان",
+      "addressCopied": "تم نسخ العنوان",
+      "requestedAt": "تاريخ الإرسال",
+      "approveWallet": "قبول",
+      "rejectWallet": "رفض",
+      "resendVerification": "إعادة إرسال التحقق",
+      "askMerchant": "مراسلة التاجر",
+      "openReviewQueue": "طابور المراجعة العام",
+      "noWalletsYet": "لم تُرسل أي محافظ تسوية بعد.",
+      "walletsLoadFailed": "تعذّر تحميل المحافظ",
+      "resendFailed": "فشلت إعادة الإرسال",
+      "verificationSent": "تم إرسال رسائل التحقق",
+      "verificationSentHint": "تم إشعار صندوق بريد التاجر وصندوق الإدارة عند الإعداد.",
+      "walletUpdateFailed": "فشل تحديث المحفظة",
+      "walletStatusUpdated": "تم وسم المحفظة كـ {status}",
+      "merchantNotified": "تم إشعار التاجر عبر البريد الإلكتروني.",
+      "rejectionPrompt": "سبب الرفض (اختياري):",
+      "walletEmailSubject": "سؤال بخصوص المحفظة “{label}”"
     }
   },
   "Auth": {
-    "welcomeBack": "مرحباً بعودتك",
-    "signInTitle": "تسجيل الدخول إلى حسابك",
-    "createAccountTitle": "إنشاء حسابك",
+    "welcomeBack": "مرحبًا بعودتك",
+    "signInTitle": "سجّل الدخول إلى حسابك",
+    "createAccountTitle": "أنشئ حسابك",
     "newToBrand": "جديد على Crypto Pay؟",
-    "createAccountLink": "إنشاء حساب",
+    "createAccountLink": "أنشئ حسابًا",
     "alreadyHaveAccount": "لديك حساب بالفعل؟",
-    "signInLink": "تسجيل الدخول",
+    "signInLink": "سجّل الدخول",
     "accountCreated": "تم إنشاء الحساب.",
-    "verifyEmailWith": "أرسلنا رابط تأكيد إلى {email}. يرجى تأكيد بريدك ثم تسجيل الدخول.",
-    "verifyEmailGeneric": "أرسلنا بريد تأكيد. يرجى تأكيد بريدك ثم تسجيل الدخول.",
-    "resendConfirmation": "إعادة إرسال بريد التأكيد",
+    "verifyEmailWith": "أرسلنا رابط تأكيد إلى {email}. يرجى تأكيد بريدك الإلكتروني، ثم تسجيل الدخول.",
+    "verifyEmailGeneric": "أرسلنا رسالة تأكيد. يرجى تأكيد بريدك الإلكتروني، ثم تسجيل الدخول.",
+    "resendConfirmation": "إعادة إرسال رسالة التأكيد",
     "resendingConfirmation": "جارٍ الإرسال…",
-    "resendConfirmationSent": "إذا كان الحساب موجودًا، أرسلنا رابط تأكيد جديدًا.",
-    "resendConfirmationFailed": "تعذر الإرسال الآن. حاول مرة أخرى بعد قليل.",
-    "signInWithEmail": "سجّل الدخول بـ {email} للمتابعة.",
-    "signInToDashboard": "سجّل الدخول للوصول إلى لوحة التحكم.",
-    "alreadySignedIn": "أنت مسجل الدخول بالفعل.",
-    "signedInHint": "انتقل إلى لوحة التحكم أو سجّل الخروج لتبديل الحساب.",
-    "continueToDashboard": "متابعة إلى لوحة التحكم",
+    "resendConfirmationSent": "إذا كان هناك حساب لهذا البريد الإلكتروني، فقد أُرسلت رسالة تأكيد جديدة.",
+    "resendConfirmationFailed": "تعذّر إعادة الإرسال الآن. حاول مرة أخرى بعد بضع دقائق.",
+    "signInWithEmail": "سجّل الدخول باستخدام {email} للمتابعة.",
+    "signInToDashboard": "سجّل الدخول للمتابعة إلى لوحة التحكم.",
+    "alreadySignedIn": "أنت مسجّل الدخول بالفعل.",
+    "signedInHint": "انتقل إلى لوحة التحكم أو سجّل الخروج لتبديل الحسابات.",
+    "continueToDashboard": "المتابعة إلى لوحة التحكم",
     "signOut": "تسجيل الخروج",
-    "alreadyLoggedInSignup": "مسجل الدخول بالفعل؟",
-    "signedInCreateNew": "أنت مسجل الدخول حالياً. إذا أردت إنشاء حساب جديد ببريد مختلف،",
-    "signOutFirst": "سجّل الخروج أولاً",
+    "alreadyLoggedInSignup": "مسجّل الدخول بالفعل؟",
+    "signedInCreateNew": "أنت مسجّل الدخول حاليًا. إذا كنت تريد إنشاء حساب جديد ببريد مختلف، يرجى",
+    "signOutFirst": "تسجيل الخروج أولاً",
     "newHere": "جديد هنا؟",
-    "newHereHint": "أنشئ حسابك بالبريد وكلمة المرور.",
+    "newHereHint": "أنشئ حسابك باستخدام بريدك الإلكتروني وكلمة المرور للبدء.",
     "firstName": "الاسم الأول",
     "lastName": "اسم العائلة",
     "email": "البريد الإلكتروني",
     "phoneOptional": "الهاتف (اختياري)",
     "password": "كلمة المرور",
-    "emailPlaceholder": "أدخل بريدك",
+    "emailPlaceholder": "أدخل بريدك الإلكتروني",
     "passwordPlaceholder": "أدخل كلمة المرور",
-    "phonePlaceholder": "+966 50 123 4567",
+    "phonePlaceholder": "+1 (555) 123-4567",
     "forgotPassword": "نسيت كلمة المرور؟",
     "signIn": "تسجيل الدخول",
     "signUp": "إنشاء حساب",
@@ -511,17 +629,433 @@
     "and": "و",
     "privacyPolicy": "سياسة الخصوصية",
     "sendResetLink": "إرسال رابط إعادة التعيين",
-    "backToSignIn": "العودة لتسجيل الدخول",
-    "resetPassword": "إعادة تعيين كلمة المرور"
+    "backToSignIn": "العودة إلى تسجيل الدخول",
+    "resetPassword": "إعادة تعيين كلمة المرور",
+    "securityCheckTitle": "تحقق أنك لست روبوتًا",
+    "securityCheckHint": "تحقق سريع من Cloudflare — يكتمل خلال ثانية.",
+    "securityCheckVerified": "تم التحقق",
+    "securityCheckFailed": "فشل التحقق",
+    "securityCheckRetry": "يرجى إكمال التحقق مرة أخرى، ثم الإرسال.",
+    "securityCheckRequired": "يرجى إكمال التحقق الأمني قبل المتابعة.",
+    "tooManyAttempts": "محاولات كثيرة جدًا. يرجى الانتظار بضع دقائق ثم المحاولة مجددًا.",
+    "layout": {
+      "backToHome": "العودة إلى الصفحة الرئيسية",
+      "backToSite": "العودة إلى الموقع"
+    }
+  },
+  "CookieConsent": {
+    "bannerTitle": "تفضيلات ملفات تعريف الارتباط",
+    "bannerDescription": "نستخدم cookies للوظائف الأساسية والتحليلات الاختيارية.",
+    "cookiePolicy": "سياسة Cookies",
+    "acceptAll": "قبول الكل",
+    "essentialOnly": "الأساسية فقط",
+    "customize": "تخصيص",
+    "required": "مطلوب",
+    "toggleEnable": "تفعيل cookies {name}",
+    "toggleDisable": "تعطيل cookies {name}",
+    "viewDetails": "عرض التفاصيل",
+    "hideDetails": "إخفاء التفاصيل",
+    "dialogDescription": "اختر cookies الاختيارية. الأساسية مفعّلة دائمًا.",
+    "selectAll": "تحديد الكل",
+    "savePreferences": "حفظ التفضيلات",
+    "settingsButton": "إعدادات Cookies",
+    "categories": {
+      "essential": {
+        "name": "ضرورية للغاية",
+        "description": "أساسية لعمل الموقع. مطلوبة لتسجيل الدخول الآمن والمصادقة.",
+        "examples": {
+          "session": "Cookies الجلسة",
+          "auth": "رموز المصادقة",
+          "csrf": "حماية CSRF",
+          "loadBalancing": "موازنة الحمل"
+        }
+      },
+      "functional": {
+        "name": "وظيفية",
+        "description": "تمكّن ميزات مخصّصة وتتذكّر تفضيلات اللغة والعرض.",
+        "examples": {
+          "language": "تفضيلات اللغة",
+          "recent": "عناصر شوهدت مؤخرًا",
+          "theme": "إعدادات المظهر",
+          "location": "بيانات الموقع"
+        }
+      },
+      "analytics": {
+        "name": "التحليلات والأداء",
+        "description": "تساعدنا على فهم تفاعل الزوار بشكل مجهول.",
+        "examples": {
+          "ga": "Google Analytics",
+          "pageViews": "مشاهدات الصفحة",
+          "sessionDuration": "مدة الجلسة",
+          "errorTracking": "تتبّع الأخطاء",
+          "hotjar": "Hotjar"
+        }
+      },
+      "advertising": {
+        "name": "الإعلان والتسويق",
+        "description": "للمحتوى ذي الصلة وقياس الحملات. قد تُضبط من شركاء التسويق.",
+        "examples": {
+          "googleAds": "Google Ads",
+          "facebook": "Facebook Pixel",
+          "retargeting": "إعادة الاستهداف",
+          "crossSite": "تتبّع عبر المواقع",
+          "linkedin": "LinkedIn Insight"
+        }
+      }
+    }
+  },
+  "Faq": {
+    "meta": {
+      "title": "الأسئلة الشائعة | Crypto Pay",
+      "description": "أسئلة شائعة عن Crypto Pay — تسوية المحفظة والأصول والأسعار وتكامل API.",
+      "ogTitle": "Crypto Pay — الأسئلة الشائعة",
+      "ogDescription": "إجابات عن قبول مدفوعات cripto مع Crypto Pay."
+    },
+    "hero": {
+      "eyebrow": "الأسئلة الشائعة",
+      "title": "إجابات للمشغّلين والمالكين",
+      "description": "إن كان لديك سير عمل فريد، تواصل معنا ونصمّم خطة لك."
+    },
+    "cta": {
+      "title": "لا تزال لديك أسئلة؟",
+      "description": "تواصل معنا وسنساعدك في الإعداد.",
+      "button": "التواصل"
+    },
+    "categories": {
+      "gettingStarted": "البدء",
+      "payments": "المدفوعات",
+      "security": "الأمان",
+      "developers": "للمطورين",
+      "pricing": "الأسعار",
+      "support": "الدعم"
+    },
+    "items": {
+      "whatIsCryptoPay": {
+        "question": "ما هو Crypto Pay؟",
+        "answer": "Crypto Pay يساعدك على تتبّع وقبول مدفوعات cripto. المدفوعات تذهب مباشرةً إلى محفظتك — غير حاضن ومُراعٍ للخصوصية."
+      },
+      "howFastSetup": {
+        "question": "ما سرعة الإعداد؟",
+        "answer": "معظم التجار يربطون محفظة وينشئون أول رابط خلال دقائق. تكامل API يستغرق ساعات حسب stack."
+      },
+      "whatDoINeed": {
+        "question": "ماذا أحتاج للبدء؟",
+        "answer": "عنوان محفظة تتحكم به وحساب Crypto Pay. للمواقع المخصّصة URL callback أو webhook endpoint لتحديثات الحالة."
+      },
+      "supportedCoins": {
+        "question": "ما العملات المدعومة؟",
+        "answer": "ندعم BTC وETH وLTC وUSDT وUSDC. قد تُضاف أصول لاحقًا."
+      },
+      "wherePaymentsGo": {
+        "question": "إلى أين تذهب المدفوعات؟",
+        "answer": "مباشرةً إلى محفظتك. لا نحتفظ برصيد تجاري مجمّع — التسوية من محفظة إلى محفظة."
+      },
+      "paymentStatus": {
+        "question": "كيف تتتبّعون حالة الدفع؟",
+        "answer": "نراقب blockchain للمعاملات المطابقة. الحالة: غير مدفوع → قيد المعالجة → مدفوع."
+      },
+      "kycRequirements": {
+        "question": "ما متطلبات KYC؟",
+        "answer": "لأننا لا نعالج ولا نخزّن المدفوعات، KYC محدود ومبني على تقييم المخاطر — لا على custody."
+      },
+      "privateKeys": {
+        "question": "هل تحتاجون مفاتيحي الخاصة؟",
+        "answer": "لا. تقدّم عنوان محفظة عامًا فقط. Crypto Pay لا يطلب مفاتيح خاصة."
+      },
+      "hasApi": {
+        "question": "هل توجد API؟",
+        "answer": "نعم. API موحّدة لإنشاء charges وفحص الحالة واستقبال webhooks عند التأكيد."
+      },
+      "websiteIntegration": {
+        "question": "كيف أدمج على موقعي؟",
+        "answer": "روابط دفع بدون كود أو REST API وwebhooks لcheckout مخصّص. راجع صفحة المطورين."
+      },
+      "fees": {
+        "question": "كيف تعمل الرسوم؟",
+        "answer": "التسعير القياسي: رسوم أساس {percent}% لكل معاملة ناجحة، تُفوتر شهريًا — لا تُخصم عند الدفع. Business Scale بالتواصل."
+      },
+      "platformFees": {
+        "question": "هل هناك رسوم إعداد أو شهرية؟",
+        "answer": "لا رسوم منصة مخفية في الخطة القياسية. تدفع عند استلام دفع ناجح حسب أسعارنا."
+      },
+      "supportIncluded": {
+        "question": "ما الدعم المُضمّن؟",
+        "answer": "دعم إعداد بالبريد في Standard. Business Scale يشمل دعمًا أولويًا وSLA اختياريًا."
+      }
+    }
+  },
+  "DevelopersPage": {
+    "meta": {
+      "title": "معلومات المنتج | Crypto Pay",
+      "description": "تعرّف على كيفية عمل Crypto Pay، وما المتاح اليوم، وما القادم لاحقًا."
+    },
+    "hero": {
+      "eyebrow": "معلومات",
+      "title": "كيف يعمل Crypto Pay",
+      "description": "نظرة عامة بسيطة حول التسوية، والتحقق من المحافظ، وخطة إطلاق ميزات الدفع."
+    },
+    "blocks": {
+      "security": {
+        "title": "الأمان أولاً",
+        "description": "تسوية غير حاضنة وممارسات قوية لأمان الحساب عبر المنصة."
+      },
+      "walletVerification": {
+        "title": "التحقق من المحافظ",
+        "description": "تتم مراجعة محافظ التسوية قبل استخدامها للتوجيه."
+      },
+      "gettingStarted": {
+        "title": "البدء",
+        "description": "أنشئ حسابًا، أضف محفظة تسوية، وتابع إطلاق ميزات الدفع عند توفرها."
+      }
+    },
+    "quickStart": {
+      "eyebrow": "الخطوات التالية",
+      "description": "ابدأ بإعداد المحفظة وتعرّف على التدفق بالكامل. ميزات الدفع وروابط الدفع قادمة لاحقًا.",
+      "howItWorks": "كيف يعمل",
+      "getStarted": "ابدأ الآن"
+    },
+    "cta": {
+      "title": "هل أنت مستعد للبدء؟",
+      "description": "أنشئ حسابًا، أضف محفظة تسوية، وتواصل معنا إذا احتجت مساعدة في الإعداد.",
+      "apiDocs": "اعرف المزيد"
+    }
+  },
+  "HowItWorksPage": {
+    "meta": {
+      "title": "كيف يعمل Crypto Pay",
+      "description": "دفع cripto غير حاضن: من محفظة إلى محفظة، تتبّع on-chain وwebhooks."
+    },
+    "hero": {
+      "eyebrow": "كيف يعمل",
+      "title": "تتبّع واقبل مدفوعات العملات المشفّرة",
+      "description": "مُراعٍ للخصوصية. من محفظة إلى محفظة. من أول رابط إلى الدفع المؤكّد."
+    },
+    "stepLabel": "الخطوة {step}",
+    "steps": {
+      "connectWallet": {
+        "title": "اربط محفظتك",
+        "description": "أضف العنوان العام حيث تريد استلام المدفوعات. بدون مفاتيح خاصة — من محفظة إلى محفظة."
+      },
+      "createPayment": {
+        "title": "أنشئ طلب دفع",
+        "description": "حدّد المبلغ والعملة. شارك رابط دفع أو أنشئ charge عبر API مع مرجع الطلب."
+      },
+      "customerPays": {
+        "title": "يدفع العميل on-chain",
+        "description": "يمكن أن يبقى الدفع على موقعك. نكتشف المعاملة ونحدّث الحالة إلى قيد المعالجة."
+      },
+      "confirmationCallback": {
+        "title": "التأكيد والاستدعاء",
+        "description": "عند التأكيد on-chain تصبح الحالة مدفوعة ويتحدّث webhook أو لوحة التحكم."
+      },
+      "reconcileExport": {
+        "title": "المطابقة والتصدير",
+        "description": "راجع سجل المدفوعات في حسابك وصدّر السجلات للمحاسبة."
+      }
+    },
+    "cta": {
+      "title": "هل أنت مستعد للبدء؟",
+      "description": "انضم الآن لcheckout cripto سلس — إعداد خلال دقائق.",
+      "apiDocs": "وثائق API"
+    }
+  },
+  "GetStartedPage": {
+    "meta": {
+      "title": "ابدأ الآن",
+      "description": "ابدأ قبول مدفوعات cripto بخطة نشر بسيطة."
+    },
+    "hero": {
+      "eyebrow": "ابدأ الآن",
+      "title": "أطلق checkout cripto في sprint قصير",
+      "description": "اتبع هذا المسار من الإعداد إلى أول دفع مباشر بسرعة."
+    },
+    "stepLabel": "الخطوة {step}",
+    "checklist": {
+      "1": "أنشئ حسابك وتحقّق من بيانات عملك",
+      "2": "اربط محفظة الدفع",
+      "3": "أنشئ أول رابط دفع",
+      "4": "اختبر التدفق بمعاملة صغيرة",
+      "5": "انطلق مباشرة وراقب التأكيدات في لوحة التحكم"
+    },
+    "cta": {
+      "createAccount": "أنشئ حسابك",
+      "talkToOnboarding": "تحدّث إلى فريق الإعداد"
+    }
+  },
+  "AboutPage": {
+    "meta": {
+      "title": "من نحن | Crypto Pay",
+      "description": "تعرّف على Crypto Pay — مدفوعات cripto غير حاضنة، تسوية من محفظة إلى محفظة وأدوات للتجار.",
+      "ogTitle": "قصتنا: Crypto Pay",
+      "ogDescription": "للتجار الذين يريدون تسوية مباشرة في المحفظة دون custody مجمّعة."
+    },
+    "hero": {
+      "eyebrow": "من نحن",
+      "title": "مدفوعات cripto دون أخذ custody",
+      "description": "Crypto Pay يساعد التجار على قبول وتتبّع المدفوعات on-chain بينما تُسوّى الأموال مباشرةً إلى محافظهم.",
+      "bookDemo": "احجز demo",
+      "contactSales": "تواصل مع المبيعات"
+    },
+    "mission": {
+      "title": "مهمتنا",
+      "body": "جعل checkout cripto بسيطًا مثل بوابات البطاقات — دون حجز أموال التاجر أو إضافة تعقيد امتثال غير ضروري.",
+      "tagline": "نخدم التجار الإلكترونيين وفرق SaaS والأسواق حول العالم."
+    },
+    "stats": {
+      "merchants": {
+        "value": "+500",
+        "label": "تاجر تم إعداده"
+      },
+      "uptime": {
+        "value": "99.9%",
+        "label": "توفر المنصة"
+      },
+      "setup": {
+        "value": "دقائق",
+        "label": "وقت الإعداد المعتاد"
+      },
+      "assets": {
+        "value": "+5",
+        "label": "أصول مدعومة"
+      }
+    },
+    "values": {
+      "title": "قيمنا",
+      "subtitle": "ما يدفعنا كل يوم",
+      "merchantFirst": {
+        "title": "التاجر أولًا",
+        "description": "تسوية مباشرة في المحفظة وحالة شفافة — بدون أرصدة مجمّعة."
+      },
+      "privacy": {
+        "title": "مُراعٍ للخصوصية",
+        "description": "يبقى الدفع على موقعك. نتتبّع حالة الدفع لا بيانات شخصية غير ضرورية."
+      },
+      "developerReady": {
+        "title": "جاهز للمطورين",
+        "description": "روابط دفع وcharges وwebhooks وتكامل Runner لل stacks المخصّصة."
+      }
+    },
+    "milestones": {
+      "title": "مسيرتنا",
+      "2024Launch": {
+        "year": "2024",
+        "title": "إطلاق المنصة",
+        "description": "حسابات التجار والتحقق من محافظ الدفع وhandshake API Runner."
+      },
+      "2025Runner": {
+        "year": "2025",
+        "title": "تكامل Runner",
+        "description": "توسيع Edge API HMAC وwebhooks صادرة لتغييرات حالة المحفظة."
+      },
+      "2026Checkout": {
+        "year": "2026",
+        "title": "خارطة checkout",
+        "description": "روابط دفع وAPI charges وwebhooks تأكيد on-chain للتجار."
+      }
+    },
+    "cta": {
+      "title": "هل أنت مستعد لقبول cripto؟",
+      "description": "أنشئ حسابًا، اربط محفظة وابدأ خطة النشر.",
+      "getStarted": "ابدأ الآن",
+      "contact": "تواصل معنا"
+    }
+  },
+  "ContactPage": {
+    "channels": {
+      "sales": {
+        "title": "المبيعات + الإعداد",
+        "copy": "تجار جدد وdemos وأسئلة التسعير."
+      },
+      "integration": {
+        "title": "دعم التكامل",
+        "copy": "API وwebhooks وcheckout مخصّص."
+      },
+      "support": {
+        "title": "الدعم",
+        "copy": "الحساب والمحافظ والمساعدة التشغيلية."
+      }
+    },
+    "locationCounts": {
+      "1": "موقع واحد",
+      "2-5": "2-5 مواقع",
+      "6-10": "6-10 مواقع",
+      "11-25": "11-25 موقعًا",
+      "25+": "+25 موقعًا"
+    },
+    "interests": {
+      "paymentLinks": "روابط الدفع",
+      "apiIntegration": "تكامل API",
+      "walletVerification": "التحقق من المحفظة",
+      "customCheckout": "Checkout مخصّص",
+      "volumePricing": "تسعير بالحجم"
+    },
+    "errors": {
+      "nameRequired": "الاسم مطلوب",
+      "emailRequired": "البريد مطلوب",
+      "emailInvalid": "يرجى إدخال بريد صالح",
+      "companyRequired": "اسم الشركة مطلوب",
+      "messageRequired": "أخبرنا باحتياجاتك"
+    },
+    "success": {
+      "title": "شكرًا لتواصلك!",
+      "emailClient": "يُفترض أن يكون عميل بريدك قد فُتح مع رسالتك. وإلا راسلنا مباشرة على",
+      "responseTime": "نرد عادةً خلال 24 ساعة.",
+      "sendAnother": "إرسال رسالة أخرى"
+    },
+    "hero": {
+      "eyebrow": "التواصل",
+      "title": "لنخطّط لنشر checkout cripto الخاص بك.",
+      "description": "أخبرنا عن عملك واحتياجات التكامل والجدول الزمني. سنرد بخطة إعداد مخصّصة.",
+      "startOnboarding": "بدء الإعداد",
+      "viewPricing": "عرض الأسعار"
+    },
+    "info": {
+      "office": "المكتب",
+      "officeLocation": "Los Angeles, CA (فريق عن بُعد)",
+      "responseTime": "وقت الرد",
+      "responseTimeDetail": "خلال 24 ساعة في أيام العمل"
+    },
+    "form": {
+      "eyebrow": "إرسال طلب",
+      "namePlaceholder": "اسمك *",
+      "emailPlaceholder": "البريد الإلكتروني *",
+      "phonePlaceholder": "الهاتف (اختياري)",
+      "companyPlaceholder": "اسم الشركة *",
+      "locationsLabel": "عدد المواقع",
+      "interestsLabel": "ما الذي يهمك؟",
+      "messagePlaceholder": "أخبرنا عن عملك واحتياجاتك *",
+      "submit": "إرسال الطلب",
+      "submitHint": "سنرد خلال 24 ساعة بخطة مخصّصة.",
+      "notProvided": "غير مذكور",
+      "notSpecified": "غير محدّد",
+      "emailSubject": "طلب تواصل من {company}"
+    },
+    "demo": {
+      "eyebrow": "تفضّل جولة توضيحية؟",
+      "title": "حدّد demo للبوابة 20 دقيقة مع فريقنا.",
+      "bookDemo": "احجز demo"
+    }
+  },
+  "CryptoConverter": {
+    "eyebrow": "محوّل مباشر",
+    "subtitle": "cripto إلى fiat في الوقت الفعلي حسب أسعار السوق",
+    "refreshRates": "تحديث الأسعار",
+    "errorLoadRates": "تعذّر تحميل الأسعار",
+    "labels": {
+      "amount": "المبلغ",
+      "cryptocurrency": "العملة المشفّرة",
+      "localCurrency": "العملة المحلية"
+    },
+    "rateLine": "{amount} {symbol} · 1 {symbol} = {unitPrice}"
   },
   "Legal": {
     "terms": {
       "eyebrow": "قانوني",
       "title": "شروط الخدمة",
       "metaTitle": "شروط الخدمة | Crypto Pay",
-      "metaDescription": "شروط خدمة Crypto Pay — قبول مدفوعات العملات المشفرة غير الحاضنة وحسابات التجار واستخدام واجهة البرمجة.",
+      "metaDescription": "شروط خدمة Crypto Pay — قبول مدفوعات العملات المشفّرة غير الحاضنة، وحسابات التجار، واستخدام واجهة API.",
       "openGraphTitle": "Crypto Pay — شروط الخدمة",
-      "openGraphDescription": "شروط التجار لقبول مدفوعات العملات المشفرة مع التسوية من محفظة إلى محفظة.",
+      "openGraphDescription": "شروط التجار لقبول مدفوعات العملات المشفّرة مع التسوية من محفظة إلى محفظة.",
       "lastUpdated": "آخر تحديث: {date}",
       "footerNote": "باستخدامك Crypto Pay، فإنك تقر بأنك قرأت وفهمت ووافقت على شروط الخدمة هذه."
     },
@@ -529,9 +1063,9 @@
       "eyebrow": "قانوني",
       "title": "سياسة الخصوصية",
       "metaTitle": "سياسة الخصوصية | Crypto Pay",
-      "metaDescription": "كيف تجمع Crypto Pay وتستخدم وتحمي بيانات التجار والمعاملات لخدمات الدفع بالعملات المشفرة.",
+      "metaDescription": "كيف تجمع Crypto Pay بيانات التجار والمعاملات وتستخدمها وتحميها لخدمات الدفع بالعملات المشفّرة.",
       "openGraphTitle": "Crypto Pay — سياسة الخصوصية",
-      "openGraphDescription": "ممارسات الخصوصية للتجار الذين يستخدمون Crypto Pay لقبول وتتبع مدفوعات العملات المشفرة.",
+      "openGraphDescription": "ممارسات الخصوصية للتجار الذين يستخدمون Crypto Pay لقبول وتتبع مدفوعات العملات المشفّرة.",
       "lastUpdated": "آخر تحديث: {date}",
       "footerNote": "تصف سياسة الخصوصية هذه كيفية تعاملنا مع المعلومات عند استخدامك Crypto Pay."
     }

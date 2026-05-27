@@ -1,5 +1,7 @@
 ## API style guide (portal backend)
 
+**Context:** [ENV_AND_API_GUIDE.md](./ENV_AND_API_GUIDE.md) (system map, auth layers, env sync) · [ADMIN_AND_USER_API_REFERENCE.md](./ADMIN_AND_USER_API_REFERENCE.md) (route index)
+
 This document defines how we design and document backend endpoints so:
 
 - **Admin tooling** is predictable and safe

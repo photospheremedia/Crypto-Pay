@@ -7,7 +7,8 @@ export const routing = defineRouting({
   locales: [...locales],
   defaultLocale: "en",
   localePrefix: "as-needed",
-  // Persist locale across sessions (next-intl sets NEXT_LOCALE on switch).
+  // Browser Accept-Language on first visit; cookie after explicit switch (see locale-preference.ts).
+  // localeDetection defaults to true — do not disable unless URLs alone should pick locale.
   localeCookie: {
     maxAge: 60 * 60 * 24 * 365,
   },
