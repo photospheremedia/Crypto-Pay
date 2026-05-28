@@ -77,6 +77,7 @@ export function MerchantEmailDialog({
         text: "Email sent via Resend. The merchant can reply directly to your inbox.",
       });
       setMessage("");
+      setOpen(false);
     } catch (e) {
       const text = e instanceof Error ? e.message : "Failed to send email";
       toast({ title: "Email not sent", description: text, variant: "destructive" });

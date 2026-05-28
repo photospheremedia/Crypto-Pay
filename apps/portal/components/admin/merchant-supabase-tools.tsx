@@ -78,7 +78,7 @@ export function MerchantSupabaseTools({
   const runAction = async (
     action: string,
     body?: Record<string, unknown>,
-    options?: { successTitle?: string; onSuccess?: () => void },
+    options?: { successTitle?: string; onSuccess?: () => void; skipRefresh?: boolean },
   ) => {
     setBusy(action);
     try {
@@ -104,7 +104,7 @@ export function MerchantSupabaseTools({
 
       if (parsed.data.auth) {
         setAuth(parsed.data.auth);
-      } else {
+      } else if (!options?.skipRefresh) {
         await refreshAuth();
       }
 
@@ -113,7 +113,9 @@ export function MerchantSupabaseTools({
         description: parsed.data.message ?? "Completed successfully.",
       });
       options?.onSuccess?.();
-      onAuthChange?.();
+      if (!options?.skipRefresh) {
+        onAuthChange?.();
+      }
     } finally {
       setBusy(null);
     }
@@ -131,6 +133,7 @@ export function MerchantSupabaseTools({
     }
     await runAction("delete_account", undefined, {
       successTitle: "Account deleted",
+      skipRefresh: true,
       onSuccess: () => router.replace("/admin/users"),
     });
   };

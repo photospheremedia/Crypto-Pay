@@ -1,5 +1,9 @@
 name: Supabase CI/CD
 
+# Deployment behavior:
+# - Runs automatically on git push to main/master for supabase/** changes.
+# - Treat this as the default deploy path (avoid manual `supabase db push` unless explicitly needed).
+
 on:
   push:
     branches:

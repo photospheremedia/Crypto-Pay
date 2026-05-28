@@ -13,6 +13,13 @@ Follow `.agents/skills/dev-workflow/SKILL.md` during implementation.
 - Watch dev-server terminal for Next/runtime errors when `pnpm dev:portal` is running.
 - DB/auth/API: use **Supabase MCP** (advisors, logs) — do not guess RLS or schema.
 
+## Deployment defaults (always assume)
+
+- **Vercel auto-deploys on git push** via connected Git integration for `crypto-pay-portal`.
+- **Supabase deploy workflow runs on git push** for changes under `supabase/**` (`.github/workflows/supabase.yml`).
+- Prefer push-and-verify over manual deploy commands.
+- Only run manual deploy commands (`vercel deploy --prod`, `supabase db push`, etc.) when explicitly requested by the user or when CI/Git integration is unavailable/broken.
+
 ## Documentation order (mandatory)
 
 1. **Project skill** in `.agents/skills/` (see `dev-workflow/library-index.md`)

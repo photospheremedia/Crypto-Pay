@@ -98,6 +98,11 @@ export default function AdminUserDetailPage() {
         "Failed to load merchant",
       );
       if (!parsed.ok) {
+        if (parsed.status === 404) {
+          // Resource was deleted (often by this page). Redirect without noisy error toast.
+          router.replace("/admin/users");
+          return;
+        }
         toast({
           title: parsed.status === 403 ? "Not a merchant account" : "Could not load merchant",
           description: parsed.error,

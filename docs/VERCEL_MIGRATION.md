@@ -38,6 +38,11 @@ pnpm vercel:env-sync      # from apps/portal/.env.local
 pnpm vercel:secrets       # optional — GitHub Actions VERCEL_*
 ```
 
+### Deployment default
+
+- Primary path: **Vercel Git integration auto-deploy on push** to `master`.
+- Use manual CLI deploy (`pnpm vercel:deploy`) only for explicit/manual rollout requests or troubleshooting.
+
 Use **one** production deploy path: Vercel GitHub app **or** `.github/workflows/vercel.yml`.
 
 ## Domains + DNS
