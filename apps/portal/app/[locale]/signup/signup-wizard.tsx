@@ -2,7 +2,7 @@
 
 import { useActionState, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { AlertCircle, ArrowLeft, ArrowRight, CheckCircle2, Loader2 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { HoneypotField } from "@/components/auth/honeypot-field";
@@ -33,6 +33,7 @@ function clampStep(index: number, max: number) {
 export function SignupWizard() {
   const t = useTranslations("Auth");
   const tCommon = useTranslations("Common");
+  const currentLocale = useLocale();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") ?? searchParams.get("redirectTo") ?? "";
   const priceId = searchParams.get("priceId") ?? "";
@@ -141,6 +142,7 @@ export function SignupWizard() {
 
             <form action={formAction} className="flex flex-col gap-4">
               <HoneypotField />
+              <input type="hidden" name="locale" value={currentLocale} />
               <input type="hidden" name="redirect" value={redirect} />
               <input type="hidden" name="priceId" value={priceId} />
               <input type="hidden" name="first_name" value={form.first_name} />

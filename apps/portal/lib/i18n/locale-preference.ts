@@ -8,7 +8,7 @@ import { localePath } from "@/lib/i18n/locale-config";
  *
  * 1. Locale prefix in URL — explicit navigation / shared links
  * 2. Logged-in `user_settings.language` — account preference (applied on auth redirect)
- * 3. `NEXT_LOCALE` cookie — only when functional cookies are allowed
+ * 3. `NEXT_LOCALE` cookie — only when `cryptopay-functional` consent cookie is set
  * 4. `Accept-Language` header — browser language on first visit (next-intl "best fit")
  * 5. `routing.defaultLocale` (`en`)
  *

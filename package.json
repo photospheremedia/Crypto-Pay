@@ -29,11 +29,9 @@
     "porkbun:ping": "./scripts/porkbun-api.sh ping",
     "porkbun:domains": "./scripts/porkbun-api.sh domains",
     "porkbun:dns": "./scripts/porkbun-api.sh dns",
-    "dns:export-vercel": "./scripts/export-vercel-dns.sh",
     "dns:plan": "python3 scripts/porkbun-dns-netlify.py",
     "dns:apply": "python3 scripts/porkbun-dns-netlify.py --apply",
     "dns:clean": "python3 scripts/porkbun-dns-netlify.py --clean",
-    "dns:fix": "./scripts/fix-porkbun-from-vercel.sh --apply --yes",
     "netlify:setup": "./scripts/setup-netlify-photospheremedia.sh",
     "netlify:bootstrap": "./scripts/netlify-bootstrap.sh",
     "netlify:connect": "./scripts/connect-netlify.sh",
@@ -46,16 +44,6 @@
     "netlify:status": "cd apps/portal && pnpm exec netlify status",
     "netlify:deploy": "cd apps/portal && pnpm exec netlify deploy --build --prod",
     "netlify:preview": "cd apps/portal && pnpm exec netlify deploy --build",
-    "vercel:deploy": "vercel --prod",
-    "vercel:preview": "vercel",
-    "vercel:env": "vercel env pull",
-    "vercel:setup": "./scripts/setup-vercel-photospheremedia.sh",
-    "vercel:setup:link": "./scripts/setup-vercel-photospheremedia.sh --link",
-    "vercel:link": "vercel link --project crypto-pay-portal",
-    "vercel:env-sync": "./scripts/sync-vercel-env.sh",
-    "vercel:env:push": "powershell -ExecutionPolicy Bypass -File scripts/sync-vercel-env.ps1",
-    "vercel:logs": "vercel logs",
-    "vercel:inspect": "vercel inspect",
     "check:env": "./scripts/check-env.sh",
     "supabase:status": "./scripts/supabase-auth.sh status",
     "supabase:login": "./scripts/supabase-auth.sh login",
@@ -68,11 +56,12 @@
     "supabase:backup:enable": "./scripts/supabase-enable-platform-backups.sh",
     "supabase:db:dump": "./scripts/supabase-db-dump.sh",
     "supabase:secrets": "./scripts/setup-supabase-github-secrets.sh",
+    "supabase:migration:repair-drift": "./scripts/repair-supabase-migration-history.sh",
+    "portal:secrets": "./scripts/setup-portal-github-secrets.sh",
     "resend:sync": "./scripts/setup-resend-secrets.sh",
     "resend:verify": "./scripts/verify-supabase-resend-config.sh && cd apps/portal && pnpm email:verify"
   },
   "devDependencies": {
-    "netlify-cli": "^26.0.2",
-    "vercel": "^50.9.6"
+    "netlify-cli": "^26.0.2"
   }
 }

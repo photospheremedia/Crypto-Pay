@@ -64,7 +64,7 @@ function buildWorkflowIdempotencyKey(
 }
 
 /**
- * Send email via Resend on Vercel (RESEND_API_KEY) or Supabase Edge Function fallback.
+ * Send email via Resend (RESEND_API_KEY) or Supabase Edge Function fallback.
  */
 export async function sendEmail(options: EmailOptions): Promise<EmailResult> {
   const resendKey = process.env.RESEND_API_KEY;
@@ -114,7 +114,7 @@ export async function sendEmail(options: EmailOptions): Promise<EmailResult> {
     const resolvedIdempotencyKey =
       options.idempotencyKey || buildWorkflowIdempotencyKey(options.workflow, recipients);
 
-    // Primary: direct Resend (Vercel env RESEND_API_KEY)
+    // Primary: direct Resend (RESEND_API_KEY from Netlify / .env.local)
     if (resendKey) {
       const { Resend } = await import("resend");
       const resend = new Resend(resendKey);

@@ -271,6 +271,13 @@
       "saved": "Enregistré",
       "notice": "Information",
       "success": "Succès",
+      "rejection": {
+        "title": "Portefeuille non approuvé",
+        "intro": "Notre équipe n’a pas pu vérifier cette adresse de règlement.",
+        "reasonLabel": "Motif",
+        "defaultMessage": "Aucun motif précis n’a été indiqué. Si vous pensez qu’il s’agit d’une erreur, contactez le support après avoir mis à jour votre adresse.",
+        "nextSteps": "Modifiez le portefeuille, corrigez l’adresse si nécessaire, puis enregistrez pour une nouvelle vérification."
+      },
       "messages": {
         "invalidDetails": "Informations de portefeuille invalides.",
         "duplicateName": "Vous avez déjà un portefeuille avec ce nom.",
@@ -295,7 +302,7 @@
       "savedSuccess": "Paramètres enregistrés avec succès !",
       "saveFailed": "Échec de l’enregistrement des paramètres",
       "language": "Langue",
-      "languageHint": "S’applique à tout le site. Votre choix est enregistré sur votre compte et restauré lors de votre prochaine visite.",
+      "languageHint": "S’applique au site et aux e-mails transactionnels Crypto Pay (portefeuille, bienvenue, avis de compte). Enregistré sur votre compte pour votre prochaine visite.",
       "profileSection": "Informations du profil",
       "emailAddress": "Adresse email",
       "companyName": "Nom de l’entreprise",
@@ -584,6 +591,15 @@
       "walletStatusUpdated": "Portefeuille marqué {status}",
       "merchantNotified": "Marchand notifié par email.",
       "rejectionPrompt": "Motif de rejet (optionnel) :",
+      "rejectDialogTitle": "Rejeter le portefeuille",
+      "rejectDialogDescription": "Rejeter « {label} ». Le marchand verra votre note dans son tableau de bord et par email si les notifications sont activées.",
+      "rejectReasonLabel": "Motif du rejet (optionnel)",
+      "rejectReasonPlaceholder": "p. ex. Le format de l’adresse n’a pas pu être validé, ou ne correspond pas au réseau déclaré.",
+      "rejectReasonHint": "Laissez vide si aucune explication n’est nécessaire. 1 000 caractères maximum.",
+      "rejectConfirm": "Rejeter le portefeuille",
+      "rejectCancel": "Annuler",
+      "rejectionNoteLabel": "Note de rejet",
+      "rejectionNoteEmpty": "Aucun motif enregistré",
       "walletEmailSubject": "Question à propos du portefeuille « {label} »"
     }
   },

@@ -14,7 +14,7 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
-# Marketing redirects (from vercel.json)
+# Marketing redirects
 [[redirects]]
   from = "/home"
   to = "/"

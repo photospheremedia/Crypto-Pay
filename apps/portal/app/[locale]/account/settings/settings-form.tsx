@@ -1,14 +1,26 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
-import { useRouter } from "@/i18n/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import { usePathname, useRouter } from "@/i18n/navigation";
 import type { User } from "@supabase/supabase-js";
-import { LocaleSwitcher } from "@/components/locale-switcher";
+import { LocaleFlag } from "@/components/locale-flag";
 import { refreshMerchantProfileCache } from "@/app/[locale]/account/actions";
+import { localeCodes, type Locale } from "@/lib/i18n/locale-config";
+import { persistUserLocale } from "@/lib/i18n/locale-actions";
+import { setLocaleCookieClient } from "@/lib/i18n/locale-cookie-client";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useApplyUserTheme } from "@/lib/theme/use-apply-user-theme";
 import type { UserThemeSetting } from "@/lib/theme/theme-preference";
 import { saveMerchantSettings } from "./actions";
+import { SmsNotificationSection } from "./sms-notification-section";
 
 interface SettingsFormProps {
   user: User;
@@ -19,7 +31,10 @@ interface SettingsFormProps {
 export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
   const t = useTranslations("Account.settings");
   const tCommon = useTranslations("Common");
+  const tLocale = useTranslations("LocaleSwitcher");
   const router = useRouter();
+  const pathname = usePathname();
+  const activeLocale = useLocale() as Locale;
   const applyUserTheme = useApplyUserTheme();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
@@ -34,12 +49,19 @@ export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
 
   const [settingsData, setSettingsData] = useState({
     theme: initialTheme,
+    language: (settings?.language as Locale | undefined) || activeLocale,
     currency: settings?.currency || "USD",
     email_notifications: settings?.email_notifications ?? true,
     sms_notifications: settings?.sms_notifications ?? false,
+    sms_opt_in: Boolean(settings?.sms_opt_in_at),
     order_updates: settings?.order_updates ?? true,
     marketing_emails: settings?.marketing_emails ?? false,
   });
+
+  const [smsPhoneE164, setSmsPhoneE164] = useState(
+    settings?.sms_phone_e164 || profile?.phone || "",
+  );
+  const smsVerified = Boolean(settings?.sms_verified_at);
 
   useEffect(() => {
     applyUserTheme(initialTheme);
@@ -53,8 +75,16 @@ export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
     try {
       await saveMerchantSettings({ profile: profileData, settings: settingsData });
 
+      setLocaleCookieClient(settingsData.language);
+      await persistUserLocale(settingsData.language);
+
       applyUserTheme(settingsData.theme as UserThemeSetting);
       await refreshMerchantProfileCache();
+
+      if (settingsData.language !== activeLocale) {
+        router.replace(pathname, { locale: settingsData.language });
+        return;
+      }
       setMessage({ type: "success", text: t("savedSuccess") });
       router.refresh();
     } catch (error: any) {
@@ -175,13 +205,33 @@ export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700">
+            <label htmlFor="communication_language" className="block text-sm font-medium text-slate-700">
               {t("language")}
             </label>
             <p className="mt-1 text-sm text-slate-500">{t("languageHint")}</p>
-            <div className="mt-2">
-              <LocaleSwitcher variant="select" className="w-full max-w-sm" />
-            </div>
+            <Select
+              value={settingsData.language}
+              onValueChange={(next) =>
+                setSettingsData({ ...settingsData, language: next as Locale })
+              }
+            >
+              <SelectTrigger id="communication_language" className="mt-2 w-full max-w-sm">
+                <LocaleFlag locale={settingsData.language} size="sm" />
+                <SelectValue placeholder={tLocale(settingsData.language)} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {localeCodes.map((code) => (
+                    <SelectItem key={code} value={code}>
+                      <span className="flex items-center gap-2">
+                        <LocaleFlag locale={code} size="sm" />
+                        <span>{tLocale(code)}</span>
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
 
           <div>
@@ -241,6 +291,17 @@ export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
               className="h-5 w-5 rounded border-slate-300 text-emerald-500 focus:ring-emerald-500"
             />
           </div>
+
+          <SmsNotificationSection
+            phoneE164={smsPhoneE164}
+            smsOptIn={settingsData.sms_opt_in}
+            smsVerified={smsVerified}
+            smsNotificationsEnabled={settingsData.sms_notifications}
+            onPhoneChange={setSmsPhoneE164}
+            onOptInChange={(optIn) =>
+              setSettingsData({ ...settingsData, sms_opt_in: optIn })
+            }
+          />
 
           <div className="flex items-center justify-between">
             <div>

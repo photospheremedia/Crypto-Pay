@@ -5,6 +5,7 @@
 
 import { generateBaseTemplate, components, brandColors } from './base-template';
 import { EMAIL_ROUTES, MERCHANT_SUPPORT_REPLY } from './routing';
+import { getEmailMessages, formatEmailString } from './messages';
 import { walletEmailTemplates } from './templates/wallet';
 
 export type EmailTemplate = 
@@ -45,30 +46,42 @@ export const emailTemplates: Record<EmailTemplate, TemplateConfig> = {
   welcome: {
     subject: "Welcome to Crypto Pay",
     generateHtml: (data) => {
+      const locale =
+        typeof data.locale === "string" && data.locale ? data.locale : "en";
+      const m = getEmailMessages(locale).welcome;
+      const firstName = String(data.firstName || "there");
+      const businessName = data.businessName ? String(data.businessName) : "";
+      const thanksLine = businessName
+        ? `${formatEmailString(m.thanks, { firstName, businessName, businessSuffix: "" })}${formatEmailString(m.thanksBusinessSuffix, { businessName })}`
+        : formatEmailString(m.thanks, { firstName, businessName: "", businessSuffix: "" });
       const walletUrl =
         (data.dashboardUrl as string) || EMAIL_ROUTES.accountWallets();
       return generateBaseTemplate(
         `
-      ${components.iconHero("Welcome", `Welcome, ${data.firstName || "there"}`, "Complete setup by adding your first payout wallet.")}
+      ${components.iconHero(
+        "Welcome",
+        formatEmailString(m.heroTitle, { firstName }),
+        formatEmailString(m.heroSubtitle, { firstName }),
+      )}
       ${components.contentOpen()}
-          ${components.paragraph(`Thank you for creating a <strong>Crypto Pay</strong> merchant account${data.businessName ? ` for <strong>${data.businessName}</strong>` : ""}.`)}
-          ${components.paragraph(`Your account supports <strong>multiple payout wallets</strong> across BTC, ETH, USDT, USDC, and LTC. Each address is reviewed before use.`)}
+          ${components.paragraph(thanksLine)}
+          ${components.paragraph(m.multiWallet)}
           ${components.card(
             `
-            <p style="margin: 0 0 12px; font-size: 14px; font-weight: 600; color: ${brandColors.secondary};">Next steps</p>
+            <p style="margin: 0 0 12px; font-size: 14px; font-weight: 600; color: ${brandColors.secondary};">${m.nextStepsTitle}</p>
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-              <tr><td style="padding: 6px 0;"><span style="color: ${brandColors.primary}; font-weight: 700;">1.</span> <span style="margin-left: 8px;">Add a public payout address</span></td></tr>
-              <tr><td style="padding: 6px 0;"><span style="color: ${brandColors.textMuted}; font-weight: 700;">2.</span> <span style="margin-left: 8px;">Our team verifies the wallet (1–2 business days)</span></td></tr>
-              <tr><td style="padding: 6px 0;"><span style="color: ${brandColors.textMuted}; font-weight: 700;">3.</span> <span style="margin-left: 8px;">Accept payments when checkout launches</span></td></tr>
+              <tr><td style="padding: 6px 0;"><span style="color: ${brandColors.primary}; font-weight: 700;">1.</span> <span style="margin-left: 8px;">${m.step1}</span></td></tr>
+              <tr><td style="padding: 6px 0;"><span style="color: ${brandColors.textMuted}; font-weight: 700;">2.</span> <span style="margin-left: 8px;">${m.step2}</span></td></tr>
+              <tr><td style="padding: 6px 0;"><span style="color: ${brandColors.textMuted}; font-weight: 700;">3.</span> <span style="margin-left: 8px;">${m.step3}</span></td></tr>
             </table>
           `,
             { highlight: true },
           )}
-          ${components.button("Add payout wallet", walletUrl)}
-          ${components.paragraph(`Questions? Reply to this email or write to <a href="mailto:${MERCHANT_SUPPORT_REPLY}" style="color: ${brandColors.primary};font-weight:600;">${MERCHANT_SUPPORT_REPLY}</a>`, { muted: true, center: true })}
+          ${components.button(m.cta, walletUrl)}
+          ${components.paragraph(formatEmailString(m.support, { supportEmail: MERCHANT_SUPPORT_REPLY }), { muted: true, center: true })}
       ${components.contentClose()}
     `,
-        { preheader: `Welcome to Crypto Pay — add your payout wallet.` },
+        { preheader: m.preheader },
       );
     },
   },

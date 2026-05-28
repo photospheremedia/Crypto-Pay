@@ -1,0 +1,57 @@
+{
+  "welcome": {
+    "subject": "مرحبًا بك في Crypto Pay",
+    "preheader": "مرحبًا بك في Crypto Pay — أضف محفظة الدفع الخاصة بك.",
+    "heroTitle": "مرحبًا، {firstName}",
+    "heroSubtitle": "أكمل الإعداد بإضافة أول محفظة دفع.",
+    "thanks": "شكرًا لإنشاء حساب تاجر على <strong>Crypto Pay</strong>{businessSuffix}.",
+    "thanksBusinessSuffix": " لـ <strong>{businessName}</strong>",
+    "multiWallet": "يدعم حسابك <strong>عدة محافظ دفع</strong> عبر BTC وETH وUSDT وUSDC وLTC. تتم مراجعة كل عنوان قبل الاستخدام.",
+    "nextStepsTitle": "الخطوات التالية",
+    "step1": "أضف عنوان دفع عام",
+    "step2": "يراجع فريقنا المحفظة (1–2 يوم عمل)",
+    "step3": "اقبل المدفوعات عند تفعيل الدفع",
+    "cta": "إضافة محفظة دفع",
+    "support": "أسئلة؟ رُد على هذا البريد أو راسل <a href=\"mailto:{supportEmail}\" style=\"color:#059669;font-weight:600;\">{supportEmail}</a>"
+  },
+  "wallet_submitted": {
+    "subject": "استلمنا محفظة الدفع الخاصة بك",
+    "preheader": "محفظة الدفع بانتظار التحقق على Crypto Pay.",
+    "heroTitle": "تم إرسال محفظة الدفع",
+    "heroSubtitle": "{walletLabel}",
+    "body": "شكرًا لك. استلمنا محفظة الدفع وأضفناها لقائمة المراجعة. تُتحقق معظم العناوين خلال <strong>يوم إلى يومي عمل</strong>.",
+    "statusPending": "بانتظار التحقق",
+    "multiWalletNote": "يمكنك تسجيل <strong>عدة محافظ دفع</strong> (شبكات أو تسميات مختلفة). تُراجع كل عنوان على حدة.",
+    "cta": "عرض حالة المحفظة",
+    "securityNote": "نطلب عناوين عامة فقط — وليس المفاتيح الخاصة أو عبارات الاسترداد.",
+    "onboarding": {
+      "accountCreated": "تم إنشاء الحساب",
+      "addWallet": "إضافة محفظة دفع",
+      "adminVerifies": "تحقق الفريق من العنوان",
+      "acceptPayments": "قبول المدفوعات (قريبًا)"
+    }
+  },
+  "wallet_status": {
+    "verified": {
+      "subject": "تم التحقق من المحفظة: {walletLabel}",
+      "preheader": "تم التحقق من {walletLabel} على Crypto Pay",
+      "heroTitle": "تم التحقق من المحفظة",
+      "body": "تم التحقق من محفظة الدفع <strong>{walletLabel}</strong>. ستُستخدم للتسوية عند تفعيل الدفع في حسابك.",
+      "statusVerified": "تم التحقق",
+      "cta": "فتح لوحة الحساب"
+    },
+    "rejected": {
+      "subject": "لم تُوافق على المحفظة: {walletLabel}",
+      "preheader": "{walletLabel} يحتاج تحديثًا",
+      "heroTitle": "لم تُوافق على المحفظة",
+      "body": "تعذّر علينا الموافقة على <strong>{walletLabel}</strong> حاليًا.{reasonBlock}<br><br>يُرجى تحديث العنوان في لوحة التحكم وإعادة الإرسال.",
+      "reasonPrefix": "<br><br><strong>السبب:</strong> {reason}",
+      "statusRejected": "غير موافق عليها",
+      "cta": "تحديث محفظة الدفع"
+    },
+    "network": "الشبكة",
+    "address": "العنوان",
+    "status": "الحالة",
+    "support": "تحتاج مساعدة؟ رُد على هذا البريد أو تواصل مع <a href=\"mailto:{supportEmail}\" style=\"color:#059669;font-weight:600;\">{supportEmail}</a>"
+  }
+}

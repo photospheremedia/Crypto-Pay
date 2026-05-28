@@ -18,9 +18,6 @@ import {
 } from "@/lib/site-metadata";
 
 const ASSET_VERSION =
-  process.env.VERCEL_GIT_COMMIT_SHA ??
-  process.env.VERCEL_DEPLOYMENT_ID ??
-  // Netlify cache-busting (prod uses Netlify, not Vercel)
   process.env.COMMIT_REF ??
   process.env.DEPLOY_ID ??
   process.env.BUILD_ID ??

@@ -132,7 +132,7 @@ pnpm test                 # Playwright E2E tests
 | Rate limiting | Upstash Redis |
 | CAPTCHA | Cloudflare Turnstile |
 | AI / Chat | Groq (`llama-3.3-70b-versatile`) + OpenAI fallback |
-| Deployment | Vercel (portal) + Supabase edge functions |
+| Deployment | Netlify (portal) + Supabase edge functions |
 | Testing | Playwright E2E |
 
 ---
@@ -211,7 +211,7 @@ Project MCP config: `.cursor/mcp.json`. Agent skills: `.agents/skills/`. Library
 | 1 | Project skills | `supabase`, `multilingual-website`, `shadcn`, `context7-mcp`, etc. |
 | 2 | `context7` | Library/framework docs (`resolve-library-id` → `query-docs`) |
 | 3 | Domain MCP | `supabase`, `shadcn` (cwd `apps/portal`), `netlify` — see `.cursor/rules/netlify-mcp.mdc` |
-| 4 | CLI | `supabase`, `netlify`, `vercel`, `pnpm exec shadcn` when MCP lacks a tool |
+| 4 | CLI | `supabase`, `netlify`, `pnpm exec shadcn` when MCP lacks a tool |
 | 5 | Web | WebSearch/WebFetch only if 1–4 fail |
 
 ### Context7

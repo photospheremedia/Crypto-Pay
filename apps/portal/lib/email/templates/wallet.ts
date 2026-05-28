@@ -8,21 +8,19 @@ import {
   MERCHANT_SUPPORT_REPLY,
 } from "@/lib/email/routing";
 import { generateBaseTemplate, components, brandColors } from "../base-template";
-import { EMAIL } from "../config";
+import { getEmailMessages, formatEmailString } from "../messages";
 import { walletNetworkLabel } from "@/lib/wallets/constants";
+
+function resolveLocale(data: Record<string, unknown>): string {
+  return typeof data.locale === "string" && data.locale ? data.locale : "en";
+}
 
 function maskAddress(address: string): string {
   if (address.length <= 16) return address;
   return `${address.slice(0, 8)}…${address.slice(-8)}`;
 }
 
-function onboardingSteps(done: number) {
-  const steps = [
-    "Account created",
-    "Add payout wallet",
-    "Admin verifies address",
-    "Accept payments (coming soon)",
-  ];
+function onboardingSteps(done: number, steps: string[]) {
   const rows = steps
     .map((label, i) => {
       const complete = i < done;
@@ -38,11 +36,8 @@ function onboardingSteps(done: number) {
   return `<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">${rows}</table>`;
 }
 
-function supportFooter() {
-  return components.paragraph(
-    `Need help? Reply to this email or contact <a href="mailto:${MERCHANT_SUPPORT_REPLY}" style="color:${brandColors.primary};font-weight:600;">${MERCHANT_SUPPORT_REPLY}</a>`,
-    { muted: true, center: true },
-  );
+function supportFooter(html: string) {
+  return components.paragraph(html, { muted: true, center: true });
 }
 
 export const walletEmailTemplates = {
@@ -106,55 +101,78 @@ export const walletEmailTemplates = {
   wallet_status_merchant: {
     subject: "{{subjectLine}}",
     generateHtml: (data: Record<string, unknown>) => {
+      const locale = resolveLocale(data);
+      const m = getEmailMessages(locale);
       const verified = data.status === "verified";
-      const title = verified ? "Wallet verified" : "Wallet not approved";
+      const walletLabel = String(data.walletLabel || "");
+      const verifiedCopy = m.wallet_status.verified;
+      const rejectedCopy = m.wallet_status.rejected;
+      const copy = verified ? verifiedCopy : rejectedCopy;
+      const reasonBlock =
+        !verified && data.rejectionReason
+          ? formatEmailString(rejectedCopy.reasonPrefix, {
+              reason: String(data.rejectionReason),
+            })
+          : "";
+      const vars = {
+        walletLabel,
+        supportEmail: MERCHANT_SUPPORT_REPLY,
+        reason: String(data.rejectionReason || ""),
+        reasonBlock,
+      };
       const ctaUrl =
         (data.actionUrl as string) ||
         (verified ? EMAIL_ROUTES.account() : EMAIL_ROUTES.accountWallets());
-      const ctaLabel = verified ? "Open account dashboard" : "Update payout wallet";
 
       return generateBaseTemplate(
         `
       ${components.iconHero(
         verified ? "✓" : "!",
-        title,
-        String(data.walletLabel || "Your wallet"),
+        formatEmailString(copy.heroTitle, vars),
+        formatEmailString(copy.heroSubtitle ?? walletLabel, vars),
       )}
       ${components.contentOpen()}
-          ${verified
-            ? components.paragraph(
-                `Your payout wallet <strong>${data.walletLabel}</strong> has been verified. It will be used for crypto settlements when checkout is enabled on your account.`,
-              )
-            : components.paragraph(
-                `We were unable to approve <strong>${data.walletLabel}</strong> at this time.${data.rejectionReason ? `<br><br><strong>Reason:</strong> ${String(data.rejectionReason)}` : ""}<br><br>Please update the wallet address in your dashboard and submit again.`,
-              )}
+          ${components.paragraph(formatEmailString(copy.body, vars))}
           ${components.card(
             `
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-              ${components.infoRow("Network", walletNetworkLabel(String(data.walletNetwork || "btc")))}
-              ${components.infoRow("Address", maskAddress(String(data.walletAddress || "")))}
-              ${components.infoRow("Status", verified ? "Verified" : "Not approved")}
+              ${components.infoRow(m.wallet_status.network, walletNetworkLabel(String(data.walletNetwork || "btc")))}
+              ${components.infoRow(m.wallet_status.address, maskAddress(String(data.walletAddress || "")))}
+              ${components.infoRow(
+                m.wallet_status.status,
+                verified ? verifiedCopy.statusVerified : rejectedCopy.statusRejected,
+              )}
             </table>
             `,
             { highlight: verified },
           )}
-          ${onboardingSteps(verified ? 3 : 2)}
-          ${components.button(ctaLabel, ctaUrl)}
-          ${supportFooter()}
+          ${onboardingSteps(
+            verified ? 3 : 2,
+            [
+              m.wallet_submitted.onboarding.accountCreated,
+              m.wallet_submitted.onboarding.addWallet,
+              m.wallet_submitted.onboarding.adminVerifies,
+              m.wallet_submitted.onboarding.acceptPayments,
+            ],
+          )}
+          ${components.button(formatEmailString(copy.cta, vars), ctaUrl)}
+          ${supportFooter(formatEmailString(m.wallet_status.support, vars))}
       ${components.contentClose()}
     `,
         {
-          preheader: verified
-            ? `${data.walletLabel} is verified on Crypto Pay`
-            : `${data.walletLabel} requires an update`,
+          preheader: formatEmailString(copy.preheader, vars),
         },
       );
     },
   },
 
   wallet_submitted_merchant: {
-    subject: "We received your payout wallet",
+    subject: "{{subjectLine}}",
     generateHtml: (data: Record<string, unknown>) => {
+      const locale = resolveLocale(data);
+      const m = getEmailMessages(locale).wallet_submitted;
+      const walletLabel = String(data.walletLabel || "");
+      const vars = { walletLabel, supportEmail: MERCHANT_SUPPORT_REPLY };
       const walletsUrl =
         (data.actionUrl as string) || EMAIL_ROUTES.accountWallets();
 
@@ -162,34 +180,38 @@ export const walletEmailTemplates = {
         `
       ${components.iconHero(
         "◷",
-        "Payout wallet submitted",
-        String(data.walletLabel || "Your wallet"),
+        formatEmailString(m.heroTitle, vars),
+        formatEmailString(m.heroSubtitle, vars),
       )}
       ${components.contentOpen()}
-          ${components.paragraph(
-            `Thank you. We have received your payout wallet and queued it for review. Most addresses are verified within <strong>one to two business days</strong>.`,
-          )}
+          ${components.paragraph(formatEmailString(m.body, vars))}
           ${components.card(
             `
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-              ${components.infoRow("Wallet name", String(data.walletLabel || "—"))}
-              ${components.infoRow("Network", walletNetworkLabel(String(data.walletNetwork || "btc")))}
-              ${components.infoRow("Status", "Pending verification")}
+              ${components.infoRow(m.walletName, walletLabel || "—")}
+              ${components.infoRow(m.network, walletNetworkLabel(String(data.walletNetwork || "btc")))}
+              ${components.infoRow(m.status, m.statusPending)}
             </table>
             `,
             { highlight: true },
           )}
-          ${onboardingSteps(2)}
-          ${components.paragraph(
-            `You may register <strong>multiple payout wallets</strong> (separate networks or labels). Each address is reviewed independently.`,
-            { muted: true },
-          )}
-          ${components.button("View wallet status", walletsUrl)}
-          ${components.paragraph("We only ever ask for public addresses — never private keys or seed phrases.", { small: true, muted: true, center: true })}
-          ${supportFooter()}
+          ${onboardingSteps(2, [
+            m.onboarding.accountCreated,
+            m.onboarding.addWallet,
+            m.onboarding.adminVerifies,
+            m.onboarding.acceptPayments,
+          ])}
+          ${components.paragraph(formatEmailString(m.multiWalletNote, vars), { muted: true })}
+          ${components.button(formatEmailString(m.cta, vars), walletsUrl)}
+          ${components.paragraph(formatEmailString(m.securityNote, vars), {
+            small: true,
+            muted: true,
+            center: true,
+          })}
+          ${supportFooter(formatEmailString(m.support, vars))}
       ${components.contentClose()}
     `,
-        { preheader: "Your payout wallet is pending verification on Crypto Pay." },
+        { preheader: formatEmailString(m.preheader, vars) },
       );
     },
   },
@@ -197,9 +219,12 @@ export const walletEmailTemplates = {
   admin_message_merchant: {
     subject: "[Crypto Pay] {{subjectLine}}",
     generateHtml: (data: Record<string, unknown>) => {
+      const locale = resolveLocale(data);
+      const m = getEmailMessages(locale);
       const accountUrl = String(data.accountUrl || EMAIL_ROUTES.account());
       const walletsUrl = String(data.walletsUrl || EMAIL_ROUTES.accountWallets());
       const body = String(data.messageBody || "").replace(/\n/g, "<br />");
+      const supportVars = { supportEmail: MERCHANT_SUPPORT_REPLY };
       return generateBaseTemplate(
         `
       ${components.iconHero("Message", "Message from Crypto Pay", String(data.subjectLine || "Account update"))}
@@ -217,7 +242,7 @@ export const walletEmailTemplates = {
             `Reply to this email to reach <a href="mailto:${data.adminEmail || MERCHANT_SUPPORT_REPLY}" style="color:${brandColors.primary};font-weight:600;">${data.adminEmail || MERCHANT_SUPPORT_REPLY}</a> directly.`,
             { muted: true, center: true },
           )}
-          ${supportFooter()}
+          ${supportFooter(formatEmailString(m.wallet_status.support, supportVars))}
       ${components.contentClose()}
     `,
         { preheader: String(data.subjectLine || "Message from Crypto Pay") },

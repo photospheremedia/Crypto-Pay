@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 
 /**
- * Best-effort client IP for rate limiting (Netlify / Vercel / proxies).
+ * Best-effort client IP for rate limiting (Netlify / proxies).
  */
 export function getClientIpFromRequest(request: Request | NextRequest): string {
   const forwarded = request.headers.get("x-forwarded-for");

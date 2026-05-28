@@ -103,6 +103,7 @@ export async function adminResendWalletVerification(params: {
 
   const merchantResult = await notifyMerchantWalletSubmitted({
     merchantEmail,
+    merchantUserId,
     walletId: row.id,
     label: row.label,
     walletNetwork: row.wallet_network,

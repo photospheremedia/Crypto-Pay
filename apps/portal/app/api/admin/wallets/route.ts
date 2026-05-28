@@ -6,6 +6,7 @@ import { assertMerchantAccount } from "@/lib/admin/merchant-directory";
 import { routeForbidden } from "@/lib/api/route-error";
 import { getSupabaseServiceClient } from "@crypto-pay/db/supabaseServer";
 import { logEmailWorkflow, runWalletStatusEmailWorkflow } from "@/lib/email/workflows";
+import { isSmsWorkflowSkipped, logSmsWorkflow, runWalletStatusSmsWorkflow } from "@/lib/sms/workflows";
 import { merchantWallets } from "@/lib/wallets/db";
 import type { MerchantWallet } from "@/types/crypto-pay-db";
 
@@ -90,11 +91,16 @@ export async function PATCH(req: NextRequest) {
     }>(req);
     if (body instanceof Response) return body;
 
-    const { id, status, rejection_reason } = body;
+    const { id, status, rejection_reason: rawRejectionReason } = body;
 
     if (!id || !status || !["verified", "rejected"].includes(status)) {
       return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
     }
+
+    const rejection_reason =
+      status === "rejected" && typeof rawRejectionReason === "string"
+        ? rawRejectionReason.trim().slice(0, 1000) || null
+        : null;
 
     const supabase = getSupabaseServiceClient();
 
@@ -125,7 +131,7 @@ export async function PATCH(req: NextRequest) {
       status,
       verified_at: new Date().toISOString(),
       verified_by: user.id,
-      rejection_reason: status === "rejected" ? rejection_reason ?? null : null,
+      rejection_reason,
     };
 
     const { data: updated, error: updateError } = await merchantWallets(supabase)
@@ -178,6 +184,12 @@ export async function PATCH(req: NextRequest) {
       error?: string;
     } = { sent: false };
 
+    let merchantSmsNotification: {
+      sent: boolean;
+      skipped?: string;
+      error?: string;
+    } = { sent: false };
+
     if (merchantEmail) {
       const { data: walletRow } = await merchantWallets(supabase)
         .select("wallet_network, wallet_address")
@@ -223,10 +235,35 @@ export async function PATCH(req: NextRequest) {
       }
     }
 
+    const smsResult = await runWalletStatusSmsWorkflow({
+      walletId: id,
+      merchantUserId: existing.user_id,
+      label: existing.label,
+      status,
+      previousStatus: existing.status,
+      verificationRequestedAt: verificationRequestedAt,
+      rejectionReason: rejection_reason,
+    });
+
+    if (isSmsWorkflowSkipped(smsResult)) {
+      merchantSmsNotification = { sent: false, skipped: smsResult.reason };
+      logSmsWorkflow(`wallet.status.sms.${id}.${status}`, {
+        success: true,
+        error: `skipped:${smsResult.reason}`,
+      });
+    } else {
+      merchantSmsNotification = {
+        sent: smsResult.success,
+        error: smsResult.success ? undefined : smsResult.error,
+      };
+      logSmsWorkflow(`wallet.status.sms.${id}.${status}`, smsResult);
+    }
+
     return NextResponse.json({
       success: true,
       status,
       merchantNotification,
+      merchantSmsNotification,
     });
   } catch (error) {
     return routeError(error, { logContext: "admin/wallets PATCH" });

@@ -8,6 +8,7 @@
 
 import { sendEmail, type EmailResult, type EmailRecipient } from './sender';
 import { EMAIL_ROUTES, MERCHANT_SUPPORT_REPLY } from './routing';
+import { getEmailMessages, formatEmailString } from './messages';
 import { EMAIL_WORKFLOW_EVENTS, workflowIdempotencyKey } from './workflow-keys';
 
 // ============================================
@@ -20,15 +21,19 @@ export async function sendWelcomeEmail(
     firstName?: string;
     businessName?: string;
     dashboardUrl?: string;
+    locale?: string;
   }
 ): Promise<EmailResult> {
+  const locale = data.locale ?? "en";
+  const welcome = getEmailMessages(locale).welcome;
   return sendEmail({
     to: { email, name: data.firstName },
     replyTo: MERCHANT_SUPPORT_REPLY,
-    subject: "Welcome to Crypto Pay",
+    subject: welcome.subject,
     template: "welcome",
     templateData: {
       ...data,
+      locale,
       dashboardUrl: data.dashboardUrl ?? EMAIL_ROUTES.accountWallets(),
     },
     tags: ["onboarding", "welcome"],

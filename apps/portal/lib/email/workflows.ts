@@ -32,10 +32,12 @@ export async function runWelcomeEmailWorkflow(params: {
   email: string;
   firstName?: string;
   dashboardUrl: string;
+  locale?: string;
 }): Promise<EmailTaskResult> {
   return sendWelcomeEmail(params.email, {
     firstName: params.firstName,
     dashboardUrl: params.dashboardUrl,
+    locale: params.locale,
   });
 }
 
@@ -107,6 +109,7 @@ export async function runWalletPendingEmailsWorkflow(params: {
     }
     merchant = await notifyMerchantWalletSubmitted({
       merchantEmail: params.merchantEmail,
+      merchantUserId: params.merchantUserId,
       walletId: params.wallet.id,
       label: params.wallet.label,
       walletNetwork: params.wallet.wallet_network,
@@ -149,6 +152,7 @@ export async function runWalletStatusEmailWorkflow(params: {
 
   return notifyMerchantWalletStatus({
     merchantEmail: params.merchantEmail,
+    merchantUserId: params.merchantUserId,
     walletId: params.walletId,
     label: params.label,
     status: params.status,

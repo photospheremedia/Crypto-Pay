@@ -7,8 +7,8 @@ export const routing = defineRouting({
   locales: [...locales],
   defaultLocale: "en",
   localePrefix: "as-needed",
-  // Browser Accept-Language on first visit; cookie after explicit switch (see locale-preference.ts).
-  // localeDetection defaults to true — do not disable unless URLs alone should pick locale.
+  // Browser Accept-Language on first visit; NEXT_LOCALE only when functional consent
+  // cookie is set (see functional-consent-cookie.ts + proxy.ts).
   localeCookie: {
     maxAge: 60 * 60 * 24 * 365,
   },
