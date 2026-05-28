@@ -1,0 +1,89 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build outputs (except portal app)
+apps/storefront/.next
+apps/storefront/out
+apps/storefront/.vercel
+
+# Testing
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+__tests__
+coverage
+
+# Development
+.env.local
+.env*.local
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Documentation (not needed for deployment)
+*.md
+!README.md
+docs/
+CHANGELOG.md
+
+# Git
+.git
+.gitignore
+
+# Research repos
+_research_repos/
+
+# Other apps not being deployed
+apps/storefront/
+affiliate marketing/
+aws-deployment/
+BaseOfCommand/
+binance/
+config/
+docs/
+FinancialTools/
+HighlightAssist/
+HighlightAssist.worktrees/
+LawFirmProject/
+manual_checks/
+memory/
+MobileProgrammingFinalProject/
+storage/
+
+# Python scripts
+*.py
+pytest.ini
+
+# Shell scripts
+*.sh
+
+# Terraform
+*.tf
+*.tfplan
+*.tfstate
+*.tfvars
+
+# Docker
+docker-compose*.yml
+Dockerfile
+.dockerignore
+
+# Database
+*.sql
+
+# Logs and temporary files
+*.log
+.temp
+tmp/

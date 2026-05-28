@@ -33,13 +33,14 @@ pb_post() {
     echo "Missing credentials. Create $ENV_FILE from .env.porkbun.example" >&2
     exit 1
   fi
+  # Allow passing extra as either a JSON object string ("{}") or empty.
   curl -sS -X POST "${API_BASE}/${endpoint}" \
     -H "Content-Type: application/json" \
     -d "$(jq -n \
       --arg apikey "$PORKBUN_API_KEY" \
       --arg secretapikey "$PORKBUN_SECRET_API_KEY" \
-      --argjson extra "$extra" \
-      '{apikey: $apikey, secretapikey: $secretapikey} + $extra')"
+      --arg extra "$extra" \
+      '{apikey: $apikey, secretapikey: $secretapikey} + ((($extra|fromjson?) // {}) | select(type=="object"))')"
 }
 
 cmd_ping() {

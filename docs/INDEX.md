@@ -16,7 +16,8 @@
 | Configure **Supabase** | [supabase skill](../.agents/skills/supabase/SKILL.md) → [PLATFORM_CONFIGURATION.md](./PLATFORM_CONFIGURATION.md) |
 | Protect production DB / backups | [supabase-production-maintenance skill](../.agents/skills/supabase-production-maintenance/SKILL.md) → [SUPABASE_MAINTENANCE_AND_BACKUPS.md](./SUPABASE_MAINTENANCE_AND_BACKUPS.md) |
 | Configure **Resend** (email) | [resend skill](../.agents/skills/resend/SKILL.md) → [EMAIL_SETUP_CRYPTO_PAY.md](./EMAIL_SETUP_CRYPTO_PAY.md) |
-| Configure **Netlify** (deploy) | [netlify skill](../.agents/skills/netlify/SKILL.md) → [PLATFORM_CONFIGURATION.md](./PLATFORM_CONFIGURATION.md) |
+| Configure **Vercel** (portal deploy) | [VERCEL_MIGRATION.md](./VERCEL_MIGRATION.md) → [PLATFORM_CONFIGURATION.md](./PLATFORM_CONFIGURATION.md) |
+| Configure **Netlify** (legacy / rollback) | [netlify skill](../.agents/skills/netlify/SKILL.md) → [PLATFORM_CONFIGURATION.md](./PLATFORM_CONFIGURATION.md) |
 | Know merchant UI vs admin UI | [MERCHANT_VS_ADMIN_UI.md](./MERCHANT_VS_ADMIN_UI.md) |
 | Set up local dev / login | [LOCAL_DEV.md](./LOCAL_DEV.md) |
 | Trace merchant signup → wallet → verify | [ACCOUNT_SETUP_WORKFLOW.md](./ACCOUNT_SETUP_WORKFLOW.md) |

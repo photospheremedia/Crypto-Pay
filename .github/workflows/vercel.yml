@@ -1,0 +1,179 @@
+# Portal production deploy via Vercel (primary after Netlify → Vercel migration).
+# If the Vercel GitHub app also deploys on push, disable one path to avoid double deploys:
+#   Project → Settings → Git → uncheck auto-deploy, OR skip this workflow's deploy job.
+name: Vercel CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'apps/portal/**'
+      - 'packages/**'
+      - 'vercel.json'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/vercel.yml'
+  pull_request:
+    branches:
+      - main
+      - master
+    paths:
+      - 'apps/portal/**'
+      - 'packages/**'
+      - 'vercel.json'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/vercel.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: vercel-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: corepack enable && pnpm install --frozen-lockfile
+
+      - name: Typecheck portal
+        run: pnpm --filter @crypto-pay/portal typecheck
+
+  test:
+    if: github.event_name == 'pull_request'
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: corepack enable && pnpm install --frozen-lockfile
+
+      - name: Check portal CI test secrets
+        id: portal_ci
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          can_test=true
+          for name in NEXT_PUBLIC_SUPABASE_URL NEXT_PUBLIC_SUPABASE_ANON_KEY SUPABASE_SERVICE_ROLE_KEY; do
+            if [ -z "${!name}" ]; then
+              echo "Missing GitHub secret: $name"
+              can_test=false
+            fi
+          done
+          echo "can_test=${can_test}" >> "$GITHUB_OUTPUT"
+
+      - name: Create portal env for Playwright
+        if: steps.portal_ci.outputs.can_test == 'true'
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          cat > apps/portal/.env.local <<EOF
+          NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+          SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+          EOF
+
+      - name: Install Playwright browsers
+        if: steps.portal_ci.outputs.can_test == 'true'
+        run: pnpm --filter @crypto-pay/portal exec playwright install --with-deps chromium
+
+      - name: Run portal tests (Playwright)
+        if: steps.portal_ci.outputs.can_test == 'true'
+        run: pnpm --filter @crypto-pay/portal test
+
+  deploy:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: corepack enable && pnpm install --frozen-lockfile
+
+      - name: Typecheck portal
+        run: pnpm --filter @crypto-pay/portal typecheck
+
+      - name: Validate Vercel CI secrets
+        id: validate_secrets
+        run: |
+          can_deploy=true
+          for name in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
+            if [ -z "${!name}" ]; then
+              echo "Missing GitHub secret: $name"
+              can_deploy=false
+            fi
+          done
+          echo "can_deploy=${can_deploy}" >> "$GITHUB_OUTPUT"
+          if [ "${can_deploy}" != "true" ]; then
+            {
+              echo "### Vercel deploy skipped"
+              echo ""
+              echo "- Set \`VERCEL_TOKEN\`, \`VERCEL_ORG_ID\`, \`VERCEL_PROJECT_ID\` in Actions secrets."
+              echo "- Bootstrap: \`pnpm vercel:secrets\` after \`pnpm vercel:link\` (project already imported on vercel.com)."
+              echo "- Or rely on the **Vercel GitHub app** deploy from your dashboard import."
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Deploy to Vercel (production)
+        if: steps.validate_secrets.outputs.can_deploy == 'true'
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
+          working-directory: ./
+
+      - name: Deployment summary
+        if: steps.validate_secrets.outputs.can_deploy == 'true'
+        run: |
+          {
+            echo "### Vercel production deploy"
+            echo ""
+            echo "- Branch: \`${{ github.ref_name }}\`"
+            echo "- Commit: \`${{ github.sha }}\`"
+            echo "- Config: \`vercel.json\` (monorepo pnpm build)"
+          } >> "$GITHUB_STEP_SUMMARY"

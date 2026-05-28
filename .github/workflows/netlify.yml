@@ -1,6 +1,6 @@
-# Single Netlify deploy workflow (do not add netlify-deploy.yml or similar).
-# If the site is linked in Netlify UI with "Build on push", disable that to avoid
-# double deploys alongside this workflow — or skip GitHub Actions and use Netlify Git only.
+# Netlify — legacy host during Vercel migration. Production deploy is manual only.
+# Primary portal deploy: .github/workflows/vercel.yml + Vercel dashboard (see docs/VERCEL_MIGRATION.md).
+# Disable Netlify "Build on push" in the UI to avoid double deploys.
 name: Netlify CI/CD
 
 on:
@@ -192,7 +192,8 @@ jobs:
           fi
 
   deploy:
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    # Paused for Vercel cutover — run manually from Actions if you need a Netlify build.
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     environment: production
     env:

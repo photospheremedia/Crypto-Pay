@@ -1,4 +1,4 @@
-# Platform configuration — Supabase, Resend, Netlify
+# Platform configuration — Supabase, Resend, Vercel, Netlify (legacy)
 
 Guide for developers and agents configuring Crypto Pay infrastructure. Secrets live in `apps/portal/.env.local` (gitignored); sync to hosted environments with the scripts below—**never commit API keys**.
 
@@ -18,8 +18,8 @@ Guide for developers and agents configuring Crypto Pay infrastructure. Secrets l
 2. pnpm dev:setup              (local auth user + membership)
 3. pnpm resend:sync            (Resend → Supabase Auth SMTP + edge secrets)
    pnpm resend:verify          (Supabase SMTP + secrets + portal Resend domain)
-4. pnpm netlify:connect        (link site)
-5. pnpm netlify:env-sync       (portal env → Netlify build)
+4. pnpm vercel:link && pnpm vercel:env-sync   (portal → Vercel; see VERCEL_MIGRATION.md)
+5. pnpm vercel:secrets         (optional — GitHub Actions deploy)
 6. supabase db push            (migrations, when schema changes)
 7. Deploy edge functions       (runner-api, etc.)
 ```
@@ -242,14 +242,40 @@ Apply with `pnpm db:push` on your linked project when ready.
 
 ---
 
-## Netlify (portal hosting)
+## Vercel (portal hosting — primary)
+
+**Migration checklist:** [VERCEL_MIGRATION.md](./VERCEL_MIGRATION.md) (use after importing the repo on vercel.com).
 
 ### What it hosts
 
-- Next.js 16 portal (`apps/portal`) — marketing, **merchant account**, **admin**, `/api/*`
-- Production site: **crypto-pay-portal** → `cryptopay.sale`
+- Next.js portal (`apps/portal`) — marketing, **merchant account**, **admin**, `/api/*`
+- Production domain: **cryptopay.sale** (after DNS cutover)
 
-Config: repo root `netlify.toml` (monorepo build from root, **no** `publish` dir — `@netlify/plugin-nextjs` serves `/_next/static`, Node 24, `NETLIFY_NEXT_SKEW_PROTECTION=true`). CI uses `netlify deploy --prod --build --filter @crypto-pay/portal` (not `deploy --no-build` from repo root). If deploy fails with **credit usage exceeded**, add Netlify billing credits and re-run the workflow.
+Config: repo root `vercel.json` — pnpm monorepo build, **no** `outputDirectory` (Next.js on Vercel serves `/_next/static` correctly).
+
+| Method | Command / trigger |
+|--------|-------------------|
+| Vercel GitHub app | Dashboard import (you may already use this) |
+| GitHub Actions | `.github/workflows/vercel.yml` — needs `VERCEL_*` secrets (`pnpm vercel:secrets`) |
+
+Use **one** deploy path on push to avoid double production builds.
+
+```bash
+pnpm vercel:link
+pnpm vercel:env-sync
+pnpm vercel:secrets    # optional, for Actions
+```
+
+---
+
+## Netlify (legacy — until DNS cutover)
+
+### What it hosted
+
+- Same portal; site **crypto-pay-portal** on Netlify
+- Production deploy via GitHub Actions is **manual only** (`workflow_dispatch` on `netlify.yml`)
+
+Config: `netlify.toml` — do not set `publish` to raw `.next`. Netlify auto-deploy on push should be **disabled** during Vercel migration.
 
 ### One canonical site
 
@@ -314,12 +340,13 @@ Domain DNS may be managed via Porkbun scripts (`pnpm dns:*`) — see [PORKBUN-SE
 
 | Symptom | Check |
 |---------|--------|
-| Login works locally, fails in prod | Redirect URLs; `NEXT_PUBLIC_APP_URL` on Netlify |
+| Login works locally, fails in prod | Redirect URLs; `NEXT_PUBLIC_APP_URL` on Vercel |
+| JS/CSS 404, layout broken | Wrong `outputDirectory` on host; use `vercel.json` / VERCEL_MIGRATION.md |
 | Emails not sent | `RESEND_API_KEY`; domain verified; `pnpm resend:sync` |
 | Admin emails missing | `ADMIN_REVIEW_EMAIL`, `ADMIN_ALLOWED_EMAILS` |
 | Runner API 401 | Clock skew; HMAC path must be `/v1/wallets` not full URL |
 | RLS errors in portal | Policy + `auth.uid()`; use Supabase MCP advisors |
-| Build fails on Netlify | `pnpm build:portal` locally; Node 24 in `netlify.toml` |
+| Build fails on Vercel | `pnpm build:portal` locally; Node 24 in project settings |
 
 ---
 

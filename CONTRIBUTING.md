@@ -13,7 +13,7 @@ Guidance for collaborators using Git and GitHub on this repo.
 ```text
 master  ←── merge via PR ──  your-branch
   ↑
-  └── production Netlify + Supabase (when paths match CI filters)
+  └── production Vercel + Supabase (when paths match CI filters; Netlify deploy manual)
 ```
 
 1. Branch from up-to-date `master`.

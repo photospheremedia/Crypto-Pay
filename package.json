@@ -44,6 +44,13 @@
     "netlify:status": "cd apps/portal && pnpm exec netlify status",
     "netlify:deploy": "cd apps/portal && pnpm exec netlify deploy --build --prod",
     "netlify:preview": "cd apps/portal && pnpm exec netlify deploy --build",
+    "vercel:login": "pnpm exec vercel login",
+    "vercel:link": "pnpm exec vercel link --yes --project crypto-pay-portal",
+    "vercel:env-sync": "./scripts/sync-vercel-env.sh",
+    "vercel:secrets": "./scripts/setup-vercel-github-secrets.sh",
+    "vercel:deploy": "pnpm exec vercel deploy --prod",
+    "vercel:preview": "pnpm exec vercel deploy",
+    "vercel:setup": "./scripts/setup-vercel-photospheremedia.sh",
     "check:env": "./scripts/check-env.sh",
     "supabase:status": "./scripts/supabase-auth.sh status",
     "supabase:login": "./scripts/supabase-auth.sh login",
@@ -62,6 +69,7 @@
     "resend:verify": "./scripts/verify-supabase-resend-config.sh && cd apps/portal && pnpm email:verify"
   },
   "devDependencies": {
-    "netlify-cli": "^26.0.2"
+    "netlify-cli": "^26.0.2",
+    "vercel": "^50.9.6"
   }
 }
