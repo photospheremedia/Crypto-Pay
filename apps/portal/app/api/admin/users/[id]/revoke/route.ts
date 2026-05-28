@@ -24,11 +24,16 @@ export async function POST(_req: NextRequest, { params }: Params) {
 
     const service = getSupabaseServiceClient();
 
-    // revoke_user_sessions is expected to remove active sessions for a user.
-    // If it doesn't exist in an environment, we keep this non-fatal and still succeed.
-    const { error } = await service.rpc("revoke_user_sessions", { p_user_id: id });
-    if (error) {
-      console.warn("[Admin User Revoke] revoke_user_sessions rpc failed:", error.message);
+    // Primary path: Supabase Auth Admin API global sign-out.
+    const { error: signOutError } = await service.auth.admin.signOut(id, "global");
+    if (signOutError) {
+      console.warn("[Admin User Revoke] admin.signOut failed:", signOutError.message);
+      // Fallback path for older deployments that still rely on DB RPC.
+      const { error: rpcError } = await service.rpc("revoke_user_sessions", { p_user_id: id });
+      if (rpcError) {
+        console.warn("[Admin User Revoke] revoke_user_sessions rpc failed:", rpcError.message);
+        return NextResponse.json({ error: "Failed to revoke sessions" }, { status: 502 });
+      }
     }
 
     return NextResponse.json({ success: true });

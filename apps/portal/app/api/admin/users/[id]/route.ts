@@ -12,6 +12,7 @@ import {
 } from "@/lib/api/route-error";
 import { getSupabaseServiceClient } from "@crypto-pay/db/supabaseServer";
 import { deleteMerchantInSupabase } from "@/lib/admin/merchant-supabase-admin";
+import { revokeMerchantSessionsGlobal } from "@/lib/admin/merchant-supabase-admin";
 import { isUuid } from "@/lib/admin/is-uuid";
 
 type Params = {
@@ -303,13 +304,19 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
       const { data: authUser } = await service.auth.admin.getUserById(id);
       const merchantEmail = authUser?.user?.email;
       if (merchantEmail) {
-        await notifyMerchantAccountDeleted({
+        const notifyResult = await notifyMerchantAccountDeleted({
           merchantUserId: id,
           merchantEmail,
           merchantName: profile?.full_name ?? null,
           adminEmail: user.email ?? "",
           adminUserId: user.id,
         });
+        if (!notifyResult.success) {
+          console.warn(
+            "[Admin User Detail] delete notify failed:",
+            notifyResult.error,
+          );
+        }
       }
     } else {
       const { data: targetMembership } = await supabase
@@ -329,6 +336,9 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
         }
       }
     }
+
+    // Revoke sessions before delete for immediate lockout.
+    await revokeMerchantSessionsGlobal(id);
 
     const deleteResult = await deleteMerchantInSupabase(id);
     if (!deleteResult.success) {

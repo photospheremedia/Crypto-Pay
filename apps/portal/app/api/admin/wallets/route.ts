@@ -127,10 +127,12 @@ export async function PATCH(req: NextRequest) {
     }
 
     const verificationRequestedAt = existing.verification_requested_at;
+    const isVerified = status === "verified";
     const updates = {
       status,
-      verified_at: new Date().toISOString(),
-      verified_by: user.id,
+      // Keep verification fields aligned with actual final status.
+      verified_at: isVerified ? new Date().toISOString() : null,
+      verified_by: isVerified ? user.id : null,
       rejection_reason,
     };
 

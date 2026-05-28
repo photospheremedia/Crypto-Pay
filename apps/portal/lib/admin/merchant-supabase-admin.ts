@@ -270,8 +270,9 @@ export async function syncMerchantMetadataFromProfile(params: {
 
   const metadata = {
     ...(user.user_metadata ?? {}),
-    ...(params.fullName ? { full_name: params.fullName } : {}),
-    ...(params.phone ? { phone: params.phone } : {}),
+    // Keep auth metadata in lockstep with profile, including explicit clears.
+    full_name: params.fullName,
+    phone: params.phone,
   };
 
   const { error } = await service.auth.admin.updateUserById(params.userId, {

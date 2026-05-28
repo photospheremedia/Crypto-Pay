@@ -231,13 +231,26 @@ export async function executeMerchantAdminAction(
     }
 
     case "delete_account": {
-      await notifyMerchantAccountDeleted({
+      let emailSent = false;
+      const notifyResult = await notifyMerchantAccountDeleted({
         merchantUserId: ctx.merchantUserId,
         merchantEmail: ctx.merchantEmail,
         merchantName: ctx.merchantName,
         adminEmail: admin.email ?? "",
         adminUserId: admin.id,
       });
+      if (!notifyResult.success) {
+        // Don't block account deletion if notification delivery fails.
+        console.warn(
+          "[merchant-admin] delete_account notification failed:",
+          notifyResult.error,
+        );
+      } else {
+        emailSent = true;
+      }
+
+      // Revoke active sessions before hard delete for immediate lockout.
+      await revokeMerchantSessionsGlobal(ctx.merchantUserId);
 
       const result = await deleteMerchantInSupabase(ctx.merchantUserId);
       if (!result.success) return { success: false, error: result.error };
@@ -246,11 +259,14 @@ export async function executeMerchantAdminAction(
         actorUserId: admin.id,
         merchantUserId: ctx.merchantUserId,
         action: "merchant.delete_account",
+        after: { emailSent },
       });
 
       return {
         success: true,
-        message: "Merchant account deleted from Supabase Auth.",
+        message: emailSent
+          ? "Merchant account deleted from Supabase Auth."
+          : "Merchant account deleted. Notification email could not be sent.",
       };
     }
 

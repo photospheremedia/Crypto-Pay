@@ -1,10 +1,11 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { AlertCircle } from 'lucide-react';
 import { PageLoading } from '@/components/ui/loading-indicator';
+import { createClient as createSupabaseBrowserClient } from '@/lib/supabase/client';
 
 /**
  * Maps technical error messages to user-friendly messages.
@@ -91,6 +92,60 @@ function ErrorContent() {
     const searchParams = useSearchParams();
     const technicalError = searchParams.get('error');
     const { title, message, suggestion } = getUserFriendlyMessage(technicalError);
+    const [recovering, setRecovering] = useState(false);
+
+    const canRecoverFromHashSession = useMemo(() => {
+        if (technicalError !== 'no_code') return false;
+        if (typeof window === 'undefined') return false;
+        const hash = window.location.hash.startsWith('#')
+            ? window.location.hash.slice(1)
+            : window.location.hash;
+        if (!hash) return false;
+        const hashParams = new URLSearchParams(hash);
+        return Boolean(hashParams.get('access_token') && hashParams.get('refresh_token'));
+    }, [technicalError]);
+
+    useEffect(() => {
+        if (!canRecoverFromHashSession || typeof window === 'undefined') return;
+
+        let cancelled = false;
+        const recover = async () => {
+            try {
+                setRecovering(true);
+                const hash = window.location.hash.startsWith('#')
+                    ? window.location.hash.slice(1)
+                    : window.location.hash;
+                const hashParams = new URLSearchParams(hash);
+                const accessToken = hashParams.get('access_token');
+                const refreshToken = hashParams.get('refresh_token');
+
+                if (!accessToken || !refreshToken) return;
+
+                const supabase = createSupabaseBrowserClient();
+                const { error } = await supabase.auth.setSession({
+                    access_token: accessToken,
+                    refresh_token: refreshToken,
+                });
+
+                if (error) {
+                    console.error('[Auth Error] hash session recovery failed:', error.message);
+                    return;
+                }
+
+                if (!cancelled) {
+                    // Cleanup hash tokens from address bar and continue authenticated flow.
+                    window.location.replace('/account');
+                }
+            } finally {
+                if (!cancelled) setRecovering(false);
+            }
+        };
+
+        void recover();
+        return () => {
+            cancelled = true;
+        };
+    }, [canRecoverFromHashSession]);
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
@@ -106,6 +161,11 @@ function ErrorContent() {
                 {/* User-friendly message */}
                 <p className="text-slate-600 mb-2">{message}</p>
                 <p className="text-slate-500 text-sm mb-6">{suggestion}</p>
+                {recovering ? (
+                    <p className="text-emerald-600 text-sm mb-6">
+                        Recovering your sign-in session...
+                    </p>
+                ) : null}
 
                 {/* Actions */}
                 <div className="space-y-3">
