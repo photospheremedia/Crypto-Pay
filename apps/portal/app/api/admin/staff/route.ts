@@ -32,11 +32,11 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Failed to fetch users" }, { status: 500 });
     }
 
-    // Get all active memberships
+    // Get memberships (all statuses) so UI can show active/inactive/suspended correctly.
     const { data: memberships, error: membershipsError } = await supabase
       .from("memberships")
       .select("id, user_id, tenant_id, role, status, created_at, tenants(name, slug)")
-      .eq("status", "active");
+      .order("created_at", { ascending: false });
 
     if (membershipsError) {
       console.error("[Staff API] Memberships error:", membershipsError);
@@ -44,12 +44,16 @@ export async function GET(req: NextRequest) {
 
     // Combine data and categorize users
     const users = profiles?.map(profile => {
-      const membership = memberships?.find(m => m.user_id === profile.id);
+      const userMemberships = (memberships ?? []).filter(
+        (m) => m.user_id === profile.id,
+      );
+      const membership =
+        userMemberships.find((m) => m.status === "active") ?? userMemberships[0];
       
       // Determine user type based on membership role
       let user_type = 'customer';
       let membership_role = null;
-      let membership_status = 'none';
+      let membership_status: string | null = null;
       let membership_id = null;
       
       if (membership) {
@@ -57,12 +61,14 @@ export async function GET(req: NextRequest) {
         membership_status = membership.status;
         membership_id = membership.id;
         
-        if (membership.role === 'rhs_admin') {
+        if (membership.role === 'cp_admin' || membership.role === 'rhs_admin') {
           user_type = 'super_admin';
         } else if (membership.role === 'admin') {
           user_type = 'admin';
         } else if (membership.role === 'owner') {
           user_type = 'owner';
+        } else if (membership.role === 'manager') {
+          user_type = 'staff_member';
         } else if (membership.role === 'staff') {
           user_type = 'staff_member';
         }

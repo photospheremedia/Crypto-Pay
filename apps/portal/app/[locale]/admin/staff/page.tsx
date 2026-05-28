@@ -59,7 +59,7 @@ interface User {
   user_type: 'super_admin' | 'admin' | 'owner' | 'staff_member' | 'customer';
   membership_id?: string;
   membership_role?: string;
-  membership_status?: string;
+  membership_status?: string | null;
   tenant?: {
     name: string;
     slug: string;
@@ -106,6 +106,15 @@ const statusColors: Record<string, string> = {
   pending: "bg-amber-100 text-amber-800",
   inactive: "bg-slate-100 text-slate-800",
   suspended: "bg-red-100 text-red-800",
+  no_membership: "bg-gray-100 text-gray-600",
+};
+
+const statusLabels: Record<string, string> = {
+  active: "Active",
+  pending: "Pending",
+  inactive: "Inactive",
+  suspended: "Suspended",
+  no_membership: "No membership",
 };
 
 export default function StaffManagementPage() {
@@ -472,15 +481,16 @@ export default function StaffManagementPage() {
                     )}
                   </td>
                   <td className="p-4">
-                    {user.membership_status ? (
-                      <Badge className={statusColors[user.membership_status] || statusColors.active}>
-                        {user.membership_status}
-                      </Badge>
-                    ) : (
-                      <Badge className="bg-gray-100 text-gray-600">
-                        Regular User
-                      </Badge>
-                    )}
+                    <Badge
+                      className={
+                        statusColors[user.membership_status || "no_membership"] ||
+                        statusColors.no_membership
+                      }
+                    >
+                      {statusLabels[user.membership_status || "no_membership"] ||
+                        user.membership_status ||
+                        "No membership"}
+                    </Badge>
                   </td>
                   <td className="p-4 text-sm text-slate-500">
                     {formatDate(user.created_at)}
