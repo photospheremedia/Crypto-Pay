@@ -21,6 +21,8 @@ export type AdminNavLink = {
   href: string;
   icon: LucideIcon;
   badgeKey?: AdminNavBadgeKey;
+  /** Visible but intentionally disabled in sidebar. */
+  comingSoon?: boolean;
   /** Hide unless `isSuperAdmin` from layout */
   superAdminOnly?: boolean;
 };
@@ -67,6 +69,7 @@ export const adminNavSections: AdminNavSection[] = [
         href: "/admin/leads",
         icon: MessageSquare,
         badgeKey: "newLeads",
+        comingSoon: true,
       },
     ],
   },
@@ -77,6 +80,7 @@ export const adminNavSections: AdminNavSection[] = [
         titleKey: "analytics",
         href: "/admin/analytics",
         icon: BarChart3,
+        comingSoon: true,
       },
     ],
   },
@@ -106,21 +110,29 @@ export const adminGrowthSubmenu: AdminNavSubmenu = {
   titleKey: "growth",
   icon: Mail,
   items: [
-    { titleKey: "campaigns", href: "/admin/marketing", icon: Mail },
+    {
+      titleKey: "campaigns",
+      href: "/admin/marketing",
+      icon: Mail,
+      comingSoon: true,
+    },
     {
       titleKey: "automations",
       href: "/admin/marketing/automations",
       icon: Mail,
+      comingSoon: true,
     },
     {
       titleKey: "templates",
       href: "/admin/marketing/templates",
       icon: Mail,
+      comingSoon: true,
     },
     {
       titleKey: "contacts",
       href: "/admin/marketing/contacts",
       icon: UserCircle,
+      comingSoon: true,
     },
   ],
 };

@@ -36,6 +36,9 @@ const navLinkClass = (active: boolean) =>
       : "text-slate-400 hover:bg-slate-800 hover:text-white",
   );
 
+const disabledNavLinkClass =
+  "flex cursor-not-allowed items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-500 opacity-80";
+
 const subLinkClass = (active: boolean) =>
   cn(
     "block rounded-lg px-3 py-2 text-sm transition-colors",
@@ -43,6 +46,17 @@ const subLinkClass = (active: boolean) =>
       ? "bg-emerald-500/10 text-emerald-400"
       : "text-slate-500 hover:bg-slate-800 hover:text-white",
   );
+
+const disabledSubLinkClass =
+  "block cursor-not-allowed rounded-lg px-3 py-2 text-sm text-slate-500 opacity-80";
+
+function ComingSoonBadge({ label }: { label: string }) {
+  return (
+    <span className="ml-2 inline-flex shrink-0 items-center rounded-full border border-amber-500/40 bg-amber-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-300">
+      {label}
+    </span>
+  );
+}
 
 export function AdminSidebarPanel({
   isSuperAdmin,
@@ -97,6 +111,23 @@ export function AdminSidebarPanel({
               const count = item.badgeKey
                 ? badgeCount(item.badgeKey, counts)
                 : 0;
+              const disabled = Boolean(item.comingSoon);
+
+              if (disabled) {
+                return (
+                  <div
+                    key={item.href}
+                    aria-disabled="true"
+                    className={disabledNavLinkClass}
+                  >
+                    <span className="flex min-w-0 items-center gap-3">
+                      <item.icon className="size-5 shrink-0" />
+                      <span className="truncate">{t(item.titleKey)}</span>
+                    </span>
+                    <ComingSoonBadge label={t("comingSoon")} />
+                  </div>
+                );
+              }
 
               return (
                 <Link
@@ -142,16 +173,27 @@ export function AdminSidebarPanel({
         </button>
         {growthExpanded ? (
           <div className="ml-4 mt-1 space-y-0.5 border-l border-slate-700 pl-3">
-            {adminGrowthSubmenu.items.map((sub) => (
-              <Link
-                key={sub.href}
-                href={sub.href}
-                onClick={onNavigate}
-                className={subLinkClass(isAdminPathActive(pathname, sub.href))}
-              >
-                {t(sub.titleKey)}
-              </Link>
-            ))}
+            {adminGrowthSubmenu.items.map((sub) =>
+              sub.comingSoon ? (
+                <div
+                  key={sub.href}
+                  aria-disabled="true"
+                  className={cn(disabledSubLinkClass, "flex items-center justify-between")}
+                >
+                  <span>{t(sub.titleKey)}</span>
+                  <ComingSoonBadge label={t("comingSoon")} />
+                </div>
+              ) : (
+                <Link
+                  key={sub.href}
+                  href={sub.href}
+                  onClick={onNavigate}
+                  className={subLinkClass(isAdminPathActive(pathname, sub.href))}
+                >
+                  {t(sub.titleKey)}
+                </Link>
+              ),
+            )}
           </div>
         ) : null}
       </div>

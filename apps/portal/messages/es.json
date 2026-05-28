@@ -488,7 +488,8 @@
       "contacts": "Contactos",
       "staff": "Gestión de personal",
       "audit": "Registros de auditoría",
-      "exitAdmin": "Salir al sitio"
+      "exitAdmin": "Salir al sitio",
+      "comingSoon": "Próximamente"
     },
     "dashboard": {
       "title": "Resumen de operaciones",

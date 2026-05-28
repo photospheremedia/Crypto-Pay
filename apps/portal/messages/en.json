@@ -503,7 +503,8 @@
       "contacts": "Contacts",
       "staff": "Staff management",
       "audit": "Audit logs",
-      "exitAdmin": "Exit to site"
+      "exitAdmin": "Exit to site",
+      "comingSoon": "Coming soon"
     },
     "dashboard": {
       "title": "Operations overview",

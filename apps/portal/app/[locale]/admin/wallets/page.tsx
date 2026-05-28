@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { Check, Mail, User, X } from "lucide-react";
 import { MerchantEmailDialog } from "@/components/admin/merchant-email-dialog";
 import { WalletRejectionDialog } from "@/components/admin/wallet-rejection-dialog";
+import { useAdminStats } from "@/components/admin/admin-stats-provider";
 import { walletNetworkLabel, walletStatusLabel } from "@/lib/wallets/constants";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -43,6 +44,7 @@ type AdminWalletRow = {
 
 export default function AdminWalletsPage() {
   const { toast } = useToast();
+  const { refresh: refreshAdminStats } = useAdminStats();
   const searchParams = useSearchParams();
   const highlightWalletId = searchParams.get("wallet");
   const filterUserId = searchParams.get("user");
@@ -143,6 +145,7 @@ export default function AdminWalletsPage() {
         message: parsed.data.message ?? "Verification reminder emails sent.",
       });
       await load();
+      await refreshAdminStats();
     } finally {
       setActing(null);
     }

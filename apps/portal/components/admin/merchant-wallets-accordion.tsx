@@ -19,6 +19,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { MerchantEmailDialog } from "@/components/admin/merchant-email-dialog";
 import { WalletRejectionDialog } from "@/components/admin/wallet-rejection-dialog";
+import { useAdminStats } from "@/components/admin/admin-stats-provider";
 import { useToast } from "@/hooks/use-toast";
 import { parseAdminApiResponse } from "@/lib/admin/parse-admin-api-response";
 import { cn } from "@/lib/utils";
@@ -49,13 +50,16 @@ export function MerchantWalletsAccordion({
   merchantUserId,
   merchantEmail,
   defaultOpenPending = true,
+  onReviewed,
 }: {
   merchantUserId: string;
   merchantEmail: string;
   defaultOpenPending?: boolean;
+  onReviewed?: () => Promise<void> | void;
 }) {
   const t = useTranslations("Admin.merchants");
   const { toast } = useToast();
+  const { refresh: refreshAdminStats } = useAdminStats();
   const [wallets, setWallets] = useState<MerchantWalletRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [acting, setActing] = useState<string | null>(null);
@@ -187,6 +191,8 @@ export function MerchantWalletsAccordion({
         text: `${t("walletStatusUpdated", { status: statusLabel })}.${note}`,
       });
       await load();
+      await refreshAdminStats();
+      await onReviewed?.();
     } finally {
       setActing(null);
     }

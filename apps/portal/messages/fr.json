@@ -488,7 +488,8 @@
       "contacts": "Contacts",
       "staff": "Gestion du personnel",
       "audit": "Journaux d’audit",
-      "exitAdmin": "Revenir au site"
+      "exitAdmin": "Revenir au site",
+      "comingSoon": "Bientôt disponible"
     },
     "dashboard": {
       "title": "Vue opérationnelle",

@@ -13,9 +13,11 @@ import { MerchantWalletsAccordion } from "@/components/admin/merchant-wallets-ac
 export function MerchantWalletsPanel({
   merchantUserId,
   merchantEmail,
+  onReviewed,
 }: {
   merchantUserId: string;
   merchantEmail: string;
+  onReviewed?: () => Promise<void> | void;
 }) {
   const t = useTranslations("Admin.merchants");
 
@@ -29,6 +31,7 @@ export function MerchantWalletsPanel({
         <MerchantWalletsAccordion
           merchantUserId={merchantUserId}
           merchantEmail={merchantEmail}
+          onReviewed={onReviewed}
         />
       </CardContent>
     </Card>

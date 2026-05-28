@@ -324,6 +324,7 @@ export default function AdminUserDetailPage() {
             <MerchantWalletsPanel
               merchantUserId={userId}
               merchantEmail={merchantEmail}
+              onReviewed={() => load()}
             />
           ) : null}
         </TabsContent>

@@ -114,7 +114,7 @@ export default function AdminDashboard() {
           title={t("newLeadsToday")}
           value={stats?.newLeadsToday ?? 0}
           icon={MessageSquare}
-          href="/admin/leads"
+          comingSoon
         />
       </div>
 
@@ -168,12 +168,12 @@ export default function AdminDashboard() {
               description="Browse merchant accounts and wallet status"
             />
             <QuickAction
-              href="/admin/leads"
+              comingSoon
               title={t("openInbox")}
               description="Qualify inbound chat and contact requests"
             />
             <QuickAction
-              href="/admin/analytics"
+              comingSoon
               title="Analytics"
               description="Track activation and conversion"
             />
@@ -190,12 +190,14 @@ function MetricCard({
   icon: Icon,
   href,
   highlight = false,
+  comingSoon = false,
 }: {
   title: string;
   value: number | string;
   icon: React.ComponentType<{ className?: string }>;
   href?: string;
   highlight?: boolean;
+  comingSoon?: boolean;
 }) {
   const card = (
     <div
@@ -210,10 +212,15 @@ function MetricCard({
         </div>
       </div>
       <p className="mt-2 text-2xl font-bold text-slate-900">{value}</p>
+      {comingSoon ? (
+        <div className="mt-2">
+          <ComingSoonChip />
+        </div>
+      ) : null}
     </div>
   );
 
-  if (href) {
+  if (href && !comingSoon) {
     return (
       <Link href={href} className="block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500">
         {card}
@@ -224,9 +231,42 @@ function MetricCard({
   return card;
 }
 
-function QuickAction({ href, title, description }: { href: string; title: string; description: string }) {
+function ComingSoonChip() {
   return (
-    <Link href={href} className="rounded-lg border border-slate-200 p-4 transition hover:border-emerald-300 hover:bg-emerald-50/40">
+    <span className="inline-flex items-center rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700">
+      Coming soon
+    </span>
+  );
+}
+
+function QuickAction({
+  href,
+  title,
+  description,
+  comingSoon = false,
+}: {
+  href?: string;
+  title: string;
+  description: string;
+  comingSoon?: boolean;
+}) {
+  if (comingSoon) {
+    return (
+      <div className="cursor-not-allowed rounded-lg border border-slate-200 bg-slate-50/70 p-4 opacity-90">
+        <div className="flex items-center justify-between gap-2">
+          <p className="font-medium text-slate-900">{title}</p>
+          <ComingSoonChip />
+        </div>
+        <p className="mt-1 text-xs text-slate-500">{description}</p>
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      href={href ?? "/admin/dashboard"}
+      className="rounded-lg border border-slate-200 p-4 transition hover:border-emerald-300 hover:bg-emerald-50/40"
+    >
       <p className="font-medium text-slate-900">{title}</p>
       <p className="mt-1 text-xs text-slate-500">{description}</p>
     </Link>
