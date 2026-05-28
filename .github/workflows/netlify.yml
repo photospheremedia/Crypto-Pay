@@ -175,11 +175,21 @@ jobs:
       - name: Build and deploy preview to Netlify
         if: steps.validate_secrets.outputs.can_deploy == 'true'
         run: |
-          pnpm exec netlify build --filter @crypto-pay/portal
-          pnpm exec netlify deploy --no-build --filter @crypto-pay/portal --message "PR #${{ github.event.pull_request.number }} ${{ github.sha }}"
+          set -o pipefail
+          pnpm exec netlify deploy --build --filter @crypto-pay/portal \
+            --message "PR #${{ github.event.pull_request.number }} ${{ github.sha }}" \
+            2>&1 | tee netlify-deploy.log
+          exit "${PIPESTATUS[0]}"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+      - name: Netlify deploy failure hint
+        if: failure() && steps.validate_secrets.outputs.can_deploy == 'true'
+        run: |
+          if grep -q "credit usage exceeded" netlify-deploy.log 2>/dev/null; then
+            echo "::error::Netlify blocked the deploy — account credit usage exceeded. Add credits in Netlify billing, then re-run the workflow."
+          fi
 
   deploy:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
@@ -238,11 +248,21 @@ jobs:
       - name: Build and deploy production to Netlify
         if: steps.validate_secrets.outputs.can_deploy == 'true'
         run: |
-          pnpm exec netlify build --filter @crypto-pay/portal
-          pnpm exec netlify deploy --prod --no-build --filter @crypto-pay/portal --message "Production ${{ github.sha }}"
+          set -o pipefail
+          pnpm exec netlify deploy --prod --build --filter @crypto-pay/portal \
+            --message "Production ${{ github.sha }}" \
+            2>&1 | tee netlify-deploy.log
+          exit "${PIPESTATUS[0]}"
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+      - name: Netlify deploy failure hint
+        if: failure() && steps.validate_secrets.outputs.can_deploy == 'true'
+        run: |
+          if grep -q "credit usage exceeded" netlify-deploy.log 2>/dev/null; then
+            echo "::error::Netlify blocked the deploy — account credit usage exceeded. Add credits in Netlify billing, then re-run the workflow."
+          fi
 
       - name: Deployment summary
         if: steps.validate_secrets.outputs.can_deploy == 'true'

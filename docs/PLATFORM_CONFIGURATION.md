@@ -249,7 +249,7 @@ Apply with `pnpm db:push` on your linked project when ready.
 - Next.js 16 portal (`apps/portal`) — marketing, **merchant account**, **admin**, `/api/*`
 - Production site: **crypto-pay-portal** → `cryptopay.sale`
 
-Config: repo root `netlify.toml` (monorepo build from root, **no** `publish` dir — plugin serves `/_next/static`, Node 24, `@netlify/plugin-nextjs`, `NETLIFY_NEXT_SKEW_PROTECTION=true`).
+Config: repo root `netlify.toml` (monorepo build from root, **no** `publish` dir — `@netlify/plugin-nextjs` serves `/_next/static`, Node 24, `NETLIFY_NEXT_SKEW_PROTECTION=true`). CI uses `netlify deploy --prod --build --filter @crypto-pay/portal` (not `deploy --no-build` from repo root). If deploy fails with **credit usage exceeded**, add Netlify billing credits and re-run the workflow.
 
 ### One canonical site
 
