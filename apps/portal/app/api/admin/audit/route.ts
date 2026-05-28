@@ -2,17 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { checkAdminAccess } from "@/lib/admin-auth";
 
-// GET - List audit logs (Super Admin only)
+// GET - List audit logs (permission-gated)
 export async function GET(req: NextRequest) {
   try {
-    const { user, isSuperAdmin, permissions } = await checkAdminAccess();
+    const { user, permissions } = await checkAdminAccess();
     
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    if (!isSuperAdmin || !permissions?.canViewAuditLogs) {
-      return NextResponse.json({ error: "Super admin access required" }, { status: 403 });
+    if (!permissions?.canViewAuditLogs) {
+      return NextResponse.json({ error: "Audit log access required" }, { status: 403 });
     }
 
     const supabase = await createClient();
@@ -65,6 +65,9 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       success: true,
       logs,
+      permissions: {
+        canViewAuditLogs: true,
+      },
       pagination: {
         page,
         limit,

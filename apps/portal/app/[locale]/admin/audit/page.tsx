@@ -77,7 +77,7 @@ export default function AuditLogsPage() {
   const [logs, setLogs] = useState<AuditLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const [canViewAuditLogs, setCanViewAuditLogs] = useState(false);
   const [error, setError] = useState("");
 
   // Filters
@@ -106,9 +106,9 @@ export default function AuditLogsPage() {
         setLogs(data.logs);
         setTotalPages(data.pagination.totalPages);
         setTotalCount(data.pagination.total);
-        setIsSuperAdmin(data.isSuperAdmin);
+        setCanViewAuditLogs(Boolean(data.permissions?.canViewAuditLogs));
       } else {
-        if (data.error === "Super admin access required") {
+        if (data.error === "Audit log access required") {
           router.push("/admin");
         } else {
           setError(data.error || "Failed to load audit logs");
@@ -167,13 +167,13 @@ export default function AuditLogsPage() {
     );
   }
 
-  if (!isSuperAdmin) {
+  if (!canViewAuditLogs) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
         <Shield className="h-12 w-12 text-slate-300 mb-4" />
         <h2 className="text-xl font-semibold text-slate-900">Access Restricted</h2>
         <p className="text-slate-500 mt-2">
-          Audit logs are only accessible to super admins
+          Audit logs are restricted for your current role
         </p>
         <Button onClick={() => router.push("/admin/dashboard")} className="mt-4">
           Return to Dashboard
