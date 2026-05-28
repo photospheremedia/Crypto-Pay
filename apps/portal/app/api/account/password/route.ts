@@ -26,10 +26,36 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const providers = Array.isArray(user.app_metadata?.providers)
+      ? (user.app_metadata.providers as string[])
+      : [];
+    const userHasPassword = providers.includes("email");
+
+    if (userHasPassword && !String(currentPassword || "").trim()) {
+      return NextResponse.json(
+        { error: "Current password is required" },
+        { status: 400 },
+      );
+    }
+
     if (normalizedPassword.length < 8) {
       return NextResponse.json(
         { error: "Password must be at least 8 characters" },
         { status: 400 }
+      );
+    }
+
+    // Server-side strength check (match portal reset/change UI intent).
+    const hasUppercase = /[A-Z]/.test(normalizedPassword);
+    const hasLowercase = /[a-z]/.test(normalizedPassword);
+    const hasNumber = /[0-9]/.test(normalizedPassword);
+    if (!hasUppercase || !hasLowercase || !hasNumber) {
+      return NextResponse.json(
+        {
+          error:
+            "Password must include at least one uppercase letter, one lowercase letter, and one number",
+        },
+        { status: 400 },
       );
     }
 
@@ -39,7 +65,7 @@ export async function POST(request: NextRequest) {
       return createRateLimitResponse(rateLimitResult.limit, rateLimitResult.remaining, rateLimitResult.reset);
     }
 
-    if (currentPassword) {
+    if (userHasPassword) {
       const { error: verifyError } = await supabase.auth.signInWithPassword({
         email: user.email || "",
         password: String(currentPassword),

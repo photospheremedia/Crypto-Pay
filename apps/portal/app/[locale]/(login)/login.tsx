@@ -26,15 +26,20 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
   const verificationPending = searchParams.get('verify') === '1';
   const pendingEmail = searchParams.get('email');
   const [existingUser, setExistingUser] = useState(false);
+  const [firstName, setFirstName] = useState<string | null>(null);
   const [state, formAction, pending] = useActionState<ActionState, FormData>(
     mode === 'signin' ? signIn : signUp,
     { error: '' },
   );
 
   const title = useMemo(() => {
-    if (mode === 'signin') return existingUser ? t('welcomeBack') : t('signInTitle');
+    if (mode === 'signin') {
+      if (!existingUser) return t('signInTitle');
+      if (firstName) return t('welcomeBackWithName', { name: firstName });
+      return t('welcomeBack');
+    }
     return t('createAccountTitle');
-  }, [existingUser, mode, t]);
+  }, [existingUser, firstName, mode, t]);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -42,6 +47,8 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
       if (!supabase) return;
       const { data } = await supabase.auth.getUser();
       setExistingUser(!!data.user);
+      const maybeFirstName = data.user?.user_metadata?.first_name;
+      setFirstName(typeof maybeFirstName === 'string' && maybeFirstName.trim() ? maybeFirstName.trim() : null);
     };
     void checkUser();
   }, []);

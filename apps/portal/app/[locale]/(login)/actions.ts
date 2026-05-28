@@ -191,7 +191,7 @@ export async function signUp(
   }
 
   if (!data.session) {
-    redirect(`/login?created=1&verify=1&email=${encodeURIComponent(email)}`);
+    redirect(`/check-email?verify=1&email=${encodeURIComponent(email)}`);
   }
 
   const realm = await resolveRealmForUserEdge(supabase, data.session.user);

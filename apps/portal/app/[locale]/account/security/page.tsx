@@ -16,7 +16,10 @@ export default async function SecurityPage() {
   const t = await getTranslations("Account.security");
   const { user } = await getMerchantAuth();
 
-  const hasPassword = !!(user.app_metadata?.provider !== 'oauth' || user.app_metadata?.providers?.includes('email'));
+  const providers = Array.isArray(user.app_metadata?.providers)
+    ? (user.app_metadata.providers as string[])
+    : [];
+  const hasPassword = providers.includes("email");
   const identities = user.identities || [];
   const lastSignIn = user.last_sign_in_at
     ? new Date(user.last_sign_in_at).toLocaleString()

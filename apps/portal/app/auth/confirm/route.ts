@@ -78,12 +78,16 @@ export async function GET(request: NextRequest) {
   const nextPath = normalizeAuthEmailNextParam(rawNext);
 
   let target: string;
-  if (nextPath) {
+  // Security: password recovery links must *always* land on the password update
+  // screen, even if Supabase includes a `next`/RedirectTo param (e.g. /account).
+  // The recovery link establishes a session; we should not grant normal app
+  // access until the password has been changed.
+  if (type === "recovery") {
+    target = "/reset-password";
+  } else if (nextPath) {
     target = sanitizePostAuthRedirect(nextPath, realm);
   } else if (realm === "admin") {
     target = getHomePathForRealm("admin");
-  } else if (type === "recovery") {
-    target = "/reset-password";
   } else {
     const wallets = await listUserMerchantWallets(
       supabase,

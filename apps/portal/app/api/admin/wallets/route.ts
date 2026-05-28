@@ -188,6 +188,7 @@ export async function PATCH(req: NextRequest) {
       const result = await runWalletStatusEmailWorkflow({
         walletId: id,
         merchantEmail,
+        merchantUserId: existing.user_id,
         label: existing.label,
         status,
         previousStatus,

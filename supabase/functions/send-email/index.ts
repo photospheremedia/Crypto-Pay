@@ -144,7 +144,7 @@ serve(async (req) => {
       payload.replyTo ||
       Deno.env.get("EMAIL_REPLY_TO") ||
       Deno.env.get("ADMIN_REVIEW_EMAIL") ||
-      "photospheremedia00@gmail.com";
+      "support@cryptopay.sale";
     let html = payload.html || "";
     const workflowTag = payload.workflow?.event ? [`workflow:${payload.workflow.event}`] : [];
     const mergedTags = [...(payload.tags || []), ...workflowTag].slice(0, 10);

@@ -589,6 +589,7 @@
   },
   "Auth": {
     "welcomeBack": "Bon retour",
+    "welcomeBackWithName": "Bon retour, {name}",
     "signInTitle": "Connectez-vous à votre compte",
     "createAccountTitle": "Créez votre compte",
     "newToBrand": "Nouveau sur Crypto Pay ?",

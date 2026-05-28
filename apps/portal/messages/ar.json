@@ -589,6 +589,7 @@
   },
   "Auth": {
     "welcomeBack": "مرحبًا بعودتك",
+    "welcomeBackWithName": "مرحبًا بعودتك، {name}",
     "signInTitle": "سجّل الدخول إلى حسابك",
     "createAccountTitle": "أنشئ حسابك",
     "newToBrand": "جديد على Crypto Pay؟",

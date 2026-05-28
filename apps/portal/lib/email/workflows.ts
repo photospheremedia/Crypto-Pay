@@ -11,6 +11,7 @@ import {
 } from "@/lib/wallets/notify-admin";
 import { EMAIL_WORKFLOW_EVENTS, workflowIdempotencyKey } from "./workflow-keys";
 import type { MerchantWallet } from "@/types/crypto-pay-db";
+import { getMerchantNotificationPreferences } from "@/lib/account/notification-settings";
 
 export { EMAIL_WORKFLOW_EVENTS, workflowIdempotencyKey } from "./workflow-keys";
 
@@ -100,6 +101,10 @@ export async function runWalletPendingEmailsWorkflow(params: {
 
   let merchant: EmailTaskResult | undefined;
   if (params.sendMerchantCopy && params.merchantEmail) {
+    const prefs = await getMerchantNotificationPreferences(params.merchantUserId);
+    if (!prefs.emailEnabled || !prefs.walletAndPaymentEmails) {
+      return { admin, merchant: { success: true, error: "skipped:disabled_by_user_preferences" } };
+    }
     merchant = await notifyMerchantWalletSubmitted({
       merchantEmail: params.merchantEmail,
       walletId: params.wallet.id,
@@ -114,6 +119,7 @@ export async function runWalletPendingEmailsWorkflow(params: {
 export async function runWalletStatusEmailWorkflow(params: {
   walletId: string;
   merchantEmail: string;
+  merchantUserId: string;
   label: string;
   status: "verified" | "rejected";
   previousStatus: string;
@@ -134,6 +140,11 @@ export async function runWalletStatusEmailWorkflow(params: {
   const requestAt = params.verificationRequestedAt.trim();
   if (emailedFor && emailedFor === requestAt) {
     return { skipped: true, reason: "already_notified_this_request" };
+  }
+
+  const prefs = await getMerchantNotificationPreferences(params.merchantUserId);
+  if (!prefs.emailEnabled || !prefs.walletAndPaymentEmails) {
+    return { skipped: true, reason: "disabled_by_user_preferences" };
   }
 
   return notifyMerchantWalletStatus({

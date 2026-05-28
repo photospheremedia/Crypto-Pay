@@ -100,7 +100,7 @@ sequenceDiagram
   U->>P: signUp
   P->>S: signUp (emailRedirectTo = /account?tab=wallets)
   S-->>P: user, no session
-  P->>U: redirect /login?created=1&verify=1&email=...
+  P->>U: redirect /check-email?verify=1&email=...
   U->>S: Click confirm link in email
   S->>P: GET /auth/confirm?token_hash=...&type=email&next=/account?tab=wallets
   P->>S: verifyOtp(type, token_hash)
@@ -109,7 +109,7 @@ sequenceDiagram
 
 **Code:** `apps/portal/app/auth/confirm/route.ts`, `apps/portal/app/[locale]/(login)/actions.ts` (`signUp`)
 
-After redirecting to `/login?created=1&verify=1`, the login UI offers a **Resend confirmation email** action (no account enumeration).
+After redirecting to `/check-email?verify=1`, the UI offers a **Resend confirmation email** action (no account enumeration).
 
 ### C. Sign in (existing merchant)
 

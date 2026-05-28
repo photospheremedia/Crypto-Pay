@@ -2,18 +2,11 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { createBrowserClient } from "@supabase/ssr";
 import { useRouter } from "@/i18n/navigation";
 import type { User } from "@supabase/supabase-js";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { refreshMerchantProfileCache } from "@/app/[locale]/account/actions";
-
-function getSupabaseBrowserClient() {
-  return createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
-}
+import { saveMerchantSettings } from "./actions";
 
 interface SettingsFormProps {
   user: User;
@@ -25,7 +18,6 @@ export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
   const t = useTranslations("Account.settings");
   const tCommon = useTranslations("Common");
   const router = useRouter();
-  const supabase = getSupabaseBrowserClient();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
@@ -50,21 +42,7 @@ export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
     setMessage(null);
 
     try {
-      // Update profile
-      const { error: profileError } = await supabase
-        .from("user_profiles")
-        .update(profileData)
-        .eq("id", user.id);
-
-      if (profileError) throw profileError;
-
-      // Update settings
-      const { error: settingsError } = await supabase
-        .from("user_settings")
-        .update(settingsData)
-        .eq("user_id", user.id);
-
-      if (settingsError) throw settingsError;
+      await saveMerchantSettings({ profile: profileData, settings: settingsData });
 
       await refreshMerchantProfileCache();
       setMessage({ type: "success", text: t("savedSuccess") });
