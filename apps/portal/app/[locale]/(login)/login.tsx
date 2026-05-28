@@ -61,7 +61,8 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
       const supabase = getSupabaseBrowserClientOptional();
       if (!supabase) return;
 
-      if (consumePendingSignOut()) {
+      const pendingCleanup = consumePendingSignOut();
+      if (pendingCleanup) {
         await supabase.auth.signOut({ scope: 'local' });
       }
 
@@ -73,7 +74,9 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
           ? maybeFirstName.trim()
           : null,
       );
-      router.refresh();
+      if (pendingCleanup) {
+        router.refresh();
+      }
     };
     void syncSession();
   }, [router, searchParams]);

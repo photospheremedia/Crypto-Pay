@@ -33,7 +33,7 @@ The **portal** (`apps/portal`) is hosted on Netlify as site **crypto-pay-portal*
 | Config file | Root `netlify.toml` |
 | Build base | `apps/portal` |
 | Build command | `pnpm install` + `pnpm --filter @crypto-pay/portal build` |
-| Publish | `apps/portal/.next` |
+| Publish | *(unset — `@netlify/plugin-nextjs` owns output)* |
 | Node | 24 (see `[build.environment]` in `netlify.toml`) |
 | Plugin | `@netlify/plugin-nextjs` |
 

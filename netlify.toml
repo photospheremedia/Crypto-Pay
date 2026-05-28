@@ -2,14 +2,15 @@
 # Do not create a second site from Git import; run: pnpm netlify:audit
 # Dashboard: https://app.netlify.com/sites/crypto-pay-portal
 
-# Monorepo: install and build from repo root; publish Next.js output under apps/portal.
+# Monorepo: install and build from repo root. Do not set publish — @netlify/plugin-nextjs
+# maps /_next/static to CDN assets; publishing raw .next breaks JS/CSS (404 text/plain).
 [build]
   command = "pnpm run netlify:build"
-  publish = "apps/portal/.next"
 
 [build.environment]
   NODE_VERSION = "24"
   PNPM_VERSION = "9.15.5"
+  NETLIFY_NEXT_SKEW_PROTECTION = "true"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
@@ -24,6 +25,7 @@
 [[headers]]
   for = "/*"
   [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "DENY"
     Referrer-Policy = "strict-origin-when-cross-origin"
@@ -38,3 +40,9 @@
   for = "/api/*"
   [headers.values]
     Cache-Control = "no-cache, no-store, must-revalidate"
+
+# Immutable hashed assets (plugin also sets this; explicit for CDN)
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

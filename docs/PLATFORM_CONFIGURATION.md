@@ -249,7 +249,7 @@ Apply with `pnpm db:push` on your linked project when ready.
 - Next.js 16 portal (`apps/portal`) — marketing, **merchant account**, **admin**, `/api/*`
 - Production site: **crypto-pay-portal** → `cryptopay.sale`
 
-Config: repo root `netlify.toml` (build base `apps/portal`, Node 24, `@netlify/plugin-nextjs`).
+Config: repo root `netlify.toml` (monorepo build from root, **no** `publish` dir — plugin serves `/_next/static`, Node 24, `@netlify/plugin-nextjs`, `NETLIFY_NEXT_SKEW_PROTECTION=true`).
 
 ### One canonical site
 
