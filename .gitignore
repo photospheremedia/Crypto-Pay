@@ -18,6 +18,7 @@ backups/
 .vercel
 .netlify
 .netlify-env-import.tmp
+.vercel-env-import.tmp
 .env*.local
 .env.porkbun
 .env.netlify

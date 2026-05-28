@@ -44,7 +44,7 @@ Next.js loads `.env.development.local` in dev and sets `NEXT_PUBLIC_APP_URL=http
 
 Email logos use `NEXT_PUBLIC_APP_URL/email/logo.png`. In dev, mail clients cannot load `localhost` images — use production `NEXT_PUBLIC_APP_URL` when testing real sends, or set `EMAIL_LOGO_URL` to a public CDN URL.
 
-**Reply-To:** Set `EMAIL_REPLY_TO=photospheremedia00@gmail.com` (or your monitored inbox) so merchant replies are not lost. Sync to Netlify/Supabase with `pnpm netlify:env-sync` and `pnpm resend:sync`. Public contact on the site can stay `support@cryptopay.sale`; that is separate from transactional `Reply-To`.
+**Reply-To:** Set `EMAIL_REPLY_TO=photospheremedia00@gmail.com` (or your monitored inbox) so merchant replies are not lost. Sync to Vercel/Supabase with `pnpm vercel:env-sync` and `pnpm resend:sync`. Public contact on the site can stay `support@cryptopay.sale`; that is separate from transactional `Reply-To`.
 
 ## Supabase dashboard (one-time)
 

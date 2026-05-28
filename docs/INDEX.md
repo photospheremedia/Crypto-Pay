@@ -17,7 +17,6 @@
 | Protect production DB / backups | [supabase-production-maintenance skill](../.agents/skills/supabase-production-maintenance/SKILL.md) → [SUPABASE_MAINTENANCE_AND_BACKUPS.md](./SUPABASE_MAINTENANCE_AND_BACKUPS.md) |
 | Configure **Resend** (email) | [resend skill](../.agents/skills/resend/SKILL.md) → [EMAIL_SETUP_CRYPTO_PAY.md](./EMAIL_SETUP_CRYPTO_PAY.md) |
 | Configure **Vercel** (portal deploy) | [VERCEL_MIGRATION.md](./VERCEL_MIGRATION.md) → [PLATFORM_CONFIGURATION.md](./PLATFORM_CONFIGURATION.md) |
-| Configure **Netlify** (legacy / rollback) | [netlify skill](../.agents/skills/netlify/SKILL.md) → [PLATFORM_CONFIGURATION.md](./PLATFORM_CONFIGURATION.md) |
 | Know merchant UI vs admin UI | [MERCHANT_VS_ADMIN_UI.md](./MERCHANT_VS_ADMIN_UI.md) |
 | Set up local dev / login | [LOCAL_DEV.md](./LOCAL_DEV.md) |
 | Trace merchant signup → wallet → verify | [ACCOUNT_SETUP_WORKFLOW.md](./ACCOUNT_SETUP_WORKFLOW.md) |
@@ -56,13 +55,13 @@ Do not integrate third-party payment SaaS by name in this codebase.
 | [../.agents/skills/dev-workflow/SKILL.md](../.agents/skills/dev-workflow/SKILL.md) | Health checks, docs order (skills → MCP → CLI → web) |
 | [../.agents/skills/dev-workflow/library-index.md](../.agents/skills/dev-workflow/library-index.md) | Skill ↔ Context7 ↔ MCP map |
 
-### Platform skills (Supabase, Resend, Netlify)
+### Platform skills (Supabase, Resend, Vercel)
 
 | Service | Project skill | Project docs |
 |---------|---------------|--------------|
 | **Supabase** | [supabase/SKILL.md](../.agents/skills/supabase/SKILL.md) | [PLATFORM_CONFIGURATION.md](./PLATFORM_CONFIGURATION.md), [SUPABASE_MAINTENANCE_AND_BACKUPS.md](./SUPABASE_MAINTENANCE_AND_BACKUPS.md), [MULTITENANT_SECURITY_CHECKLIST.md](./MULTITENANT_SECURITY_CHECKLIST.md) |
 | **Resend** | [resend/SKILL.md](../.agents/skills/resend/SKILL.md) | [EMAIL_SETUP_CRYPTO_PAY.md](./EMAIL_SETUP_CRYPTO_PAY.md) |
-| **Netlify** | [netlify/SKILL.md](../.agents/skills/netlify/SKILL.md) | [netlify-cli-and-deploy](../.agents/skills/netlify-cli-and-deploy/SKILL.md), [netlify-config](../.agents/skills/netlify-config/SKILL.md) |
+| **Vercel** | — | [VERCEL_MIGRATION.md](./VERCEL_MIGRATION.md), [PLATFORM_CONFIGURATION.md](./PLATFORM_CONFIGURATION.md) |
 
 Postgres tuning (with Supabase): [supabase-postgres-best-practices/SKILL.md](../.agents/skills/supabase-postgres-best-practices/SKILL.md).
 
@@ -131,7 +130,7 @@ Postgres tuning (with Supabase): [supabase-postgres-best-practices/SKILL.md](../
 | Runner → portal webhook | `apps/portal/lib/runner-api/dispatch-wallet-webhook.ts` |
 | Sign Runner requests | `apps/portal/lib/runner-api/sign-request.ts` |
 | Portal env template | `apps/portal/.env.example` |
-| Netlify build | `netlify.toml` |
+| Vercel build | `vercel.json` |
 | shadcn config + UI primitives | `apps/portal/components.json`, `apps/portal/components/ui/` |
 | Account / admin feature UI | `apps/portal/components/account/`, `apps/portal/components/admin/` |
 
@@ -143,7 +142,7 @@ Postgres tuning (with Supabase): [supabase-postgres-best-practices/SKILL.md](../
 2. **Platform / stack skill** when applicable:
    - Supabase (DB, auth, RLS, migrations, edge) → `.agents/skills/supabase/SKILL.md`
    - Resend (email) → `.agents/skills/resend/SKILL.md`
-   - Netlify (deploy, env) → `.agents/skills/netlify/SKILL.md`
+   - Vercel (deploy, env) → [VERCEL_MIGRATION.md](./VERCEL_MIGRATION.md)
    - **shadcn/ui** (portal UI, forms, tables, dialogs) → `.agents/skills/shadcn/SKILL.md`
 3. **`.agents/skills/crypto-pay-platform/SKILL.md`** — if touching users, wallets, Runner, or platform boundaries  
 4. **Task-specific doc** from the catalog above  
@@ -158,7 +157,7 @@ Postgres tuning (with Supabase): [supabase-postgres-best-practices/SKILL.md](../
 |------|------|
 | Platform boundaries | `.cursor/rules/crypto-pay-platform.mdc` |
 | Dev workflow | `.cursor/rules/dev-workflow.mdc` |
-| Netlify MCP | `.cursor/rules/netlify-mcp.mdc` |
+| Vercel (PhotoSphere) | `.cursor/rules/vercel-photosphere.mdc` |
 
 ---
 

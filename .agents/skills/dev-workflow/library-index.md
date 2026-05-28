@@ -15,7 +15,7 @@ Use with `.agents/skills/dev-workflow/SKILL.md`. Prefer **project skill** first,
 | Postgres tuning | `supabase-postgres-best-practices/SKILL.md` |
 | Resend transactional + Auth SMTP | `resend/SKILL.md` |
 | shadcn/ui | `shadcn/SKILL.md` (+ `apps/portal/.agents/skills/shadcn/`) |
-| Netlify deploy/config | `netlify-cli-and-deploy/SKILL.md`, `netlify-config/SKILL.md` |
+| Vercel deploy | `docs/VERCEL_MIGRATION.md` |
 
 ## Context7 library IDs (common in this repo)
 
@@ -41,7 +41,7 @@ Resolve with `resolve-library-id` when version-specific IDs matter.
 |------|--------|
 | Tables, migrations, logs, advisors | `supabase` |
 | Component registry / add / docs | `shadcn` |
-| Sites, deploys, env | `netlify` |
+| Sites, deploys, env | Vercel CLI (`pnpm vercel:*`) |
 
 ## Cursor plugin skills (user install — use when relevant)
 

@@ -30,23 +30,21 @@ Copy `apps/portal/.env.example` to `apps/portal/.env.local` and add your Supabas
 
 **Docs:** [docs/README.md](docs/README.md) — includes [merchant account setup workflow](docs/ACCOUNT_SETUP_WORKFLOW.md).
 
-## Deploy (Netlify + GitHub)
+## Deploy (Vercel + GitHub)
 
-Hosting uses **Netlify** (GitHub login — no Vercel phone signup). Config: `netlify.toml`.
+Portal hosting: **Vercel** (PhotoSphere team). Config: `vercel.json`.
 
 ```bash
-pnpm netlify:bootstrap   # import URL + env prep
-pnpm netlify:login       # GitHub (photospheremedia)
-pnpm netlify:link        # link site crypto-pay-portal
-pnpm netlify:env-sync    # push Supabase keys from .env.local
-pnpm netlify:deploy      # production deploy
-pnpm netlify:audit       # CLI fallback; prefer Netlify MCP (list-sites) in Cursor
-pnpm netlify:secrets     # repo admin: GitHub Actions deploy secrets
+pnpm vercel:auth-photosphere --link
+pnpm vercel:env-sync       # push keys from apps/portal/.env.local
+pnpm vercel:deploy         # production CLI deploy (or use Vercel GitHub app)
+pnpm vercel:secrets        # repo admin: GitHub Actions VERCEL_* secrets
+pnpm dns:apply             # Porkbun → Vercel (apex + www)
 ```
 
-**CI/CD:** `.github/workflows/netlify.yml` — production deploy on push to `main`/`master` when portal files change; PRs typecheck and optional Netlify preview (requires `NETLIFY_AUTH_TOKEN` + `NETLIFY_SITE_ID`).
+**CI/CD:** `.github/workflows/vercel.yml` — typecheck on PR; production deploy on push to `master` (or Vercel GitHub app alone — use one path).
 
-Production branch: `master`. Supabase: `usbxwewohpsbjwiuazpf`. Domain: `cryptopay.sale` (Porkbun DNS → `pnpm dns:apply`).
+See [docs/VERCEL_MIGRATION.md](docs/VERCEL_MIGRATION.md). Production branch: `master`. Supabase: `usbxwewohpsbjwiuazpf`. Domain: `cryptopay.sale`.
 
 ## Project layout
 

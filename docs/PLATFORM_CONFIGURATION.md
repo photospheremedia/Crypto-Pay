@@ -1,11 +1,11 @@
-# Platform configuration — Supabase, Resend, Vercel, Netlify (legacy)
+# Platform configuration — Supabase, Resend, Vercel
 
 Guide for developers and agents configuring Crypto Pay infrastructure. Secrets live in `apps/portal/.env.local` (gitignored); sync to hosted environments with the scripts below—**never commit API keys**.
 
 **End-to-end (env + APIs + flows):** [ENV_AND_API_GUIDE.md](./ENV_AND_API_GUIDE.md)  
 **Index:** [INDEX.md](./INDEX.md)
 
-**Agent skills:** [Supabase](../.agents/skills/supabase/SKILL.md) · [Resend](../.agents/skills/resend/SKILL.md) · [Netlify](../.agents/skills/netlify/SKILL.md)
+**Agent skills:** [Supabase](../.agents/skills/supabase/SKILL.md) · [Resend](../.agents/skills/resend/SKILL.md) · Vercel ([VERCEL_MIGRATION.md](./VERCEL_MIGRATION.md), `.cursor/rules/vercel-photosphere.mdc`)
 
 **Related:** [LOCAL_DEV.md](./LOCAL_DEV.md) · [MERCHANT_VS_ADMIN_UI.md](./MERCHANT_VS_ADMIN_UI.md) · [PROD_READINESS.md](./PROD_READINESS.md)
 
@@ -170,10 +170,10 @@ pnpm resend:sync
 
 This runs `scripts/setup-resend-secrets.sh`: pushes secrets to Supabase Edge + configures Auth SMTP (`smtp.resend.com`, port 587).
 
-5. Push same vars to Netlify for Next.js server routes:
+5. Push same vars to Vercel for Next.js server routes:
 
 ```bash
-pnpm netlify:env-sync
+pnpm vercel:env-sync
 ```
 
 ### Verify
@@ -225,7 +225,7 @@ SMS_FROM=+15551234567
 | `TWILIO_AUTH_TOKEN` | No | Twilio auth |
 | `SMS_FROM` / `TWILIO_PHONE_NUMBER` | No | Sender E.164 |
 
-Sync to Netlify for production portal: `pnpm netlify:env-sync`.
+Sync to Vercel for production portal: `pnpm vercel:env-sync`.
 
 ### Schema
 
@@ -242,62 +242,48 @@ Apply with `pnpm db:push` on your linked project when ready.
 
 ---
 
-## Vercel (portal hosting — primary)
+## Vercel (portal hosting)
 
-**Migration checklist:** [VERCEL_MIGRATION.md](./VERCEL_MIGRATION.md) (use after importing the repo on vercel.com).
+**Setup:** [VERCEL_MIGRATION.md](./VERCEL_MIGRATION.md) · PhotoSphere CLI rule: `.cursor/rules/vercel-photosphere.mdc`
 
 ### What it hosts
 
 - Next.js portal (`apps/portal`) — marketing, **merchant account**, **admin**, `/api/*`
-- Production domain: **cryptopay.sale** (after DNS cutover)
+- Production domain: **cryptopay.sale** (Porkbun DNS → Vercel; add domain in Vercel dashboard)
 
-Config: repo root `vercel.json` — pnpm monorepo build, **no** `outputDirectory` (Next.js on Vercel serves `/_next/static` correctly).
+### Config migrated from former Netlify (`netlify.toml`)
+
+| Former Netlify | On Vercel now |
+|----------------|---------------|
+| `pnpm netlify:build` | `vercel.json` → `pnpm install --frozen-lockfile` + `pnpm --filter @crypto-pay/portal build` |
+| Node 24 / pnpm 9.15.5 | Vercel project Node **24.x**; `packageManager` in `package.json` |
+| `@netlify/plugin-nextjs` | Native Next.js on Vercel (no `outputDirectory` override) |
+| Redirect `/home` → `/` | `vercel.json` `redirects` |
+| Security headers on `/*`, `/api/*` | `vercel.json` `headers` + `apps/portal/next.config.ts` |
+| Cache `/email/*`, `/_next/static/*` | `vercel.json` + `next.config.ts` |
+| `pnpm netlify:env-sync` | `pnpm vercel:env-sync` |
+| Netlify CI workflow | `.github/workflows/vercel.yml` |
+| Porkbun → Netlify DNS | `scripts/porkbun-dns-vercel.py` · `pnpm dns:apply` |
+
+### Deploy
 
 | Method | Command / trigger |
 |--------|-------------------|
-| Vercel GitHub app | Dashboard import (you may already use this) |
-| GitHub Actions | `.github/workflows/vercel.yml` — needs `VERCEL_*` secrets (`pnpm vercel:secrets`) |
+| Vercel GitHub app | Dashboard import on `master` |
+| GitHub Actions | `.github/workflows/vercel.yml` — optional `VERCEL_*` via `pnpm vercel:secrets` |
 
-Use **one** deploy path on push to avoid double production builds.
+Use **one** deploy path on push (Git app **or** Actions, not both).
 
 ```bash
-pnpm vercel:link
+pnpm vercel:auth-photosphere --link
 pnpm vercel:env-sync
-pnpm vercel:secrets    # optional, for Actions
+pnpm vercel:secrets    # optional — GitHub Actions only
 ```
 
----
-
-## Netlify (legacy — until DNS cutover)
-
-### What it hosted
-
-- Same portal; site **crypto-pay-portal** on Netlify
-- Production deploy via GitHub Actions is **manual only** (`workflow_dispatch` on `netlify.yml`)
-
-Config: `netlify.toml` — do not set `publish` to raw `.next`. Netlify auto-deploy on push should be **disabled** during Vercel migration.
-
-### One canonical site
-
-- **Keep:** site linked via `pnpm netlify:connect` (see `scripts/lib/netlify-site.sh` / `.cursor/rules/netlify-mcp.mdc`).
-- Do not create duplicate sites from Git import; run `pnpm netlify:audit` if unsure.
-
-### Local Netlify CLI auth
+### Environment variables on Vercel
 
 ```bash
-cp .env.netlify.example .env.netlify   # NETLIFY_AUTH_TOKEN
-pnpm netlify:connect
-pnpm netlify:status
-```
-
-Use **Netlify MCP** in Cursor when available (preferred over ad-hoc CLI for site list/deploy).
-
-### Environment variables on Netlify
-
-Build-time and serverless functions need the same secrets as `.env.local` (except service role only on server):
-
-```bash
-pnpm netlify:env-sync    # from apps/portal/.env.local → Netlify UI
+pnpm vercel:env-sync    # apps/portal/.env.local → production (+ preview/dev where supported)
 ```
 
 Minimum production set:
@@ -306,28 +292,24 @@ Minimum production set:
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `NEXT_PUBLIC_APP_URL=https://cryptopay.sale`
 - `RESEND_API_KEY`, `EMAIL_FROM`, `EMAIL_REPLY_TO`, `ADMIN_REVIEW_EMAIL`
-- `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
-- AI keys if chat enabled (`GROQ_API_KEY` or `OPENAI_API_KEY`)
+- `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`
+- AI keys if chat enabled (`GROQ_API_KEY` / `OPENAI_API_KEY`)
 
-### Deploy
+### DNS (Porkbun)
 
-| Method | Command / trigger |
-|--------|-------------------|
-| GitHub Actions | `.github/workflows/netlify.yml` |
-| Manual | `pnpm netlify:deploy` (prod) / `pnpm netlify:preview` |
+```bash
+pnpm dns:plan      # audit
+pnpm dns:apply     # apex A 76.76.21.21 + www → cname.vercel-dns.com
+```
 
-Avoid triple deploy: if CI builds on push, disable redundant Netlify UI auto-build.
-
-### DNS
-
-Domain DNS may be managed via Porkbun scripts (`pnpm dns:*`) — see [PORKBUN-SECRETS.md](./PORKBUN-SECRETS.md). `NEXT_PUBLIC_APP_URL` must match the live hostname.
+CI: `.github/workflows/dns-vercel.yml` (manual). See [PORKBUN-SECRETS.md](./PORKBUN-SECRETS.md).
 
 ---
 
 ## Environment matrix
 
-| Variable | Local `.env.local` | Netlify | Supabase Edge | Browser |
-|----------|-------------------|---------|---------------|---------|
+| Variable | Local `.env.local` | Vercel | Supabase Edge | Browser |
+|----------|-------------------|--------|---------------|---------|
 | `NEXT_PUBLIC_SUPABASE_*` | ✓ | ✓ | — | ✓ |
 | `SUPABASE_SERVICE_ROLE_KEY` | ✓ | ✓ | ✓ (functions) | ✗ |
 | `RESEND_API_KEY` | ✓ | ✓ | ✓ | ✗ |
@@ -353,7 +335,7 @@ Domain DNS may be managed via Porkbun scripts (`pnpm dns:*`) — see [PORKBUN-SE
 ## Agent checklist (configuration changes)
 
 - [ ] Updated `apps/portal/.env.example` comments if new vars added (no real secrets)
-- [ ] Documented sync command (`resend:sync`, `netlify:env-sync`) in this file or LOCAL_DEV
+- [ ] Documented sync command (`resend:sync`, `vercel:env-sync`) in this file or LOCAL_DEV
 - [ ] No `service_role` or `RESEND_API_KEY` in `NEXT_PUBLIC_*`
 - [ ] Supabase Auth redirect URLs mentioned if auth flow changed
 - [ ] Migrations applied with `pnpm db:push` when schema changes

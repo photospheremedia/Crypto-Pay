@@ -39,4 +39,4 @@ gh secret set NEXT_PUBLIC_SUPABASE_URL -R "$REPO" -b "$URL"
 gh secret set NEXT_PUBLIC_SUPABASE_ANON_KEY -R "$REPO" -b "$ANON"
 gh secret set SUPABASE_SERVICE_ROLE_KEY -R "$REPO" -b "$SERVICE"
 
-echo "Done. PR workflow can run Playwright when Netlify validate runs (.github/workflows/netlify.yml test job)."
+echo "Done. PR workflow can run Playwright when Vercel validate runs (.github/workflows/vercel.yml test job)."

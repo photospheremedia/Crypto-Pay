@@ -30,6 +30,4 @@ fi
 echo "==> Setting GitHub secrets on $REPO (values are never printed)"
 gh secret set PORKBUN_API_KEY -R "$REPO" -b "$PORKBUN_API_KEY"
 gh secret set PORKBUN_SECRET_API_KEY -R "$REPO" -b "$PORKBUN_SECRET_API_KEY"
-[[ -n "${NETLIFY_SITE_HOSTNAME:-}" ]] && \
-  gh secret set NETLIFY_SITE_HOSTNAME -R "$REPO" -b "$NETLIFY_SITE_HOSTNAME"
-echo "Done. Collaborators use these in CI; locally use .env.porkbun (gitignored)."
+echo "Done. DNS workflow: .github/workflows/dns-vercel.yml (pnpm dns:apply locally)."

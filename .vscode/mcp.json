@@ -1,10 +1,6 @@
 {
 	"inputs": [],
 	"servers": {
-		"netlify": {
-			"command": "bash",
-			"args": ["${workspaceFolder}/scripts/mcp-netlify.sh"]
-		},
 		"supabase": {
 			"command": "bash",
 			"args": ["${workspaceFolder}/scripts/mcp-supabase.sh"]

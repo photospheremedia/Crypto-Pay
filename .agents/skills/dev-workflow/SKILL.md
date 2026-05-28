@@ -53,8 +53,8 @@ For any library, API, or platform question:
 ```
 1. Project skill     → .agents/skills/<name>/SKILL.md (see library-index.md)
 2. Context7 MCP      → resolve-library-id → query-docs (read tool schemas first)
-3. Domain MCP        → supabase | shadcn | netlify (this repo’s .cursor/mcp.json)
-4. CLI               → --help, official CLI (supabase, netlify, shadcn, etc.)
+3. Domain MCP        → supabase | shadcn (this repo’s .cursor/mcp.json)
+4. CLI               → --help, official CLI (supabase, vercel, shadcn, etc.)
 5. Web               → WebSearch / WebFetch only if 1–4 fail or MCP unavailable
 ```
 
@@ -76,14 +76,14 @@ Detailed steps: `.agents/skills/context7-mcp/SKILL.md`
 |-------|------------|--------|
 | Supabase DB/auth/logs | `supabase` | Advisors + logs before schema guesses |
 | shadcn/ui components | `shadcn` | `apps/portal` cwd; see `shadcn/mcp.md` |
-| Netlify deploy/site | `netlify` | Prefer MCP over CLI — `.cursor/rules/netlify-mcp.mdc` |
+| Vercel deploy/site | — | `docs/VERCEL_MIGRATION.md`, `.cursor/rules/vercel-photosphere.mdc` |
 
 ### CLI (after MCP)
 
 Use for **verification**, not primary docs:
 
 - `pnpm exec supabase --help`, `supabase db …`
-- `cd apps/portal && pnpm exec netlify …` (if MCP down)
+- `pnpm vercel:deploy` / `pnpm vercel:env-sync` (PhotoSphere account)
 - `npx shadcn@latest …` — see `.agents/skills/shadcn/cli.md`
 
 ### Web (last resort)

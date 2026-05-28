@@ -68,11 +68,11 @@ git diff --staged   # review what will be committed
 
 **Never commit** (see `.gitignore`):
 
-- `.env`, `.env.local`, `.env.porkbun`, `.env.netlify`, and other env files with real keys
+- `.env`, `.env.local`, `.env.porkbun`, `.env.vercel`, and other env files with real keys
 - `node_modules`, `.next`, build artifacts, logs, HAR captures, backup dumps
 - OAuth guides or captures that may contain tokens (`GOOGLE_*.md`, `*.har`, etc.)
 
-Use `apps/portal/.env.example` as the template; keep secrets in local env or GitHub/Netlify/Supabase secret stores only.
+Use `apps/portal/.env.example` as the template; keep secrets in local env or GitHub/Vercel/Supabase secret stores only.
 
 ---
 
@@ -104,15 +104,15 @@ Path filters mean **not every push runs every workflow**. If your change is outs
 
 | Workflow | File | Triggers on PR | Deploys on push to `master` |
 |----------|------|----------------|------------------------------|
-| **Netlify CI/CD** | [.github/workflows/netlify.yml](.github/workflows/netlify.yml) | Typecheck; optional Playwright (if portal secrets set); optional Netlify preview | Production deploy (`environment: production`) — typecheck + build only |
+| **Vercel CI/CD** | [.github/workflows/vercel.yml](.github/workflows/vercel.yml) | Typecheck; optional Playwright (if portal secrets set) | Production deploy via Vercel (or use Vercel GitHub app only — pick one) |
 | **Supabase CI/CD** | [.github/workflows/supabase.yml](.github/workflows/supabase.yml) | Migration lint (linked) | `supabase db push` when `supabase/**` changes |
 
 **Implications**
 
-- Portal-only UI work: Netlify validate (and preview if configured) should run.
+- Portal-only UI work: Vercel workflow validate (and optional Playwright) should run.
 - Schema changes: add files under `supabase/migrations/` only — do not use Supabase MCP `apply_migration` on production without a matching repo file (causes CI `db push` drift). Repair: `pnpm supabase:migration:repair-drift`.
-- Avoid double production deploys: Netlify UI “build on push” should stay off if GitHub Actions deploys (see [.cursor/rules/netlify-mcp.mdc](.cursor/rules/netlify-mcp.mdc)).
-- Production host is Netlify (`cryptopay.sale`) only — not Vercel.
+- Avoid double production deploys: use **either** Vercel GitHub app **or** Actions `vercel.yml`, not both.
+- Production host: **Vercel** (`cryptopay.sale`). See [docs/VERCEL_MIGRATION.md](docs/VERCEL_MIGRATION.md).
 
 Run locally before pushing portal changes:
 
@@ -129,8 +129,8 @@ pnpm --filter @crypto-pay/portal typecheck
 |------|-----|
 | `supabase/migrations/` | Applied to production on merge to `master` |
 | `.github/workflows/` | Changes CI/CD behavior for everyone |
-| Repo/org secrets | Netlify, Supabase, Porkbun — admin-only |
-| `netlify.toml`, DNS scripts | Affects `cryptopay.sale` hosting |
+| Repo/org secrets | Vercel, Supabase, Porkbun — admin-only |
+| `vercel.json`, DNS scripts | Affects `cryptopay.sale` hosting |
 
 For breaking or wide refactors, propose in the PR or an issue before large diffs.
 

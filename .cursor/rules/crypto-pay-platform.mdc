@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Crypto Pay platform boundaries
 
-**Read `docs/INDEX.md` first** — then skills as needed: `supabase`, `resend`, `netlify`, **`shadcn`** (UI), and `crypto-pay-platform` under `.agents/skills/`.
+**Read `docs/INDEX.md` first** — then skills as needed: `supabase`, `resend`, **Vercel** (`docs/VERCEL_MIGRATION.md`), **`shadcn`** (UI), and `crypto-pay-platform` under `.agents/skills/`.
 
 ## This repo owns (implement here)
 

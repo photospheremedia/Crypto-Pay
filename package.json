@@ -12,7 +12,6 @@
     "dev:portal:clean": "bash scripts/kill-port.sh 3001 && bash scripts/clean-portal-next.sh && pnpm dev:portal",
     "dev:setup": "pnpm --filter @crypto-pay/portal dev:setup",
     "build:portal": "pnpm --filter @crypto-pay/portal build",
-    "netlify:build": "pnpm install --frozen-lockfile && pnpm --filter @crypto-pay/portal build",
     "typecheck:portal": "pnpm --filter @crypto-pay/portal typecheck",
     "test": "pnpm --filter @crypto-pay/portal test",
     "test:ui": "pnpm --filter @crypto-pay/portal test:ui",
@@ -29,21 +28,9 @@
     "porkbun:ping": "./scripts/porkbun-api.sh ping",
     "porkbun:domains": "./scripts/porkbun-api.sh domains",
     "porkbun:dns": "./scripts/porkbun-api.sh dns",
-    "dns:plan": "python3 scripts/porkbun-dns-netlify.py",
-    "dns:apply": "python3 scripts/porkbun-dns-netlify.py --apply",
-    "dns:clean": "python3 scripts/porkbun-dns-netlify.py --clean",
-    "netlify:setup": "./scripts/setup-netlify-photospheremedia.sh",
-    "netlify:bootstrap": "./scripts/netlify-bootstrap.sh",
-    "netlify:connect": "./scripts/connect-netlify.sh",
-    "netlify:login": "pnpm exec netlify login",
-    "netlify:link": "cd apps/portal && pnpm exec netlify link --id d54f3b5a-17e4-4ddd-b01d-166716dd4dc5",
-    "netlify:audit": "./scripts/netlify-audit-sites.sh",
-    "netlify:secrets": "./scripts/setup-netlify-github-secrets.sh",
-    "netlify:env-sync": "./scripts/sync-netlify-env.sh",
-    "netlify:notifications": "./scripts/setup-netlify-notifications.sh",
-    "netlify:status": "cd apps/portal && pnpm exec netlify status",
-    "netlify:deploy": "cd apps/portal && pnpm exec netlify deploy --build --prod",
-    "netlify:preview": "cd apps/portal && pnpm exec netlify deploy --build",
+    "dns:plan": "python3 scripts/porkbun-dns-vercel.py",
+    "dns:apply": "python3 scripts/porkbun-dns-vercel.py --apply",
+    "dns:clean": "python3 scripts/porkbun-dns-vercel.py --clean",
     "vercel:login": "pnpm exec vercel login",
     "vercel:auth-photosphere": "./scripts/vercel-auth-photosphere.sh",
     "vercel:link": "./scripts/vercel-auth-photosphere.sh --link",
@@ -70,7 +57,6 @@
     "resend:verify": "./scripts/verify-supabase-resend-config.sh && cd apps/portal && pnpm email:verify"
   },
   "devDependencies": {
-    "netlify-cli": "^26.0.2",
     "vercel": "^50.9.6"
   }
 }

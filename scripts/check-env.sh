@@ -167,7 +167,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "📋 QUICK COMMANDS"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "   Portal env template:     cp apps/portal/.env.example apps/portal/.env.local"
-echo "   Sync to Netlify:         pnpm netlify:env-sync"
+echo "   Sync to Vercel:          pnpm vercel:env-sync"
 echo "   Get Supabase keys:       supabase projects api-keys --project-ref $SUPABASE_REF"
 echo "   Regenerate Supabase:     supabase projects api-keys regenerate --project-ref $SUPABASE_REF"
 echo ""

@@ -17,8 +17,8 @@ Follow `.agents/skills/dev-workflow/SKILL.md` during implementation.
 
 1. **Project skill** in `.agents/skills/` (see `dev-workflow/library-index.md`)
 2. **Context7 MCP** — `resolve-library-id` then `query-docs` (read tool schemas first)
-3. **Domain MCP** — `supabase`, `shadcn`, `netlify` per `.cursor/mcp.json`
-4. **CLI** (`--help`, `supabase`, `netlify`, `shadcn`, etc.)
+3. **Domain MCP** — `supabase`, `shadcn` per `.cursor/mcp.json` (Vercel: CLI + `docs/VERCEL_MIGRATION.md`)
+4. **CLI** (`--help`, `supabase`, `vercel`, `shadcn`, etc.)
 5. **Web** only if the above do not answer
 
 Do not rely on training data for version-specific Next.js, Supabase, or library APIs.

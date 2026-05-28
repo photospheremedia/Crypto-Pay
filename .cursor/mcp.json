@@ -1,9 +1,5 @@
 {
   "mcpServers": {
-    "netlify": {
-      "command": "bash",
-      "args": ["scripts/mcp-netlify.sh"]
-    },
     "supabase": {
       "command": "bash",
       "args": ["scripts/mcp-supabase.sh"]

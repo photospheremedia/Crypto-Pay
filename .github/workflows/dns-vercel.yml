@@ -1,5 +1,5 @@
-# Point Porkbun DNS at Netlify (apex + www). Requires GitHub secrets from pnpm porkbun:secrets.
-name: DNS — Porkbun → Netlify
+# Point Porkbun DNS at Vercel (apex A + www CNAME). Requires GitHub secrets from pnpm porkbun:secrets.
+name: DNS — Porkbun → Vercel
 
 on:
   workflow_dispatch:
@@ -10,24 +10,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Apply Netlify DNS records via Porkbun API
+      - name: Apply Vercel DNS records via Porkbun API
         env:
           PORKBUN_API_KEY: ${{ secrets.PORKBUN_API_KEY }}
           PORKBUN_SECRET_API_KEY: ${{ secrets.PORKBUN_SECRET_API_KEY }}
-          NETLIFY_SITE_HOSTNAME: ${{ secrets.NETLIFY_SITE_HOSTNAME }}
           PORKBUN_DOMAIN: cryptopay.sale
         run: |
           if [ -z "$PORKBUN_API_KEY" ] || [ -z "$PORKBUN_SECRET_API_KEY" ]; then
             echo "Missing PORKBUN_API_KEY or PORKBUN_SECRET_API_KEY. Run: pnpm porkbun:secrets"
             exit 1
           fi
-          if [ -z "$NETLIFY_SITE_HOSTNAME" ]; then
-            echo "Missing NETLIFY_SITE_HOSTNAME (e.g. dazzling-pithivier-e119b1.netlify.app)"
-            exit 1
-          fi
           printf '%s\n' \
             "PORKBUN_API_KEY=$PORKBUN_API_KEY" \
             "PORKBUN_SECRET_API_KEY=$PORKBUN_SECRET_API_KEY" \
-            "NETLIFY_SITE_HOSTNAME=$NETLIFY_SITE_HOSTNAME" \
             "PORKBUN_DOMAIN=cryptopay.sale" > .env.porkbun
-          ./scripts/porkbun-dns-netlify.py --apply
+          python3 scripts/porkbun-dns-vercel.py --clean --apply

@@ -121,4 +121,4 @@ fi
 python3 -c "import json; d=json.load(open('/tmp/supabase-smtp-patch.json')); print('  smtp_host:', d.get('smtp_host')); print('  smtp_admin_email:', d.get('smtp_admin_email')); print('  site_url:', d.get('site_url'))"
 rm -f /tmp/supabase-smtp-patch.json
 
-echo "Done. Run pnpm netlify:env-sync to push RESEND_API_KEY to Netlify."
+echo "Done. Run pnpm vercel:env-sync to push RESEND_API_KEY to Vercel."

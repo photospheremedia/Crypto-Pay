@@ -1,4 +1,4 @@
-# Portal production deploy via Vercel (primary after Netlify → Vercel migration).
+# Portal CI/CD — Vercel (production hosting). Netlify removed from repo.
 # If the Vercel GitHub app also deploys on push, disable one path to avoid double deploys:
 #   Project → Settings → Git → uncheck auto-deploy, OR skip this workflow's deploy job.
 name: Vercel CI/CD
