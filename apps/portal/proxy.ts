@@ -15,7 +15,12 @@ import {
   type UserRealm,
 } from "@/lib/auth/user-realm";
 import { hasSupabaseSessionCookie } from "@/lib/auth/has-supabase-session-cookie";
+import {
+  stripLocaleCookieFromRequest,
+  stripLocaleCookieFromResponse,
+} from "@/lib/i18n/functional-consent-cookie";
 import { mergeIntlMiddlewareResponse } from "@/lib/i18n/merge-intl-middleware-response";
+import { redirectWithProxyCookies } from "@/lib/proxy/finalize-proxy-response";
 import { stripLocale } from "@/lib/i18n/strip-locale";
 import { isMetadataRoute } from "@/lib/routing/metadata-routes";
 
@@ -42,7 +47,10 @@ async function handleProxy(request: NextRequest) {
     return NextResponse.next();
   }
 
+  stripLocaleCookieFromRequest(request);
+
   const intlResponse = handleIntl(request);
+  stripLocaleCookieFromResponse(request, intlResponse);
 
   if (
     rawPathname.startsWith("/auth/callback") ||
@@ -97,6 +105,7 @@ async function handleProxy(request: NextRequest) {
         cookiesToSet.forEach(({ name, value, options }) =>
           response.cookies.set(name, value, options),
         );
+        stripLocaleCookieFromResponse(request, response);
       },
     },
   });
@@ -126,7 +135,7 @@ async function handleProxy(request: NextRequest) {
   if (isAdminRoute && !user) {
     const redirectUrl = new URL(localizedPath("/login"), request.url);
     redirectUrl.searchParams.set("redirect", rawPathname);
-    return NextResponse.redirect(redirectUrl);
+    return redirectWithProxyCookies(request, redirectUrl, response, intlResponse);
   }
 
   const needsRealm =
@@ -144,7 +153,7 @@ async function handleProxy(request: NextRequest) {
   if (isAdminRoute && user && realm !== "admin") {
     const redirectUrl = new URL(localizedPath("/account"), request.url);
     redirectUrl.searchParams.set("error", "admin_required");
-    return NextResponse.redirect(redirectUrl);
+    return redirectWithProxyCookies(request, redirectUrl, response, intlResponse);
   }
 
   if (user && isStaffOnlyPath(pathname) && realm === "admin") {
@@ -152,7 +161,7 @@ async function handleProxy(request: NextRequest) {
       localizedPath(getHomePathForRealm("admin")),
       request.url,
     );
-    return NextResponse.redirect(redirectUrl);
+    return redirectWithProxyCookies(request, redirectUrl, response, intlResponse);
   }
 
   if (user && isAdminPath(pathname) && realm === "merchant") {
@@ -161,49 +170,26 @@ async function handleProxy(request: NextRequest) {
       request.url,
     );
     redirectUrl.searchParams.set("error", "admin_required");
-    return NextResponse.redirect(redirectUrl);
+    return redirectWithProxyCookies(request, redirectUrl, response, intlResponse);
   }
 
   if (isProtectedRoute && !user) {
     const redirectUrl = new URL(localizedPath("/login"), request.url);
     redirectUrl.searchParams.set("redirect", rawPathname);
-    return NextResponse.redirect(redirectUrl);
+    return redirectWithProxyCookies(request, redirectUrl, response, intlResponse);
   }
 
   if (isAuthRoute && user && pathname !== "/app" && realm) {
     const destination = localizedPath(getHomePathForRealm(realm));
-    return NextResponse.redirect(new URL(destination, request.url));
-  }
-
-  if (pathname.startsWith("/api/user")) {
-    response.headers.set(
-      "Cache-Control",
-      "private, max-age=300, stale-while-revalidate=60",
+    return redirectWithProxyCookies(
+      request,
+      new URL(destination, request.url),
+      response,
+      intlResponse,
     );
   }
 
-  if (pathname.startsWith("/api/products")) {
-    response.headers.set(
-      "Cache-Control",
-      "public, max-age=900, stale-while-revalidate=300",
-    );
-  }
-
-  if (
-    pathname.startsWith("/api/auth") ||
-    pathname.startsWith("/api/account/password") ||
-    request.method !== "GET"
-  ) {
-    response.headers.set(
-      "Cache-Control",
-      "no-cache, no-store, must-revalidate",
-    );
-  }
-
-  if (pathname.startsWith("/api/")) {
-    response.headers.set("X-Robots-Tag", "noindex, nofollow");
-  }
-
+  stripLocaleCookieFromResponse(request, response);
   return response;
 }
 

@@ -9,7 +9,12 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { safeJsonParse, safeJsonParseObject } from '@/lib/errors';
+import {
+  clearFunctionalConsentCookieClient,
+  setFunctionalConsentCookieClient,
+} from '@/lib/i18n/functional-consent-cookie';
 import { clearLocaleCookieClient } from '@/lib/i18n/locale-preference';
+import { clearThemeCookieClient } from '@/lib/theme/theme-cookie-client';
 import {
   Dialog,
   DialogContent,
@@ -385,6 +390,9 @@ export function CookieConsent() {
       setPreferences(prefs);
       if (localStorage.getItem(COOKIE_PREFERENCES_KEY)) {
         initializeTracking(prefs);
+        if (prefs.functional) {
+          setFunctionalConsentCookieClient();
+        }
       }
     }
   }, []);
@@ -409,8 +417,12 @@ export function CookieConsent() {
     // Initialize tracking based on new preferences
     initializeTracking(prefs);
 
-    if (!prefs.functional) {
+    if (prefs.functional) {
+      setFunctionalConsentCookieClient();
+    } else {
+      clearFunctionalConsentCookieClient();
       clearLocaleCookieClient();
+      clearThemeCookieClient();
     }
 
     // Dispatch event for other components to react

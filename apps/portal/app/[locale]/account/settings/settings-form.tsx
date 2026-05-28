@@ -1,11 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import type { User } from "@supabase/supabase-js";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { refreshMerchantProfileCache } from "@/app/[locale]/account/actions";
+import { useApplyUserTheme } from "@/lib/theme/use-apply-user-theme";
+import type { UserThemeSetting } from "@/lib/theme/theme-preference";
 import { saveMerchantSettings } from "./actions";
 
 interface SettingsFormProps {
@@ -18,6 +20,7 @@ export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
   const t = useTranslations("Account.settings");
   const tCommon = useTranslations("Common");
   const router = useRouter();
+  const applyUserTheme = useApplyUserTheme();
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
@@ -27,14 +30,20 @@ export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
     business_type: profile?.business_type || "online_store",
   });
 
+  const initialTheme = (settings?.theme as UserThemeSetting | undefined) || "light";
+
   const [settingsData, setSettingsData] = useState({
-    theme: settings?.theme || "light",
+    theme: initialTheme,
     currency: settings?.currency || "USD",
     email_notifications: settings?.email_notifications ?? true,
     sms_notifications: settings?.sms_notifications ?? false,
     order_updates: settings?.order_updates ?? true,
     marketing_emails: settings?.marketing_emails ?? false,
   });
+
+  useEffect(() => {
+    applyUserTheme(initialTheme);
+  }, [applyUserTheme, initialTheme]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -44,6 +53,7 @@ export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
     try {
       await saveMerchantSettings({ profile: profileData, settings: settingsData });
 
+      applyUserTheme(settingsData.theme as UserThemeSetting);
       await refreshMerchantProfileCache();
       setMessage({ type: "success", text: t("savedSuccess") });
       router.refresh();
@@ -151,7 +161,11 @@ export function SettingsForm({ user, profile, settings }: SettingsFormProps) {
             <select
               id="theme"
               value={settingsData.theme}
-              onChange={(e) => setSettingsData({ ...settingsData, theme: e.target.value })}
+              onChange={(e) => {
+                const theme = e.target.value as UserThemeSetting;
+                setSettingsData({ ...settingsData, theme });
+                applyUserTheme(theme);
+              }}
               className="mt-1 block w-full rounded-md border border-slate-300 px-3 py-2 focus:border-emerald-500 focus:ring-emerald-500"
             >
               <option value="light">{t("themeLight")}</option>

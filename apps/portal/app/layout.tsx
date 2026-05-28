@@ -2,9 +2,12 @@ import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
 import { getLocale } from "next-intl/server";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ToastProvider } from "@/hooks/use-toast";
 import { isRtlLocale } from "@/i18n/routing";
 import { getHtmlLang } from "@/lib/i18n/locale-config";
+import { getServerTheme } from "@/lib/theme/get-server-theme";
+import { serverHtmlThemeClass } from "@/lib/theme/theme-preference";
 import { BRAND } from "@/lib/cryptopay/constants";
 import {
   SITE_METADATA,
@@ -114,15 +117,20 @@ export default async function RootLayout({
 }) {
   const locale = await getLocale();
   const dir = isRtlLocale(locale) ? "rtl" : "ltr";
+  const theme = await getServerTheme();
+  const themeClass = serverHtmlThemeClass(theme);
 
   return (
     <html
       lang={getHtmlLang(locale)}
       dir={dir}
-      className={`bg-white dark:bg-gray-950 text-black dark:text-white ${manrope.className}`}
+      suppressHydrationWarning
+      className={`${themeClass} bg-white dark:bg-gray-950 text-black dark:text-white ${manrope.className}`}
     >
       <body className="min-h-dvh bg-gray-50">
-        <ToastProvider>{children}</ToastProvider>
+        <ThemeProvider defaultTheme={theme}>
+          <ToastProvider>{children}</ToastProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
