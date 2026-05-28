@@ -16,7 +16,11 @@ import {
 import { createClient } from "@/lib/supabase/server";
 
 function loginPath(homePath: string): string {
-  return `/login?redirect=${encodeURIComponent(homePath)}`;
+  const params = new URLSearchParams({
+    signedOut: "1",
+    redirect: homePath,
+  });
+  return `/login?${params.toString()}`;
 }
 
 function invalidateAuthCaches(userId?: string) {
@@ -71,7 +75,7 @@ export async function signOutForRealm(expectedRealm: UserRealm): Promise<never> 
     redirect(realm === "admin" ? ADMIN_HOME_PATH : MERCHANT_HOME_PATH);
   }
 
-  const { error } = await supabase.auth.signOut({ scope: "local" });
+  const { error } = await supabase.auth.signOut();
   if (error) {
     console.error(`[signOut:${expectedRealm}]`, error.message);
   }

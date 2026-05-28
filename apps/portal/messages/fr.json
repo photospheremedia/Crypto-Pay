@@ -622,6 +622,8 @@
     "signInWithEmail": "Connectez-vous avec {email} pour continuer.",
     "signInToDashboard": "Connectez-vous pour accéder à votre tableau de bord.",
     "alreadySignedIn": "Vous êtes déjà connecté.",
+    "signedOutTitle": "Vous êtes déconnecté",
+    "signedOutHint": "Reconnectez-vous pour accéder à la console admin ou à un autre compte.",
     "signedInHint": "Accédez à votre tableau de bord ou déconnectez-vous pour changer de compte.",
     "continueToDashboard": "Continuer vers le tableau de bord",
     "signOut": "Se déconnecter",

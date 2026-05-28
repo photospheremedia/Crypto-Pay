@@ -179,7 +179,9 @@ async function handleProxy(request: NextRequest) {
     return redirectWithProxyCookies(request, redirectUrl, response, intlResponse);
   }
 
-  if (isAuthRoute && user && pathname !== "/app" && realm) {
+  const justSignedOut = request.nextUrl.searchParams.get("signedOut") === "1";
+
+  if (isAuthRoute && user && pathname !== "/app" && realm && !justSignedOut) {
     const destination = localizedPath(getHomePathForRealm(realm));
     return redirectWithProxyCookies(
       request,

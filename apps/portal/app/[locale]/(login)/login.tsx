@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState, useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { Input } from '@/components/ui/input';
@@ -14,13 +14,17 @@ import { ResendConfirmationButton } from '@/components/auth/resend-confirmation-
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { getSafeLoginContinuePath } from '@/lib/auth/user-realm';
 import { cn } from '@/lib/utils';
 
 export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
   const t = useTranslations('Auth');
   const tCommon = useTranslations('Common');
+  const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect') ?? searchParams.get('redirectTo');
+  const signedOut = searchParams.get('signedOut') === '1';
+  const continueHref = getSafeLoginContinuePath(redirect);
   const priceId = searchParams.get('priceId');
   const accountCreated = searchParams.get('created') === '1';
   const verificationPending = searchParams.get('verify') === '1';
@@ -45,13 +49,22 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
     const checkUser = async () => {
       const supabase = getSupabaseBrowserClientOptional();
       if (!supabase) return;
+
+      if (signedOut) {
+        await supabase.auth.signOut();
+        setExistingUser(false);
+        setFirstName(null);
+        router.refresh();
+        return;
+      }
+
       const { data } = await supabase.auth.getUser();
       setExistingUser(!!data.user);
       const maybeFirstName = data.user?.user_metadata?.first_name;
       setFirstName(typeof maybeFirstName === 'string' && maybeFirstName.trim() ? maybeFirstName.trim() : null);
     };
     void checkUser();
-  }, []);
+  }, [router, signedOut]);
 
   const buildAuthHref = (target: '/login' | '/signup') => {
     const params = new URLSearchParams();
@@ -62,7 +75,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
   };
 
   return (
-    <div className="flex min-h-[calc(100dvh-5.5rem)] items-center justify-center bg-linear-to-br from-slate-50 via-white to-emerald-50/30 px-4 sm:px-6 lg:px-8">
+    <div className="flex flex-1 w-full items-center justify-center px-4 py-8 sm:px-6 sm:py-10">
       <div className="w-full max-w-md">
         <Card className="border-slate-200/80 shadow-lg">
           <CardHeader className="text-center">
@@ -114,7 +127,17 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
               </Alert>
             ) : null}
 
-            {existingUser && mode === 'signin' ? (
+            {signedOut && mode === 'signin' ? (
+              <Alert className="border-slate-200/80 bg-white/80 text-slate-900">
+                <CheckCircle2 />
+                <AlertTitle>{t('signedOutTitle')}</AlertTitle>
+                <AlertDescription className="text-slate-700">
+                  {t('signedOutHint')}
+                </AlertDescription>
+              </Alert>
+            ) : null}
+
+            {existingUser && mode === 'signin' && !signedOut ? (
               <Alert className="border-emerald-200/70 bg-emerald-50/60 text-emerald-950">
                 <CheckCircle2 />
                 <AlertTitle>{t('alreadySignedIn')}</AlertTitle>
@@ -122,7 +145,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                   <p>{t('signedInHint')}</p>
                   <div className="flex flex-col gap-2 pt-2 sm:flex-row">
                     <Button asChild className="rounded-full">
-                      <Link href="/account">{t('continueToDashboard')}</Link>
+                      <Link href={continueHref}>{t('continueToDashboard')}</Link>
                     </Button>
                     <Button
                       type="button"
@@ -132,6 +155,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                         const supabase = getSupabaseBrowserClientOptional();
                         if (supabase) await supabase.auth.signOut();
                         setExistingUser(false);
+                        router.refresh();
                       }}
                     >
                       <LogOut data-icon="inline-start" />
@@ -155,6 +179,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                         const supabase = getSupabaseBrowserClientOptional();
                         if (supabase) await supabase.auth.signOut();
                         setExistingUser(false);
+                        router.refresh();
                       }}
                       className="font-medium underline underline-offset-2"
                     >

@@ -18,7 +18,7 @@ export async function AuthChromeLayout({
 
   if (variant === "marketing") {
     return (
-      <div className="min-h-screen bg-linear-to-br from-slate-50 via-emerald-50/30 to-slate-50 text-slate-900">
+      <div className="flex min-h-screen flex-col bg-linear-to-br from-slate-50 via-emerald-50/30 to-slate-50 text-slate-900">
         <header className="sticky left-0 right-0 top-0 z-30 border-b border-white/70 bg-white/95 shadow-sm backdrop-blur-md">
           <div className="mx-auto flex w-full min-w-0 max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-4 sm:gap-4 sm:px-6">
             <Logo size="md" showText={true} />
@@ -45,7 +45,9 @@ export async function AuthChromeLayout({
             </Link>
           </div>
         </header>
-        <main className={mainBelowHeaderClass}>{children}</main>
+        <main className={`${mainBelowHeaderClass} flex flex-1 flex-col`}>
+          {children}
+        </main>
       </div>
     );
   }

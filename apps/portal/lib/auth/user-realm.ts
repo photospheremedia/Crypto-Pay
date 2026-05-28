@@ -75,6 +75,32 @@ export function isPathAllowedForRealm(pathname: string, realm: UserRealm): boole
   return false;
 }
 
+/** Safe in-app target for "continue" on login when a session cookie is still visible. */
+export function getSafeLoginContinuePath(
+  redirect: string | null | undefined,
+): string {
+  if (!redirect || typeof redirect !== "string") {
+    return MERCHANT_HOME_PATH;
+  }
+
+  const trimmed = redirect.trim();
+  if (
+    !trimmed.startsWith("/") ||
+    trimmed.startsWith("//") ||
+    trimmed.includes("://") ||
+    trimmed.includes("\\")
+  ) {
+    return MERCHANT_HOME_PATH;
+  }
+
+  const base = pathBase(trimmed);
+  if (isAdminPath(base) || isMerchantAccountPath(base) || isMerchantAppPath(base)) {
+    return trimmed;
+  }
+
+  return MERCHANT_HOME_PATH;
+}
+
 export function sanitizePostAuthRedirect(
   requested: string | null | undefined,
   realm: UserRealm,

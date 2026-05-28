@@ -622,6 +622,8 @@
     "signInWithEmail": "Inicia sesión con {email} para continuar.",
     "signInToDashboard": "Inicia sesión para continuar al panel.",
     "alreadySignedIn": "Ya has iniciado sesión.",
+    "signedOutTitle": "Has cerrado sesión",
+    "signedOutHint": "Inicia sesión de nuevo para continuar en la consola de administración u otra cuenta.",
     "signedInHint": "Ve a tu panel o cierra sesión para cambiar de cuenta.",
     "continueToDashboard": "Continuar al panel",
     "signOut": "Cerrar sesión",

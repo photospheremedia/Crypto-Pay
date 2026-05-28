@@ -642,6 +642,8 @@
     "signInWithEmail": "Sign in with {email} to continue.",
     "signInToDashboard": "Sign in to continue to your dashboard.",
     "alreadySignedIn": "You are already signed in.",
+    "signedOutTitle": "You have been signed out",
+    "signedOutHint": "Sign in again to continue to the admin console or another account.",
     "signedInHint": "Go to your dashboard or sign out to switch accounts.",
     "continueToDashboard": "Continue to dashboard",
     "signOut": "Sign out",

@@ -622,6 +622,8 @@
     "signInWithEmail": "Melden Sie sich mit {email} an, um fortzufahren.",
     "signInToDashboard": "Melden Sie sich an, um zum Dashboard zu gelangen.",
     "alreadySignedIn": "Sie sind bereits angemeldet.",
+    "signedOutTitle": "Sie wurden abgemeldet",
+    "signedOutHint": "Melden Sie sich erneut an, um zur Admin-Konsole oder einem anderen Konto zu gelangen.",
     "signedInHint": "Gehen Sie zum Dashboard oder melden Sie sich ab, um das Konto zu wechseln.",
     "continueToDashboard": "Zum Dashboard",
     "signOut": "Abmelden",
