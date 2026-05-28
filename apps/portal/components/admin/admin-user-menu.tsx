@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { Settings, LogOut, Shield, Crown, ChevronDown } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { signOutAdmin } from "@/app/[locale]/(login)/actions";
+import { SignOutForm } from "@/components/auth/sign-out-form";
 
 interface AdminUserMenuProps {
   isSuperAdmin?: boolean;
@@ -112,7 +113,7 @@ export function AdminUserMenu({ isSuperAdmin }: AdminUserMenuProps) {
 
           {/* Sign Out */}
           <div className="border-t border-slate-200 py-2">
-            <form action={signOutAdmin}>
+            <SignOutForm action={signOutAdmin}>
               <button
                 type="submit"
                 className="flex w-full items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
@@ -120,7 +121,7 @@ export function AdminUserMenu({ isSuperAdmin }: AdminUserMenuProps) {
                 <LogOut className="h-4 w-4" />
                 Sign Out
               </button>
-            </form>
+            </SignOutForm>
           </div>
         </div>
       )}

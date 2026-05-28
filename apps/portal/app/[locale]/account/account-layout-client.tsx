@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { signOutMerchant } from "@/app/[locale]/(login)/actions";
+import { SignOutForm } from "@/components/auth/sign-out-form";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { CryptoPayLogo } from "@/components/cryptopay/crypto-pay-logo";
 import { AccountUserMenu } from "@/components/account/account-user-menu";
@@ -107,7 +108,10 @@ export function AccountLayoutClient({
         ))}
       </nav>
 
-      <form action={signOutMerchant} className="mt-3 border-t border-slate-200/60 pt-3">
+      <SignOutForm
+        action={signOutMerchant}
+        className="mt-3 border-t border-slate-200/60 pt-3"
+      >
         <button
           type="submit"
           className="group flex w-full items-center gap-3 rounded-xl border border-slate-200/60 bg-white/70 px-4 py-3 text-sm font-medium text-slate-600 shadow-sm backdrop-blur-sm transition-all hover:-translate-x-0.5 hover:border-red-300/60 hover:bg-red-50/80 hover:text-red-600 hover:shadow-md"
@@ -115,7 +119,7 @@ export function AccountLayoutClient({
           <LogOut className="h-4 w-4 transition-transform group-hover:scale-110" />
           <span>{t("signOut")}</span>
         </button>
-      </form>
+      </SignOutForm>
     </>
   );
 

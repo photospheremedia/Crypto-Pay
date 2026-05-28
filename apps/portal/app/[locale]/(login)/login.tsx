@@ -14,6 +14,7 @@ import { ResendConfirmationButton } from '@/components/auth/resend-confirmation-
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { consumePendingSignOut } from '@/lib/auth/pending-sign-out';
 import { getSafeLoginContinuePath } from '@/lib/auth/user-realm';
 import { cn } from '@/lib/utils';
 
@@ -23,8 +24,8 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect') ?? searchParams.get('redirectTo');
-  const signedOut = searchParams.get('signedOut') === '1';
   const continueHref = getSafeLoginContinuePath(redirect);
+  const [signedOutNotice, setSignedOutNotice] = useState(false);
   const priceId = searchParams.get('priceId');
   const accountCreated = searchParams.get('created') === '1';
   const verificationPending = searchParams.get('verify') === '1';
@@ -46,25 +47,36 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
   }, [existingUser, firstName, mode, t]);
 
   useEffect(() => {
-    const checkUser = async () => {
+    if (searchParams.get('signedOut') !== '1') return;
+
+    setSignedOutNotice(true);
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('signedOut');
+    const query = params.toString();
+    router.replace(query ? `/login?${query}` : '/login', { scroll: false });
+  }, [router, searchParams]);
+
+  useEffect(() => {
+    const syncSession = async () => {
       const supabase = getSupabaseBrowserClientOptional();
       if (!supabase) return;
 
-      if (signedOut) {
-        await supabase.auth.signOut();
-        setExistingUser(false);
-        setFirstName(null);
-        router.refresh();
-        return;
+      if (consumePendingSignOut()) {
+        await supabase.auth.signOut({ scope: 'local' });
       }
 
       const { data } = await supabase.auth.getUser();
       setExistingUser(!!data.user);
       const maybeFirstName = data.user?.user_metadata?.first_name;
-      setFirstName(typeof maybeFirstName === 'string' && maybeFirstName.trim() ? maybeFirstName.trim() : null);
+      setFirstName(
+        typeof maybeFirstName === 'string' && maybeFirstName.trim()
+          ? maybeFirstName.trim()
+          : null,
+      );
+      router.refresh();
     };
-    void checkUser();
-  }, [router, signedOut]);
+    void syncSession();
+  }, [router, searchParams]);
 
   const buildAuthHref = (target: '/login' | '/signup') => {
     const params = new URLSearchParams();
@@ -127,7 +139,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
               </Alert>
             ) : null}
 
-            {signedOut && mode === 'signin' ? (
+            {signedOutNotice && mode === 'signin' ? (
               <Alert className="border-slate-200/80 bg-white/80 text-slate-900">
                 <CheckCircle2 />
                 <AlertTitle>{t('signedOutTitle')}</AlertTitle>
@@ -137,7 +149,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
               </Alert>
             ) : null}
 
-            {existingUser && mode === 'signin' && !signedOut ? (
+            {existingUser && mode === 'signin' && !signedOutNotice ? (
               <Alert className="border-emerald-200/70 bg-emerald-50/60 text-emerald-950">
                 <CheckCircle2 />
                 <AlertTitle>{t('alreadySignedIn')}</AlertTitle>
@@ -153,7 +165,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                       className="rounded-full"
                       onClick={async () => {
                         const supabase = getSupabaseBrowserClientOptional();
-                        if (supabase) await supabase.auth.signOut();
+                        if (supabase) await supabase.auth.signOut({ scope: 'local' });
                         setExistingUser(false);
                         router.refresh();
                       }}
@@ -177,7 +189,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                       type="button"
                       onClick={async () => {
                         const supabase = getSupabaseBrowserClientOptional();
-                        if (supabase) await supabase.auth.signOut();
+                        if (supabase) await supabase.auth.signOut({ scope: 'local' });
                         setExistingUser(false);
                         router.refresh();
                       }}

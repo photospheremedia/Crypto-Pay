@@ -75,7 +75,9 @@ export async function signOutForRealm(expectedRealm: UserRealm): Promise<never> 
     redirect(realm === "admin" ? ADMIN_HOME_PATH : MERCHANT_HOME_PATH);
   }
 
-  const { error } = await supabase.auth.signOut();
+  // Admin: revoke all sessions. Merchant: this browser only (Supabase sign-out scopes).
+  const scope = expectedRealm === "admin" ? "global" : "local";
+  const { error } = await supabase.auth.signOut({ scope });
   if (error) {
     console.error(`[signOut:${expectedRealm}]`, error.message);
   }

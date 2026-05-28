@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import { signOutMerchant } from "@/app/[locale]/(login)/actions";
+import { SignOutForm } from "@/components/auth/sign-out-form";
 
 export interface AccountUserMenuProps {
   email: string;
@@ -124,7 +125,7 @@ export function AccountUserMenu({
           </div>
 
           <div className="border-t border-slate-200 py-2">
-            <form action={signOutMerchant}>
+            <SignOutForm action={signOutMerchant}>
               <button
                 type="submit"
                 role="menuitem"
@@ -133,7 +134,7 @@ export function AccountUserMenu({
                 <LogOut className="h-4 w-4" />
                 {t("signOut")}
               </button>
-            </form>
+            </SignOutForm>
           </div>
         </div>
       )}
