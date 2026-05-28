@@ -1,0 +1,57 @@
+{
+  "welcome": {
+    "subject": "Bienvenido a Crypto Pay",
+    "preheader": "Bienvenido a Crypto Pay — añade tu wallet de cobro.",
+    "heroTitle": "Bienvenido, {firstName}",
+    "heroSubtitle": "Completa la configuración añadiendo tu primera wallet de cobro.",
+    "thanks": "Gracias por crear una cuenta de comercio en <strong>Crypto Pay</strong>{businessSuffix}.",
+    "thanksBusinessSuffix": " para <strong>{businessName}</strong>",
+    "multiWallet": "Tu cuenta admite <strong>varias wallets de cobro</strong> en BTC, ETH, USDT, USDC y LTC. Cada dirección se revisa antes de usarse.",
+    "nextStepsTitle": "Próximos pasos",
+    "step1": "Añade una dirección pública de cobro",
+    "step2": "Nuestro equipo verifica la wallet (1–2 días laborables)",
+    "step3": "Acepta pagos cuando el checkout esté disponible",
+    "cta": "Añadir wallet de cobro",
+    "support": "¿Preguntas? Responde a este correo o escribe a <a href=\"mailto:{supportEmail}\" style=\"color:#059669;font-weight:600;\">{supportEmail}</a>"
+  },
+  "wallet_submitted": {
+    "subject": "Hemos recibido tu wallet de cobro",
+    "preheader": "Tu wallet de cobro está pendiente de verificación en Crypto Pay.",
+    "heroTitle": "Wallet de cobro enviada",
+    "heroSubtitle": "{walletLabel}",
+    "body": "Gracias. Hemos recibido tu wallet de cobro y la hemos puesto en cola de revisión. La mayoría de direcciones se verifican en <strong>uno o dos días laborables</strong>.",
+    "statusPending": "Pendiente de verificación",
+    "multiWalletNote": "Puedes registrar <strong>varias wallets de cobro</strong> (redes o etiquetas distintas). Cada dirección se revisa por separado.",
+    "cta": "Ver estado de la wallet",
+    "securityNote": "Solo pedimos direcciones públicas — nunca claves privadas ni frases semilla.",
+    "onboarding": {
+      "accountCreated": "Cuenta creada",
+      "addWallet": "Añadir wallet de cobro",
+      "adminVerifies": "El equipo verifica la dirección",
+      "acceptPayments": "Aceptar pagos (próximamente)"
+    }
+  },
+  "wallet_status": {
+    "verified": {
+      "subject": "Wallet verificada: {walletLabel}",
+      "preheader": "{walletLabel} está verificada en Crypto Pay",
+      "heroTitle": "Wallet verificada",
+      "body": "Tu wallet de cobro <strong>{walletLabel}</strong> ha sido verificada. Se usará para liquidaciones cripto cuando el checkout esté activo en tu cuenta.",
+      "statusVerified": "Verificada",
+      "cta": "Abrir panel de cuenta"
+    },
+    "rejected": {
+      "subject": "Wallet no aprobada: {walletLabel}",
+      "preheader": "{walletLabel} requiere una actualización",
+      "heroTitle": "Wallet no aprobada",
+      "body": "No hemos podido aprobar <strong>{walletLabel}</strong> en este momento.{reasonBlock}<br><br>Actualiza la dirección en tu panel y vuelve a enviarla.",
+      "reasonPrefix": "<br><br><strong>Motivo:</strong> {reason}",
+      "statusRejected": "No aprobada",
+      "cta": "Actualizar wallet de cobro"
+    },
+    "network": "Red",
+    "address": "Dirección",
+    "status": "Estado",
+    "support": "¿Necesitas ayuda? Responde a este correo o contacta con <a href=\"mailto:{supportEmail}\" style=\"color:#059669;font-weight:600;\">{supportEmail}</a>"
+  }
+}

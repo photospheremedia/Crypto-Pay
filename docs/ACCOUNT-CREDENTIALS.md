@@ -17,7 +17,6 @@ Open `docs/ACCOUNT-CREDENTIALS.local.md` in your editor or password manager expo
 |------|------------------|-----------|
 | **PhotoSphere (production)** | `photospheremedia00@gmail.com` | Supabase, Netlify, GitHub org, Resend ops, local dev admin |
 | **GitHub org** | [photospheremedia/Crypto-Pay](https://github.com/photospheremedia/Crypto-Pay) | Source + Actions secrets |
-| **Vercel (optional)** | PhotoSphere team / `photospheremedia` GitHub login | Alternate deploy path |
 | **Netlify (production host)** | Netlify via GitHub `photospheremedia` | Site `crypto-pay-portal` |
 
 PhotoSphere is the **canonical** owner for Crypto Pay infrastructure.
@@ -57,7 +56,6 @@ Create tokens: https://supabase.com/dashboard/account/tokens (sign in as `photos
 | Check linked project / token | `pnpm supabase:status` |
 | Local dev login user | `pnpm dev:setup` (default `photospheremedia00@gmail.com`) |
 | Netlify link + env | `pnpm netlify:connect`, `pnpm netlify:env-sync` |
-| Vercel (PhotoSphere) | `pnpm vercel:setup` |
 | GitHub Actions secrets map | `.github/secrets.env.example` |
 
 ## Local dev defaults

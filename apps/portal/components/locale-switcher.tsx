@@ -68,7 +68,9 @@ function LocaleMenuItem({
       )}
     >
       <LocaleFlag locale={code} size="md" />
-      <span className="min-w-0 flex-1 truncate text-sm font-medium">{t(code)}</span>
+      <span className="min-w-0 flex-1 text-pretty text-sm font-medium leading-snug">
+        {t(code)}
+      </span>
       {selected ? (
         <Check className="size-4 shrink-0 text-emerald-600" aria-hidden />
       ) : (
@@ -130,7 +132,7 @@ function LocaleGrid({
                 <Check className="size-4 text-emerald-600 dark:text-emerald-400" aria-hidden />
               ) : null}
             </span>
-            <span className="truncate text-sm font-semibold">{t(code)}</span>
+            <span className="line-clamp-2 text-sm font-semibold leading-snug">{t(code)}</span>
           </button>
         );
       })}
@@ -174,7 +176,7 @@ export function LocaleSwitcher({
         <SelectTrigger
           className={cn(
             pendingClass,
-            "h-11 gap-2 rounded-xl",
+            "h-11 gap-2 rounded-xl [&>span]:line-clamp-none [&>span]:whitespace-normal",
             isMarketing &&
               "border-slate-200/80 bg-white/90 shadow-sm dark:border-slate-700 dark:bg-slate-900/80",
             className,
@@ -183,13 +185,16 @@ export function LocaleSwitcher({
         >
           <SelectValue placeholder={t(locale)} />
         </SelectTrigger>
-        <SelectContent align="start" className={cn(popoverLayerClassName, "rounded-xl")}>
+        <SelectContent
+          align="start"
+          className={cn(popoverLayerClassName, "min-w-[var(--radix-select-trigger-width)] rounded-xl")}
+        >
           <SelectGroup>
             {localeCodes.map((code) => (
               <SelectItem key={code} value={code} className="py-2.5">
                 <span className="flex items-center gap-3">
                   <LocaleFlag locale={code} size="sm" />
-                  <span>{t(code)}</span>
+                  <span className="text-pretty leading-snug">{t(code)}</span>
                 </span>
               </SelectItem>
             ))}
@@ -211,7 +216,7 @@ export function LocaleSwitcher({
 
   const menuContentClassName = cn(
     popoverLayerClassName,
-    "w-60 rounded-xl border bg-popover p-1.5 shadow-lg",
+    "min-w-[15rem] max-w-[min(100vw-1.5rem,20rem)] rounded-xl border bg-popover p-1.5 shadow-lg",
   );
 
   // Avoid Radix hydration mismatches by rendering the dropdown only after mount.
@@ -226,9 +231,12 @@ export function LocaleSwitcher({
       >
         <LocaleFlag locale={locale} size="sm" />
         {size === "toolbar" ? (
-          <span className="max-w-[4rem] truncate sm:hidden">{shortCode}</span>
+          <>
+            <span className="font-medium tabular-nums sm:hidden">{shortCode}</span>
+            <span className="hidden whitespace-nowrap sm:inline">{t(locale)}</span>
+          </>
         ) : (
-          <span className="max-w-[7rem] truncate">{t(locale)}</span>
+          <span className="whitespace-nowrap">{t(locale)}</span>
         )}
       </Button>
     );
@@ -246,21 +254,19 @@ export function LocaleSwitcher({
           <LocaleFlag locale={locale} size="sm" />
           {isMarketing ? (
             <>
-              <span className="hidden max-w-[7rem] truncate font-medium sm:inline">
-                {t(locale)}
-              </span>
+              <span className="hidden whitespace-nowrap font-medium sm:inline">{t(locale)}</span>
               <span className="font-medium tabular-nums sm:hidden">{shortCode}</span>
               <ChevronDown className="size-3.5 opacity-50" aria-hidden />
             </>
           ) : size === "default" ? (
             <>
-              <span className="max-w-[7rem] truncate">{t(locale)}</span>
+              <span className="whitespace-nowrap">{t(locale)}</span>
               <ChevronDown className="size-3.5 opacity-50" aria-hidden />
             </>
           ) : (
             <>
-              <span className="max-w-[4rem] truncate sm:hidden">{shortCode}</span>
-              <span className="hidden max-w-[7rem] truncate sm:inline">{t(locale)}</span>
+              <span className="font-medium tabular-nums sm:hidden">{shortCode}</span>
+              <span className="hidden whitespace-nowrap sm:inline">{t(locale)}</span>
               <ChevronDown className="hidden size-3.5 opacity-50 sm:inline" aria-hidden />
             </>
           )}

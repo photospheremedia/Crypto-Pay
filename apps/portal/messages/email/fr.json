@@ -1,0 +1,57 @@
+{
+  "welcome": {
+    "subject": "Bienvenue sur Crypto Pay",
+    "preheader": "Bienvenue sur Crypto Pay — ajoutez votre wallet de paiement.",
+    "heroTitle": "Bienvenue, {firstName}",
+    "heroSubtitle": "Terminez la configuration en ajoutant votre premier wallet de paiement.",
+    "thanks": "Merci d'avoir créé un compte marchand <strong>Crypto Pay</strong>{businessSuffix}.",
+    "thanksBusinessSuffix": " pour <strong>{businessName}</strong>",
+    "multiWallet": "Votre compte prend en charge <strong>plusieurs wallets de paiement</strong> (BTC, ETH, USDT, USDC, LTC). Chaque adresse est vérifiée avant utilisation.",
+    "nextStepsTitle": "Prochaines étapes",
+    "step1": "Ajoutez une adresse publique de paiement",
+    "step2": "Notre équipe vérifie le wallet (1–2 jours ouvrés)",
+    "step3": "Acceptez les paiements lorsque le checkout sera disponible",
+    "cta": "Ajouter un wallet de paiement",
+    "support": "Des questions ? Répondez à cet e-mail ou écrivez à <a href=\"mailto:{supportEmail}\" style=\"color:#059669;font-weight:600;\">{supportEmail}</a>"
+  },
+  "wallet_submitted": {
+    "subject": "Nous avons reçu votre wallet de paiement",
+    "preheader": "Votre wallet de paiement est en attente de vérification sur Crypto Pay.",
+    "heroTitle": "Wallet de paiement envoyé",
+    "heroSubtitle": "{walletLabel}",
+    "body": "Merci. Nous avons reçu votre wallet de paiement et l'avons mis en file d'attente pour examen. La plupart des adresses sont vérifiées sous <strong>un à deux jours ouvrés</strong>.",
+    "statusPending": "En attente de vérification",
+    "multiWalletNote": "Vous pouvez enregistrer <strong>plusieurs wallets de paiement</strong> (réseaux ou libellés distincts). Chaque adresse est examinée séparément.",
+    "cta": "Voir l'état du wallet",
+    "securityNote": "Nous ne demandons que des adresses publiques — jamais de clés privées ni de phrase secrète.",
+    "onboarding": {
+      "accountCreated": "Compte créé",
+      "addWallet": "Ajouter un wallet de paiement",
+      "adminVerifies": "Vérification par l'équipe",
+      "acceptPayments": "Accepter les paiements (bientôt)"
+    }
+  },
+  "wallet_status": {
+    "verified": {
+      "subject": "Wallet vérifié : {walletLabel}",
+      "preheader": "{walletLabel} est vérifié sur Crypto Pay",
+      "heroTitle": "Wallet vérifié",
+      "body": "Votre wallet de paiement <strong>{walletLabel}</strong> a été vérifié. Il sera utilisé pour les règlements crypto lorsque le checkout sera activé.",
+      "statusVerified": "Vérifié",
+      "cta": "Ouvrir le tableau de bord"
+    },
+    "rejected": {
+      "subject": "Wallet non approuvé : {walletLabel}",
+      "preheader": "{walletLabel} nécessite une mise à jour",
+      "heroTitle": "Wallet non approuvé",
+      "body": "Nous n'avons pas pu approuver <strong>{walletLabel}</strong> pour le moment.{reasonBlock}<br><br>Veuillez mettre à jour l'adresse dans votre tableau de bord et la soumettre à nouveau.",
+      "reasonPrefix": "<br><br><strong>Motif :</strong> {reason}",
+      "statusRejected": "Non approuvé",
+      "cta": "Mettre à jour le wallet"
+    },
+    "network": "Réseau",
+    "address": "Adresse",
+    "status": "Statut",
+    "support": "Besoin d'aide ? Répondez à cet e-mail ou contactez <a href=\"mailto:{supportEmail}\" style=\"color:#059669;font-weight:600;\">{supportEmail}</a>"
+  }
+}

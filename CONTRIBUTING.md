@@ -104,14 +104,15 @@ Path filters mean **not every push runs every workflow**. If your change is outs
 
 | Workflow | File | Triggers on PR | Deploys on push to `master` |
 |----------|------|----------------|------------------------------|
-| **Netlify CI/CD** | [.github/workflows/netlify.yml](.github/workflows/netlify.yml) | Typecheck `@crypto-pay/portal`; optional Netlify preview if repo secrets are set | Production deploy when portal/packages/`netlify.toml`/lockfile change |
-| **Supabase CI/CD** | [.github/workflows/supabase.yml](.github/workflows/supabase.yml) | Migration lint (dry-run) | Applies migrations when `supabase/**` changes |
+| **Netlify CI/CD** | [.github/workflows/netlify.yml](.github/workflows/netlify.yml) | Typecheck; optional Playwright (if portal secrets set); optional Netlify preview | Production deploy (`environment: production`) — typecheck + build only |
+| **Supabase CI/CD** | [.github/workflows/supabase.yml](.github/workflows/supabase.yml) | Migration lint (linked) | `supabase db push` when `supabase/**` changes |
 
 **Implications**
 
 - Portal-only UI work: Netlify validate (and preview if configured) should run.
-- Schema changes: include `supabase/` migrations in the PR; Supabase workflow must pass before merge.
+- Schema changes: add files under `supabase/migrations/` only — do not use Supabase MCP `apply_migration` on production without a matching repo file (causes CI `db push` drift). Repair: `pnpm supabase:migration:repair-drift`.
 - Avoid double production deploys: Netlify UI “build on push” should stay off if GitHub Actions deploys (see [.cursor/rules/netlify-mcp.mdc](.cursor/rules/netlify-mcp.mdc)).
+- Production host is Netlify (`cryptopay.sale`) only — not Vercel.
 
 Run locally before pushing portal changes:
 

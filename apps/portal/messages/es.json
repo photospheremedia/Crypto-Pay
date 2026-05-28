@@ -271,6 +271,13 @@
       "saved": "Guardado",
       "notice": "Aviso",
       "success": "Éxito",
+      "rejection": {
+        "title": "Wallet no aprobada",
+        "intro": "Nuestro equipo no pudo verificar esta dirección de liquidación.",
+        "reasonLabel": "Motivo",
+        "defaultMessage": "No se indicó un motivo específico. Si crees que es un error, contacta con soporte tras actualizar tu dirección.",
+        "nextSteps": "Edita la wallet, corrige la dirección si hace falta y guarda para enviarla de nuevo a revisión."
+      },
       "messages": {
         "invalidDetails": "Datos de la wallet no válidos.",
         "duplicateName": "Ya tienes una wallet con este nombre.",
@@ -295,7 +302,7 @@
       "savedSuccess": "¡Ajustes guardados correctamente!",
       "saveFailed": "No se pudieron guardar los ajustes",
       "language": "Idioma",
-      "languageHint": "Se aplica a todo el sitio. Tu elección se guarda en tu cuenta y se recuerda en tu próxima visita.",
+      "languageHint": "Se aplica al sitio web y a los correos transaccionales de Crypto Pay (actualizaciones de billetera, bienvenida y avisos de cuenta). Se guarda en tu cuenta para tu próxima visita.",
       "profileSection": "Información del perfil",
       "emailAddress": "Dirección de email",
       "companyName": "Nombre de la empresa",
@@ -584,6 +591,15 @@
       "walletStatusUpdated": "Wallet marcada como {status}",
       "merchantNotified": "Comercio notificado por email.",
       "rejectionPrompt": "Motivo de rechazo (opcional):",
+      "rejectDialogTitle": "Rechazar wallet",
+      "rejectDialogDescription": "Rechazar “{label}”. El comercio verá tu nota en el panel y por email si las notificaciones están activas.",
+      "rejectReasonLabel": "Motivo del rechazo (opcional)",
+      "rejectReasonPlaceholder": "p. ej. No se pudo validar el formato de la dirección o no coincide con la red indicada.",
+      "rejectReasonHint": "Déjalo en blanco si no hace falta explicación. Máximo 1.000 caracteres.",
+      "rejectConfirm": "Rechazar wallet",
+      "rejectCancel": "Cancelar",
+      "rejectionNoteLabel": "Nota de rechazo",
+      "rejectionNoteEmpty": "Sin motivo registrado",
       "walletEmailSubject": "Pregunta sobre la wallet “{label}”"
     }
   },

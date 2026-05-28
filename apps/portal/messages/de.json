@@ -271,6 +271,13 @@
       "saved": "Gespeichert",
       "notice": "Hinweis",
       "success": "Erfolg",
+      "rejection": {
+        "title": "Wallet nicht genehmigt",
+        "intro": "Unser Team konnte diese Auszahlungsadresse nicht verifizieren.",
+        "reasonLabel": "Grund",
+        "defaultMessage": "Es wurde kein konkreter Grund angegeben. Wenn Sie einen Fehler vermuten, wenden Sie sich nach der Adressaktualisierung an den Support.",
+        "nextSteps": "Bearbeiten Sie die Wallet, korrigieren Sie die Adresse bei Bedarf und speichern Sie erneut zur Prüfung."
+      },
       "messages": {
         "invalidDetails": "Ungültige Wallet-Daten.",
         "duplicateName": "Wallet mit diesem Namen existiert bereits.",
@@ -295,7 +302,7 @@
       "savedSuccess": "Einstellungen erfolgreich gespeichert!",
       "saveFailed": "Einstellungen konnten nicht gespeichert werden",
       "language": "Sprache",
-      "languageHint": "Gilt für die gesamte Website. Ihre Wahl wird in Ihrem Konto gespeichert und beim nächsten Besuch verwendet.",
+      "languageHint": "Gilt für die Website und transaktionale E-Mails von Crypto Pay (Wallet-Updates, Willkommen, Kontohinweise). Wird in Ihrem Konto für den nächsten Besuch gespeichert.",
       "profileSection": "Profilinformationen",
       "emailAddress": "E-Mail-Adresse",
       "companyName": "Firmenname",
@@ -584,6 +591,15 @@
       "walletStatusUpdated": "Wallet: {status}",
       "merchantNotified": "Händler per E-Mail benachrichtigt.",
       "rejectionPrompt": "Ablehnungsgrund (optional):",
+      "rejectDialogTitle": "Wallet ablehnen",
+      "rejectDialogDescription": "„{label}“ ablehnen. Der Händler sieht Ihre Notiz im Dashboard und per E-Mail, wenn Benachrichtigungen aktiv sind.",
+      "rejectReasonLabel": "Ablehnungsgrund (optional)",
+      "rejectReasonPlaceholder": "z. B. Adressformat konnte nicht validiert werden oder passt nicht zum angegebenen Netzwerk.",
+      "rejectReasonHint": "Leer lassen, wenn keine Erklärung nötig ist. Max. 1.000 Zeichen.",
+      "rejectConfirm": "Wallet ablehnen",
+      "rejectCancel": "Abbrechen",
+      "rejectionNoteLabel": "Ablehnungsnotiz",
+      "rejectionNoteEmpty": "Kein Grund hinterlegt",
       "walletEmailSubject": "Frage zur Wallet „{label}“"
     }
   },

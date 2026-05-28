@@ -1,0 +1,57 @@
+{
+  "welcome": {
+    "subject": "Willkommen bei Crypto Pay",
+    "preheader": "Willkommen bei Crypto Pay — fügen Sie Ihre Auszahlungs-Wallet hinzu.",
+    "heroTitle": "Willkommen, {firstName}",
+    "heroSubtitle": "Schließen Sie die Einrichtung ab, indem Sie Ihre erste Auszahlungs-Wallet hinzufügen.",
+    "thanks": "Vielen Dank für die Erstellung eines <strong>Crypto Pay</strong>-Händlerkontos{businessSuffix}.",
+    "thanksBusinessSuffix": " für <strong>{businessName}</strong>",
+    "multiWallet": "Ihr Konto unterstützt <strong>mehrere Auszahlungs-Wallets</strong> für BTC, ETH, USDT, USDC und LTC. Jede Adresse wird vor der Nutzung geprüft.",
+    "nextStepsTitle": "Nächste Schritte",
+    "step1": "Öffentliche Auszahlungsadresse hinzufügen",
+    "step2": "Unser Team prüft die Wallet (1–2 Werktage)",
+    "step3": "Zahlungen annehmen, sobald Checkout verfügbar ist",
+    "cta": "Auszahlungs-Wallet hinzufügen",
+    "support": "Fragen? Antworten Sie auf diese E-Mail oder schreiben Sie an <a href=\"mailto:{supportEmail}\" style=\"color:#059669;font-weight:600;\">{supportEmail}</a>"
+  },
+  "wallet_submitted": {
+    "subject": "Wir haben Ihre Auszahlungs-Wallet erhalten",
+    "preheader": "Ihre Auszahlungs-Wallet wartet auf Verifizierung bei Crypto Pay.",
+    "heroTitle": "Auszahlungs-Wallet eingereicht",
+    "heroSubtitle": "{walletLabel}",
+    "body": "Vielen Dank. Wir haben Ihre Auszahlungs-Wallet erhalten und zur Prüfung vorgemerkt. Die meisten Adressen werden innerhalb von <strong>ein bis zwei Werktagen</strong> verifiziert.",
+    "statusPending": "Verifizierung ausstehend",
+    "multiWalletNote": "Sie können <strong>mehrere Auszahlungs-Wallets</strong> registrieren (verschiedene Netzwerke oder Bezeichnungen). Jede Adresse wird einzeln geprüft.",
+    "cta": "Wallet-Status ansehen",
+    "securityNote": "Wir fragen nur nach öffentlichen Adressen — niemals nach privaten Schlüsseln oder Seed-Phrasen.",
+    "onboarding": {
+      "accountCreated": "Konto erstellt",
+      "addWallet": "Auszahlungs-Wallet hinzufügen",
+      "adminVerifies": "Team prüft Adresse",
+      "acceptPayments": "Zahlungen annehmen (demnächst)"
+    }
+  },
+  "wallet_status": {
+    "verified": {
+      "subject": "Wallet verifiziert: {walletLabel}",
+      "preheader": "{walletLabel} ist bei Crypto Pay verifiziert",
+      "heroTitle": "Wallet verifiziert",
+      "body": "Ihre Auszahlungs-Wallet <strong>{walletLabel}</strong> wurde verifiziert. Sie wird für Krypto-Abrechnungen genutzt, sobald Checkout für Ihr Konto aktiv ist.",
+      "statusVerified": "Verifiziert",
+      "cta": "Konto-Dashboard öffnen"
+    },
+    "rejected": {
+      "subject": "Wallet nicht genehmigt: {walletLabel}",
+      "preheader": "{walletLabel} muss aktualisiert werden",
+      "heroTitle": "Wallet nicht genehmigt",
+      "body": "Wir konnten <strong>{walletLabel}</strong> derzeit nicht genehmigen.{reasonBlock}<br><br>Bitte aktualisieren Sie die Adresse im Dashboard und reichen Sie sie erneut ein.",
+      "reasonPrefix": "<br><br><strong>Grund:</strong> {reason}",
+      "statusRejected": "Nicht genehmigt",
+      "cta": "Auszahlungs-Wallet aktualisieren"
+    },
+    "network": "Netzwerk",
+    "address": "Adresse",
+    "status": "Status",
+    "support": "Hilfe benötigt? Antworten Sie auf diese E-Mail oder kontaktieren Sie <a href=\"mailto:{supportEmail}\" style=\"color:#059669;font-weight:600;\">{supportEmail}</a>"
+  }
+}

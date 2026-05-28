@@ -17,7 +17,7 @@ echo ""
 # Check if .env.local exists
 if [ ! -f "$ENV_FILE" ]; then
     echo "❌ Missing $ENV_FILE"
-    echo "   Run: cd apps/portal && vercel env pull .env.local"
+    echo "   Run: cp apps/portal/.env.example apps/portal/.env.local"
     exit 1
 fi
 
@@ -38,7 +38,7 @@ for VAR in "${REQUIRED_VARS[@]}"; do
     fi
     VAL=$(grep "^${VAR}=" "$ENV_FILE" | cut -d'=' -f2- | tr -d '"' | tr -d "'")
     if [ -z "$VAL" ]; then
-        echo "❌ Empty: $VAR (set in Supabase Dashboard → API, then vercel env add or .env.local)"
+        echo "❌ Empty: $VAR (set in Supabase Dashboard → API, then apps/portal/.env.local)"
         MISSING=1
     fi
 done
@@ -46,7 +46,7 @@ done
 if [ $MISSING -eq 1 ]; then
     echo ""
     echo "⚠️  Some required variables are missing!"
-    echo "   Run: cd apps/portal && vercel env pull .env.local"
+    echo "   Run: cp apps/portal/.env.example apps/portal/.env.local"
     exit 1
 fi
 
@@ -166,8 +166,8 @@ echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "📋 QUICK COMMANDS"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "   Pull fresh from Vercel:  cd apps/portal && vercel env pull .env.local"
+echo "   Portal env template:     cp apps/portal/.env.example apps/portal/.env.local"
+echo "   Sync to Netlify:         pnpm netlify:env-sync"
 echo "   Get Supabase keys:       supabase projects api-keys --project-ref $SUPABASE_REF"
-echo "   List Vercel env vars:    vercel env ls production"
 echo "   Regenerate Supabase:     supabase projects api-keys regenerate --project-ref $SUPABASE_REF"
 echo ""

@@ -18,6 +18,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { MerchantEmailDialog } from "@/components/admin/merchant-email-dialog";
+import { WalletRejectionDialog } from "@/components/admin/wallet-rejection-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { parseAdminApiResponse } from "@/lib/admin/parse-admin-api-response";
 import { cn } from "@/lib/utils";
@@ -30,6 +31,7 @@ export type MerchantWalletRow = {
   status: string;
   verification_requested_at: string;
   is_primary: boolean;
+  rejection_reason: string | null;
 };
 
 function statusBadgeClass(status: string): string {
@@ -57,6 +59,10 @@ export function MerchantWalletsAccordion({
   const [wallets, setWallets] = useState<MerchantWalletRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [acting, setActing] = useState<string | null>(null);
+  const [rejectingWallet, setRejectingWallet] = useState<{
+    id: string;
+    label: string;
+  } | null>(null);
   const [banner, setBanner] = useState<{
     type: "success" | "error";
     text: string;
@@ -142,12 +148,11 @@ export function MerchantWalletsAccordion({
     }
   }
 
-  async function review(id: string, status: "verified" | "rejected") {
-    const rejection_reason =
-      status === "rejected"
-        ? window.prompt(t("rejectionPrompt")) ?? undefined
-        : undefined;
-
+  async function review(
+    id: string,
+    status: "verified" | "rejected",
+    rejection_reason?: string,
+  ) {
     setActing(id);
     setBanner(null);
     try {
@@ -185,6 +190,12 @@ export function MerchantWalletsAccordion({
     } finally {
       setActing(null);
     }
+  }
+
+  async function confirmRejection(rejection_reason: string | undefined) {
+    if (!rejectingWallet) return;
+    await review(rejectingWallet.id, "rejected", rejection_reason);
+    setRejectingWallet(null);
   }
 
   function copyAddress(address: string) {
@@ -295,6 +306,16 @@ export function MerchantWalletsAccordion({
                     {t("requestedAt")}:{" "}
                     {new Date(w.verification_requested_at).toLocaleString()}
                   </p>
+                  {w.status === "rejected" ? (
+                    <p className="rounded-md border border-dashed bg-muted/50 px-3 py-2 text-sm text-muted-foreground">
+                      <span className="font-medium text-foreground">
+                        {t("rejectionNoteLabel")}:{" "}
+                      </span>
+                      {w.rejection_reason?.trim()
+                        ? w.rejection_reason.trim()
+                        : t("rejectionNoteEmpty")}
+                    </p>
+                  ) : null}
                   {w.status === "pending" ? (
                     <>
                       <Separator />
@@ -311,7 +332,9 @@ export function MerchantWalletsAccordion({
                           size="sm"
                           variant="outline"
                           disabled={acting === w.id}
-                          onClick={() => void review(w.id, "rejected")}
+                          onClick={() =>
+                            setRejectingWallet({ id: w.id, label: w.label })
+                          }
                         >
                           <X data-icon="inline-start" />
                           {t("rejectWallet")}
@@ -341,6 +364,16 @@ export function MerchantWalletsAccordion({
           ))}
         </Accordion>
       </ScrollArea>
+
+      <WalletRejectionDialog
+        open={rejectingWallet !== null}
+        onOpenChange={(open) => {
+          if (!open) setRejectingWallet(null);
+        }}
+        walletLabel={rejectingWallet?.label ?? ""}
+        pending={acting !== null}
+        onConfirm={confirmRejection}
+      />
     </div>
   );
 }

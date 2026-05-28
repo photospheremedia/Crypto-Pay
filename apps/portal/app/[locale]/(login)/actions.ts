@@ -1,9 +1,11 @@
 "use server";
 
 import { z } from "zod";
+import { hasLocale } from "next-intl";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { getSupabaseServerClient } from "@crypto-pay/db/supabaseServer";
+import { getSupabaseServerClient, getSupabaseServiceClient } from "@crypto-pay/db/supabaseServer";
+import { routing } from "@/i18n/routing";
 import {
   ACCOUNT_WALLET_SETUP_PATH,
   accountWalletSetupConfirmUrl,
@@ -190,6 +192,19 @@ export async function signUp(
     return { error: userMessage, email };
   }
 
+  const preferredLocale = String(formData.get("locale") || "");
+  const communicationLocale = hasLocale(routing.locales, preferredLocale)
+    ? preferredLocale
+    : routing.defaultLocale;
+
+  if (data.user) {
+    const service = getSupabaseServiceClient();
+    await service.from("user_settings").upsert(
+      { user_id: data.user.id, language: communicationLocale },
+      { onConflict: "user_id" },
+    );
+  }
+
   if (!data.session) {
     redirect(`/check-email?verify=1&email=${encodeURIComponent(email)}`);
   }
@@ -205,6 +220,7 @@ export async function signUp(
       email,
       firstName,
       dashboardUrl,
+      locale: communicationLocale,
     }),
   );
 

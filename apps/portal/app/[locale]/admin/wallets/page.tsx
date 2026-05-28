@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import { Check, Mail, User, X } from "lucide-react";
 import { MerchantEmailDialog } from "@/components/admin/merchant-email-dialog";
+import { WalletRejectionDialog } from "@/components/admin/wallet-rejection-dialog";
 import { walletNetworkLabel, walletStatusLabel } from "@/lib/wallets/constants";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -52,6 +53,10 @@ export default function AdminWalletsPage() {
   const [wallets, setWallets] = useState<AdminWalletRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [acting, setActing] = useState<string | null>(null);
+  const [rejectingWallet, setRejectingWallet] = useState<{
+    id: string;
+    label: string;
+  } | null>(null);
   const [banner, setBanner] = useState<{
     type: "success" | "error";
     message: string;
@@ -143,12 +148,11 @@ export default function AdminWalletsPage() {
     }
   }
 
-  async function review(id: string, status: "verified" | "rejected") {
-    const rejection_reason =
-      status === "rejected"
-        ? window.prompt("Rejection reason (optional):") ?? undefined
-        : undefined;
-
+  async function review(
+    id: string,
+    status: "verified" | "rejected",
+    rejection_reason?: string,
+  ) {
     setActing(id);
     setBanner(null);
     try {
@@ -198,6 +202,12 @@ export default function AdminWalletsPage() {
     } finally {
       setActing(null);
     }
+  }
+
+  async function confirmRejection(rejection_reason: string | undefined) {
+    if (!rejectingWallet) return;
+    await review(rejectingWallet.id, "rejected", rejection_reason);
+    setRejectingWallet(null);
   }
 
   return (
@@ -315,7 +325,9 @@ export default function AdminWalletsPage() {
                               size="sm"
                               variant="outline"
                               disabled={acting === w.id}
-                              onClick={() => review(w.id, "rejected")}
+                              onClick={() =>
+                                setRejectingWallet({ id: w.id, label: w.label })
+                              }
                             >
                               <X data-icon="inline-start" />
                               Reject
@@ -346,6 +358,16 @@ export default function AdminWalletsPage() {
           )}
         </CardContent>
       </Card>
+
+      <WalletRejectionDialog
+        open={rejectingWallet !== null}
+        onOpenChange={(open) => {
+          if (!open) setRejectingWallet(null);
+        }}
+        walletLabel={rejectingWallet?.label ?? ""}
+        pending={acting !== null}
+        onConfirm={confirmRejection}
+      />
     </div>
   );
 }

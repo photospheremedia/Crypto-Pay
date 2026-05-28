@@ -1,0 +1,63 @@
+{
+  "welcome": {
+    "subject": "Welcome to Crypto Pay",
+    "preheader": "Welcome to Crypto Pay — add your payout wallet.",
+    "heroTitle": "Welcome, {firstName}",
+    "heroSubtitle": "Complete setup by adding your first payout wallet.",
+    "thanks": "Thank you for creating a <strong>Crypto Pay</strong> merchant account{businessSuffix}.",
+    "thanksBusinessSuffix": " for <strong>{businessName}</strong>",
+    "multiWallet": "Your account supports <strong>multiple payout wallets</strong> across BTC, ETH, USDT, USDC, and LTC. Each address is reviewed before use.",
+    "nextStepsTitle": "Next steps",
+    "step1": "Add a public payout address",
+    "step2": "Our team verifies the wallet (1–2 business days)",
+    "step3": "Accept payments when checkout launches",
+    "cta": "Add payout wallet",
+    "support": "Questions? Reply to this email or write to <a href=\"mailto:{supportEmail}\" style=\"color:#059669;font-weight:600;\">{supportEmail}</a>"
+  },
+  "wallet_submitted": {
+    "subject": "We received your payout wallet",
+    "preheader": "Your payout wallet is pending verification on Crypto Pay.",
+    "heroTitle": "Payout wallet submitted",
+    "heroSubtitle": "{walletLabel}",
+    "body": "Thank you. We have received your payout wallet and queued it for review. Most addresses are verified within <strong>one to two business days</strong>.",
+    "walletName": "Wallet name",
+    "network": "Network",
+    "status": "Status",
+    "statusPending": "Pending verification",
+    "multiWalletNote": "You may register <strong>multiple payout wallets</strong> (separate networks or labels). Each address is reviewed independently.",
+    "cta": "View wallet status",
+    "securityNote": "We only ever ask for public addresses — never private keys or seed phrases.",
+    "support": "Need help? Reply to this email or contact <a href=\"mailto:{supportEmail}\" style=\"color:#059669;font-weight:600;\">{supportEmail}</a>",
+    "onboarding": {
+      "accountCreated": "Account created",
+      "addWallet": "Add payout wallet",
+      "adminVerifies": "Admin verifies address",
+      "acceptPayments": "Accept payments (coming soon)"
+    }
+  },
+  "wallet_status": {
+    "verified": {
+      "subject": "Wallet verified: {walletLabel}",
+      "preheader": "{walletLabel} is verified on Crypto Pay",
+      "heroTitle": "Wallet verified",
+      "heroSubtitle": "{walletLabel}",
+      "body": "Your payout wallet <strong>{walletLabel}</strong> has been verified. It will be used for crypto settlements when checkout is enabled on your account.",
+      "statusVerified": "Verified",
+      "cta": "Open account dashboard"
+    },
+    "rejected": {
+      "subject": "Wallet not approved: {walletLabel}",
+      "preheader": "{walletLabel} requires an update",
+      "heroTitle": "Wallet not approved",
+      "heroSubtitle": "{walletLabel}",
+      "body": "We were unable to approve <strong>{walletLabel}</strong> at this time.{reasonBlock}<br><br>Please update the wallet address in your dashboard and submit again.",
+      "reasonPrefix": "<br><br><strong>Reason:</strong> {reason}",
+      "statusRejected": "Not approved",
+      "cta": "Update payout wallet"
+    },
+    "network": "Network",
+    "address": "Address",
+    "status": "Status",
+    "support": "Need help? Reply to this email or contact <a href=\"mailto:{supportEmail}\" style=\"color:#059669;font-weight:600;\">{supportEmail}</a>"
+  }
+}

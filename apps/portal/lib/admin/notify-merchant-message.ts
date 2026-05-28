@@ -1,4 +1,5 @@
 import { sendEmail } from "@/lib/email/sender";
+import { resolveMerchantEmailLocale } from "@/lib/email/resolve-merchant-email-locale";
 import { EMAIL_WORKFLOW_EVENTS, workflowIdempotencyKey } from "@/lib/email/workflow-keys";
 import { EMAIL_ROUTES, MERCHANT_SUPPORT_REPLY } from "@/lib/email/routing";
 
@@ -32,12 +33,15 @@ export async function notifyMerchantAdminMessage(params: {
     return { success: false, error: "Subject and message are required" };
   }
 
+  const locale = await resolveMerchantEmailLocale(merchantUserId);
+
   return sendEmail({
     to: { email: merchantEmail, name: merchantName ?? undefined },
     replyTo: adminEmail || MERCHANT_SUPPORT_REPLY,
     subject: `[Crypto Pay] ${trimmedSubject}`,
     template: "admin_message_merchant",
     templateData: {
+      locale,
       merchantName: merchantName || "there",
       subjectLine: trimmedSubject,
       messageBody: trimmedMessage,

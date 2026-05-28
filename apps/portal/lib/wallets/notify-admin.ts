@@ -1,4 +1,6 @@
 import { sendEmail } from "@/lib/email/sender";
+import { getEmailMessages, formatEmailString } from "@/lib/email/messages";
+import { resolveMerchantEmailLocale } from "@/lib/email/resolve-merchant-email-locale";
 import {
   EMAIL_WORKFLOW_EVENTS,
   walletStatusEmailIdempotencyKey,
@@ -84,15 +86,23 @@ export { RESEND_IDEMPOTENCY_MS };
 
 export async function notifyMerchantWalletSubmitted(params: {
   merchantEmail: string;
+  merchantUserId: string;
   walletId: string;
   label: string;
   walletNetwork: string;
 }): Promise<{ success: boolean; error?: string }> {
+  const locale = await resolveMerchantEmailLocale(params.merchantUserId);
+  const copy = getEmailMessages(locale).wallet_submitted;
+  const subjectLine = formatEmailString(copy.subject, { walletLabel: params.label });
+
   return sendEmail({
     to: { email: params.merchantEmail },
     replyTo: MERCHANT_SUPPORT_REPLY,
+    subject: subjectLine,
     template: "wallet_submitted_merchant",
     templateData: {
+      locale,
+      subjectLine,
       walletLabel: params.label,
       walletNetwork: params.walletNetwork,
       actionUrl: EMAIL_ROUTES.accountWallets(),
@@ -112,6 +122,7 @@ export async function notifyMerchantWalletSubmitted(params: {
 
 export async function notifyMerchantWalletStatus(params: {
   merchantEmail: string;
+  merchantUserId: string;
   walletId: string;
   label: string;
   status: "verified" | "rejected";
@@ -122,6 +133,7 @@ export async function notifyMerchantWalletStatus(params: {
 }): Promise<{ success: boolean; error?: string }> {
   const {
     merchantEmail,
+    merchantUserId,
     walletId,
     label,
     status,
@@ -135,22 +147,23 @@ export async function notifyMerchantWalletStatus(params: {
     ? EMAIL_WORKFLOW_EVENTS.walletVerified
     : EMAIL_WORKFLOW_EVENTS.walletRejected;
 
+  const locale = await resolveMerchantEmailLocale(merchantUserId);
+  const statusCopy = getEmailMessages(locale).wallet_status[verified ? "verified" : "rejected"];
+  const subjectLine = formatEmailString(statusCopy.subject, { walletLabel: label });
+
   return sendEmail({
     to: { email: merchantEmail },
     replyTo: MERCHANT_SUPPORT_REPLY,
-    subject: verified
-      ? `[Crypto Pay] Wallet verified: ${label}`
-      : `[Crypto Pay] Wallet not approved: ${label}`,
+    subject: subjectLine,
     template: "wallet_status_merchant",
     templateData: {
+      locale,
       status,
       walletLabel: label,
       walletNetwork: walletNetwork || "btc",
       walletAddress: walletAddress || "",
       rejectionReason: rejectionReason || "",
-      subjectLine: verified
-        ? `Wallet verified: ${label}`
-        : `Wallet not approved: ${label}`,
+      subjectLine,
       actionUrl: verified ? EMAIL_ROUTES.account() : EMAIL_ROUTES.accountWallets(),
     },
     tags: ["wallet", "merchant_status", status],

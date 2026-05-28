@@ -4,7 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 // Load .env.local
 config({ path: ".env.local" });
 
-// Clean env values (remove \n artifacts from Vercel CLI)
+// Clean env values (remove stray newlines from env files)
 const cleanEnv = (val: string | undefined) => val?.replace(/\\n/g, "").trim();
 
 const supabaseUrl = cleanEnv(process.env.NEXT_PUBLIC_SUPABASE_URL)!;

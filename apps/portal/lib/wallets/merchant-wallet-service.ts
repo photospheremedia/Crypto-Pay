@@ -10,6 +10,8 @@ import {
   shouldNotifyAdminWalletPending,
 } from "@/lib/email/workflows";
 import { notifyMerchantWalletSubmitted } from "@/lib/wallets/notify-admin";
+import { scheduleSmsWork } from "@/lib/sms/schedule";
+import { runWalletSubmittedSmsWorkflow } from "@/lib/sms/workflows";
 import type { MerchantWalletInput } from "@/lib/wallets/validation";
 import type { MerchantWallet } from "@/types/crypto-pay-db";
 
@@ -173,9 +175,20 @@ export async function upsertMerchantWallet(
         scheduleEmailWork(`wallet.pending.merchant.${saved.id}`, () =>
           notifyMerchantWalletSubmitted({
             merchantEmail,
+            merchantUserId: user.id,
             walletId: saved.id,
             label: saved.label,
             walletNetwork: saved.wallet_network,
+          }),
+        );
+      }
+
+      if (isCreate) {
+        scheduleSmsWork(`wallet.pending.merchant.sms.${saved.id}`, () =>
+          runWalletSubmittedSmsWorkflow({
+            merchantUserId: user.id,
+            walletId: saved.id,
+            label: saved.label,
           }),
         );
       }

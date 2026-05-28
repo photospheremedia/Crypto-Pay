@@ -193,6 +193,55 @@ cd apps/portal && pnpm email:preview   # template previews
 
 ---
 
+## SMS (transactional notifications)
+
+Supabase Auth SMS is for **OTP/MFA only**. Merchant wallet alerts use a **server-side SMS provider** from Next.js API routes (`apps/portal/lib/sms/`), never from the browser.
+
+### What it powers
+
+| SMS type | Trigger |
+|----------|---------|
+| Phone verification OTP | Merchant **Settings** → Send verification code |
+| Wallet submitted (merchant) | New pending wallet (`merchant-wallet-service`) |
+| Wallet verified / rejected | Admin `PATCH /api/admin/wallets` |
+
+Resend remains **email-only**. Merchants opt in, verify E.164 phone, and can disable SMS without revoking opt-in (`sms_disabled_at`).
+
+### Local env (`apps/portal/.env.local`)
+
+```env
+# Provider: twilio (production) or omit for mock (logs to server console in dev)
+SMS_PROVIDER=twilio
+TWILIO_ACCOUNT_SID=AC...
+TWILIO_AUTH_TOKEN=...
+SMS_FROM=+15551234567
+# alias: TWILIO_PHONE_NUMBER
+```
+
+| Variable | Client-safe? | Purpose |
+|----------|----------------|--------|
+| `SMS_PROVIDER` | No | `twilio` or `mock` |
+| `TWILIO_ACCOUNT_SID` | No | Twilio REST API |
+| `TWILIO_AUTH_TOKEN` | No | Twilio auth |
+| `SMS_FROM` / `TWILIO_PHONE_NUMBER` | No | Sender E.164 |
+
+Sync to Netlify for production portal: `pnpm netlify:env-sync`.
+
+### Schema
+
+Migration `20260528100000_sms_notifications.sql`: `user_settings` SMS columns, `sms_phone_verification_challenges`, `sms_outbound_log` (audit + idempotency).
+
+Apply with `pnpm db:push` on your linked project when ready.
+
+### Verify locally
+
+1. Apply migration (`pnpm db:push`).
+2. Open `/account/settings`, enable SMS, opt in, enter `+1…` phone, send code (mock mode prints code in `pnpm dev:portal` terminal).
+3. Confirm code → `sms_verified_at` set.
+4. Create a wallet or admin-verify one → check `sms_outbound_log` or mock log line.
+
+---
+
 ## Netlify (portal hosting)
 
 ### What it hosts
