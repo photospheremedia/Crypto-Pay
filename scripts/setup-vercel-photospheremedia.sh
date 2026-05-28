@@ -31,7 +31,8 @@ Options:
   --help
 
 Env:
-  VERCEL_TEAM          Team slug or ID (PhotoSphere Media on Vercel)
+  VERCEL_TEAM_SLUG     Default: photospheremedia-s-projects (PHOTOSPHEREMEDIA's projects)
+  VERCEL_TEAM_ID       Default: team_AflYR0tFtYDkhqMjaEg0vyQj
   VERCEL_PROJECT_NAME  Default: crypto-pay-portal
 
 Phone signup error "The user could not be found":
@@ -81,24 +82,20 @@ cmd_link() {
   echo "==> Current Vercel user: $(vercel whoami 2>/dev/null || echo 'not logged in')"
   echo "==> Linking project ${PROJECT_NAME}..."
 
-  link_args=(-y --project "$PROJECT_NAME")
-  if [[ -n "${VERCEL_TEAM:-}" ]]; then
-    link_args+=(--team "$VERCEL_TEAM")
-  fi
-
-  vercel link "${link_args[@]}"
+  # shellcheck source=lib/vercel-photosphere.sh
+  source "$ROOT/scripts/lib/vercel-photosphere.sh"
+  scope="${VERCEL_TEAM_ID:-${VERCEL_TEAM_SLUG:-$VERCEL_TEAM_SLUG}}"
+  vercel link -y --project "$PROJECT_NAME" --scope "$scope"
 
   echo ""
   echo "==> Patching monorepo settings via API (optional)..."
-  if [[ -n "${VERCEL_TOKEN:-}" && -n "${VERCEL_TEAM:-}" ]]; then
-    TEAM_ID="$(vercel teams ls 2>/dev/null | awk -v t="$VERCEL_TEAM" '$0 ~ t {print $1; exit}')"
-    if [[ -n "$TEAM_ID" ]]; then
-      VERCEL_TOKEN="$VERCEL_TOKEN" PROJECT="$PROJECT_NAME" TEAM_ID="$TEAM_ID" \
-        "$ROOT/scripts/update-vercel-project.sh" || true
-    fi
+  if [[ -n "${VERCEL_TOKEN:-}" ]]; then
+    VERCEL_TOKEN="$VERCEL_TOKEN" PROJECT="$PROJECT_NAME" TEAM_ID="$VERCEL_TEAM_ID" \
+      "$ROOT/scripts/update-vercel-project.sh" || true
   else
-    echo "    Set VERCEL_TOKEN + VERCEL_TEAM to auto-patch, or confirm in dashboard:"
-    echo "    Root: / | Build: pnpm --filter @crypto-pay/portal build | Output: apps/portal/.next"
+    echo "    Confirm in dashboard (see docs/VERCEL_MIGRATION.md):"
+    echo "    Root: apps/portal or repo root | Build: pnpm --filter @crypto-pay/portal build"
+    echo "    Output Directory: empty (Next.js default)"
   fi
 
   echo ""

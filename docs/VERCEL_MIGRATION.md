@@ -2,6 +2,26 @@
 
 Use this after importing **photospheremedia/Crypto-Pay** on [vercel.com](https://vercel.com). Production domain: **cryptopay.sale**.
 
+## 0. CLI + Cursor MCP (PhotoSphere account)
+
+**Wrong account:** do not use personal alt accounts (e.g. `skullcandyxxx`). Use **`photospheremedia`**.
+
+```bash
+pnpm vercel:auth-photosphere --link   # logout wrong user, login, link repo
+pnpm exec vercel whoami               # must print: photospheremedia
+```
+
+| Item | Value |
+|------|--------|
+| Team slug | `photospheremedia-s-projects` |
+| Team ID | `team_AflYR0tFtYDkhqMjaEg0vyQj` |
+| Project | `crypto-pay-portal` |
+| Project ID | `prj_miNyfjtzgh3gEjxh6LN4inBj7BNX` |
+
+**Cursor:** Settings → MCP → **Vercel** → sign out if needed, sign in as the same PhotoSphere GitHub user.
+
+---
+
 ## 1. Vercel project settings (dashboard)
 
 Confirm these match repo `vercel.json` (Settings → General → Build & Development):
@@ -9,7 +29,7 @@ Confirm these match repo `vercel.json` (Settings → General → Build & Develop
 | Setting | Value |
 |---------|--------|
 | Framework Preset | **Next.js** |
-| Root Directory | **.** (repo root — not `apps/portal` alone) |
+| Root Directory | **`apps/portal`** (matches dashboard import) or **`.`** if using root `vercel.json` only — pick one and keep CLI link in sync |
 | Install Command | `pnpm install --frozen-lockfile` |
 | Build Command | `pnpm --filter @crypto-pay/portal build` |
 | Output Directory | *(leave empty — Next.js on Vercel manages output)* |

@@ -1,0 +1,24 @@
+---
+description: Vercel CLI/MCP must use PhotoSphere account, not personal alt accounts
+globs:
+  - vercel.json
+  - .vercel/**
+  - scripts/**/vercel*
+  - .github/workflows/vercel.yml
+---
+
+# Vercel — PhotoSphere only
+
+- **Account:** `photospheremedia` / team **photospheremedia-s-projects** (`team_AflYR0tFtYDkhqMjaEg0vyQj`).
+- **Project:** `crypto-pay-portal` (`prj_miNyfjtzgh3gEjxh6LN4inBj7BNX`).
+- **Do not** use `skullcandyxxx` or other personal Vercel accounts for this repo.
+
+Before deploy/link:
+
+```bash
+pnpm vercel:auth-photosphere --link
+```
+
+**Cursor MCP:** Settings → MCP → Vercel → sign out if wrong user, sign in as PhotoSphere (same as `vercel whoami` → `photospheremedia`).
+
+See `docs/VERCEL_MIGRATION.md`.
