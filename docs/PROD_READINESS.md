@@ -41,6 +41,14 @@ These are used as **RLS helpers** in our schema. The warning is expected when su
   - Move them to a non-exposed schema (preferred if practical).
   - Revoke execute from `authenticated` only if we can prove RLS doesn’t rely on them.
 
+**Update (2026-05-28):** These helpers were refactored to avoid SECURITY DEFINER RPC exposure in `public`:
+
+- Replaced RLS checks with **SECURITY INVOKER** helpers:
+  - `public.is_platform_super_admin()` (checks JWT `user_role` in `('cp_admin','rhs_admin')`)
+  - `public.is_staff_jwt()` (checks JWT `platform_realm='admin'`)
+- Dropped the SECURITY DEFINER RPC helpers from `public`:
+  - `public.is_cp_admin()`, `public.is_merchant_account(uuid)`, `public.platform_admin_tenant_id()`
+
 #### 4) Auth security settings (dashboard)
 
 Advisor still warns:

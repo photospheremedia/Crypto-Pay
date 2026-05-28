@@ -19,7 +19,7 @@ Crypto Pay has **two authenticated surfaces** in the same Next.js app. They shar
 | **Home** | `/account` | `/admin/dashboard` |
 | **Layout** | `app/[locale]/account/layout.tsx` | `app/[locale]/admin/layout.tsx` |
 | **Auth guard** | `requireMerchantSession()` / protected `/account` | `requireAdminSession()` / `checkAdminAccess()` |
-| **Data access** | RLS as owning `user_id` | Staff roles + `is_cp_admin()` / permissions |
+| **Data access** | RLS as owning `user_id` | Staff JWT realm (`is_staff_jwt()`) + super-admin checks (`is_platform_super_admin()`) |
 | **Primary jobs** | Add payout wallets, account settings, security | Verify wallets, manage merchants, staff, marketing |
 | **Wallet verification** | Submit addresses → **pending** | Approve / reject → emails + Runner webhook |
 | **Indexed** | `noindex` | `noindex` |

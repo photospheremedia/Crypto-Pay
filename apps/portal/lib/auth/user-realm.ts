@@ -10,7 +10,7 @@ import {
 
 /**
  * Platform realms (UI + routing). Enforced in proxy, layouts, and server actions.
- * Database access must still rely on RLS (`is_cp_admin()`, row ownership) — never UI alone.
+ * Database access must still rely on RLS (`is_staff_jwt()`, `is_platform_super_admin()`, row ownership) — never UI alone.
  *
  * @see Supabase custom claims: `custom_access_token_hook` → JWT `user_role`, `platform_realm`
  * @see Next.js auth DAL: `lib/auth/session.ts`
