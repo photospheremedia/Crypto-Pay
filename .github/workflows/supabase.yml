@@ -137,42 +137,24 @@ jobs:
             echo "No edge functions to deploy"
           fi
 
-      - name: Sync Resend Auth SMTP (optional)
+      - name: Push Supabase config (config.toml -> remote)
         if: steps.validate_secrets.outputs.can_deploy == 'true'
         env:
+          # config.toml interpolates the SMTP password via pass = "env(RESEND_API_KEY)".
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
         run: |
           if [ -z "${RESEND_API_KEY}" ]; then
-            echo "RESEND_API_KEY GitHub secret not set — skipping Auth SMTP sync."
-            echo "Run locally: pnpm resend:sync (uses apps/portal/.env.local)"
+            # config.toml enables Auth SMTP with pass = env(RESEND_API_KEY); pushing without it
+            # would send an empty SMTP password to production. Skip until the secret is set.
+            echo "RESEND_API_KEY GitHub secret not set — skipping config push to avoid clearing Auth SMTP."
+            echo "Run locally instead: pnpm resend:sync (uses apps/portal/.env.local), or set the GitHub secret."
+            {
+              echo "### Supabase config push skipped"
+              echo ""
+              echo "- Set the \`RESEND_API_KEY\` GitHub secret so \`config.toml\` SMTP can be pushed."
+            } >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
-          # Resend SMTP for Supabase Auth — https://resend.com/docs/send-with-smtp
-          python3 <<'PY'
-          import json, os, urllib.request
-          token = os.environ["SUPABASE_ACCESS_TOKEN"]
-          ref = os.environ["SUPABASE_PROJECT_REF"]
-          key = os.environ["RESEND_API_KEY"]
-          payload = {
-              "external_email_enabled": True,
-              "site_url": "https://cryptopay.sale",
-              "uri_allow_list": "https://cryptopay.sale/**,https://www.cryptopay.sale/**,http://localhost:3000/**,http://localhost:3001/**",
-              "smtp_host": "smtp.resend.com",
-              "smtp_port": "587",
-              "smtp_user": "resend",
-              "smtp_pass": key,
-              "smtp_admin_email": "noreply@cryptopay.sale",
-              "smtp_sender_name": "Crypto Pay",
-              "mailer_autoconfirm": True,
-              "rate_limit_email_sent": 30,
-          }
-          req = urllib.request.Request(
-              f"https://api.supabase.com/v1/projects/{ref}/config/auth",
-              data=json.dumps(payload).encode(),
-              headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
-              method="PATCH",
-          )
-          with urllib.request.urlopen(req) as resp:
-              out = json.load(resp)
-          print("Auth SMTP:", out.get("smtp_host"), out.get("smtp_admin_email"))
-          PY
+          # Single source of truth: config.toml -> remote auth config (site_url, redirect URLs,
+          # email confirmations, rate limits, Resend SMTP, custom_access_token hook, email templates).
+          supabase config push --project-ref "${SUPABASE_PROJECT_REF}" --yes
