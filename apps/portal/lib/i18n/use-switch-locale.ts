@@ -30,10 +30,12 @@ export function useSwitchLocale() {
         clearLocaleCookieClient();
       }
       setIsPending(true);
-      void persistUserLocale(next);
 
       const href = getPathname({ href: pathname, locale: next });
-      window.location.assign(href);
+      void (async () => {
+        await persistUserLocale(next);
+        window.location.assign(href);
+      })();
     },
     [isPending, locale, pathname],
   );

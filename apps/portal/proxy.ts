@@ -20,9 +20,14 @@ import {
   stripLocaleCookieFromResponse,
 } from "@/lib/i18n/functional-consent-cookie";
 import { mergeIntlMiddlewareResponse } from "@/lib/i18n/merge-intl-middleware-response";
-import { syncLocaleCookieWithResolvedLocale } from "@/lib/i18n/sync-locale-cookie";
+import {
+  readLocaleCookie,
+  syncLocaleCookieWithResolvedLocale,
+} from "@/lib/i18n/sync-locale-cookie";
+import { localizeAppPath } from "@/lib/i18n/locale-preference";
+import { shouldRedirectToAccountLocale } from "@/lib/i18n/account-locale-policy";
 import { redirectWithProxyCookies } from "@/lib/proxy/finalize-proxy-response";
-import { stripLocale } from "@/lib/i18n/strip-locale";
+import { getLocaleFromPathname, stripLocale } from "@/lib/i18n/strip-locale";
 import { isMetadataRoute } from "@/lib/routing/metadata-routes";
 
 const handleIntl = createIntlMiddleware(routing);
@@ -63,7 +68,6 @@ async function handleProxy(request: NextRequest) {
   }
 
   if (intlResponse.status >= 300 && intlResponse.status < 400) {
-    syncLocaleCookieWithResolvedLocale(request, intlResponse);
     return intlResponse;
   }
 
@@ -183,15 +187,44 @@ async function handleProxy(request: NextRequest) {
   }
 
   const justSignedOut = request.nextUrl.searchParams.get("signedOut") === "1";
+  const urlLocale = getLocaleFromPathname(rawPathname);
 
+  // Logged-in user on an auth route → send to their dashboard in the saved locale.
   if (isAuthRoute && user && pathname !== "/app" && realm && !justSignedOut) {
-    const destination = localizedPath(getHomePathForRealm(realm));
+    const preferredLocale = readLocaleCookie(request);
+    const home = getHomePathForRealm(realm);
+    const destination = preferredLocale
+      ? localizeAppPath(preferredLocale, home)
+      : localizedPath(home);
     return redirectWithProxyCookies(
       request,
       new URL(destination, request.url),
       response,
       intlResponse,
     );
+  }
+
+  // Unprefixed account/admin deep link (manual URL, bookmark, email) → redirect once
+  // to the saved locale from the NEXT_LOCALE cookie. Prefixed URLs are explicit and
+  // never overridden, so the common case is cookie-free and there is no redirect loop.
+  if (user && urlLocale === null && (isProtectedRoute || isAdminRoute)) {
+    const preferredLocale = readLocaleCookie(request);
+    if (
+      preferredLocale &&
+      shouldRedirectToAccountLocale(rawPathname, preferredLocale)
+    ) {
+      const redirectUrl = new URL(
+        localizeAppPath(preferredLocale, pathname),
+        request.url,
+      );
+      redirectUrl.search = request.nextUrl.search;
+      return redirectWithProxyCookies(
+        request,
+        redirectUrl,
+        response,
+        intlResponse,
+      );
+    }
   }
 
   stripLocaleCookieFromResponse(request, response);

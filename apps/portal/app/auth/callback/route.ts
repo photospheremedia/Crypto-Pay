@@ -10,14 +10,10 @@ import {
 } from "@/lib/auth/user-realm";
 import { scheduleEmailWork } from "@/lib/email/schedule";
 import { runWelcomeEmailWorkflow } from "@/lib/email/workflows";
-import { getUserPreferredLocale } from "@/lib/i18n/locale-actions";
 import {
-  localizeAppPath,
-  localeCookieOptions,
-} from "@/lib/i18n/locale-preference";
-import { LOCALE_COOKIE_NAME } from "@/lib/i18n/locale-cookie-client";
-import { getUserPreferredTheme } from "@/lib/theme/theme-actions";
-import { THEME_COOKIE_NAME } from "@/lib/theme/theme-preference";
+  applyAccountPreferenceCookies,
+  resolveAccountLocaleRedirect,
+} from "@/lib/i18n/account-locale";
 import { listUserMerchantWallets } from "@/lib/wallets/db";
 
 function redirectWithAccountLocale(
@@ -25,39 +21,6 @@ function redirectWithAccountLocale(
   targetPath: string,
 ): NextResponse {
   return NextResponse.redirect(new URL(targetPath, baseUrl));
-}
-
-async function resolveRedirectTarget(
-  userId: string,
-  targetPath: string,
-): Promise<{ path: string; localeCookie?: string; themeCookie?: string }> {
-  const [preferredLocale, preferredTheme] = await Promise.all([
-    getUserPreferredLocale(userId),
-    getUserPreferredTheme(userId),
-  ]);
-
-  const path = preferredLocale
-    ? localizeAppPath(preferredLocale, targetPath)
-    : targetPath;
-
-  return {
-    path,
-    localeCookie: preferredLocale ?? undefined,
-    themeCookie: preferredTheme ?? undefined,
-  };
-}
-
-function applyAccountPreferenceCookies(
-  response: NextResponse,
-  prefs: { localeCookie?: string; themeCookie?: string },
-) {
-  const cookieOpts = localeCookieOptions();
-  if (prefs.localeCookie) {
-    response.cookies.set(LOCALE_COOKIE_NAME, prefs.localeCookie, cookieOpts);
-  }
-  if (prefs.themeCookie) {
-    response.cookies.set(THEME_COOKIE_NAME, prefs.themeCookie, cookieOpts);
-  }
 }
 
 /**
@@ -128,10 +91,8 @@ export async function GET(request: NextRequest) {
 
     if (realm === "admin") {
       const target = sanitizePostAuthRedirect(rawNext, "admin");
-      const { path, localeCookie, themeCookie } = await resolveRedirectTarget(
-        data.session.user.id,
-        target,
-      );
+      const { path, localeCookie, themeCookie } =
+        await resolveAccountLocaleRedirect(data.session.user.id, target);
       const response = redirectWithAccountLocale(baseUrl, path);
       applyAccountPreferenceCookies(response, { localeCookie, themeCookie });
       return response;
@@ -169,7 +130,7 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    const { path, localeCookie, themeCookie } = await resolveRedirectTarget(
+    const { path, localeCookie, themeCookie } = await resolveAccountLocaleRedirect(
       data.session.user.id,
       target,
     );

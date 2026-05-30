@@ -2,6 +2,7 @@ import { LOCALE_COOKIE_NAME } from "@/lib/i18n/locale-cookie-client";
 import { localeCookieOptions } from "@/lib/i18n/locale-preference";
 import { THEME_COOKIE_NAME } from "@/lib/theme/theme-preference";
 import { SIDEBAR_COOKIE_NAME } from "@/lib/ui/sidebar-cookie";
+import { hasSupabaseSessionCookie } from "@/lib/auth/has-supabase-session-cookie";
 import type { NextRequest, NextResponse } from "next/server";
 
 /** Set when the visitor allows functional cookies (mirrors localStorage consent). */
@@ -44,6 +45,9 @@ function stripPreferenceCookies(
   response?: NextResponse,
 ): void {
   if (hasFunctionalConsentCookie(request)) return;
+  // Logged-in users keep their preference cookies (language/theme are first-party
+  // account settings tied to the session, not consent-gated tracking).
+  if (hasSupabaseSessionCookie(request)) return;
   for (const name of PREFERENCE_COOKIE_NAMES) {
     request.cookies.delete(name);
     response?.cookies.delete(name);

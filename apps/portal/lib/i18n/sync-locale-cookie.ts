@@ -8,6 +8,19 @@ import { getLocaleFromPathname } from "@/lib/i18n/strip-locale";
 
 const INTL_LOCALE_HEADER = "x-next-intl-locale";
 
+/**
+ * Saved locale from the `NEXT_LOCALE` cookie (set from `user_settings.language`
+ * at auth boundaries). Used by the proxy to route authenticated users without a
+ * per-request DB read. Returns null when absent or invalid.
+ */
+export function readLocaleCookie(request: NextRequest): Locale | null {
+  const value = request.cookies.get(LOCALE_COOKIE_NAME)?.value;
+  if (value && hasLocale(routing.locales, value)) {
+    return value;
+  }
+  return null;
+}
+
 /** Locale next-intl resolved for this request (header, then URL prefix, then default). */
 export function getResolvedIntlLocale(
   request: NextRequest,

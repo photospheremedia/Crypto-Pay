@@ -19,6 +19,12 @@ import {
 import { scheduleEmailWork } from "@/lib/email/schedule";
 import { runWelcomeEmailWorkflow } from "@/lib/email/workflows";
 import { listUserMerchantWallets } from "@/lib/wallets/db";
+import { getUserPreferredLocale } from "@/lib/i18n/locale-actions";
+import {
+  persistLocaleCookie,
+  redirectAuthenticatedUser,
+  resolveLocaleForAuthenticatedRedirect,
+} from "@/lib/i18n/account-locale";
 import { signOutForRealm } from "@/lib/auth/sign-out";
 import { assertBotProtectionForForm } from "@/lib/security/bot-protection";
 
@@ -87,20 +93,22 @@ export async function signIn(
 
   revalidatePath("/", "layout");
 
-  if (redirectPath) {
-    redirect(sanitizePostAuthRedirect(redirectPath, realm));
-  }
+  const preferredLocale = await getUserPreferredLocale(data.user.id);
 
-  if (realm === "admin") {
-    redirect(getHomePathForRealm("admin"));
-  }
+  const target = redirectPath
+    ? sanitizePostAuthRedirect(redirectPath, realm)
+    : realm === "admin"
+      ? getHomePathForRealm("admin")
+      : (await listUserMerchantWallets(supabase, data.user.id)).length === 0
+        ? merchantOnboardingPath()
+        : getHomePathForRealm("merchant");
 
-  const wallets = await listUserMerchantWallets(supabase, data.user.id);
-  if (wallets.length === 0) {
-    redirect(merchantOnboardingPath());
-  }
-
-  redirect(getHomePathForRealm("merchant"));
+  const { href, locale } = resolveLocaleForAuthenticatedRedirect(
+    target,
+    preferredLocale,
+  );
+  await persistLocaleCookie(locale);
+  redirectAuthenticatedUser(href, locale);
 }
 
 const signUpSchema = z.object({
@@ -224,7 +232,10 @@ export async function signUp(
     }),
   );
 
-  redirect(realm === "admin" ? getHomePathForRealm("admin") : merchantOnboardingPath());
+  const target =
+    realm === "admin" ? getHomePathForRealm("admin") : merchantOnboardingPath();
+  await persistLocaleCookie(communicationLocale);
+  redirectAuthenticatedUser(target, communicationLocale);
 }
 
 const resendConfirmationSchema = z.object({

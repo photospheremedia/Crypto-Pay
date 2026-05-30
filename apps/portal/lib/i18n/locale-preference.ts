@@ -7,9 +7,9 @@ import { localePath } from "@/lib/i18n/locale-config";
  * Locale resolution priority (extends next-intl middleware defaults):
  *
  * 1. Locale prefix in URL — explicit navigation / shared links (`localeDetection: false`)
- * 2. Logged-in `user_settings.language` — account preference (applied on auth redirect)
- * 3. `NEXT_LOCALE` cookie — synced to the resolved URL locale when functional consent is set
- * 4. `routing.defaultLocale` (`en`) for unprefixed paths
+ * 2. Logged-in `user_settings.language` — saved preference (auth redirects, proxy on /account & /admin, settings)
+ * 3. `NEXT_LOCALE` cookie — synced to the active URL locale when functional consent is set
+ * 4. `routing.defaultLocale` (`en`) for unprefixed paths when anonymous
  *
  * @see https://next-intl.dev/docs/routing/middleware#locale-detection
  */

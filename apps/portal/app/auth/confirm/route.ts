@@ -15,6 +15,10 @@ import {
 import { scheduleEmailWork } from "@/lib/email/schedule";
 import { runWelcomeEmailWorkflow } from "@/lib/email/workflows";
 import { listUserMerchantWallets } from "@/lib/wallets/db";
+import {
+  applyAccountPreferenceCookies,
+  resolveAccountLocaleRedirect,
+} from "@/lib/i18n/account-locale";
 
 /**
  * Email confirmation / recovery / magic-link token exchange (PKCE / SSR).
@@ -99,5 +103,11 @@ export async function GET(request: NextRequest) {
         : getHomePathForRealm("merchant");
   }
 
-  return NextResponse.redirect(new URL(target, baseUrl));
+  const { path, localeCookie, themeCookie } = await resolveAccountLocaleRedirect(
+    data.session.user.id,
+    target,
+  );
+  const response = NextResponse.redirect(new URL(path, baseUrl));
+  applyAccountPreferenceCookies(response, { localeCookie, themeCookie });
+  return response;
 }

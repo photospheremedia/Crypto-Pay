@@ -14,7 +14,7 @@ export async function persistUserLocale(locale: string): Promise<{ ok: boolean }
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Anonymous visitors rely on next-intl's NEXT_LOCALE cookie only.
+  // Anonymous: UI locale is URL-only; cookie sync is optional (functional consent).
   if (!user) {
     return { ok: true };
   }
