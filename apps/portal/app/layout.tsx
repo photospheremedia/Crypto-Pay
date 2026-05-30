@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
 import { getLocale } from "next-intl/server";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { ToastProvider } from "@/hooks/use-toast";
 import { isRtlLocale } from "@/i18n/routing";
@@ -128,6 +129,7 @@ export default async function RootLayout({
         <ThemeProvider defaultTheme={theme}>
           <ToastProvider>{children}</ToastProvider>
         </ThemeProvider>
+        <SpeedInsights />
       </body>
     </html>
   );
