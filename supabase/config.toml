@@ -155,11 +155,17 @@ enabled = true
 # in emails.
 site_url = "https://cryptopay.sale"
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
+# NOTE: config.toml is the single source of truth — `supabase config push` (CI) will
+# OVERWRITE the remote allow-list with exactly this list. Keep every Vercel preview/prod
+# domain here or auth redirects to those origins will be rejected.
 additional_redirect_urls = [
   "http://localhost:3000/**",
   "http://localhost:3001/**",
   "https://cryptopay.sale/**",
   "https://www.cryptopay.sale/**",
+  "https://crypto-pay-portal-gray.vercel.app/**",
+  "https://*-crypto-pay-portal.vercel.app/**",
+  "https://crypto-pay-portal-*.vercel.app/**",
 ]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
 jwt_expiry = 3600
