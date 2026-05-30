@@ -1,4 +1,5 @@
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
 import { Manrope } from "next/font/google";
 import { getLocale } from "next-intl/server";
@@ -128,6 +129,7 @@ export default async function RootLayout({
         <ThemeProvider defaultTheme={theme}>
           <ToastProvider>{children}</ToastProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
