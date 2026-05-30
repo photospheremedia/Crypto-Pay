@@ -158,3 +158,21 @@ jobs:
           # Single source of truth: config.toml -> remote auth config (site_url, redirect URLs,
           # email confirmations, rate limits, Resend SMTP, custom_access_token hook, email templates).
           supabase config push --project-ref "${SUPABASE_PROJECT_REF}" --yes
+
+      - name: Apply project security settings (Management API)
+        if: steps.validate_secrets.outputs.can_deploy == 'true'
+        run: |
+          # Leaked-password protection (HaveIBeenPwned) is a project-level Auth setting that is
+          # NOT represented in config.toml, so `config push` cannot carry it. Patch it directly.
+          # Requires the Pro plan; on lower plans the API rejects it, so this step is non-fatal.
+          http=$(curl -sS -o /tmp/hibp.json -w '%{http_code}' \
+            -X PATCH "https://api.supabase.com/v1/projects/${SUPABASE_PROJECT_REF}/config/auth" \
+            -H "Authorization: Bearer ${SUPABASE_ACCESS_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d '{"password_hibp_enabled": true}')
+          if [ "${http}" = "200" ]; then
+            echo "Leaked-password protection enabled (password_hibp_enabled=true)."
+          else
+            echo "::warning::Could not enable leaked-password protection (HTTP ${http}). Requires Pro plan."
+            cat /tmp/hibp.json || true
+          fi
