@@ -5,6 +5,10 @@ import { useLocale } from "next-intl";
 import { getPathname, usePathname } from "@/i18n/navigation";
 import type { Locale } from "@/lib/i18n/locale-config";
 import { setLocaleCookieClient } from "@/lib/i18n/locale-cookie-client";
+import {
+  canPersistLocaleCookie,
+  clearLocaleCookieClient,
+} from "@/lib/i18n/locale-preference";
 import { persistUserLocale } from "@/lib/i18n/locale-actions";
 
 /**
@@ -20,7 +24,11 @@ export function useSwitchLocale() {
     (next: Locale) => {
       if (next === locale || isPending) return;
 
-      setLocaleCookieClient(next);
+      if (canPersistLocaleCookie()) {
+        setLocaleCookieClient(next);
+      } else {
+        clearLocaleCookieClient();
+      }
       setIsPending(true);
       void persistUserLocale(next);
 

@@ -31,6 +31,39 @@ test.describe("Cookie proxy & consent", () => {
     }
   });
 
+  test("login stays English when NEXT_LOCALE is stale after visiting English home", async ({
+    page,
+    context,
+  }) => {
+    await context.addCookies([
+      {
+        name: FUNCTIONAL_CONSENT_COOKIE,
+        value: "1",
+        domain: "localhost",
+        path: "/",
+      },
+      {
+        name: LOCALE_COOKIE_NAME,
+        value: "es",
+        domain: "localhost",
+        path: "/",
+      },
+    ]);
+
+    const response = await page.goto("/");
+    expect(response?.status()).toBeLessThan(500);
+    await expect(page).toHaveURL(/\/(?:\?|$)/);
+    await expect(page).not.toHaveURL(/\/es/);
+
+    await page.getByRole("link", { name: /log in/i }).click();
+    await expect(page).toHaveURL(/\/login/);
+    await expect(page).not.toHaveURL(/\/es\/login/);
+
+    const cookies = await context.cookies();
+    const locale = cookies.find((c) => c.name === LOCALE_COOKIE_NAME);
+    expect(locale?.value).toBe("en");
+  });
+
   test("allows preference cookies after functional consent", async ({
     page,
     context,

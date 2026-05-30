@@ -7,8 +7,10 @@ export const routing = defineRouting({
   locales: [...locales],
   defaultLocale: "en",
   localePrefix: "as-needed",
-  // Browser Accept-Language on first visit; NEXT_LOCALE only when functional consent
-  // cookie is set (see functional-consent-cookie.ts + proxy.ts).
+  // Only the URL prefix chooses the locale (/, /login = en; /es, /es/login = es).
+  // Prevents a stale NEXT_LOCALE cookie from hijacking unprefixed links after testing languages.
+  // Users change language via LocaleSwitcher (explicit navigation + optional cookie sync in proxy).
+  localeDetection: false,
   localeCookie: {
     maxAge: 60 * 60 * 24 * 365,
   },

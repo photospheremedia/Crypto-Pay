@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { stripLocaleCookieFromResponse } from "@/lib/i18n/functional-consent-cookie";
 import { mergeIntlMiddlewareResponse } from "@/lib/i18n/merge-intl-middleware-response";
+import { syncLocaleCookieWithResolvedLocale } from "@/lib/i18n/sync-locale-cookie";
 
 /** Copy cookies (incl. httpOnly/options) from one Next response onto another. */
 export function copyResponseCookies(
@@ -29,5 +30,6 @@ export function redirectWithProxyCookies(
   mergeIntlMiddlewareResponse(intlResponse, redirect);
   copyResponseCookies(sessionResponse, redirect);
   stripLocaleCookieFromResponse(request, redirect);
+  syncLocaleCookieWithResolvedLocale(request, redirect);
   return redirect;
 }

@@ -20,6 +20,7 @@ import {
   stripLocaleCookieFromResponse,
 } from "@/lib/i18n/functional-consent-cookie";
 import { mergeIntlMiddlewareResponse } from "@/lib/i18n/merge-intl-middleware-response";
+import { syncLocaleCookieWithResolvedLocale } from "@/lib/i18n/sync-locale-cookie";
 import { redirectWithProxyCookies } from "@/lib/proxy/finalize-proxy-response";
 import { stripLocale } from "@/lib/i18n/strip-locale";
 import { isMetadataRoute } from "@/lib/routing/metadata-routes";
@@ -51,6 +52,7 @@ async function handleProxy(request: NextRequest) {
 
   const intlResponse = handleIntl(request);
   stripLocaleCookieFromResponse(request, intlResponse);
+  syncLocaleCookieWithResolvedLocale(request, intlResponse);
 
   if (
     rawPathname.startsWith("/auth/callback") ||
@@ -61,6 +63,7 @@ async function handleProxy(request: NextRequest) {
   }
 
   if (intlResponse.status >= 300 && intlResponse.status < 400) {
+    syncLocaleCookieWithResolvedLocale(request, intlResponse);
     return intlResponse;
   }
 
@@ -192,6 +195,7 @@ async function handleProxy(request: NextRequest) {
   }
 
   stripLocaleCookieFromResponse(request, response);
+  syncLocaleCookieWithResolvedLocale(request, response);
   return response;
 }
 
