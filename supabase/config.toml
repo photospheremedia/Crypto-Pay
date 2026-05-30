@@ -303,9 +303,11 @@ auth_token = "env(SUPABASE_AUTH_SMS_TWILIO_AUTH_TOKEN)"
 max_enrolled_factors = 10
 
 # Control MFA via App Authenticator (TOTP)
+# NOTE: MFA requires the Supabase Pro plan. Flip both to true after upgrading to Pro
+# (and add a portal enrollment UI) to clear the "Insufficient MFA Options" advisor.
 [auth.mfa.totp]
-enroll_enabled = true
-verify_enabled = true
+enroll_enabled = false
+verify_enabled = false
 
 # Configure MFA via Phone Messaging
 [auth.mfa.phone]
